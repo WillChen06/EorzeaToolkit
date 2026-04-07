@@ -1,0 +1,10 @@
+/* Tab Titles */
+"tab.treasureMap" = "藏寶圖";
+"tab.relicWeapon" = "發光武器";
+"tab.oceanFishing" = "海釣";
+"tab.progress" = "進度";
+
+/* Common */
+"common.level" = "等級";
+"common.search" = "搜尋";
+"common.noData" = "暫無資料";

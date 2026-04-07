@@ -1,0 +1,505 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		025A67D3151B3C43DC2C3142 /* relic_weapons.json in Resources */ = {isa = PBXBuildFile; fileRef = 44C199F7F0439BDD9DF63DE5 /* relic_weapons.json */; };
+		0872DD5E815FE236F8EFC813 /* XIVAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD11C8459A748FFAD797086 /* XIVAPIService.swift */; };
+		09BA766A39AC9B547891F46D /* ocean_fishing.json in Resources */ = {isa = PBXBuildFile; fileRef = D2BC33C71CF25E0141DE065D /* ocean_fishing.json */; };
+		123E3B8EC74C0BEEC7F15237 /* OceanFishing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E008F2D00900B1E5C3A1A09 /* OceanFishing.swift */; };
+		1B45FE4D097CAAD65F323597 /* ProgressTrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62257207F987500AC387985D /* ProgressTrackerView.swift */; };
+		208E3A2EFC90291197BD41E9 /* RelicWeaponViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA4A4DBD2933C011AE58698 /* RelicWeaponViewModel.swift */; };
+		21464979E774C1BA47C4D78E /* RelicWeaponListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD54A6B8AEDE3EC50910827 /* RelicWeaponListView.swift */; };
+		285A3EBFA26DE5C970C248F5 /* OceanFishingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82939FBA2993DFF50DDA0C1 /* OceanFishingViewModel.swift */; };
+		3031DC7EF96289AB33309399 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5207532D7062D6DDBE8CDC20 /* MainTabView.swift */; };
+		4282D6200B3411DBF17796D7 /* treasure_maps.json in Resources */ = {isa = PBXBuildFile; fileRef = 3C29DC0DEAD933ADBAB15DF0 /* treasure_maps.json */; };
+		44916CB86ADCA41999192E7F /* TreasureMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA545E4D6687BEE1A40A1B1 /* TreasureMap.swift */; };
+		46AD4BC7CAEFBBDCF855E47C /* TreasureMapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A14791E8C11AA209AA0562 /* TreasureMapViewModel.swift */; };
+		4C7AD3C3FCB056B2866568A8 /* TreasureMapListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914E93C547E3805E26F5F9D6 /* TreasureMapListView.swift */; };
+		543277F7B42D08F771CEF9F4 /* OceanFishingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6709100A9CF22B7F192B2D32 /* OceanFishingView.swift */; };
+		65939C06BC1CE65AC4080A5A /* TreasureMapDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71206E4982454E1556AE20D8 /* TreasureMapDetailView.swift */; };
+		8B4DAB5EFA326CA13D9E416B /* RelicWeaponDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7179CCAFE4C7C105A2AD6C7 /* RelicWeaponDetailView.swift */; };
+		8EDD234DECF8ED18B9984887 /* EorzeaToolkitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC69B62CFD0B7BAEEB1F2F0 /* EorzeaToolkitApp.swift */; };
+		95ECDDB514E25DA6AB0BCA37 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0E910E77FA98796228BC0DC /* Assets.xcassets */; };
+		B07E3909BF9E625D9CE02422 /* LocalDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA57853C57893DD24999BD39 /* LocalDataService.swift */; };
+		D41D468CA1207296BE2BD674 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 01FE0EEA33F14EFF845F9638 /* Localizable.strings */; };
+		ED28E2085B4B170426957A74 /* ProgressRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A21CE703F501936991D2E7E /* ProgressRecord.swift */; };
+		FA066DD46DB2A4CAA69AC3E3 /* RelicWeapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDC8E113EEA7483788B92 /* RelicWeapon.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		130A2C5428DE74BF52D22DC7 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		1CD54A6B8AEDE3EC50910827 /* RelicWeaponListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelicWeaponListView.swift; sourceTree = "<group>"; };
+		27A14791E8C11AA209AA0562 /* TreasureMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapViewModel.swift; sourceTree = "<group>"; };
+		2AC69B62CFD0B7BAEEB1F2F0 /* EorzeaToolkitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EorzeaToolkitApp.swift; sourceTree = "<group>"; };
+		2ADBDC8E113EEA7483788B92 /* RelicWeapon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelicWeapon.swift; sourceTree = "<group>"; };
+		3C29DC0DEAD933ADBAB15DF0 /* treasure_maps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = treasure_maps.json; sourceTree = "<group>"; };
+		44C199F7F0439BDD9DF63DE5 /* relic_weapons.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = relic_weapons.json; sourceTree = "<group>"; };
+		5207532D7062D6DDBE8CDC20 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		62257207F987500AC387985D /* ProgressTrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTrackerView.swift; sourceTree = "<group>"; };
+		6709100A9CF22B7F192B2D32 /* OceanFishingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OceanFishingView.swift; sourceTree = "<group>"; };
+		6E008F2D00900B1E5C3A1A09 /* OceanFishing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OceanFishing.swift; sourceTree = "<group>"; };
+		6EA545E4D6687BEE1A40A1B1 /* TreasureMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMap.swift; sourceTree = "<group>"; };
+		71206E4982454E1556AE20D8 /* TreasureMapDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapDetailView.swift; sourceTree = "<group>"; };
+		7A21CE703F501936991D2E7E /* ProgressRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressRecord.swift; sourceTree = "<group>"; };
+		84EEB99FC86E568BF0D2EA0D /* EorzeaToolkit.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = EorzeaToolkit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9113B83FA58C9AC86332E63E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		914E93C547E3805E26F5F9D6 /* TreasureMapListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapListView.swift; sourceTree = "<group>"; };
+		AAA4A4DBD2933C011AE58698 /* RelicWeaponViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelicWeaponViewModel.swift; sourceTree = "<group>"; };
+		ABD11C8459A748FFAD797086 /* XIVAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XIVAPIService.swift; sourceTree = "<group>"; };
+		C82939FBA2993DFF50DDA0C1 /* OceanFishingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OceanFishingViewModel.swift; sourceTree = "<group>"; };
+		D0E910E77FA98796228BC0DC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D2BC33C71CF25E0141DE065D /* ocean_fishing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ocean_fishing.json; sourceTree = "<group>"; };
+		DA57853C57893DD24999BD39 /* LocalDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataService.swift; sourceTree = "<group>"; };
+		E7179CCAFE4C7C105A2AD6C7 /* RelicWeaponDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelicWeaponDetailView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		09FBACC73703D8AAA186D7B5 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				DA57853C57893DD24999BD39 /* LocalDataService.swift */,
+				ABD11C8459A748FFAD797086 /* XIVAPIService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		112289ADD8C5B2DC43F0C83A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5207532D7062D6DDBE8CDC20 /* MainTabView.swift */,
+				1DC7051F3D5A74A78F869867 /* OceanFishing */,
+				E8FDB16057A396C814A04AFA /* Progress */,
+				5B224F3F1645633F718CCFFF /* RelicWeapon */,
+				EF10BFA3E01EFCB74288995A /* TreasureMap */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1DC7051F3D5A74A78F869867 /* OceanFishing */ = {
+			isa = PBXGroup;
+			children = (
+				6709100A9CF22B7F192B2D32 /* OceanFishingView.swift */,
+			);
+			path = OceanFishing;
+			sourceTree = "<group>";
+		};
+		45DF0C8E0A6C2FB92C9BFA07 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				6E008F2D00900B1E5C3A1A09 /* OceanFishing.swift */,
+				7A21CE703F501936991D2E7E /* ProgressRecord.swift */,
+				2ADBDC8E113EEA7483788B92 /* RelicWeapon.swift */,
+				6EA545E4D6687BEE1A40A1B1 /* TreasureMap.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		5B224F3F1645633F718CCFFF /* RelicWeapon */ = {
+			isa = PBXGroup;
+			children = (
+				E7179CCAFE4C7C105A2AD6C7 /* RelicWeaponDetailView.swift */,
+				1CD54A6B8AEDE3EC50910827 /* RelicWeaponListView.swift */,
+			);
+			path = RelicWeapon;
+			sourceTree = "<group>";
+		};
+		860D61CF36579136B7EA5281 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				84EEB99FC86E568BF0D2EA0D /* EorzeaToolkit.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		86CC27BB767B9D17B1F9B882 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				2AC69B62CFD0B7BAEEB1F2F0 /* EorzeaToolkitApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		8C5184121CE4B7102D7B6360 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				C82939FBA2993DFF50DDA0C1 /* OceanFishingViewModel.swift */,
+				AAA4A4DBD2933C011AE58698 /* RelicWeaponViewModel.swift */,
+				27A14791E8C11AA209AA0562 /* TreasureMapViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		946C166DF675D455F044CCC8 /* EorzeaToolkit */ = {
+			isa = PBXGroup;
+			children = (
+				86CC27BB767B9D17B1F9B882 /* App */,
+				A1E3F1C3DA971BE9828BFFEA /* Localization */,
+				45DF0C8E0A6C2FB92C9BFA07 /* Models */,
+				D956C2BBD6268FE45C0D4F20 /* Resources */,
+				09FBACC73703D8AAA186D7B5 /* Services */,
+				8C5184121CE4B7102D7B6360 /* ViewModels */,
+				112289ADD8C5B2DC43F0C83A /* Views */,
+			);
+			path = EorzeaToolkit;
+			sourceTree = "<group>";
+		};
+		A1E3F1C3DA971BE9828BFFEA /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				01FE0EEA33F14EFF845F9638 /* Localizable.strings */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+		ABF50FBB49DC0E73DFC76187 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				D2BC33C71CF25E0141DE065D /* ocean_fishing.json */,
+				44C199F7F0439BDD9DF63DE5 /* relic_weapons.json */,
+				3C29DC0DEAD933ADBAB15DF0 /* treasure_maps.json */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		D956C2BBD6268FE45C0D4F20 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D0E910E77FA98796228BC0DC /* Assets.xcassets */,
+				ABF50FBB49DC0E73DFC76187 /* Data */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E8FDB16057A396C814A04AFA /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				62257207F987500AC387985D /* ProgressTrackerView.swift */,
+			);
+			path = Progress;
+			sourceTree = "<group>";
+		};
+		ED9C9F6EFB39522231714773 = {
+			isa = PBXGroup;
+			children = (
+				946C166DF675D455F044CCC8 /* EorzeaToolkit */,
+				860D61CF36579136B7EA5281 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EF10BFA3E01EFCB74288995A /* TreasureMap */ = {
+			isa = PBXGroup;
+			children = (
+				71206E4982454E1556AE20D8 /* TreasureMapDetailView.swift */,
+				914E93C547E3805E26F5F9D6 /* TreasureMapListView.swift */,
+			);
+			path = TreasureMap;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A24CF7D10E3961865033402C /* EorzeaToolkit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0848946B33B4CE061F86164 /* Build configuration list for PBXNativeTarget "EorzeaToolkit" */;
+			buildPhases = (
+				472441B38736B955D77BD405 /* Sources */,
+				6B0C4DDA1E7F131F9CCFE971 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EorzeaToolkit;
+			packageProductDependencies = (
+			);
+			productName = EorzeaToolkit;
+			productReference = 84EEB99FC86E568BF0D2EA0D /* EorzeaToolkit.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5923048CE9C047CD2F1B71B4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = C82D586A96653BA01D25D11D /* Build configuration list for PBXProject "EorzeaToolkit" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+				"zh-Hant",
+			);
+			mainGroup = ED9C9F6EFB39522231714773;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 860D61CF36579136B7EA5281 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A24CF7D10E3961865033402C /* EorzeaToolkit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6B0C4DDA1E7F131F9CCFE971 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95ECDDB514E25DA6AB0BCA37 /* Assets.xcassets in Resources */,
+				D41D468CA1207296BE2BD674 /* Localizable.strings in Resources */,
+				09BA766A39AC9B547891F46D /* ocean_fishing.json in Resources */,
+				025A67D3151B3C43DC2C3142 /* relic_weapons.json in Resources */,
+				4282D6200B3411DBF17796D7 /* treasure_maps.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		472441B38736B955D77BD405 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8EDD234DECF8ED18B9984887 /* EorzeaToolkitApp.swift in Sources */,
+				B07E3909BF9E625D9CE02422 /* LocalDataService.swift in Sources */,
+				3031DC7EF96289AB33309399 /* MainTabView.swift in Sources */,
+				123E3B8EC74C0BEEC7F15237 /* OceanFishing.swift in Sources */,
+				543277F7B42D08F771CEF9F4 /* OceanFishingView.swift in Sources */,
+				285A3EBFA26DE5C970C248F5 /* OceanFishingViewModel.swift in Sources */,
+				ED28E2085B4B170426957A74 /* ProgressRecord.swift in Sources */,
+				1B45FE4D097CAAD65F323597 /* ProgressTrackerView.swift in Sources */,
+				FA066DD46DB2A4CAA69AC3E3 /* RelicWeapon.swift in Sources */,
+				8B4DAB5EFA326CA13D9E416B /* RelicWeaponDetailView.swift in Sources */,
+				21464979E774C1BA47C4D78E /* RelicWeaponListView.swift in Sources */,
+				208E3A2EFC90291197BD41E9 /* RelicWeaponViewModel.swift in Sources */,
+				44916CB86ADCA41999192E7F /* TreasureMap.swift in Sources */,
+				65939C06BC1CE65AC4080A5A /* TreasureMapDetailView.swift in Sources */,
+				4C7AD3C3FCB056B2866568A8 /* TreasureMapListView.swift in Sources */,
+				46AD4BC7CAEFBBDCF855E47C /* TreasureMapViewModel.swift in Sources */,
+				0872DD5E815FE236F8EFC813 /* XIVAPIService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		01FE0EEA33F14EFF845F9638 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9113B83FA58C9AC86332E63E /* en */,
+				130A2C5428DE74BF52D22DC7 /* zh-Hant */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		23785079FC4C459E2D0D0C78 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "艾歐澤亞工具箱";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.willchen.eorzeaToolkit;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2AD10D5BFAEFF98D8D0E398B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "艾歐澤亞工具箱";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.willchen.eorzeaToolkit;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EA110318F0F94048EFC78C77 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_LANGUAGE = "zh-Hant";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		F873959B636A96A7F7339DDC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_LANGUAGE = "zh-Hant";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C0848946B33B4CE061F86164 /* Build configuration list for PBXNativeTarget "EorzeaToolkit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2AD10D5BFAEFF98D8D0E398B /* Debug */,
+				23785079FC4C459E2D0D0C78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C82D586A96653BA01D25D11D /* Build configuration list for PBXProject "EorzeaToolkit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA110318F0F94048EFC78C77 /* Debug */,
+				F873959B636A96A7F7339DDC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5923048CE9C047CD2F1B71B4 /* Project object */;
+}

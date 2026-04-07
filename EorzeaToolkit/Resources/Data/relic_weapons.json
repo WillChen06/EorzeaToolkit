@@ -1,0 +1,61 @@
+{
+  "expansions": [
+    {
+      "id": "arr",
+      "name": "新生艾奧傑亞",
+      "name_en": "A Realm Reborn",
+      "weapons": [
+        {
+          "id": "curtana_zenith",
+          "name": "聖劍天頂",
+          "name_en": "Curtana Zenith",
+          "job": "PLD",
+          "steps": [
+            {
+              "step": 1,
+              "title": "基礎武器取得",
+              "description": "完成職業任務取得聖劍",
+              "materials": [
+                { "name": "蠻神白銀鏡", "quantity": 3 }
+              ]
+            },
+            {
+              "step": 2,
+              "title": "天頂強化",
+              "description": "使用星極冰晶強化武器",
+              "materials": [
+                { "name": "星極冰晶", "quantity": 1 },
+                { "name": "白金錠", "quantity": 2 }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "bravura_zenith",
+          "name": "暴勇天頂",
+          "name_en": "Bravura Zenith",
+          "job": "WAR",
+          "steps": [
+            {
+              "step": 1,
+              "title": "基礎武器取得",
+              "description": "完成職業任務取得暴勇",
+              "materials": [
+                { "name": "蠻神白銀鏡", "quantity": 3 }
+              ]
+            },
+            {
+              "step": 2,
+              "title": "天頂強化",
+              "description": "使用星極冰晶強化武器",
+              "materials": [
+                { "name": "星極冰晶", "quantity": 1 },
+                { "name": "鈷鐵錠", "quantity": 2 }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

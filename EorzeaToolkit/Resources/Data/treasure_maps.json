@@ -1,0 +1,73 @@
+{
+  "maps": [
+    {
+      "id": "timeworn_loboskin",
+      "name": "古舊的山羊革地圖",
+      "name_en": "Timeworn Loboskin Map",
+      "name_ja": "古びた山羊革の地図",
+      "level": 40,
+      "locations": [
+        {
+          "zone": "東森林",
+          "zone_en": "East Shroud",
+          "coordinates": { "x": 25.3, "y": 19.7 },
+          "notes": "靠近悄語洞窟入口"
+        },
+        {
+          "zone": "西薩納蘭",
+          "zone_en": "Western Thanalan",
+          "coordinates": { "x": 15.8, "y": 28.4 },
+          "notes": "地平線附近"
+        }
+      ]
+    },
+    {
+      "id": "timeworn_peisteskin",
+      "name": "古舊的巨蜥革地圖",
+      "name_en": "Timeworn Peisteskin Map",
+      "name_ja": "古びた巨蜥革の地図",
+      "level": 50,
+      "locations": [
+        {
+          "zone": "北森林",
+          "zone_en": "North Shroud",
+          "coordinates": { "x": 18.2, "y": 22.1 },
+          "notes": "和平庭園周邊"
+        },
+        {
+          "zone": "東拉諾西亞",
+          "zone_en": "Eastern La Noscea",
+          "coordinates": { "x": 30.5, "y": 25.8 },
+          "notes": "血腥海岸附近"
+        },
+        {
+          "zone": "摩杜納",
+          "zone_en": "Mor Dhona",
+          "coordinates": { "x": 12.7, "y": 14.3 },
+          "notes": "銀淚湖北岸"
+        }
+      ]
+    },
+    {
+      "id": "timeworn_archaeoskin",
+      "name": "古舊的古鳥革地圖",
+      "name_en": "Timeworn Archaeoskin Map",
+      "name_ja": "古びた古鳥革の地図",
+      "level": 60,
+      "locations": [
+        {
+          "zone": "高地龍堡",
+          "zone_en": "Coerthas Western Highlands",
+          "coordinates": { "x": 8.9, "y": 11.6 },
+          "notes": "獵人營地西側"
+        },
+        {
+          "zone": "翻雲霧海",
+          "zone_en": "The Sea of Clouds",
+          "coordinates": { "x": 20.1, "y": 36.4 },
+          "notes": "浮島南端"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+/* Tab Titles */
+"tab.treasureMap" = "Treasure Maps";
+"tab.relicWeapon" = "Relic Weapons";
+"tab.oceanFishing" = "Ocean Fishing";
+"tab.progress" = "Progress";
+
+/* Common */
+"common.level" = "Level";
+"common.search" = "Search";
+"common.noData" = "No Data";
