@@ -30,6 +30,7 @@ struct TreasureMap: Codable, Identifiable {
     let type: MapType
     let gatheringTypes: [Int]
     let gatheringZoneIds: [Int]
+    let gatheringNodes: [GatheringNode]
 
     enum CodingKeys: String, CodingKey {
         case id, grade, level, expansion, type
@@ -39,6 +40,7 @@ struct TreasureMap: Codable, Identifiable {
         case nameJa = "name_ja"
         case gatheringTypes = "gathering_types"
         case gatheringZoneIds = "gathering_zone_ids"
+        case gatheringNodes = "gathering_nodes"
     }
 
     enum MapType: String, Codable {
@@ -51,6 +53,21 @@ struct TreasureMap: Codable, Identifiable {
             case .party: return "8人"
             }
         }
+    }
+}
+
+// MARK: - 採集點 JSON 資料
+
+struct GatheringNode: Codable {
+    let type: Int
+    let job: String
+    let zoneId: Int
+    let x: Double
+    let y: Double
+
+    enum CodingKeys: String, CodingKey {
+        case type, job, x, y
+        case zoneId = "zone_id"
     }
 }
 
@@ -72,6 +89,9 @@ struct GatheringNodeDisplay: Identifiable {
     let id = UUID()
     let type: Int
     let zoneName: String
+    let zoneId: Int
+    let x: Double
+    let y: Double
 
     var job: GatheringJob {
         type <= 1 ? .miner : .botanist
@@ -95,6 +115,18 @@ struct GatheringNodeDisplay: Identifiable {
         case 3: return Color(.sRGB, red: 0.6, green: 0.75, blue: 0.2)
         default: return .white
         }
+    }
+
+    var typeIconURL: URL? {
+        let path: String
+        switch type {
+        case 0: path = "https://xivapi.com/i/060000/060438.png"  // 礦脈
+        case 1: path = "https://xivapi.com/i/060000/060437.png"  // 石場
+        case 2: path = "https://xivapi.com/i/060000/060433.png"  // 良材
+        case 3: path = "https://xivapi.com/i/060000/060432.png"  // 草叢
+        default: return nil
+        }
+        return URL(string: path)
     }
 }
 

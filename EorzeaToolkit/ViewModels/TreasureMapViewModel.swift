@@ -7,6 +7,7 @@ final class TreasureMapViewModel {
     private(set) var zoneNames: [String: ZoneNameEntry] = [:]
     private var spotsByKey: [String: [TreasureSpot]] = [:]  // "itemId-mapId" → spots
     private var mapInfosByKey: [String: MapInfo] = [:]
+    private var mapInfosByPlacename: [Int: MapInfo] = [:]
 
     func loadMaps() {
         do {
@@ -18,6 +19,9 @@ final class TreasureMapViewModel {
             let zhNames: [String: ZhMapName] = try LocalDataService.load("zh-maps")
             let mapInfos: [String: MapInfo] = try LocalDataService.load("maps")
             mapInfosByKey = mapInfos
+            for info in mapInfos.values where !info.dungeon {
+                mapInfosByPlacename[info.placenameId] = info
+            }
 
             // 依 (item, map) 分組點位
             var groupedSpots: [String: [TreasureSpot]] = [:]
@@ -61,13 +65,13 @@ final class TreasureMapViewModel {
     }
 
     func gatheringNodes(for map: TreasureMap) -> [GatheringNodeDisplay] {
-        var nodes: [GatheringNodeDisplay] = []
-        for type in map.gatheringTypes {
-            for zoneId in map.gatheringZoneIds {
-                let zoneName = zoneNames[String(zoneId)]?.tw ?? "未知地區"
-                nodes.append(GatheringNodeDisplay(type: type, zoneName: zoneName))
-            }
+        map.gatheringNodes.map { node in
+            let zoneName = zoneNames[String(node.zoneId)]?.tw ?? "未知地區"
+            return GatheringNodeDisplay(type: node.type, zoneName: zoneName, zoneId: node.zoneId, x: node.x, y: node.y)
         }
-        return nodes
+    }
+
+    func mapInfo(forZoneId zoneId: Int) -> MapInfo? {
+        mapInfosByPlacename[zoneId]
     }
 }
