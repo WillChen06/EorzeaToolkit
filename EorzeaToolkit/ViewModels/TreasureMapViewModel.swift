@@ -4,13 +4,15 @@ import Foundation
 final class TreasureMapViewModel {
     private(set) var maps: [TreasureMap] = []
     private(set) var zonesByItemId: [Int: [TreasureZone]] = [:]
+    private(set) var zoneNames: [String: ZoneNameEntry] = [:]
     private var spotsByKey: [String: [TreasureSpot]] = [:]  // "itemId-mapId" → spots
     private var mapInfosByKey: [String: MapInfo] = [:]
 
     func loadMaps() {
         do {
-            let mapData: TreasureMapData = try LocalDataService.load("treasure_maps")
-            maps = mapData.maps
+            let finalData: TreasureMapFinalData = try LocalDataService.load("treasure_maps_final")
+            maps = finalData.maps
+            zoneNames = finalData.zoneNames
 
             let spots: [TreasureSpot] = try LocalDataService.load("treasures")
             let zhNames: [String: ZhMapName] = try LocalDataService.load("zh-maps")
@@ -56,5 +58,16 @@ final class TreasureMapViewModel {
 
     func mapImageURL(for mapId: Int) -> String? {
         mapInfosByKey[String(mapId)]?.image
+    }
+
+    func gatheringNodes(for map: TreasureMap) -> [GatheringNodeDisplay] {
+        var nodes: [GatheringNodeDisplay] = []
+        for type in map.gatheringTypes {
+            for zoneId in map.gatheringZoneIds {
+                let zoneName = zoneNames[String(zoneId)]?.tw ?? "未知地區"
+                nodes.append(GatheringNodeDisplay(type: type, zoneName: zoneName))
+            }
+        }
+        return nodes
     }
 }

@@ -1,0 +1,697 @@
+{
+  "maps": [
+    {
+      "id": "timeworn_leather_map",
+      "item_id": 6688,
+      "grade": "G1",
+      "name_en": "Timeworn Leather Map",
+      "name_ja": "古ぼけた地図G1",
+      "level": 40,
+      "expansion": "2.1",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ],
+      "name_tw": "陳舊的鞣革地圖",
+      "name_cn": "陈旧的鞣革地图"
+    },
+    {
+      "id": "timeworn_goatskin_map",
+      "item_id": 6689,
+      "grade": "G2",
+      "name_en": "Timeworn Goatskin Map",
+      "name_ja": "古ぼけた地図G2",
+      "level": 45,
+      "expansion": "2.1",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ],
+      "name_tw": "陳舊的山羊革地圖",
+      "name_cn": "陈旧的山羊革地图"
+    },
+    {
+      "id": "timeworn_toadskin_map",
+      "item_id": 6690,
+      "grade": "G3",
+      "name_en": "Timeworn Toadskin Map",
+      "name_ja": "古ぼけた地図G3",
+      "level": 50,
+      "expansion": "2.1",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ],
+      "name_tw": "陳舊的巨蟾蜍革地圖",
+      "name_cn": "陈旧的巨蟾蜍革地图"
+    },
+    {
+      "id": "timeworn_boarskin_map",
+      "item_id": 6691,
+      "grade": "G4",
+      "name_en": "Timeworn Boarskin Map",
+      "name_ja": "古ぼけた地図G4",
+      "level": 50,
+      "expansion": "2.1",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ],
+      "name_tw": "陳舊的野豬革地圖",
+      "name_cn": "陈旧的野猪革地图"
+    },
+    {
+      "id": "timeworn_peisteskin_map",
+      "item_id": 6692,
+      "grade": "G5",
+      "name_en": "Timeworn Peisteskin Map",
+      "name_ja": "古ぼけた地図G5",
+      "level": 50,
+      "expansion": "2.1",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ],
+      "name_tw": "陳舊的毒蜥蜴革地圖",
+      "name_cn": "陈旧的毒蜥蜴革地图"
+    },
+    {
+      "id": "timeworn_archaeoskin_map",
+      "item_id": 12241,
+      "grade": "G6",
+      "name_en": "Timeworn Archaeoskin Map",
+      "name_ja": "古ぼけた地図G6",
+      "level": 55,
+      "expansion": "3.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2000,
+        2001,
+        2002,
+        2100,
+        2200
+      ],
+      "name_tw": "陳舊的古鳥革地圖",
+      "name_cn": "陈旧的古鸟革地图"
+    },
+    {
+      "id": "timeworn_wyvernskin_map",
+      "item_id": 12242,
+      "grade": "G7",
+      "name_en": "Timeworn Wyvernskin Map",
+      "name_ja": "古ぼけた地図G7",
+      "level": 60,
+      "expansion": "3.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2000,
+        2001,
+        2002,
+        2100,
+        2200
+      ],
+      "name_tw": "陳舊的飛龍革地圖",
+      "name_cn": "陈旧的飞龙革地图"
+    },
+    {
+      "id": "timeworn_dragonskin_map",
+      "item_id": 12243,
+      "grade": "G8",
+      "name_en": "Timeworn Dragonskin Map",
+      "name_ja": "古ぼけた地図G8",
+      "level": 60,
+      "expansion": "3.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2000,
+        2001,
+        2002,
+        2100,
+        2200
+      ],
+      "name_tw": "陳舊的巨龍革地圖",
+      "name_cn": "陈旧的巨龙革地图"
+    },
+    {
+      "id": "timeworn_gaganaskin_map",
+      "item_id": 17835,
+      "grade": "G9",
+      "name_en": "Timeworn Gaganaskin Map",
+      "name_ja": "古ぼけた地図G9",
+      "level": 70,
+      "expansion": "4.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2406,
+        2407,
+        2408,
+        2409,
+        2410,
+        2411
+      ],
+      "name_tw": "陳舊的迦迦納怪鳥革地圖",
+      "name_cn": "陈旧的迦迦纳怪鸟革地图"
+    },
+    {
+      "id": "timeworn_gazelleskin_map",
+      "item_id": 17836,
+      "grade": "G10",
+      "name_en": "Timeworn Gazelleskin Map",
+      "name_ja": "古ぼけた地図G10",
+      "level": 70,
+      "expansion": "4.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2406,
+        2407,
+        2408,
+        2409,
+        2410,
+        2411
+      ],
+      "name_tw": "陳舊的瞪羚革地圖",
+      "name_cn": "陈旧的瞪羚革地图"
+    },
+    {
+      "id": "timeworn_gliderskin_map",
+      "item_id": 26744,
+      "grade": "G11",
+      "name_en": "Timeworn Gliderskin Map",
+      "name_ja": "古ぼけた地図G11",
+      "level": 80,
+      "expansion": "5.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2953,
+        2954,
+        2955,
+        2957
+      ],
+      "name_tw": "陳舊的綠飄龍革地圖",
+      "name_cn": "陈旧的绿飘龙革地图"
+    },
+    {
+      "id": "timeworn_zonureskin_map",
+      "item_id": 26745,
+      "grade": "G12",
+      "name_en": "Timeworn Zonureskin Map",
+      "name_ja": "古ぼけた地図G12",
+      "level": 80,
+      "expansion": "5.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2953,
+        2954,
+        2955,
+        2957
+      ],
+      "name_tw": "陳舊的纏尾蛟革地圖",
+      "name_cn": "陈旧的缠尾蛟革地图"
+    },
+    {
+      "id": "timeworn_saigaskin_map",
+      "item_id": 36611,
+      "grade": "G13",
+      "name_en": "Timeworn Saigaskin Map",
+      "name_ja": "古ぼけた地図G13",
+      "level": 90,
+      "expansion": "6.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        3712
+      ],
+      "name_tw": "陳舊的賽加羚羊革地圖",
+      "name_cn": "陈旧的赛加羚羊革地图"
+    },
+    {
+      "id": "timeworn_kumbhiraskin_map",
+      "item_id": 36612,
+      "grade": "G14",
+      "name_en": "Timeworn Kumbhiraskin Map",
+      "name_ja": "古ぼけた地図G14",
+      "level": 90,
+      "expansion": "6.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        3712
+      ],
+      "name_tw": "陳舊的金毗羅鱷革地圖",
+      "name_cn": "陈旧的金毗罗鳄革地图"
+    },
+    {
+      "id": "timeworn_ophiotauroskin_map",
+      "item_id": 39591,
+      "grade": "G15",
+      "name_en": "Timeworn Ophiotauroskin Map",
+      "name_ja": "古ぼけた地図G15",
+      "level": 90,
+      "expansion": "6.3",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        3713
+      ],
+      "name_tw": "陳舊的蛇牛革地圖",
+      "name_cn": "陈旧的蛇牛革地图"
+    },
+    {
+      "id": "timeworn_loboskin_map",
+      "item_id": 43556,
+      "grade": "G16",
+      "name_en": "Timeworn Loboskin Map",
+      "name_ja": "古ぼけた地図G16",
+      "level": 100,
+      "expansion": "7.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        4507,
+        4508,
+        4509
+      ],
+      "name_tw": "陳舊的銀狼革地圖",
+      "name_cn": "陈旧的银狼革地图"
+    },
+    {
+      "id": "timeworn_braaxskin_map",
+      "item_id": 43557,
+      "grade": "G17",
+      "name_en": "Timeworn Br'aaxskin Map",
+      "name_ja": "古ぼけた地図G17",
+      "level": 100,
+      "expansion": "7.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        4507,
+        4508,
+        4509
+      ],
+      "name_tw": "陳舊的獰豹革地圖",
+      "name_cn": "陈旧的狞豹革地图"
+    },
+    {
+      "id": "timeworn_gargantuaskin_map",
+      "item_id": 46185,
+      "grade": "G18",
+      "name_en": "Timeworn Gargantuaskin Map",
+      "name_ja": "古ぼけた地図G18",
+      "level": 100,
+      "expansion": "7.3",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        4510
+      ],
+      "name_tw": "陳舊的卡岡圖亞革地圖",
+      "name_cn": "陈旧的卡冈图亚革地图"
+    }
+  ],
+  "gathering_type_names": {
+    "0": {
+      "en": "Mining",
+      "ja": "採掘",
+      "cn": "采矿",
+      "tw": "採掘"
+    },
+    "1": {
+      "en": "Quarrying",
+      "ja": "砕岩",
+      "cn": "碎石",
+      "tw": "碎石"
+    },
+    "2": {
+      "en": "Logging",
+      "ja": "伐採",
+      "cn": "伐木",
+      "tw": "伐木"
+    },
+    "3": {
+      "en": "Harvesting",
+      "ja": "草刈",
+      "cn": "割草",
+      "tw": "割草"
+    }
+  },
+  "_meta": {
+    "sources": [
+      "Item.csv - thewakingsands/ffxiv-datamining-cn",
+      "Map.csv - xivapi/ffxiv-datamining",
+      "PlaceName.csv - thewakingsands/ffxiv-datamining-cn",
+      "TreasureHuntRank.csv - xivapi/ffxiv-datamining",
+      "nodes.json - ffxiv-teamcraft/ffxiv-teamcraft"
+    ],
+    "notes": [
+      "gathering_zone_ids for G1-G10, G15 are derived from nodes.json + Map.csv",
+      "gathering_zone_ids for G11-G14, G16-G18 are community-verified (server-side restrictions not in client data)",
+      "name_cn is from thewakingsands/ffxiv-datamining-cn (Simplified Chinese), needs conversion to Traditional Chinese"
+    ]
+  },
+  "zone_names": {
+    "3712": {
+      "cn": "天外天垓",
+      "tw": "天外天垓"
+    },
+    "3713": {
+      "cn": "厄尔庇斯",
+      "tw": "厄爾庇斯"
+    },
+    "2953": {
+      "cn": "雷克兰德",
+      "tw": "雷克蘭德"
+    },
+    "2954": {
+      "cn": "珂露西亚岛",
+      "tw": "珂露西亞島"
+    },
+    "2955": {
+      "cn": "安穆·艾兰",
+      "tw": "安穆·艾蘭"
+    },
+    "2957": {
+      "cn": "拉凯提卡大森林",
+      "tw": "拉凱提卡大森林"
+    },
+    "2200": {
+      "cn": "库尔札斯西部高地",
+      "tw": "庫爾札斯西部高地"
+    },
+    "4507": {
+      "cn": "亚克特尔树海",
+      "tw": "亞克特爾樹海"
+    },
+    "4508": {
+      "cn": "夏劳尼荒野",
+      "tw": "夏勞尼荒野"
+    },
+    "4509": {
+      "cn": "遗产之地",
+      "tw": "遺產之地"
+    },
+    "30": {
+      "cn": "中拉诺西亚",
+      "tw": "中拉諾西亞"
+    },
+    "31": {
+      "cn": "拉诺西亚低地",
+      "tw": "拉諾西亞低地"
+    },
+    "32": {
+      "cn": "东拉诺西亚",
+      "tw": "東拉諾西亞"
+    },
+    "33": {
+      "cn": "西拉诺西亚",
+      "tw": "西拉諾西亞"
+    },
+    "34": {
+      "cn": "拉诺西亚高地",
+      "tw": "拉諾西亞高地"
+    },
+    "4510": {
+      "cn": "活着的记忆",
+      "tw": "憶想之地"
+    },
+    "42": {
+      "cn": "西萨纳兰",
+      "tw": "西薩納蘭"
+    },
+    "43": {
+      "cn": "中萨纳兰",
+      "tw": "中薩納蘭"
+    },
+    "44": {
+      "cn": "东萨纳兰",
+      "tw": "東薩納蘭"
+    },
+    "45": {
+      "cn": "南萨纳兰",
+      "tw": "南薩納蘭"
+    },
+    "46": {
+      "cn": "北萨纳兰",
+      "tw": "北薩納蘭"
+    },
+    "2100": {
+      "cn": "阿巴拉提亚云海",
+      "tw": "阿巴拉提亞雲海"
+    },
+    "54": {
+      "cn": "黑衣森林中央林区",
+      "tw": "黑衣森林中央林區"
+    },
+    "55": {
+      "cn": "黑衣森林东部林区",
+      "tw": "黑衣森林東部林區"
+    },
+    "56": {
+      "cn": "黑衣森林南部林区",
+      "tw": "黑衣森林南部林區"
+    },
+    "57": {
+      "cn": "黑衣森林北部林区",
+      "tw": "黑衣森林北部林區"
+    },
+    "63": {
+      "cn": "库尔札斯中央高地",
+      "tw": "庫爾札斯中央高地"
+    },
+    "67": {
+      "cn": "摩杜纳",
+      "tw": "摩杜納"
+    },
+    "2000": {
+      "cn": "龙堡参天高地",
+      "tw": "德拉瓦尼亞山麓地"
+    },
+    "2001": {
+      "cn": "龙堡内陆低地",
+      "tw": "德拉瓦尼亞河谷地"
+    },
+    "2002": {
+      "cn": "翻云雾海",
+      "tw": "德拉瓦尼亞雲海"
+    },
+    "2406": {
+      "cn": "基拉巴尼亚边区",
+      "tw": "基拉巴尼亞邊區"
+    },
+    "2407": {
+      "cn": "基拉巴尼亚山区",
+      "tw": "基拉巴尼亞山區"
+    },
+    "2408": {
+      "cn": "基拉巴尼亚湖区",
+      "tw": "基拉巴尼亞湖區"
+    },
+    "2409": {
+      "cn": "红玉海",
+      "tw": "紅玉海"
+    },
+    "2410": {
+      "cn": "延夏",
+      "tw": "延夏"
+    },
+    "2411": {
+      "cn": "太阳神草原",
+      "tw": "太陽神草原"
+    }
+  }
+}

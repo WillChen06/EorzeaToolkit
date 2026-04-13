@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TreasureMapListView: View {
     @State private var viewModel = TreasureMapViewModel()
+    @State private var selectedMapForGathering: TreasureMap?
 
     var body: some View {
         List(viewModel.maps) { map in
@@ -30,6 +31,21 @@ struct TreasureMapListView: View {
                             Text("Lv.\(map.level)")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
+
+                            if !map.gatheringTypes.isEmpty && !map.gatheringZoneIds.isEmpty {
+                                Button {
+                                    selectedMapForGathering = map
+                                } label: {
+                                    Label("採集點", systemImage: "leaf")
+                                        .font(.caption)
+                                        .padding(.horizontal, 6)
+                                        .padding(.vertical, 2)
+                                        .background(Color.green.opacity(0.15))
+                                        .foregroundStyle(.green)
+                                        .clipShape(Capsule())
+                                }
+                                .buttonStyle(.plain)
+                            }
                         }
                     }
                 }
@@ -39,6 +55,13 @@ struct TreasureMapListView: View {
         .navigationTitle("藏寶圖")
         .task {
             viewModel.loadMaps()
+        }
+        .sheet(item: $selectedMapForGathering) { map in
+            GatheringNodesSheetView(
+                map: map,
+                nodes: viewModel.gatheringNodes(for: map)
+            )
+            .presentationDetents([.medium, .large])
         }
     }
 }

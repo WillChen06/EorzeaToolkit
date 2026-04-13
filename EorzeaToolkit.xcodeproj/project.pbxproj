@@ -23,6 +23,8 @@
 		543277F7B42D08F771CEF9F4 /* OceanFishingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6709100A9CF22B7F192B2D32 /* OceanFishingView.swift */; };
 		65939C06BC1CE65AC4080A5A /* TreasureMapDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71206E4982454E1556AE20D8 /* TreasureMapDetailView.swift */; };
 		A1B2C3D4E5F60718293A4B5C /* TreasureSpotListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F6071829A1B2C3D43A5B /* TreasureSpotListView.swift */; };
+		A1B2C3D4E5F60718293A4B5D /* GatheringNodesSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F6071829A1B2C3D43A5C /* GatheringNodesSheetView.swift */; };
+		A1B2C3D4E5F60718293A4B5E /* treasure_maps_final.json in Resources */ = {isa = PBXBuildFile; fileRef = D4E5F6071829A1B2C3D43A5D /* treasure_maps_final.json */; };
 		868E9C082F86707B00202661 /* treasures.json in Resources */ = {isa = PBXBuildFile; fileRef = 868E9C072F86707B00202661 /* treasures.json */; };
 		868E9C092F86707B00202661 /* maps.json in Resources */ = {isa = PBXBuildFile; fileRef = 868E9C062F86707B00202661 /* maps.json */; };
 		868E9C0B2F86718900202661 /* zh-maps.json in Resources */ = {isa = PBXBuildFile; fileRef = 868E9C0A2F86718900202661 /* zh-maps.json */; };
@@ -57,6 +59,8 @@
 		9113B83FA58C9AC86332E63E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		914E93C547E3805E26F5F9D6 /* TreasureMapListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapListView.swift; sourceTree = "<group>"; };
 		D4E5F6071829A1B2C3D43A5B /* TreasureSpotListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureSpotListView.swift; sourceTree = "<group>"; };
+		D4E5F6071829A1B2C3D43A5C /* GatheringNodesSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatheringNodesSheetView.swift; sourceTree = "<group>"; };
+		D4E5F6071829A1B2C3D43A5D /* treasure_maps_final.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = treasure_maps_final.json; sourceTree = "<group>"; };
 		AAA4A4DBD2933C011AE58698 /* RelicWeaponViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelicWeaponViewModel.swift; sourceTree = "<group>"; };
 		ABD11C8459A748FFAD797086 /* XIVAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XIVAPIService.swift; sourceTree = "<group>"; };
 		C82939FBA2993DFF50DDA0C1 /* OceanFishingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OceanFishingViewModel.swift; sourceTree = "<group>"; };
@@ -173,6 +177,7 @@
 				868E9C062F86707B00202661 /* maps.json */,
 				868E9C072F86707B00202661 /* treasures.json */,
 				868E9C0A2F86718900202661 /* zh-maps.json */,
+				D4E5F6071829A1B2C3D43A5D /* treasure_maps_final.json */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -205,6 +210,7 @@
 		EF10BFA3E01EFCB74288995A /* TreasureMap */ = {
 			isa = PBXGroup;
 			children = (
+				D4E5F6071829A1B2C3D43A5C /* GatheringNodesSheetView.swift */,
 				71206E4982454E1556AE20D8 /* TreasureMapDetailView.swift */,
 				914E93C547E3805E26F5F9D6 /* TreasureMapListView.swift */,
 				D4E5F6071829A1B2C3D43A5B /* TreasureSpotListView.swift */,
@@ -275,6 +281,7 @@
 				09BA766A39AC9B547891F46D /* ocean_fishing.json in Resources */,
 				025A67D3151B3C43DC2C3142 /* relic_weapons.json in Resources */,
 				4282D6200B3411DBF17796D7 /* treasure_maps.json in Resources */,
+				A1B2C3D4E5F60718293A4B5E /* treasure_maps_final.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +308,7 @@
 				65939C06BC1CE65AC4080A5A /* TreasureMapDetailView.swift in Sources */,
 				4C7AD3C3FCB056B2866568A8 /* TreasureMapListView.swift in Sources */,
 				A1B2C3D4E5F60718293A4B5C /* TreasureSpotListView.swift in Sources */,
+				A1B2C3D4E5F60718293A4B5D /* GatheringNodesSheetView.swift in Sources */,
 				46AD4BC7CAEFBBDCF855E47C /* TreasureMapViewModel.swift in Sources */,
 				0872DD5E815FE236F8EFC813 /* XIVAPIService.swift in Sources */,
 			);
