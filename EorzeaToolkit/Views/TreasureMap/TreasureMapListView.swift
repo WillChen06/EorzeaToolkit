@@ -36,13 +36,19 @@ struct TreasureMapListView: View {
                                 Button {
                                     selectedMapForGathering = map
                                 } label: {
-                                    Label("採集點", systemImage: "leaf")
-                                        .font(.caption)
-                                        .padding(.horizontal, 6)
-                                        .padding(.vertical, 2)
-                                        .background(Color.green.opacity(0.15))
-                                        .foregroundStyle(.green)
-                                        .clipShape(Capsule())
+                                    HStack(spacing: 2) {
+                                        Text("採集點")
+                                        Image(systemName: "chevron.right")
+                                            .font(.system(size: 8, weight: .bold))
+                                    }
+                                    .font(.caption)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .foregroundStyle(.green)
+                                    .overlay(
+                                        Capsule()
+                                            .strokeBorder(.green.opacity(0.5), lineWidth: 1)
+                                    )
                                 }
                                 .buttonStyle(.plain)
                             }
@@ -59,7 +65,8 @@ struct TreasureMapListView: View {
         .sheet(item: $selectedMapForGathering) { map in
             GatheringNodesSheetView(
                 map: map,
-                nodes: viewModel.gatheringNodes(for: map)
+                nodes: viewModel.gatheringNodes(for: map),
+                viewModel: viewModel
             )
             .presentationDetents([.medium, .large])
         }
