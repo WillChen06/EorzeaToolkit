@@ -136,9 +136,14 @@ enum SkillCategory: String, CaseIterable, Identifiable, Hashable {
 
 // MARK: - Rotation（編輯區）
 
-struct RotationSlot: Identifiable, Hashable {
-    let id = UUID()
+struct RotationSlot: Identifiable, Hashable, Codable {
+    let id: UUID
     let action: BattleAction
+
+    init(id: UUID = UUID(), action: BattleAction) {
+        self.id = id
+        self.action = action
+    }
 }
 
 // MARK: - Icon URL Helper
