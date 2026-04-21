@@ -25,6 +25,13 @@ struct MainTabView: View {
             }
 
             NavigationStack {
+                BattleJobListView()
+            }
+            .tabItem {
+                Label("技能循環", systemImage: "bolt.circle")
+            }
+
+            NavigationStack {
                 ProgressTrackerView()
             }
             .tabItem {
