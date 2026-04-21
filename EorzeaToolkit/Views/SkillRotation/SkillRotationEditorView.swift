@@ -8,7 +8,7 @@ struct SkillRotationEditorView: View {
     @State private var selectedCategory: SkillCategory? = nil
 
     private let columns = [GridItem(.adaptive(minimum: 56), spacing: 10)]
-    private let rotationColumns = [GridItem(.adaptive(minimum: 48), spacing: 8)]
+    private let rotationColumns = [GridItem(.adaptive(minimum: 60), spacing: 8, alignment: .leading)]
 
     private var filteredActions: [BattleAction] {
         viewModel.actions(for: job, category: selectedCategory)
@@ -116,7 +116,7 @@ struct SkillRotationEditorView: View {
 
     private func rotationBar(availableWidth: CGFloat, maxHeight: CGFloat) -> some View {
         let headerApproxHeight: CGFloat = 30
-        let cellWidth: CGFloat = 48
+        let cellWidth: CGFloat = 60
         let cellHeight: CGFloat = 44
         let spacing: CGFloat = 8
         let gridHPadding: CGFloat = 32
@@ -144,7 +144,7 @@ struct SkillRotationEditorView: View {
                     .foregroundStyle(.secondary)
                 Spacer()
                 if !rotation.isEmpty {
-                    Text("長按可刪除・拖曳可排序")
+                    Text("長按拖曳可排序")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
@@ -180,27 +180,28 @@ struct SkillRotationEditorView: View {
     private var rotationGrid: some View {
         LazyVGrid(columns: rotationColumns, alignment: .leading, spacing: 8) {
             ForEach(Array(rotation.enumerated()), id: \.element.id) { index, slot in
-                RotationSlotView(index: index + 1, slot: slot, iconSize: 44)
-                    .id(slot.id)
-                    .contextMenu {
-                        Button(role: .destructive) {
-                            viewModel.removeSlot(id: slot.id, from: job.id)
-                        } label: {
-                            Label("移除", systemImage: "trash")
-                        }
+                HStack(spacing: 8) {
+                    RotationSlotView(slot: slot, iconSize: 44) {
+                        viewModel.removeSlot(id: slot.id, from: job.id)
                     }
-                    .draggable(slot.id.uuidString) {
-                        SkillGridIcon(action: slot.action)
-                            .frame(width: 44, height: 44)
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .opacity(index == rotation.count - 1 ? 0 : 1)
+                }
+                .id(slot.id)
+                .draggable(slot.id.uuidString) {
+                    SkillGridIcon(action: slot.action)
+                        .frame(width: 44, height: 44)
+                }
+                .dropDestination(for: String.self) { items, _ in
+                    guard let droppedIDString = items.first,
+                          let droppedID = UUID(uuidString: droppedIDString) else {
+                        return false
                     }
-                    .dropDestination(for: String.self) { items, _ in
-                        guard let droppedIDString = items.first,
-                              let droppedID = UUID(uuidString: droppedIDString) else {
-                            return false
-                        }
-                        viewModel.moveSlot(in: job.id, fromID: droppedID, toIndex: index)
-                        return true
-                    }
+                    viewModel.moveSlot(in: job.id, fromID: droppedID, toIndex: index)
+                    return true
+                }
             }
         }
         .padding(.horizontal)
@@ -245,36 +246,37 @@ struct SkillGridIcon: View {
 // MARK: - Rotation Slot
 
 struct RotationSlotView: View {
-    let index: Int
     let slot: RotationSlot
     var iconSize: CGFloat = 56
+    var onDelete: (() -> Void)? = nil
 
     var body: some View {
-        VStack(spacing: 4) {
-            ZStack(alignment: .topLeading) {
-                AsyncImage(url: slot.action.iconURL) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image.resizable().scaledToFit()
-                    default:
-                        Color(.systemGray5)
-                    }
+        ZStack(alignment: .topTrailing) {
+            AsyncImage(url: slot.action.iconURL) { phase in
+                switch phase {
+                case .success(let image):
+                    image.resizable().scaledToFit()
+                default:
+                    Color(.systemGray5)
                 }
-                .frame(width: iconSize, height: iconSize)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .strokeBorder(Color(.systemGray4), lineWidth: 0.5)
-                )
+            }
+            .frame(width: iconSize, height: iconSize)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .strokeBorder(Color(.systemGray4), lineWidth: 0.5)
+            )
 
-                Text("\(index)")
-                    .font(.system(size: 9, weight: .bold))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 4)
-                    .padding(.vertical, 1)
-                    .background(Color.accentColor)
-                    .clipShape(Capsule())
-                    .padding(2)
+            if let onDelete {
+                Button(action: onDelete) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 16))
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(.white, .red)
+                        .shadow(color: .black.opacity(0.2), radius: 1, y: 1)
+                }
+                .buttonStyle(.plain)
+                .offset(x: 6, y: -6)
             }
         }
     }
