@@ -19,36 +19,44 @@ struct SkillRotationEditorView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            rotationBar
+        GeometryReader { geometry in
+            let availableHeight = geometry.size.height
+            let availableWidth = geometry.size.width
+            let minSkillGridHeight = availableHeight * 0.3
+            let categoryFilterSectionHeight: CGFloat = 52
+            let maxRotationBarHeight = max(0, availableHeight - minSkillGridHeight - categoryFilterSectionHeight)
 
-            Divider()
+            VStack(spacing: 0) {
+                rotationBar(availableWidth: availableWidth, maxHeight: maxRotationBarHeight)
 
-            categoryFilter
-                .padding(.horizontal)
-                .padding(.vertical, 10)
+                Divider()
 
-            Divider()
+                categoryFilter
+                    .padding(.horizontal)
+                    .padding(.vertical, 10)
 
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 10) {
-                    ForEach(filteredActions) { action in
-                        SkillGridIcon(action: action)
-                            .onTapGesture {
-                                viewModel.addSkill(action, to: job.id)
-                            }
-                            .contextMenu {
-                                Button {
+                Divider()
+
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 10) {
+                        ForEach(filteredActions) { action in
+                            SkillGridIcon(action: action)
+                                .onTapGesture {
                                     viewModel.addSkill(action, to: job.id)
-                                } label: {
-                                    Label("加入 Rotation", systemImage: "plus.circle")
                                 }
-                            } preview: {
-                                SkillDetailCard(action: action)
-                            }
+                                .contextMenu {
+                                    Button {
+                                        viewModel.addSkill(action, to: job.id)
+                                    } label: {
+                                        Label("加入 Rotation", systemImage: "plus.circle")
+                                    }
+                                } preview: {
+                                    SkillDetailCard(action: action)
+                                }
+                        }
                     }
+                    .padding(12)
                 }
-                .padding(12)
             }
         }
         .navigationTitle("\(job.displayName) · \(job.abbreviation)")
@@ -106,8 +114,27 @@ struct SkillRotationEditorView: View {
 
     // MARK: - Rotation bar
 
-    private var rotationBar: some View {
-        VStack(alignment: .leading, spacing: 6) {
+    private func rotationBar(availableWidth: CGFloat, maxHeight: CGFloat) -> some View {
+        let headerApproxHeight: CGFloat = 30
+        let cellWidth: CGFloat = 48
+        let cellHeight: CGFloat = 44
+        let spacing: CGFloat = 8
+        let gridHPadding: CGFloat = 32
+        let gridVPadding: CGFloat = 20
+
+        let gridAvailableWidth = max(0, availableWidth - gridHPadding)
+        let columnsPerRow = max(1, Int((gridAvailableWidth + spacing) / (cellWidth + spacing)))
+        let rowCount = rotation.isEmpty ? 0 : Int(ceil(Double(rotation.count) / Double(columnsPerRow)))
+
+        let rowPitch = cellHeight + spacing
+        let usableHeightForRows = max(0, maxHeight - headerApproxHeight - gridVPadding)
+        let visibleRows = max(1, Int((usableHeightForRows + spacing) / rowPitch))
+        let alignedGridHeight = CGFloat(visibleRows) * cellHeight
+            + CGFloat(max(0, visibleRows - 1)) * spacing
+            + gridVPadding
+        let needsScroll = rowCount > visibleRows
+
+        return VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Text("施放順序")
                     .font(.subheadline)
@@ -130,36 +157,54 @@ struct SkillRotationEditorView: View {
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 20)
-            } else {
-                LazyVGrid(columns: rotationColumns, alignment: .leading, spacing: 8) {
-                    ForEach(Array(rotation.enumerated()), id: \.element.id) { index, slot in
-                        RotationSlotView(index: index + 1, slot: slot, iconSize: 44)
-                            .contextMenu {
-                                Button(role: .destructive) {
-                                    viewModel.removeSlot(id: slot.id, from: job.id)
-                                } label: {
-                                    Label("移除", systemImage: "trash")
-                                }
-                            }
-                            .draggable(slot.id.uuidString) {
-                                SkillGridIcon(action: slot.action)
-                                    .frame(width: 44, height: 44)
-                            }
-                            .dropDestination(for: String.self) { items, _ in
-                                guard let droppedIDString = items.first,
-                                      let droppedID = UUID(uuidString: droppedIDString) else {
-                                    return false
-                                }
-                                viewModel.moveSlot(in: job.id, fromID: droppedID, toIndex: index)
-                                return true
-                            }
+            } else if needsScroll {
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        rotationGrid
+                    }
+                    .frame(maxHeight: alignedGridHeight)
+                    .onChange(of: rotation.count) { oldValue, newValue in
+                        guard newValue > oldValue, let lastID = rotation.last?.id else { return }
+                        withAnimation {
+                            proxy.scrollTo(lastID, anchor: .bottom)
+                        }
                     }
                 }
-                .padding(.horizontal)
-                .padding(.vertical, 10)
+            } else {
+                rotationGrid
             }
         }
         .background(Color(.secondarySystemGroupedBackground))
+    }
+
+    private var rotationGrid: some View {
+        LazyVGrid(columns: rotationColumns, alignment: .leading, spacing: 8) {
+            ForEach(Array(rotation.enumerated()), id: \.element.id) { index, slot in
+                RotationSlotView(index: index + 1, slot: slot, iconSize: 44)
+                    .id(slot.id)
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            viewModel.removeSlot(id: slot.id, from: job.id)
+                        } label: {
+                            Label("移除", systemImage: "trash")
+                        }
+                    }
+                    .draggable(slot.id.uuidString) {
+                        SkillGridIcon(action: slot.action)
+                            .frame(width: 44, height: 44)
+                    }
+                    .dropDestination(for: String.self) { items, _ in
+                        guard let droppedIDString = items.first,
+                              let droppedID = UUID(uuidString: droppedIDString) else {
+                            return false
+                        }
+                        viewModel.moveSlot(in: job.id, fromID: droppedID, toIndex: index)
+                        return true
+                    }
+            }
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 10)
     }
 }
 
