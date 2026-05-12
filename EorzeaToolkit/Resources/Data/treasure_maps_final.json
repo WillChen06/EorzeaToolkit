@@ -1,0 +1,6109 @@
+{
+  "maps": [
+    {
+      "id": "timeworn_leather_map",
+      "item_id": 6688,
+      "grade": "G1",
+      "name_en": "Timeworn Leather Map",
+      "name_ja": "古ぼけた地図G1",
+      "level": 40,
+      "expansion": "2.1",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ],
+      "name_tw": "陳舊的鞣革地圖",
+      "name_cn": "陈旧的鞣革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 31,
+          "x": 23.8,
+          "y": 21.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 34,
+          "x": 30.3,
+          "y": 25.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 43,
+          "x": 25.2,
+          "y": 15.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 12.7,
+          "y": 19.1
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 28.1,
+          "y": 21.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 45,
+          "x": 17.2,
+          "y": 10.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 17.3,
+          "y": 20.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 23.1,
+          "y": 24.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 23.4,
+          "y": 24.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 56,
+          "x": 28.7,
+          "y": 22.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 63,
+          "x": 24.3,
+          "y": 19.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 63,
+          "x": 24.6,
+          "y": 13.8
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 63,
+          "x": 27.6,
+          "y": 19.9
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 30,
+          "x": 24.3,
+          "y": 27.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 31,
+          "x": 21.7,
+          "y": 35.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 32,
+          "x": 17.6,
+          "y": 27.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 32,
+          "x": 19.4,
+          "y": 33.1
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 33,
+          "x": 35.5,
+          "y": 29.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 34,
+          "x": 28.4,
+          "y": 22.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 42,
+          "x": 18.3,
+          "y": 28.8
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 42,
+          "x": 18.9,
+          "y": 28.4
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 25.6,
+          "y": 23.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 26.9,
+          "y": 18.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 21.7,
+          "y": 28.1
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 55,
+          "x": 18.2,
+          "y": 24.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 56,
+          "x": 16.8,
+          "y": 30.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 63,
+          "x": 23.4,
+          "y": 24.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 67,
+          "x": 27.8,
+          "y": 10.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 18.6,
+          "y": 16.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 20.1,
+          "y": 21.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 24.4,
+          "y": 26.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 17.2,
+          "y": 32.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 19.3,
+          "y": 25.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 30.7,
+          "y": 27.0
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 34,
+          "x": 29.1,
+          "y": 25.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 43,
+          "x": 29.3,
+          "y": 19.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 24.8,
+          "y": 29.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 30.6,
+          "y": 20.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 16.5,
+          "y": 23.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 56,
+          "x": 17.5,
+          "y": 23.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 57,
+          "x": 16.6,
+          "y": 27.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 8.5,
+          "y": 13.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 22.9,
+          "y": 17.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 26.6,
+          "y": 24.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 29.2,
+          "y": 12.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 67,
+          "x": 32.1,
+          "y": 13.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 31,
+          "x": 32.5,
+          "y": 13.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 17.6,
+          "y": 27.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 21.1,
+          "y": 29.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 27.5,
+          "y": 32.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 33,
+          "x": 34.3,
+          "y": 28.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 34,
+          "x": 34.6,
+          "y": 24.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 44,
+          "x": 12.3,
+          "y": 15.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 45,
+          "x": 13.9,
+          "y": 31.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 15.9,
+          "y": 20.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 13.8,
+          "y": 23.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 17.7,
+          "y": 19.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 22,
+          "y": 26.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 22.7,
+          "y": 30.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 56,
+          "x": 16.8,
+          "y": 32.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 56,
+          "x": 21.5,
+          "y": 28.6
+        }
+      ]
+    },
+    {
+      "id": "timeworn_goatskin_map",
+      "item_id": 6689,
+      "grade": "G2",
+      "name_en": "Timeworn Goatskin Map",
+      "name_ja": "古ぼけた地図G2",
+      "level": 45,
+      "expansion": "2.1",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ],
+      "name_tw": "陳舊的山羊革地圖",
+      "name_cn": "陈旧的山羊革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 31,
+          "x": 23.8,
+          "y": 21.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 34,
+          "x": 30.3,
+          "y": 25.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 43,
+          "x": 25.2,
+          "y": 15.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 12.7,
+          "y": 19.1
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 28.1,
+          "y": 21.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 45,
+          "x": 17.2,
+          "y": 10.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 17.3,
+          "y": 20.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 23.1,
+          "y": 24.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 23.4,
+          "y": 24.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 63,
+          "x": 24.6,
+          "y": 13.8
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 63,
+          "x": 27.6,
+          "y": 19.9
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 30,
+          "x": 24.3,
+          "y": 27.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 31,
+          "x": 21.7,
+          "y": 35.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 32,
+          "x": 17.6,
+          "y": 27.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 32,
+          "x": 19.4,
+          "y": 33.1
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 33,
+          "x": 35.5,
+          "y": 29.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 34,
+          "x": 28.4,
+          "y": 22.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 42,
+          "x": 18.3,
+          "y": 28.8
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 42,
+          "x": 18.9,
+          "y": 28.4
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 25.6,
+          "y": 23.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 26.9,
+          "y": 18.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 55,
+          "x": 18.2,
+          "y": 24.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 56,
+          "x": 16.8,
+          "y": 30.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 63,
+          "x": 23.4,
+          "y": 24.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 67,
+          "x": 27.8,
+          "y": 10.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 18.6,
+          "y": 16.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 20.1,
+          "y": 21.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 24.4,
+          "y": 26.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 17.2,
+          "y": 32.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 30.7,
+          "y": 27.0
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 34,
+          "x": 29.1,
+          "y": 25.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 43,
+          "x": 29.3,
+          "y": 19.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 24.8,
+          "y": 29.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 30.6,
+          "y": 20.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 16.5,
+          "y": 23.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 56,
+          "x": 17.5,
+          "y": 23.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 57,
+          "x": 16.6,
+          "y": 27.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 8.5,
+          "y": 13.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 22.9,
+          "y": 17.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 26.6,
+          "y": 24.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 29.2,
+          "y": 12.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 67,
+          "x": 32.1,
+          "y": 13.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 31,
+          "x": 32.5,
+          "y": 13.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 17.6,
+          "y": 27.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 27.5,
+          "y": 32.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 33,
+          "x": 34.3,
+          "y": 28.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 34,
+          "x": 34.6,
+          "y": 24.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 44,
+          "x": 12.3,
+          "y": 15.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 45,
+          "x": 13.9,
+          "y": 31.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 15.9,
+          "y": 20.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 13.8,
+          "y": 23.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 17.7,
+          "y": 19.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 22,
+          "y": 26.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 22.7,
+          "y": 30.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 56,
+          "x": 16.8,
+          "y": 32.6
+        }
+      ]
+    },
+    {
+      "id": "timeworn_toadskin_map",
+      "item_id": 6690,
+      "grade": "G3",
+      "name_en": "Timeworn Toadskin Map",
+      "name_ja": "古ぼけた地図G3",
+      "level": 50,
+      "expansion": "2.1",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ],
+      "name_tw": "陳舊的巨蟾蜍革地圖",
+      "name_cn": "陈旧的巨蟾蜍革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 31,
+          "x": 23.8,
+          "y": 21.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 43,
+          "x": 25.2,
+          "y": 15.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 28.1,
+          "y": 21.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 45,
+          "x": 17.2,
+          "y": 10.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 17.3,
+          "y": 20.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 23.1,
+          "y": 24.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 23.4,
+          "y": 24.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 63,
+          "x": 27.6,
+          "y": 19.9
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 30,
+          "x": 24.3,
+          "y": 27.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 31,
+          "x": 21.7,
+          "y": 35.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 32,
+          "x": 17.6,
+          "y": 27.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 32,
+          "x": 19.4,
+          "y": 33.1
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 33,
+          "x": 35.5,
+          "y": 29.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 42,
+          "x": 18.3,
+          "y": 28.8
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 42,
+          "x": 18.9,
+          "y": 28.4
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 25.6,
+          "y": 23.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 26.9,
+          "y": 18.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 55,
+          "x": 18.2,
+          "y": 24.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 56,
+          "x": 16.8,
+          "y": 30.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 63,
+          "x": 23.4,
+          "y": 24.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 67,
+          "x": 27.8,
+          "y": 10.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 18.6,
+          "y": 16.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 20.1,
+          "y": 21.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 24.4,
+          "y": 26.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 17.2,
+          "y": 32.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 30.7,
+          "y": 27.0
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 34,
+          "x": 29.1,
+          "y": 25.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 43,
+          "x": 29.3,
+          "y": 19.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 24.8,
+          "y": 29.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 30.6,
+          "y": 20.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 16.5,
+          "y": 23.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 56,
+          "x": 17.5,
+          "y": 23.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 57,
+          "x": 16.6,
+          "y": 27.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 8.5,
+          "y": 13.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 26.6,
+          "y": 24.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 29.2,
+          "y": 12.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 67,
+          "x": 32.1,
+          "y": 13.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 31,
+          "x": 32.5,
+          "y": 13.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 17.6,
+          "y": 27.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 27.5,
+          "y": 32.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 33,
+          "x": 34.3,
+          "y": 28.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 44,
+          "x": 12.3,
+          "y": 15.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 45,
+          "x": 13.9,
+          "y": 31.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 15.9,
+          "y": 20.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 13.8,
+          "y": 23.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 17.7,
+          "y": 19.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 22,
+          "y": 26.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 22.7,
+          "y": 30.6
+        }
+      ]
+    },
+    {
+      "id": "timeworn_boarskin_map",
+      "item_id": 6691,
+      "grade": "G4",
+      "name_en": "Timeworn Boarskin Map",
+      "name_ja": "古ぼけた地図G4",
+      "level": 50,
+      "expansion": "2.1",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ],
+      "name_tw": "陳舊的野豬革地圖",
+      "name_cn": "陈旧的野猪革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 31,
+          "x": 23.8,
+          "y": 21.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 43,
+          "x": 25.2,
+          "y": 15.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 28.1,
+          "y": 21.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 45,
+          "x": 17.2,
+          "y": 10.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 17.3,
+          "y": 20.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 23.1,
+          "y": 24.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 23.4,
+          "y": 24.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 63,
+          "x": 27.6,
+          "y": 19.9
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 30,
+          "x": 24.3,
+          "y": 27.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 31,
+          "x": 21.7,
+          "y": 35.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 32,
+          "x": 17.6,
+          "y": 27.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 32,
+          "x": 19.4,
+          "y": 33.1
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 33,
+          "x": 35.5,
+          "y": 29.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 42,
+          "x": 18.3,
+          "y": 28.8
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 42,
+          "x": 18.9,
+          "y": 28.4
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 25.6,
+          "y": 23.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 26.9,
+          "y": 18.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 55,
+          "x": 18.2,
+          "y": 24.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 56,
+          "x": 16.8,
+          "y": 30.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 63,
+          "x": 23.4,
+          "y": 24.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 67,
+          "x": 27.8,
+          "y": 10.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 18.6,
+          "y": 16.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 20.1,
+          "y": 21.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 24.4,
+          "y": 26.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 17.2,
+          "y": 32.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 30.7,
+          "y": 27.0
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 34,
+          "x": 29.1,
+          "y": 25.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 43,
+          "x": 29.3,
+          "y": 19.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 24.8,
+          "y": 29.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 30.6,
+          "y": 20.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 16.5,
+          "y": 23.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 56,
+          "x": 17.5,
+          "y": 23.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 57,
+          "x": 16.6,
+          "y": 27.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 8.5,
+          "y": 13.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 26.6,
+          "y": 24.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 29.2,
+          "y": 12.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 67,
+          "x": 32.1,
+          "y": 13.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 31,
+          "x": 32.5,
+          "y": 13.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 17.6,
+          "y": 27.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 27.5,
+          "y": 32.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 33,
+          "x": 34.3,
+          "y": 28.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 44,
+          "x": 12.3,
+          "y": 15.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 45,
+          "x": 13.9,
+          "y": 31.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 15.9,
+          "y": 20.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 13.8,
+          "y": 23.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 17.7,
+          "y": 19.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 22,
+          "y": 26.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 22.7,
+          "y": 30.6
+        }
+      ]
+    },
+    {
+      "id": "timeworn_peisteskin_map",
+      "item_id": 6692,
+      "grade": "G5",
+      "name_en": "Timeworn Peisteskin Map",
+      "name_ja": "古ぼけた地図G5",
+      "level": 50,
+      "expansion": "2.1",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ],
+      "name_tw": "陳舊的毒蜥蜴革地圖",
+      "name_cn": "陈旧的毒蜥蜴革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 31,
+          "x": 23.8,
+          "y": 21.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 43,
+          "x": 25.2,
+          "y": 15.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 28.1,
+          "y": 21.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 45,
+          "x": 17.2,
+          "y": 10.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 17.3,
+          "y": 20.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 23.1,
+          "y": 24.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 46,
+          "x": 23.4,
+          "y": 24.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 63,
+          "x": 27.6,
+          "y": 19.9
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 30,
+          "x": 24.3,
+          "y": 27.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 31,
+          "x": 21.7,
+          "y": 35.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 32,
+          "x": 17.6,
+          "y": 27.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 32,
+          "x": 19.4,
+          "y": 33.1
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 33,
+          "x": 35.5,
+          "y": 29.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 42,
+          "x": 18.3,
+          "y": 28.8
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 42,
+          "x": 18.9,
+          "y": 28.4
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 25.6,
+          "y": 23.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 44,
+          "x": 26.9,
+          "y": 18.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 55,
+          "x": 18.2,
+          "y": 24.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 56,
+          "x": 16.8,
+          "y": 30.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 63,
+          "x": 23.4,
+          "y": 24.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 67,
+          "x": 27.8,
+          "y": 10.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 18.6,
+          "y": 16.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 20.1,
+          "y": 21.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 30,
+          "x": 24.4,
+          "y": 26.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 17.2,
+          "y": 32.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 30.7,
+          "y": 27.0
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 34,
+          "x": 29.1,
+          "y": 25.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 43,
+          "x": 29.3,
+          "y": 19.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 24.8,
+          "y": 29.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 30.6,
+          "y": 20.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 16.5,
+          "y": 23.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 56,
+          "x": 17.5,
+          "y": 23.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 57,
+          "x": 16.6,
+          "y": 27.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 8.5,
+          "y": 13.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 26.6,
+          "y": 24.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 63,
+          "x": 29.2,
+          "y": 12.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 67,
+          "x": 32.1,
+          "y": 13.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 31,
+          "x": 32.5,
+          "y": 13.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 17.6,
+          "y": 27.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 32,
+          "x": 27.5,
+          "y": 32.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 33,
+          "x": 34.3,
+          "y": 28.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 44,
+          "x": 12.3,
+          "y": 15.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 45,
+          "x": 13.9,
+          "y": 31.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 54,
+          "x": 15.9,
+          "y": 20.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 13.8,
+          "y": 23.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 17.7,
+          "y": 19.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 22,
+          "y": 26.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 55,
+          "x": 22.7,
+          "y": 30.6
+        }
+      ]
+    },
+    {
+      "id": "timeworn_archaeoskin_map",
+      "item_id": 12241,
+      "grade": "G6",
+      "name_en": "Timeworn Archaeoskin Map",
+      "name_ja": "古ぼけた地図G6",
+      "level": 55,
+      "expansion": "3.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2000,
+        2001,
+        2002,
+        2100,
+        2200
+      ],
+      "name_tw": "陳舊的古鳥革地圖",
+      "name_cn": "陈旧的古鸟革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2000,
+          "x": 17.0,
+          "y": 10.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2000,
+          "x": 18.7,
+          "y": 28.8
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2000,
+          "x": 27.5,
+          "y": 31.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2000,
+          "x": 30.4,
+          "y": 15.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2000,
+          "x": 30.7,
+          "y": 32.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2000,
+          "x": 31,
+          "y": 10.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 5.4,
+          "y": 27.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 15.5,
+          "y": 19.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 25.3,
+          "y": 25.1
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 9.0,
+          "y": 7.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 9.6,
+          "y": 36.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 20.6,
+          "y": 11.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 26.8,
+          "y": 22.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 30.0,
+          "y": 7.5
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 34.9,
+          "y": 30.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 37.5,
+          "y": 14.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 10.3,
+          "y": 9.5
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 14.4,
+          "y": 30.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 22.6,
+          "y": 28.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 22.6,
+          "y": 35.0
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 31.4,
+          "y": 12.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2000,
+          "x": 25.7,
+          "y": 21.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 11.6,
+          "y": 16.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 16.6,
+          "y": 30.3
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 29.2,
+          "y": 17.9
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 30.8,
+          "y": 28.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 19.5,
+          "y": 37.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 27.7,
+          "y": 19.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 36.0,
+          "y": 26.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 7.8,
+          "y": 7.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 25.2,
+          "y": 31.3
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 36.4,
+          "y": 37.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 12.8,
+          "y": 23.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 16.7,
+          "y": 12.9
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 23.5,
+          "y": 21.1
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 25.5,
+          "y": 9.4
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 35.6,
+          "y": 21.4
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 37.3,
+          "y": 17.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 16.1,
+          "y": 36.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 26.7,
+          "y": 27.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 29.2,
+          "y": 30.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 29.8,
+          "y": 17.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 35.4,
+          "y": 11.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 7.7,
+          "y": 28.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 16.1,
+          "y": 37.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 37.9,
+          "y": 24.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 10.0,
+          "y": 9.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 10.4,
+          "y": 38.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 11.4,
+          "y": 18.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 25.3,
+          "y": 28.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 25.9,
+          "y": 8.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 32.6,
+          "y": 31.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 22.3,
+          "y": 6.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 26.4,
+          "y": 33.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 35.9,
+          "y": 21.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 10.4,
+          "y": 33.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 17.5,
+          "y": 31.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 18.2,
+          "y": 36.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 34.7,
+          "y": 29.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 37.6,
+          "y": 19.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 6.9,
+          "y": 27.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 13.0,
+          "y": 18.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 15.3,
+          "y": 33.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 38.9,
+          "y": 23.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 8.2,
+          "y": 13.2
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 10.3,
+          "y": 37.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 17.6,
+          "y": 37.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 20.6,
+          "y": 29.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 22.2,
+          "y": 22.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 13.9,
+          "y": 20.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 15.4,
+          "y": 36.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 22.6,
+          "y": 11.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 29.7,
+          "y": 23.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 35.9,
+          "y": 37.2
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 8.8,
+          "y": 10.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 10.6,
+          "y": 18.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 11.6,
+          "y": 15.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 18.2,
+          "y": 16.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 22.4,
+          "y": 21.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 25.6,
+          "y": 29.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 26.4,
+          "y": 13.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 31.1,
+          "y": 18.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 33.0,
+          "y": 14.8
+        }
+      ]
+    },
+    {
+      "id": "timeworn_wyvernskin_map",
+      "item_id": 12242,
+      "grade": "G7",
+      "name_en": "Timeworn Wyvernskin Map",
+      "name_ja": "古ぼけた地図G7",
+      "level": 60,
+      "expansion": "3.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2000,
+        2001,
+        2002,
+        2100,
+        2200
+      ],
+      "name_tw": "陳舊的飛龍革地圖",
+      "name_cn": "陈旧的飞龙革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2000,
+          "x": 17.0,
+          "y": 10.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2000,
+          "x": 18.7,
+          "y": 28.8
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 5.4,
+          "y": 27.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 15.5,
+          "y": 19.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 25.3,
+          "y": 25.1
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 9.0,
+          "y": 7.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 9.6,
+          "y": 36.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 20.6,
+          "y": 11.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 26.8,
+          "y": 22.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 30.0,
+          "y": 7.5
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 34.9,
+          "y": 30.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 37.5,
+          "y": 14.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 10.3,
+          "y": 9.5
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 14.4,
+          "y": 30.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 22.6,
+          "y": 28.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 22.6,
+          "y": 35.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2000,
+          "x": 25.7,
+          "y": 21.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 11.6,
+          "y": 16.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 16.6,
+          "y": 30.3
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 29.2,
+          "y": 17.9
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 30.8,
+          "y": 28.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 19.5,
+          "y": 37.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 27.7,
+          "y": 19.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 36.0,
+          "y": 26.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 7.8,
+          "y": 7.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 25.2,
+          "y": 31.3
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 36.4,
+          "y": 37.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 12.8,
+          "y": 23.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 23.5,
+          "y": 21.1
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 37.3,
+          "y": 17.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 16.1,
+          "y": 36.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 29.8,
+          "y": 17.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 35.4,
+          "y": 11.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 7.7,
+          "y": 28.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 16.1,
+          "y": 37.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 37.9,
+          "y": 24.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 10.0,
+          "y": 9.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 10.4,
+          "y": 38.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 11.4,
+          "y": 18.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 25.3,
+          "y": 28.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 32.6,
+          "y": 31.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 22.3,
+          "y": 6.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 26.4,
+          "y": 33.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 35.9,
+          "y": 21.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 10.4,
+          "y": 33.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 17.5,
+          "y": 31.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 34.7,
+          "y": 29.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 6.9,
+          "y": 27.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 13.0,
+          "y": 18.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 15.3,
+          "y": 33.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 38.9,
+          "y": 23.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 8.2,
+          "y": 13.2
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 10.3,
+          "y": 37.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 17.6,
+          "y": 37.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 20.6,
+          "y": 29.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 13.9,
+          "y": 20.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 22.6,
+          "y": 11.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 29.7,
+          "y": 23.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 35.9,
+          "y": 37.2
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 8.8,
+          "y": 10.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 10.6,
+          "y": 18.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 11.6,
+          "y": 15.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 22.4,
+          "y": 21.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 25.6,
+          "y": 29.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 33.0,
+          "y": 14.8
+        }
+      ]
+    },
+    {
+      "id": "timeworn_dragonskin_map",
+      "item_id": 12243,
+      "grade": "G8",
+      "name_en": "Timeworn Dragonskin Map",
+      "name_ja": "古ぼけた地図G8",
+      "level": 60,
+      "expansion": "3.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2000,
+        2001,
+        2002,
+        2100,
+        2200
+      ],
+      "name_tw": "陳舊的巨龍革地圖",
+      "name_cn": "陈旧的巨龙革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2000,
+          "x": 17.0,
+          "y": 10.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2000,
+          "x": 18.7,
+          "y": 28.8
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 5.4,
+          "y": 27.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 15.5,
+          "y": 19.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 25.3,
+          "y": 25.1
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 9.0,
+          "y": 7.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 9.6,
+          "y": 36.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 20.6,
+          "y": 11.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 26.8,
+          "y": 22.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 30.0,
+          "y": 7.5
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 34.9,
+          "y": 30.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 37.5,
+          "y": 14.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 10.3,
+          "y": 9.5
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 14.4,
+          "y": 30.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 22.6,
+          "y": 28.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 22.6,
+          "y": 35.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2000,
+          "x": 25.7,
+          "y": 21.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 11.6,
+          "y": 16.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 16.6,
+          "y": 30.3
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 29.2,
+          "y": 17.9
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2001,
+          "x": 30.8,
+          "y": 28.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 19.5,
+          "y": 37.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 27.7,
+          "y": 19.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2002,
+          "x": 36.0,
+          "y": 26.0
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 7.8,
+          "y": 7.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 25.2,
+          "y": 31.3
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2100,
+          "x": 36.4,
+          "y": 37.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 12.8,
+          "y": 23.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 23.5,
+          "y": 21.1
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2200,
+          "x": 37.3,
+          "y": 17.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 16.1,
+          "y": 36.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 29.8,
+          "y": 17.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 35.4,
+          "y": 11.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 7.7,
+          "y": 28.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 16.1,
+          "y": 37.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 37.9,
+          "y": 24.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 10.0,
+          "y": 9.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 10.4,
+          "y": 38.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 11.4,
+          "y": 18.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 25.3,
+          "y": 28.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 32.6,
+          "y": 31.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 22.3,
+          "y": 6.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 26.4,
+          "y": 33.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 35.9,
+          "y": 21.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 10.4,
+          "y": 33.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 17.5,
+          "y": 31.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2000,
+          "x": 34.7,
+          "y": 29.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 6.9,
+          "y": 27.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 13.0,
+          "y": 18.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 15.3,
+          "y": 33.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2001,
+          "x": 38.9,
+          "y": 23.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 8.2,
+          "y": 13.2
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 10.3,
+          "y": 37.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 17.6,
+          "y": 37.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2002,
+          "x": 20.6,
+          "y": 29.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 13.9,
+          "y": 20.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 22.6,
+          "y": 11.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 29.7,
+          "y": 23.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2100,
+          "x": 35.9,
+          "y": 37.2
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 8.8,
+          "y": 10.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 10.6,
+          "y": 18.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 11.6,
+          "y": 15.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 22.4,
+          "y": 21.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 25.6,
+          "y": 29.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2200,
+          "x": 33.0,
+          "y": 14.8
+        }
+      ]
+    },
+    {
+      "id": "timeworn_gaganaskin_map",
+      "item_id": 17835,
+      "grade": "G9",
+      "name_en": "Timeworn Gaganaskin Map",
+      "name_ja": "古ぼけた地図G9",
+      "level": 70,
+      "expansion": "4.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2406,
+        2407,
+        2408,
+        2409,
+        2410,
+        2411
+      ],
+      "name_tw": "陳舊的迦迦納怪鳥革地圖",
+      "name_cn": "陈旧的迦迦纳怪鸟革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2406,
+          "x": 27.4,
+          "y": 30.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2406,
+          "x": 30.9,
+          "y": 22.8
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2406,
+          "x": 31.6,
+          "y": 31.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2407,
+          "x": 15.9,
+          "y": 33.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2407,
+          "x": 27.0,
+          "y": 12.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2408,
+          "x": 4.0,
+          "y": 27.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2408,
+          "x": 11.5,
+          "y": 16.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2408,
+          "x": 13.2,
+          "y": 27.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2408,
+          "x": 21.8,
+          "y": 13.5
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2408,
+          "x": 22.7,
+          "y": 15.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2408,
+          "x": 30.7,
+          "y": 15.8
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2409,
+          "x": 10.9,
+          "y": 22.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2410,
+          "x": 12.3,
+          "y": 10.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2410,
+          "x": 20.5,
+          "y": 9.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2410,
+          "x": 29.9,
+          "y": 9.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2410,
+          "x": 37.7,
+          "y": 19.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2411,
+          "x": 4.9,
+          "y": 29.5
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2411,
+          "x": 24.1,
+          "y": 37.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2411,
+          "x": 34.8,
+          "y": 24.5
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2411,
+          "x": 36.0,
+          "y": 26.4
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2408,
+          "x": 21.2,
+          "y": 28.9
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2409,
+          "x": 39.5,
+          "y": 3.9
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2410,
+          "x": 29.0,
+          "y": 6.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2411,
+          "x": 11.5,
+          "y": 25.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2411,
+          "x": 22.3,
+          "y": 28.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2411,
+          "x": 29.4,
+          "y": 15.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2406,
+          "x": 9.0,
+          "y": 30.0
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2406,
+          "x": 14.9,
+          "y": 21.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2406,
+          "x": 34.4,
+          "y": 28.0
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2407,
+          "x": 30.6,
+          "y": 6.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2407,
+          "x": 33.4,
+          "y": 10.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2407,
+          "x": 33.9,
+          "y": 9.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2408,
+          "x": 11.9,
+          "y": 12.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2408,
+          "x": 21.1,
+          "y": 19.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2408,
+          "x": 28.4,
+          "y": 9.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2408,
+          "x": 31.1,
+          "y": 27.0
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 18.7,
+          "y": 14.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 28.7,
+          "y": 10.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2411,
+          "x": 27.2,
+          "y": 16.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2407,
+          "x": 24.1,
+          "y": 16.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2407,
+          "x": 24.7,
+          "y": 36.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2407,
+          "x": 26.6,
+          "y": 31.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2408,
+          "x": 6.8,
+          "y": 9.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2409,
+          "x": 12.8,
+          "y": 14.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 10.4,
+          "y": 36.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 16.2,
+          "y": 30.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 22.4,
+          "y": 12.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 28.1,
+          "y": 7.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 28.4,
+          "y": 35.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 32.1,
+          "y": 26.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2411,
+          "x": 15.9,
+          "y": 28.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2411,
+          "x": 16.1,
+          "y": 15.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2411,
+          "x": 19.7,
+          "y": 9.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2411,
+          "x": 25.8,
+          "y": 29.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2411,
+          "x": 29.2,
+          "y": 16.9
+        }
+      ]
+    },
+    {
+      "id": "timeworn_gazelleskin_map",
+      "item_id": 17836,
+      "grade": "G10",
+      "name_en": "Timeworn Gazelleskin Map",
+      "name_ja": "古ぼけた地図G10",
+      "level": 70,
+      "expansion": "4.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2406,
+        2407,
+        2408,
+        2409,
+        2410,
+        2411
+      ],
+      "name_tw": "陳舊的瞪羚革地圖",
+      "name_cn": "陈旧的瞪羚革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2406,
+          "x": 27.4,
+          "y": 30.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2406,
+          "x": 30.9,
+          "y": 22.8
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2406,
+          "x": 31.6,
+          "y": 31.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2407,
+          "x": 15.9,
+          "y": 33.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2407,
+          "x": 27.0,
+          "y": 12.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2408,
+          "x": 4.0,
+          "y": 27.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2408,
+          "x": 11.5,
+          "y": 16.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2408,
+          "x": 13.2,
+          "y": 27.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2408,
+          "x": 21.8,
+          "y": 13.5
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2408,
+          "x": 22.7,
+          "y": 15.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2408,
+          "x": 30.7,
+          "y": 15.8
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2409,
+          "x": 10.9,
+          "y": 22.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2410,
+          "x": 12.3,
+          "y": 10.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2410,
+          "x": 20.5,
+          "y": 9.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2410,
+          "x": 29.9,
+          "y": 9.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2410,
+          "x": 37.7,
+          "y": 19.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2411,
+          "x": 4.9,
+          "y": 29.5
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2411,
+          "x": 24.1,
+          "y": 37.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2411,
+          "x": 34.8,
+          "y": 24.5
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2411,
+          "x": 36.0,
+          "y": 26.4
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2408,
+          "x": 21.2,
+          "y": 28.9
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2409,
+          "x": 39.5,
+          "y": 3.9
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2410,
+          "x": 29.0,
+          "y": 6.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2411,
+          "x": 11.5,
+          "y": 25.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2411,
+          "x": 22.3,
+          "y": 28.7
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2411,
+          "x": 29.4,
+          "y": 15.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2406,
+          "x": 9.0,
+          "y": 30.0
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2406,
+          "x": 14.9,
+          "y": 21.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2406,
+          "x": 34.4,
+          "y": 28.0
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2407,
+          "x": 30.6,
+          "y": 6.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2407,
+          "x": 33.4,
+          "y": 10.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2407,
+          "x": 33.9,
+          "y": 9.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2408,
+          "x": 11.9,
+          "y": 12.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2408,
+          "x": 21.1,
+          "y": 19.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2408,
+          "x": 28.4,
+          "y": 9.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2408,
+          "x": 31.1,
+          "y": 27.0
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 18.7,
+          "y": 14.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 28.7,
+          "y": 10.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2411,
+          "x": 27.2,
+          "y": 16.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2407,
+          "x": 24.1,
+          "y": 16.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2407,
+          "x": 24.7,
+          "y": 36.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2407,
+          "x": 26.6,
+          "y": 31.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2408,
+          "x": 6.8,
+          "y": 9.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2409,
+          "x": 12.8,
+          "y": 14.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 10.4,
+          "y": 36.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 16.2,
+          "y": 30.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 22.4,
+          "y": 12.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 28.1,
+          "y": 7.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 28.4,
+          "y": 35.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2410,
+          "x": 32.1,
+          "y": 26.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2411,
+          "x": 15.9,
+          "y": 28.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2411,
+          "x": 16.1,
+          "y": 15.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2411,
+          "x": 19.7,
+          "y": 9.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2411,
+          "x": 25.8,
+          "y": 29.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2411,
+          "x": 29.2,
+          "y": 16.9
+        }
+      ]
+    },
+    {
+      "id": "timeworn_gliderskin_map",
+      "item_id": 26744,
+      "grade": "G11",
+      "name_en": "Timeworn Gliderskin Map",
+      "name_ja": "古ぼけた地図G11",
+      "level": 80,
+      "expansion": "5.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2953,
+        2954,
+        2955,
+        2957
+      ],
+      "name_tw": "陳舊的綠飄龍革地圖",
+      "name_cn": "陈旧的绿飘龙革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2953,
+          "x": 4.7,
+          "y": 34
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2953,
+          "x": 17.8,
+          "y": 15.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2953,
+          "x": 28.2,
+          "y": 33.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2953,
+          "x": 35.5,
+          "y": 30.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2953,
+          "x": 36.1,
+          "y": 14.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2954,
+          "x": 34.3,
+          "y": 28.5
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2954,
+          "x": 36.2,
+          "y": 12.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2955,
+          "x": 20.0,
+          "y": 29.0
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2955,
+          "x": 28.5,
+          "y": 14.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2957,
+          "x": 7.6,
+          "y": 30.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2957,
+          "x": 22.5,
+          "y": 11.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2957,
+          "x": 25.7,
+          "y": 29.1
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2954,
+          "x": 22.8,
+          "y": 18.3
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2954,
+          "x": 26.8,
+          "y": 9.8
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2954,
+          "x": 33.0,
+          "y": 18.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2955,
+          "x": 15.0,
+          "y": 18.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2955,
+          "x": 16.4,
+          "y": 11.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2955,
+          "x": 20.2,
+          "y": 8.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2957,
+          "x": 15.4,
+          "y": 30.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2953,
+          "x": 5.2,
+          "y": 26.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2953,
+          "x": 12.4,
+          "y": 10.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2953,
+          "x": 34.3,
+          "y": 10.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2954,
+          "x": 20.1,
+          "y": 27.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2954,
+          "x": 25.7,
+          "y": 12.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 15.9,
+          "y": 30.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 16.1,
+          "y": 11.0
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 17.9,
+          "y": 18.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 18.6,
+          "y": 20.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2957,
+          "x": 15.7,
+          "y": 35.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2957,
+          "x": 24.7,
+          "y": 36.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2957,
+          "x": 31.8,
+          "y": 22.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2953,
+          "x": 25.5,
+          "y": 29.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2953,
+          "x": 26.5,
+          "y": 10.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2953,
+          "x": 31.6,
+          "y": 36.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2954,
+          "x": 13.6,
+          "y": 14.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2954,
+          "x": 18.7,
+          "y": 7.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2954,
+          "x": 28.4,
+          "y": 21.2
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 13.2,
+          "y": 10.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 19.3,
+          "y": 16.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 21.1,
+          "y": 25.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 28.5,
+          "y": 29.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 32.3,
+          "y": 33.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2957,
+          "x": 22.5,
+          "y": 13.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2957,
+          "x": 26.9,
+          "y": 24.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2957,
+          "x": 33.7,
+          "y": 13.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2957,
+          "x": 34.7,
+          "y": 21.6
+        }
+      ]
+    },
+    {
+      "id": "timeworn_zonureskin_map",
+      "item_id": 26745,
+      "grade": "G12",
+      "name_en": "Timeworn Zonureskin Map",
+      "name_ja": "古ぼけた地図G12",
+      "level": 80,
+      "expansion": "5.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2953,
+        2954,
+        2955,
+        2957
+      ],
+      "name_tw": "陳舊的纏尾蛟革地圖",
+      "name_cn": "陈旧的缠尾蛟革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2953,
+          "x": 4.7,
+          "y": 34
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2953,
+          "x": 17.8,
+          "y": 15.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2953,
+          "x": 28.2,
+          "y": 33.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2953,
+          "x": 35.5,
+          "y": 30.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2953,
+          "x": 36.1,
+          "y": 14.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2954,
+          "x": 34.3,
+          "y": 28.5
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2954,
+          "x": 36.2,
+          "y": 12.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2955,
+          "x": 20.0,
+          "y": 29.0
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2955,
+          "x": 28.5,
+          "y": 14.3
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2957,
+          "x": 7.6,
+          "y": 30.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2957,
+          "x": 22.5,
+          "y": 11.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 2957,
+          "x": 25.7,
+          "y": 29.1
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2954,
+          "x": 22.8,
+          "y": 18.3
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2954,
+          "x": 26.8,
+          "y": 9.8
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2954,
+          "x": 33.0,
+          "y": 18.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2955,
+          "x": 15.0,
+          "y": 18.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2955,
+          "x": 16.4,
+          "y": 11.5
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2955,
+          "x": 20.2,
+          "y": 8.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 2957,
+          "x": 15.4,
+          "y": 30.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2953,
+          "x": 5.2,
+          "y": 26.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2953,
+          "x": 12.4,
+          "y": 10.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2953,
+          "x": 34.3,
+          "y": 10.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2954,
+          "x": 20.1,
+          "y": 27.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2954,
+          "x": 25.7,
+          "y": 12.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 15.9,
+          "y": 30.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 16.1,
+          "y": 11.0
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 17.9,
+          "y": 18.7
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 18.6,
+          "y": 20.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2957,
+          "x": 15.7,
+          "y": 35.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2957,
+          "x": 24.7,
+          "y": 36.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 2957,
+          "x": 31.8,
+          "y": 22.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2953,
+          "x": 25.5,
+          "y": 29.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2953,
+          "x": 26.5,
+          "y": 10.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2953,
+          "x": 31.6,
+          "y": 36.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2954,
+          "x": 13.6,
+          "y": 14.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2954,
+          "x": 18.7,
+          "y": 7.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2954,
+          "x": 28.4,
+          "y": 21.2
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 13.2,
+          "y": 10.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 19.3,
+          "y": 16.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 21.1,
+          "y": 25.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 28.5,
+          "y": 29.0
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2955,
+          "x": 32.3,
+          "y": 33.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2957,
+          "x": 22.5,
+          "y": 13.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2957,
+          "x": 26.9,
+          "y": 24.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2957,
+          "x": 33.7,
+          "y": 13.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 2957,
+          "x": 34.7,
+          "y": 21.6
+        }
+      ]
+    },
+    {
+      "id": "timeworn_saigaskin_map",
+      "item_id": 36611,
+      "grade": "G13",
+      "name_en": "Timeworn Saigaskin Map",
+      "name_ja": "古ぼけた地図G13",
+      "level": 90,
+      "expansion": "6.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        3712
+      ],
+      "name_tw": "陳舊的賽加羚羊革地圖",
+      "name_cn": "陈旧的赛加羚羊革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 3712,
+          "x": 17.0,
+          "y": 29.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 3712,
+          "x": 18.5,
+          "y": 12.4
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 3712,
+          "x": 21.5,
+          "y": 33.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 3712,
+          "x": 7.6,
+          "y": 21.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 3712,
+          "x": 9.5,
+          "y": 33.2
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 3712,
+          "x": 14.2,
+          "y": 28.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 3712,
+          "x": 28.1,
+          "y": 13.2
+        }
+      ]
+    },
+    {
+      "id": "timeworn_kumbhiraskin_map",
+      "item_id": 36612,
+      "grade": "G14",
+      "name_en": "Timeworn Kumbhiraskin Map",
+      "name_ja": "古ぼけた地図G14",
+      "level": 90,
+      "expansion": "6.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        3712
+      ],
+      "name_tw": "陳舊的金毗羅鱷革地圖",
+      "name_cn": "陈旧的金毗罗鳄革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 3712,
+          "x": 17.0,
+          "y": 29.4
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 3712,
+          "x": 18.5,
+          "y": 12.4
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 3712,
+          "x": 21.5,
+          "y": 33.5
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 3712,
+          "x": 7.6,
+          "y": 21.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 3712,
+          "x": 9.5,
+          "y": 33.2
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 3712,
+          "x": 14.2,
+          "y": 28.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 3712,
+          "x": 28.1,
+          "y": 13.2
+        }
+      ]
+    },
+    {
+      "id": "timeworn_ophiotauroskin_map",
+      "item_id": 39591,
+      "grade": "G15",
+      "name_en": "Timeworn Ophiotauroskin Map",
+      "name_ja": "古ぼけた地図G15",
+      "level": 90,
+      "expansion": "6.3",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        3713
+      ],
+      "name_tw": "陳舊的蛇牛革地圖",
+      "name_cn": "陈旧的蛇牛革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 3713,
+          "x": 24.6,
+          "y": 9.8
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 3713,
+          "x": 30.3,
+          "y": 18.3
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 3713,
+          "x": 8.2,
+          "y": 36.6
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 3713,
+          "x": 13.6,
+          "y": 7.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 3713,
+          "x": 14.0,
+          "y": 18.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 3713,
+          "x": 9.1,
+          "y": 23.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 3713,
+          "x": 9.8,
+          "y": 29.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 3713,
+          "x": 25.0,
+          "y": 5.6
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 3713,
+          "x": 27.9,
+          "y": 25.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 3713,
+          "x": 33.2,
+          "y": 14.8
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 3713,
+          "x": 20.8,
+          "y": 23.8
+        }
+      ]
+    },
+    {
+      "id": "timeworn_loboskin_map",
+      "item_id": 43556,
+      "grade": "G16",
+      "name_en": "Timeworn Loboskin Map",
+      "name_ja": "古ぼけた地図G16",
+      "level": 100,
+      "expansion": "7.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        4507,
+        4508,
+        4509
+      ],
+      "name_tw": "陳舊的銀狼革地圖",
+      "name_cn": "陈旧的银狼革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4507,
+          "x": 12.6,
+          "y": 9.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4507,
+          "x": 17.9,
+          "y": 37.0
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4507,
+          "x": 33.6,
+          "y": 8.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4508,
+          "x": 9.2,
+          "y": 24.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4508,
+          "x": 13.3,
+          "y": 8.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4508,
+          "x": 36.7,
+          "y": 28.1
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4509,
+          "x": 15.6,
+          "y": 22.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4509,
+          "x": 23.7,
+          "y": 27.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4509,
+          "x": 29.1,
+          "y": 21.8
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4509,
+          "x": 34.6,
+          "y": 8.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 4508,
+          "x": 17.3,
+          "y": 32.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 4508,
+          "x": 23.6,
+          "y": 27.1
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 4509,
+          "x": 14.0,
+          "y": 16.8
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 4509,
+          "x": 26.7,
+          "y": 12.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4507,
+          "x": 35.8,
+          "y": 22.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4507,
+          "x": 36.9,
+          "y": 34.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4508,
+          "x": 10.9,
+          "y": 31.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4508,
+          "x": 12.3,
+          "y": 22.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4508,
+          "x": 27.5,
+          "y": 13.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4508,
+          "x": 31.7,
+          "y": 20.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4509,
+          "x": 32.5,
+          "y": 27.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4509,
+          "x": 34.2,
+          "y": 20.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4507,
+          "x": 28.1,
+          "y": 14.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4507,
+          "x": 29.2,
+          "y": 5.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4508,
+          "x": 16.2,
+          "y": 10.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4508,
+          "x": 23.1,
+          "y": 33.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4508,
+          "x": 35.0,
+          "y": 16.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4509,
+          "x": 11.4,
+          "y": 17.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4509,
+          "x": 16.6,
+          "y": 6.8
+        }
+      ]
+    },
+    {
+      "id": "timeworn_braaxskin_map",
+      "item_id": 43557,
+      "grade": "G17",
+      "name_en": "Timeworn Br'aaxskin Map",
+      "name_ja": "古ぼけた地図G17",
+      "level": 100,
+      "expansion": "7.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        4507,
+        4508,
+        4509
+      ],
+      "name_tw": "陳舊的獰豹革地圖",
+      "name_cn": "陈旧的狞豹革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4507,
+          "x": 12.6,
+          "y": 9.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4507,
+          "x": 17.9,
+          "y": 37.0
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4507,
+          "x": 33.6,
+          "y": 8.6
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4508,
+          "x": 9.2,
+          "y": 24.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4508,
+          "x": 13.3,
+          "y": 8.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4508,
+          "x": 36.7,
+          "y": 28.1
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4509,
+          "x": 15.6,
+          "y": 22.7
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4509,
+          "x": 23.7,
+          "y": 27.9
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4509,
+          "x": 29.1,
+          "y": 21.8
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4509,
+          "x": 34.6,
+          "y": 8.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 4508,
+          "x": 17.3,
+          "y": 32.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 4508,
+          "x": 23.6,
+          "y": 27.1
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 4509,
+          "x": 14.0,
+          "y": 16.8
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 4509,
+          "x": 26.7,
+          "y": 12.2
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4507,
+          "x": 35.8,
+          "y": 22.3
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4507,
+          "x": 36.9,
+          "y": 34.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4508,
+          "x": 10.9,
+          "y": 31.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4508,
+          "x": 12.3,
+          "y": 22.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4508,
+          "x": 27.5,
+          "y": 13.8
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4508,
+          "x": 31.7,
+          "y": 20.4
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4509,
+          "x": 32.5,
+          "y": 27.9
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4509,
+          "x": 34.2,
+          "y": 20.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4507,
+          "x": 28.1,
+          "y": 14.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4507,
+          "x": 29.2,
+          "y": 5.1
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4508,
+          "x": 16.2,
+          "y": 10.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4508,
+          "x": 23.1,
+          "y": 33.7
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4508,
+          "x": 35.0,
+          "y": 16.3
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4509,
+          "x": 11.4,
+          "y": 17.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4509,
+          "x": 16.6,
+          "y": 6.8
+        }
+      ]
+    },
+    {
+      "id": "timeworn_gargantuaskin_map",
+      "item_id": 46185,
+      "grade": "G18",
+      "name_en": "Timeworn Gargantuaskin Map",
+      "name_ja": "古ぼけた地図G18",
+      "level": 100,
+      "expansion": "7.3",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        4510
+      ],
+      "name_tw": "陳舊的卡岡圖亞革地圖",
+      "name_cn": "陈旧的卡冈图亚革地图",
+      "gathering_nodes": [
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4510,
+          "x": 8.2,
+          "y": 14.2
+        },
+        {
+          "type": 0,
+          "job": "miner",
+          "zone_id": 4510,
+          "x": 9.3,
+          "y": 15.2
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 4510,
+          "x": 10.5,
+          "y": 11.1
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 4510,
+          "x": 25,
+          "y": 17.3
+        },
+        {
+          "type": 1,
+          "job": "miner",
+          "zone_id": 4510,
+          "x": 35.7,
+          "y": 18.1
+        },
+        {
+          "type": 2,
+          "job": "botanist",
+          "zone_id": 4510,
+          "x": 8.5,
+          "y": 9.6
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4510,
+          "x": 8.7,
+          "y": 7.5
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4510,
+          "x": 17.0,
+          "y": 17.9
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4510,
+          "x": 26.9,
+          "y": 7.4
+        },
+        {
+          "type": 3,
+          "job": "botanist",
+          "zone_id": 4510,
+          "x": 28.4,
+          "y": 17.4
+        }
+      ]
+    }
+  ],
+  "gathering_type_names": {
+    "0": {
+      "en": "Mining",
+      "ja": "採掘",
+      "cn": "采矿",
+      "tw": "採掘"
+    },
+    "1": {
+      "en": "Quarrying",
+      "ja": "砕岩",
+      "cn": "碎石",
+      "tw": "碎石"
+    },
+    "2": {
+      "en": "Logging",
+      "ja": "伐採",
+      "cn": "伐木",
+      "tw": "伐木"
+    },
+    "3": {
+      "en": "Harvesting",
+      "ja": "草刈",
+      "cn": "割草",
+      "tw": "割草"
+    }
+  },
+  "_meta": {
+    "sources": [
+      "Item.csv - thewakingsands/ffxiv-datamining-cn",
+      "Map.csv - xivapi/ffxiv-datamining",
+      "PlaceName.csv - thewakingsands/ffxiv-datamining-cn",
+      "TreasureHuntRank.csv - xivapi/ffxiv-datamining",
+      "nodes.json - ffxiv-teamcraft/ffxiv-teamcraft"
+    ],
+    "notes": [
+      "gathering_zone_ids for G1-G10, G15 are derived from nodes.json + Map.csv",
+      "gathering_zone_ids for G11-G14, G16-G18 are community-verified (server-side restrictions not in client data)",
+      "name_cn is from thewakingsands/ffxiv-datamining-cn (Simplified Chinese), needs conversion to Traditional Chinese"
+    ]
+  },
+  "zone_names": {
+    "3712": {
+      "cn": "天外天垓",
+      "tw": "天外天垓"
+    },
+    "3713": {
+      "cn": "厄尔庇斯",
+      "tw": "厄爾庇斯"
+    },
+    "2953": {
+      "cn": "雷克兰德",
+      "tw": "雷克蘭德"
+    },
+    "2954": {
+      "cn": "珂露西亚岛",
+      "tw": "珂露西亞島"
+    },
+    "2955": {
+      "cn": "安穆·艾兰",
+      "tw": "安穆·艾蘭"
+    },
+    "2957": {
+      "cn": "拉凯提卡大森林",
+      "tw": "拉凱提卡大森林"
+    },
+    "2200": {
+      "cn": "库尔札斯西部高地",
+      "tw": "庫爾札斯西部高地"
+    },
+    "4507": {
+      "cn": "亚克特尔树海",
+      "tw": "亞克特爾樹海"
+    },
+    "4508": {
+      "cn": "夏劳尼荒野",
+      "tw": "夏勞尼荒野"
+    },
+    "4509": {
+      "cn": "遗产之地",
+      "tw": "遺產之地"
+    },
+    "30": {
+      "cn": "中拉诺西亚",
+      "tw": "中拉諾西亞"
+    },
+    "31": {
+      "cn": "拉诺西亚低地",
+      "tw": "拉諾西亞低地"
+    },
+    "32": {
+      "cn": "东拉诺西亚",
+      "tw": "東拉諾西亞"
+    },
+    "33": {
+      "cn": "西拉诺西亚",
+      "tw": "西拉諾西亞"
+    },
+    "34": {
+      "cn": "拉诺西亚高地",
+      "tw": "拉諾西亞高地"
+    },
+    "4510": {
+      "cn": "活着的记忆",
+      "tw": "憶想之地"
+    },
+    "42": {
+      "cn": "西萨纳兰",
+      "tw": "西薩納蘭"
+    },
+    "43": {
+      "cn": "中萨纳兰",
+      "tw": "中薩納蘭"
+    },
+    "44": {
+      "cn": "东萨纳兰",
+      "tw": "東薩納蘭"
+    },
+    "45": {
+      "cn": "南萨纳兰",
+      "tw": "南薩納蘭"
+    },
+    "46": {
+      "cn": "北萨纳兰",
+      "tw": "北薩納蘭"
+    },
+    "2100": {
+      "cn": "阿巴拉提亚云海",
+      "tw": "阿巴拉提亞雲海"
+    },
+    "54": {
+      "cn": "黑衣森林中央林区",
+      "tw": "黑衣森林中央林區"
+    },
+    "55": {
+      "cn": "黑衣森林东部林区",
+      "tw": "黑衣森林東部林區"
+    },
+    "56": {
+      "cn": "黑衣森林南部林区",
+      "tw": "黑衣森林南部林區"
+    },
+    "57": {
+      "cn": "黑衣森林北部林区",
+      "tw": "黑衣森林北部林區"
+    },
+    "63": {
+      "cn": "库尔札斯中央高地",
+      "tw": "庫爾札斯中央高地"
+    },
+    "67": {
+      "cn": "摩杜纳",
+      "tw": "摩杜納"
+    },
+    "2000": {
+      "cn": "龙堡参天高地",
+      "tw": "德拉瓦尼亞山麓地"
+    },
+    "2001": {
+      "cn": "龙堡内陆低地",
+      "tw": "德拉瓦尼亞河谷地"
+    },
+    "2002": {
+      "cn": "翻云雾海",
+      "tw": "德拉瓦尼亞雲海"
+    },
+    "2406": {
+      "cn": "基拉巴尼亚边区",
+      "tw": "基拉巴尼亞邊區"
+    },
+    "2407": {
+      "cn": "基拉巴尼亚山区",
+      "tw": "基拉巴尼亞山區"
+    },
+    "2408": {
+      "cn": "基拉巴尼亚湖区",
+      "tw": "基拉巴尼亞湖區"
+    },
+    "2409": {
+      "cn": "红玉海",
+      "tw": "紅玉海"
+    },
+    "2410": {
+      "cn": "延夏",
+      "tw": "延夏"
+    },
+    "2411": {
+      "cn": "太阳神草原",
+      "tw": "太陽神草原"
+    }
+  }
+}
