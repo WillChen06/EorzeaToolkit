@@ -10736,5 +10736,104 @@
     "icon_url_template": "https://beta.xivapi.com/api/1/asset/ui/icon/{icon_path}?format=png",
     "description_note": "Skill descriptions require ActionTransient.csv (not included)",
     "translation_note": "name_tw and description_tw are auto-converted from Simplified Chinese using OpenCC (s2t). FF14's Traditional Chinese client has some skills with completely different translations (e.g. 钢铁信念 -> 守護, not 鋼鐵信念). For accurate TW names, the Traditional Chinese version's Action.csv is needed, but is not available in the current datamining repos. Consider using the Japanese names (name_ja from xivapi) as a universal fallback."
+  },
+  "tinctures": [
+    {
+      "id": 44158,
+      "name_cn": "巧力之宝药",
+      "name_tw": "巧力之寶藥",
+      "icon_id": 20709,
+      "icon_path": "020000/020709_hr1.tex",
+      "item_level": 690,
+      "stat": "dexterity"
+    },
+    {
+      "id": 44160,
+      "name_cn": "智力之宝药",
+      "name_tw": "智力之寶藥",
+      "icon_id": 20706,
+      "icon_path": "020000/020706_hr1.tex",
+      "item_level": 690,
+      "stat": "intelligence"
+    },
+    {
+      "id": 44161,
+      "name_cn": "意力之宝药",
+      "name_tw": "意力之寶藥",
+      "icon_id": 20708,
+      "icon_path": "020000/020708_hr1.tex",
+      "item_level": 690,
+      "stat": "mind"
+    },
+    {
+      "id": 44157,
+      "name_cn": "刚力之宝药",
+      "name_tw": "剛力之寶藥",
+      "icon_id": 20710,
+      "icon_path": "020000/020710_hr1.tex",
+      "item_level": 690,
+      "stat": "strength"
+    },
+    {
+      "id": 44159,
+      "name_cn": "耐力之宝药",
+      "name_tw": "耐力之寶藥",
+      "icon_id": 20707,
+      "icon_path": "020000/020707_hr1.tex",
+      "item_level": 690,
+      "stat": "vitality"
+    }
+  ],
+  "tincture_stat_jobs": {
+    "strength": {
+      "name_cn": "力量",
+      "name_tw": "力量",
+      "jobs": [
+        "PLD",
+        "WAR",
+        "DRK",
+        "GNB",
+        "DRG",
+        "SAM",
+        "RPR",
+        "VPR"
+      ]
+    },
+    "dexterity": {
+      "name_cn": "灵巧",
+      "name_tw": "靈巧",
+      "jobs": [
+        "MNK",
+        "NIN",
+        "BRD",
+        "MCH",
+        "DNC"
+      ]
+    },
+    "vitality": {
+      "name_cn": "耐力",
+      "name_tw": "耐力",
+      "jobs": []
+    },
+    "intelligence": {
+      "name_cn": "智力",
+      "name_tw": "智力",
+      "jobs": [
+        "BLM",
+        "SMN",
+        "RDM",
+        "PCT"
+      ]
+    },
+    "mind": {
+      "name_cn": "精神",
+      "name_tw": "精神",
+      "jobs": [
+        "WHM",
+        "SCH",
+        "AST",
+        "SGE"
+      ]
+    }
   }
 }
