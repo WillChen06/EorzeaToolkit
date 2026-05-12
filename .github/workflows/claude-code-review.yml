@@ -10,7 +10,6 @@ permissions:
   pull-requests: write
   issues: write
   actions: read
-  id-token: write
 
 concurrency:
   group: claude-review-${{ github.event.pull_request.number }}
@@ -25,6 +24,7 @@ jobs:
 
     steps:
       - name: Checkout
+        # v6 uses Node 24 and avoids GitHub's Node 20 action deprecation.
         uses: actions/checkout@v6
         with:
           fetch-depth: 1

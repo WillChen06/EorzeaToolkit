@@ -22,6 +22,7 @@ jobs:
 
     steps:
       - name: Checkout
+        # v6 uses Node 24 and avoids GitHub's Node 20 action deprecation.
         uses: actions/checkout@v6
 
       - name: Show Xcode version
