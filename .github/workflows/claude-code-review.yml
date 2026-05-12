@@ -25,16 +25,29 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
+
+      - name: Normalize Claude OAuth token
+        id: claude-token
+        env:
+          RAW_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          token="$(printf '%s' "$RAW_TOKEN" | tr -d '\r\n')"
+          if [ -z "$token" ]; then
+            echo "CLAUDE_CODE_OAUTH_TOKEN is empty after normalization" >&2
+            exit 1
+          fi
+          echo "::add-mask::$token"
+          printf 'token=%s\n' "$token" >> "$GITHUB_OUTPUT"
 
       - name: Claude review
         uses: anthropics/claude-code-action@v1
         env:
           GH_TOKEN: ${{ github.token }}
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_code_oauth_token: ${{ steps.claude-token.outputs.token }}
           github_token: ${{ github.token }}
           prompt: |
             REPO: ${{ github.repository }}
