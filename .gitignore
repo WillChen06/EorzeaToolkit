@@ -45,3 +45,4 @@ fastlane/test_output
 
 # Claude prompt
 prompts/
+.claude/settings.local.json
