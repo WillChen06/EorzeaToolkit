@@ -5,10 +5,13 @@ import Foundation
 struct BattleActionsData: Codable {
     let jobs: [BattleJob]
     let categoryNames: [String: [String: String]]?
+    let tinctures: [Tincture]
+    let tinctureStatJobs: [String: TinctureStatJob]
 
     enum CodingKeys: String, CodingKey {
-        case jobs
+        case jobs, tinctures
         case categoryNames = "category_names"
+        case tinctureStatJobs = "tincture_stat_jobs"
     }
 }
 
@@ -116,6 +119,43 @@ struct BattleAction: Codable, Identifiable, Hashable {
     }
 }
 
+struct Tincture: Codable, Identifiable, Hashable {
+    let id: Int
+    let nameCn: String
+    let nameTw: String
+    let iconId: Int
+    let iconPath: String
+    let itemLevel: Int
+    let stat: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, stat
+        case nameCn = "name_cn"
+        case nameTw = "name_tw"
+        case iconId = "icon_id"
+        case iconPath = "icon_path"
+        case itemLevel = "item_level"
+    }
+
+    var displayName: String { nameTw }
+
+    var iconURL: URL? {
+        XIVIconURL.make(from: iconPath)
+    }
+}
+
+struct TinctureStatJob: Codable, Hashable {
+    let nameCn: String
+    let nameTw: String
+    let jobs: [String]
+
+    enum CodingKeys: String, CodingKey {
+        case jobs
+        case nameCn = "name_cn"
+        case nameTw = "name_tw"
+    }
+}
+
 // MARK: - 技能分類
 
 enum SkillCategory: String, CaseIterable, Identifiable, Hashable {
@@ -136,13 +176,68 @@ enum SkillCategory: String, CaseIterable, Identifiable, Hashable {
 
 // MARK: - Rotation（編輯區）
 
+enum RotationItem: Hashable, Codable {
+    case action(BattleAction)
+    case tincture(Tincture)
+
+    var iconURL: URL? {
+        switch self {
+        case .action(let action): return action.iconURL
+        case .tincture(let tincture): return tincture.iconURL
+        }
+    }
+
+    var displayName: String {
+        switch self {
+        case .action(let action): return action.displayName
+        case .tincture(let tincture): return tincture.displayName
+        }
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case type, action, tincture
+    }
+
+    private enum ItemType: String, Codable {
+        case action, tincture
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(ItemType.self, forKey: .type)
+        switch type {
+        case .action:
+            self = .action(try container.decode(BattleAction.self, forKey: .action))
+        case .tincture:
+            self = .tincture(try container.decode(Tincture.self, forKey: .tincture))
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .action(let action):
+            try container.encode(ItemType.action, forKey: .type)
+            try container.encode(action, forKey: .action)
+        case .tincture(let tincture):
+            try container.encode(ItemType.tincture, forKey: .type)
+            try container.encode(tincture, forKey: .tincture)
+        }
+    }
+}
+
 struct RotationSlot: Identifiable, Hashable, Codable {
     let id: UUID
-    let action: BattleAction
+    let item: RotationItem
 
     init(id: UUID = UUID(), action: BattleAction) {
         self.id = id
-        self.action = action
+        self.item = .action(action)
+    }
+
+    init(id: UUID = UUID(), tincture: Tincture) {
+        self.id = id
+        self.item = .tincture(tincture)
     }
 }
 

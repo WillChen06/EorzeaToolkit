@@ -1,21 +1,70 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
+private enum SkillRotationCategory: String, CaseIterable, Identifiable {
+    case all
+    case weaponskill
+    case spell
+    case ability
+    case item
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .all: return "全部"
+        case .weaponskill: return SkillCategory.weaponskill.label
+        case .spell: return SkillCategory.spell.label
+        case .ability: return SkillCategory.ability.label
+        case .item: return "道具"
+        }
+    }
+
+    var skillCategory: SkillCategory? {
+        switch self {
+        case .weaponskill: return .weaponskill
+        case .spell: return .spell
+        case .ability: return .ability
+        case .all, .item: return nil
+        }
+    }
+}
+
 struct SkillRotationEditorView: View {
     let job: BattleJob
     @Bindable var viewModel: SkillRotationViewModel
 
-    @State private var selectedCategory: SkillCategory? = nil
+    @State private var selectedCategory: SkillRotationCategory = .all
 
     private let columns = [GridItem(.adaptive(minimum: 56), spacing: 10)]
     private let rotationColumns = [GridItem(.adaptive(minimum: 60), spacing: 8, alignment: .leading)]
 
     private var filteredActions: [BattleAction] {
-        viewModel.actions(for: job, category: selectedCategory)
+        switch selectedCategory {
+        case .all:
+            return viewModel.actions(for: job, category: nil)
+        case .item:
+            return []
+        case .weaponskill, .spell, .ability:
+            return viewModel.actions(for: job, category: selectedCategory.skillCategory)
+        }
+    }
+
+    private var filteredTinctures: [Tincture] {
+        switch selectedCategory {
+        case .all, .item:
+            return viewModel.tinctures(for: job)
+        case .weaponskill, .spell, .ability:
+            return []
+        }
     }
 
     private var rotation: [RotationSlot] {
         viewModel.rotation(for: job.id)
+    }
+
+    private var showsTinctureSectionSeparator: Bool {
+        selectedCategory == .all && !filteredActions.isEmpty && !filteredTinctures.isEmpty
     }
 
     var body: some View {
@@ -38,22 +87,9 @@ struct SkillRotationEditorView: View {
                 Divider()
 
                 ScrollView {
-                    LazyVGrid(columns: columns, spacing: 10) {
-                        ForEach(filteredActions) { action in
-                            SkillGridIcon(action: action)
-                                .onTapGesture {
-                                    viewModel.addSkill(action, to: job.id)
-                                }
-                                .contextMenu {
-                                    Button {
-                                        viewModel.addSkill(action, to: job.id)
-                                    } label: {
-                                        Label("加入 Rotation", systemImage: "plus.circle")
-                                    }
-                                } preview: {
-                                    SkillDetailCard(action: action)
-                                }
-                        }
+                    LazyVStack(alignment: .leading, spacing: 14) {
+                        actionGrid
+                        tinctureGrid
                     }
                     .padding(12)
                 }
@@ -74,21 +110,77 @@ struct SkillRotationEditorView: View {
         }
     }
 
+    @ViewBuilder
+    private var actionGrid: some View {
+        if !filteredActions.isEmpty {
+            LazyVGrid(columns: columns, spacing: 10) {
+                ForEach(filteredActions) { action in
+                    SkillGridIcon(item: .action(action))
+                        .onTapGesture {
+                            viewModel.addSkill(action, to: job.id)
+                        }
+                        .contextMenu {
+                            Button {
+                                viewModel.addSkill(action, to: job.id)
+                            } label: {
+                                Label("加入 Rotation", systemImage: "plus.circle")
+                            }
+                        } preview: {
+                            RotationItemDetailCard(item: .action(action), statName: nil)
+                        }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var tinctureGrid: some View {
+        if !filteredTinctures.isEmpty {
+            if showsTinctureSectionSeparator {
+                Text("道具")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 4)
+            }
+
+            LazyVGrid(columns: columns, spacing: 10) {
+                ForEach(filteredTinctures) { tincture in
+                    SkillGridIcon(item: .tincture(tincture))
+                        .onTapGesture {
+                            viewModel.addTincture(tincture, to: job.id)
+                        }
+                        .contextMenu {
+                            Button {
+                                viewModel.addTincture(tincture, to: job.id)
+                            } label: {
+                                Label("加入 Rotation", systemImage: "plus.circle")
+                            }
+                        } preview: {
+                            RotationItemDetailCard(
+                                item: .tincture(tincture),
+                                statName: viewModel.statName(for: tincture)
+                            )
+                        }
+                }
+            }
+        }
+    }
+
     // MARK: - Category filter
 
     @ViewBuilder
     private var categoryFilter: some View {
-        let available = job.availableCategories
-        HStack(spacing: 8) {
-            filterChip(label: "全部", isSelected: selectedCategory == nil) {
-                selectedCategory = nil
-            }
-            ForEach(available) { category in
-                filterChip(label: category.label, isSelected: selectedCategory == category) {
-                    selectedCategory = (selectedCategory == category) ? nil : category
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(SkillRotationCategory.allCases) { category in
+                    filterChip(label: category.label, isSelected: selectedCategory == category) {
+                        selectedCategory = category
+                    }
                 }
+                Spacer(minLength: 0)
             }
-            Spacer()
         }
     }
 
@@ -191,7 +283,7 @@ struct SkillRotationEditorView: View {
                 }
                 .id(slot.id)
                 .draggable(slot.id.uuidString) {
-                    SkillGridIcon(action: slot.action)
+                    SkillGridIcon(item: slot.item)
                         .frame(width: 44, height: 44)
                 }
                 .dropDestination(for: String.self) { items, _ in
@@ -212,10 +304,10 @@ struct SkillRotationEditorView: View {
 // MARK: - Skill Grid Icon
 
 struct SkillGridIcon: View {
-    let action: BattleAction
+    let item: RotationItem
 
     var body: some View {
-        AsyncImage(url: action.iconURL) { phase in
+        AsyncImage(url: item.iconURL) { phase in
             switch phase {
             case .success(let image):
                 image.resizable().scaledToFit()
@@ -237,9 +329,16 @@ struct SkillGridIcon: View {
     private var placeholder: some View {
         Color(.systemGray5)
             .overlay {
-                Image(systemName: "sparkles")
+                Image(systemName: placeholderImageName)
                     .foregroundStyle(.secondary)
             }
+    }
+
+    private var placeholderImageName: String {
+        switch item {
+        case .action: return "sparkles"
+        case .tincture: return "cross.vial"
+        }
     }
 }
 
@@ -252,7 +351,7 @@ struct RotationSlotView: View {
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            AsyncImage(url: slot.action.iconURL) { phase in
+            AsyncImage(url: slot.item.iconURL) { phase in
                 switch phase {
                 case .success(let image):
                     image.resizable().scaledToFit()
@@ -278,6 +377,22 @@ struct RotationSlotView: View {
                 .buttonStyle(.plain)
                 .offset(x: 6, y: -6)
             }
+        }
+    }
+}
+
+// MARK: - Rotation Item Detail Card
+
+struct RotationItemDetailCard: View {
+    let item: RotationItem
+    let statName: String?
+
+    var body: some View {
+        switch item {
+        case .action(let action):
+            SkillDetailCard(action: action)
+        case .tincture(let tincture):
+            TinctureDetailCard(tincture: tincture, statName: statName ?? tincture.stat)
         }
     }
 }
@@ -364,6 +479,68 @@ struct SkillDetailCard: View {
         case .weaponskill: return .orange
         case .spell: return .blue
         case .ability: return .green
+        }
+    }
+}
+
+// MARK: - Tincture Detail Card
+
+struct TinctureDetailCard: View {
+    let tincture: Tincture
+    let statName: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
+                AsyncImage(url: tincture.iconURL) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image.resizable().scaledToFit()
+                    default:
+                        Color(.systemGray5)
+                    }
+                }
+                .frame(width: 56, height: 56)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(tincture.displayName)
+                        .font(.headline)
+                    HStack(spacing: 6) {
+                        tag("道具", color: .purple)
+                        tag("iLv.\(tincture.itemLevel)", color: .secondary)
+                    }
+                }
+                Spacer()
+            }
+
+            Divider()
+
+            statBlock(title: "效果", value: "\(statName) +10%")
+        }
+        .padding(16)
+        .frame(minWidth: 280, maxWidth: 360, alignment: .leading)
+        .background(Color(.systemBackground))
+    }
+
+    private func tag(_ text: String, color: Color) -> some View {
+        Text(text)
+            .font(.caption)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(color.opacity(0.15))
+            .foregroundStyle(color)
+            .clipShape(Capsule())
+    }
+
+    private func statBlock(title: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+            Text(value)
+                .font(.footnote)
+                .fontWeight(.medium)
         }
     }
 }

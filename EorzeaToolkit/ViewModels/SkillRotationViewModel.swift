@@ -2,12 +2,64 @@ import Foundation
 
 private struct PersistedSlot: Codable {
     let id: UUID
-    let actionId: Int
+    let type: SlotType
+    let actionId: Int?
+    let tinctureId: Int?
+
+    enum SlotType: String, Codable {
+        case action
+        case tincture
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id, type, actionId, tinctureId
+        case actionID = "action_id"
+        case tinctureID = "tincture_id"
+    }
+
+    init(id: UUID, item: RotationItem) {
+        self.id = id
+        switch item {
+        case .action(let action):
+            self.type = .action
+            self.actionId = action.id
+            self.tinctureId = nil
+        case .tincture(let tincture):
+            self.type = .tincture
+            self.actionId = nil
+            self.tinctureId = tincture.id
+        }
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        actionId = try container.decodeIfPresent(Int.self, forKey: .actionID)
+            ?? container.decodeIfPresent(Int.self, forKey: .actionId)
+        tinctureId = try container.decodeIfPresent(Int.self, forKey: .tinctureID)
+            ?? container.decodeIfPresent(Int.self, forKey: .tinctureId)
+        type = try container.decodeIfPresent(SlotType.self, forKey: .type)
+            ?? (tinctureId == nil ? .action : .tincture)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(type, forKey: .type)
+        switch type {
+        case .action:
+            try container.encodeIfPresent(actionId, forKey: .actionId)
+        case .tincture:
+            try container.encodeIfPresent(tinctureId, forKey: .tinctureId)
+        }
+    }
 }
 
 @Observable
 final class SkillRotationViewModel {
     private(set) var jobs: [BattleJob] = []
+    private(set) var tinctures: [Tincture] = []
+    private(set) var tinctureStatJobs: [String: TinctureStatJob] = [:]
 
     /// 編輯中的 Rotation，依職業 id 分存。
     var rotationsByJobId: [Int: [RotationSlot]] = [:]
@@ -25,6 +77,8 @@ final class SkillRotationViewModel {
         do {
             let data: BattleActionsData = try LocalDataService.load("battle_actions")
             jobs = data.jobs
+            tinctures = data.tinctures
+            tinctureStatJobs = data.tinctureStatJobs
             restoreRotations()
         } catch {
             print("Failed to load battle actions: \(error)")
@@ -37,6 +91,11 @@ final class SkillRotationViewModel {
 
     func addSkill(_ action: BattleAction, to jobId: Int) {
         rotationsByJobId[jobId, default: []].append(RotationSlot(action: action))
+        persistRotations()
+    }
+
+    func addTincture(_ tincture: Tincture, to jobId: Int) {
+        rotationsByJobId[jobId, default: []].append(RotationSlot(tincture: tincture))
         persistRotations()
     }
 
@@ -71,6 +130,14 @@ final class SkillRotationViewModel {
         return filtered.sorted { $0.level == $1.level ? $0.id < $1.id : $0.level < $1.level }
     }
 
+    func tinctures(for _: BattleJob) -> [Tincture] {
+        tinctures
+    }
+
+    func statName(for tincture: Tincture) -> String {
+        tinctureStatJobs[tincture.stat]?.nameTw ?? tincture.stat
+    }
+
     // MARK: - Persistence
 
     private static func loadPersistedRotations(from defaults: UserDefaults, key: String) -> [Int: [PersistedSlot]]? {
@@ -103,13 +170,22 @@ final class SkillRotationViewModel {
             }
             actionIndex[job.id] = map
         }
+        let tinctureIndex = Dictionary(uniqueKeysWithValues: tinctures.map { ($0.id, $0) })
 
         var restored: [Int: [RotationSlot]] = [:]
         for (jobId, slots) in persisted {
             guard let jobActions = actionIndex[jobId] else { continue }
             let reconstructed = slots.compactMap { slot -> RotationSlot? in
-                guard let action = jobActions[slot.actionId] else { return nil }
-                return RotationSlot(id: slot.id, action: action)
+                switch slot.type {
+                case .action:
+                    guard let actionId = slot.actionId,
+                          let action = jobActions[actionId] else { return nil }
+                    return RotationSlot(id: slot.id, action: action)
+                case .tincture:
+                    guard let tinctureId = slot.tinctureId,
+                          let tincture = tinctureIndex[tinctureId] else { return nil }
+                    return RotationSlot(id: slot.id, tincture: tincture)
+                }
             }
             if !reconstructed.isEmpty {
                 restored[jobId] = reconstructed
@@ -121,7 +197,7 @@ final class SkillRotationViewModel {
     private func persistRotations() {
         var payload: [String: [PersistedSlot]] = [:]
         for (jobId, slots) in rotationsByJobId where !slots.isEmpty {
-            payload[String(jobId)] = slots.map { PersistedSlot(id: $0.id, actionId: $0.action.id) }
+            payload[String(jobId)] = slots.map { PersistedSlot(id: $0.id, item: $0.item) }
         }
         do {
             let data = try JSONEncoder().encode(payload)
