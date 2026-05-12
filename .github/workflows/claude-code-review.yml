@@ -43,7 +43,8 @@ jobs:
           printf 'token=%s\n' "$token" >> "$GITHUB_OUTPUT"
 
       - name: Claude review
-        uses: anthropics/claude-code-action@v1
+        # Pinned from anthropics/claude-code-action@v1 for supply-chain safety.
+        uses: anthropics/claude-code-action@dde2242db6af13460b916652159b6ba19a598f30
         env:
           GH_TOKEN: ${{ github.token }}
         with:
@@ -64,4 +65,4 @@ jobs:
             - Include whether the CI build result was visible to you.
           claude_args: |
             --max-turns 16
-            --allowedTools "Read,Grep,Glob,Bash(gh:*),Bash(git diff:*),Bash(git show:*),mcp__github_inline_comment__create_inline_comment"
+            --allowedTools "Read,Grep,Glob,Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr comment:*),Bash(gh pr checks:*),Bash(gh run view:*),Bash(gh run list:*),Bash(git diff:*),Bash(git show:*),mcp__github_inline_comment__create_inline_comment"
