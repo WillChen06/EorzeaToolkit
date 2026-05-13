@@ -65,20 +65,12 @@ final class SkillRotationViewModel {
     var rotationsByJobId: [Int: [SkillRotationLevel: [RotationSlot]]] = [:]
 
     @ObservationIgnored private let storageKey = "SkillRotation.rotationsByJobId.v2"
-    @ObservationIgnored private let legacyStorageKey = "SkillRotation.rotationsByJobId.v1"
     @ObservationIgnored private let defaults: UserDefaults
     @ObservationIgnored private var pendingPersistedRotations: [Int: [SkillRotationLevel: [PersistedSlot]]]?
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        if let persisted = Self.loadPersistedLevelRotations(from: defaults, key: storageKey) {
-            self.pendingPersistedRotations = persisted
-        } else {
-            self.pendingPersistedRotations = Self.loadLegacyPersistedRotations(
-                from: defaults,
-                key: legacyStorageKey
-            )
-        }
+        self.pendingPersistedRotations = Self.loadPersistedRotations(from: defaults, key: storageKey)
     }
 
     func load() {
@@ -99,7 +91,7 @@ final class SkillRotationViewModel {
 
     func savedLevels(for jobId: Int) -> [SkillRotationLevel] {
         guard let rotationsByLevel = rotationsByJobId[jobId] else { return [] }
-        return SkillRotationLevel.allCases.filter { level in
+        return SkillRotationLevel.displayCases.filter { level in
             rotationsByLevel[level]?.isEmpty == false
         }
     }
@@ -157,7 +149,7 @@ final class SkillRotationViewModel {
 
     // MARK: - Persistence
 
-    private static func loadPersistedLevelRotations(
+    private static func loadPersistedRotations(
         from defaults: UserDefaults,
         key: String
     ) -> [Int: [SkillRotationLevel: [PersistedSlot]]]? {
@@ -176,26 +168,6 @@ final class SkillRotationViewModel {
             return result
         } catch {
             print("Failed to decode persisted level rotations: \(error)")
-            return nil
-        }
-    }
-
-    private static func loadLegacyPersistedRotations(
-        from defaults: UserDefaults,
-        key: String
-    ) -> [Int: [SkillRotationLevel: [PersistedSlot]]]? {
-        guard let data = defaults.data(forKey: key) else { return nil }
-        do {
-            // UserDefaults 無法直接存 Int-keyed dictionary，JSON 會序列化為字串鍵。
-            let decoded = try JSONDecoder().decode([String: [PersistedSlot]].self, from: data)
-            var result: [Int: [SkillRotationLevel: [PersistedSlot]]] = [:]
-            for (stringKey, slots) in decoded {
-                guard let jobId = Int(stringKey) else { continue }
-                result[jobId] = [SkillRotationLevel.defaultLevel: slots]
-            }
-            return result
-        } catch {
-            print("Failed to decode legacy persisted rotations: \(error)")
             return nil
         }
     }
