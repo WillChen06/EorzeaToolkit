@@ -21,7 +21,6 @@ struct RelicWeaponListView: View {
                         Picker("模式", selection: $mode) {
                             ForEach(RelicWeaponMode.allCases) { option in
                                 Text(option.rawValue).tag(option)
-                                Text(mode.rawValue).tag(mode)
                             }
                         }
                         .pickerStyle(.segmented)
