@@ -61,16 +61,24 @@ final class SkillRotationViewModel {
     private(set) var tinctures: [Tincture] = []
     private(set) var tinctureStatJobs: [String: TinctureStatJob] = [:]
 
-    /// 編輯中的 Rotation，依職業 id 分存。
-    var rotationsByJobId: [Int: [RotationSlot]] = [:]
+    /// 編輯中的 Rotation，依職業 id 與等級分存。
+    var rotationsByJobId: [Int: [SkillRotationLevel: [RotationSlot]]] = [:]
 
-    @ObservationIgnored private let storageKey = "SkillRotation.rotationsByJobId.v1"
+    @ObservationIgnored private let storageKey = "SkillRotation.rotationsByJobId.v2"
+    @ObservationIgnored private let legacyStorageKey = "SkillRotation.rotationsByJobId.v1"
     @ObservationIgnored private let defaults: UserDefaults
-    @ObservationIgnored private var pendingPersistedRotations: [Int: [PersistedSlot]]?
+    @ObservationIgnored private var pendingPersistedRotations: [Int: [SkillRotationLevel: [PersistedSlot]]]?
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        self.pendingPersistedRotations = Self.loadPersistedRotations(from: defaults, key: storageKey)
+        if let persisted = Self.loadPersistedLevelRotations(from: defaults, key: storageKey) {
+            self.pendingPersistedRotations = persisted
+        } else {
+            self.pendingPersistedRotations = Self.loadLegacyPersistedRotations(
+                from: defaults,
+                key: legacyStorageKey
+            )
+        }
     }
 
     func load() {
@@ -85,47 +93,56 @@ final class SkillRotationViewModel {
         }
     }
 
-    func rotation(for jobId: Int) -> [RotationSlot] {
-        rotationsByJobId[jobId] ?? []
+    func rotation(for jobId: Int, level: SkillRotationLevel) -> [RotationSlot] {
+        rotationsByJobId[jobId]?[level] ?? []
     }
 
-    func addSkill(_ action: BattleAction, to jobId: Int) {
-        rotationsByJobId[jobId, default: []].append(RotationSlot(action: action))
+    func savedLevels(for jobId: Int) -> [SkillRotationLevel] {
+        guard let rotationsByLevel = rotationsByJobId[jobId] else { return [] }
+        return SkillRotationLevel.allCases.filter { level in
+            rotationsByLevel[level]?.isEmpty == false
+        }
+    }
+
+    func addSkill(_ action: BattleAction, to jobId: Int, level: SkillRotationLevel) {
+        rotationsByJobId[jobId, default: [:]][level, default: []].append(RotationSlot(action: action))
         persistRotations()
     }
 
-    func addTincture(_ tincture: Tincture, to jobId: Int) {
-        rotationsByJobId[jobId, default: []].append(RotationSlot(tincture: tincture))
+    func addTincture(_ tincture: Tincture, to jobId: Int, level: SkillRotationLevel) {
+        rotationsByJobId[jobId, default: [:]][level, default: []].append(RotationSlot(tincture: tincture))
         persistRotations()
     }
 
-    func removeSlot(id: UUID, from jobId: Int) {
-        rotationsByJobId[jobId]?.removeAll { $0.id == id }
+    func removeSlot(id: UUID, from jobId: Int, level: SkillRotationLevel) {
+        rotationsByJobId[jobId]?[level]?.removeAll { $0.id == id }
+        removeEmptyRotation(for: jobId, level: level)
         persistRotations()
     }
 
-    func clearRotation(for jobId: Int) {
-        rotationsByJobId[jobId] = []
+    func clearRotation(for jobId: Int, level: SkillRotationLevel) {
+        rotationsByJobId[jobId]?[level] = []
+        removeEmptyRotation(for: jobId, level: level)
         persistRotations()
     }
 
-    func moveSlot(in jobId: Int, fromID: UUID, toIndex: Int) {
-        guard var slots = rotationsByJobId[jobId],
+    func moveSlot(in jobId: Int, level: SkillRotationLevel, fromID: UUID, toIndex: Int) {
+        guard var slots = rotationsByJobId[jobId]?[level],
               let fromIndex = slots.firstIndex(where: { $0.id == fromID }),
               fromIndex != toIndex else { return }
         let clampedTo = min(max(toIndex, 0), slots.count - 1)
         let slot = slots.remove(at: fromIndex)
         slots.insert(slot, at: clampedTo)
-        rotationsByJobId[jobId] = slots
+        rotationsByJobId[jobId]?[level] = slots
         persistRotations()
     }
 
-    func actions(for job: BattleJob, category: SkillCategory?) -> [BattleAction] {
+    func actions(for job: BattleJob, level: SkillRotationLevel, category: SkillCategory?) -> [BattleAction] {
         let filtered: [BattleAction]
         if let category {
-            filtered = job.actions.filter { $0.skillCategory == category }
+            filtered = job.actions.filter { $0.level <= level.rawValue && $0.skillCategory == category }
         } else {
-            filtered = job.actions
+            filtered = job.actions.filter { $0.level <= level.rawValue }
         }
         return filtered.sorted { $0.level == $1.level ? $0.id < $1.id : $0.level < $1.level }
     }
@@ -140,19 +157,45 @@ final class SkillRotationViewModel {
 
     // MARK: - Persistence
 
-    private static func loadPersistedRotations(from defaults: UserDefaults, key: String) -> [Int: [PersistedSlot]]? {
+    private static func loadPersistedLevelRotations(
+        from defaults: UserDefaults,
+        key: String
+    ) -> [Int: [SkillRotationLevel: [PersistedSlot]]]? {
+        guard let data = defaults.data(forKey: key) else { return nil }
+        do {
+            let decoded = try JSONDecoder().decode([String: [String: [PersistedSlot]]].self, from: data)
+            var result: [Int: [SkillRotationLevel: [PersistedSlot]]] = [:]
+            for (jobKey, rotationsByLevel) in decoded {
+                guard let jobId = Int(jobKey) else { continue }
+                for (levelKey, slots) in rotationsByLevel {
+                    guard let levelValue = Int(levelKey),
+                          let level = SkillRotationLevel(rawValue: levelValue) else { continue }
+                    result[jobId, default: [:]][level] = slots
+                }
+            }
+            return result
+        } catch {
+            print("Failed to decode persisted level rotations: \(error)")
+            return nil
+        }
+    }
+
+    private static func loadLegacyPersistedRotations(
+        from defaults: UserDefaults,
+        key: String
+    ) -> [Int: [SkillRotationLevel: [PersistedSlot]]]? {
         guard let data = defaults.data(forKey: key) else { return nil }
         do {
             // UserDefaults 無法直接存 Int-keyed dictionary，JSON 會序列化為字串鍵。
             let decoded = try JSONDecoder().decode([String: [PersistedSlot]].self, from: data)
-            var result: [Int: [PersistedSlot]] = [:]
+            var result: [Int: [SkillRotationLevel: [PersistedSlot]]] = [:]
             for (stringKey, slots) in decoded {
                 guard let jobId = Int(stringKey) else { continue }
-                result[jobId] = slots
+                result[jobId] = [SkillRotationLevel.defaultLevel: slots]
             }
             return result
         } catch {
-            print("Failed to decode persisted rotations: \(error)")
+            print("Failed to decode legacy persisted rotations: \(error)")
             return nil
         }
     }
@@ -172,38 +215,55 @@ final class SkillRotationViewModel {
         }
         let tinctureIndex = Dictionary(uniqueKeysWithValues: tinctures.map { ($0.id, $0) })
 
-        var restored: [Int: [RotationSlot]] = [:]
-        for (jobId, slots) in persisted {
+        var restored: [Int: [SkillRotationLevel: [RotationSlot]]] = [:]
+        for (jobId, rotationsByLevel) in persisted {
             guard let jobActions = actionIndex[jobId] else { continue }
-            let reconstructed = slots.compactMap { slot -> RotationSlot? in
-                switch slot.type {
-                case .action:
-                    guard let actionId = slot.actionId,
-                          let action = jobActions[actionId] else { return nil }
-                    return RotationSlot(id: slot.id, action: action)
-                case .tincture:
-                    guard let tinctureId = slot.tinctureId,
-                          let tincture = tinctureIndex[tinctureId] else { return nil }
-                    return RotationSlot(id: slot.id, tincture: tincture)
+            for (level, slots) in rotationsByLevel {
+                let reconstructed = slots.compactMap { slot -> RotationSlot? in
+                    switch slot.type {
+                    case .action:
+                        guard let actionId = slot.actionId,
+                              let action = jobActions[actionId] else { return nil }
+                        return RotationSlot(id: slot.id, action: action)
+                    case .tincture:
+                        guard let tinctureId = slot.tinctureId,
+                              let tincture = tinctureIndex[tinctureId] else { return nil }
+                        return RotationSlot(id: slot.id, tincture: tincture)
+                    }
                 }
-            }
-            if !reconstructed.isEmpty {
-                restored[jobId] = reconstructed
+                if !reconstructed.isEmpty {
+                    restored[jobId, default: [:]][level] = reconstructed
+                }
             }
         }
         rotationsByJobId = restored
     }
 
     private func persistRotations() {
-        var payload: [String: [PersistedSlot]] = [:]
-        for (jobId, slots) in rotationsByJobId where !slots.isEmpty {
-            payload[String(jobId)] = slots.map { PersistedSlot(id: $0.id, item: $0.item) }
+        var payload: [String: [String: [PersistedSlot]]] = [:]
+        for (jobId, rotationsByLevel) in rotationsByJobId {
+            var persistedLevels: [String: [PersistedSlot]] = [:]
+            for level in SkillRotationLevel.allCases {
+                guard let slots = rotationsByLevel[level], !slots.isEmpty else { continue }
+                persistedLevels[String(level.rawValue)] = slots.map { PersistedSlot(id: $0.id, item: $0.item) }
+            }
+            if !persistedLevels.isEmpty {
+                payload[String(jobId)] = persistedLevels
+            }
         }
         do {
             let data = try JSONEncoder().encode(payload)
             defaults.set(data, forKey: storageKey)
         } catch {
             print("Failed to persist rotations: \(error)")
+        }
+    }
+
+    private func removeEmptyRotation(for jobId: Int, level: SkillRotationLevel) {
+        guard rotationsByJobId[jobId]?[level]?.isEmpty == true else { return }
+        rotationsByJobId[jobId]?[level] = nil
+        if rotationsByJobId[jobId]?.isEmpty == true {
+            rotationsByJobId[jobId] = nil
         }
     }
 }

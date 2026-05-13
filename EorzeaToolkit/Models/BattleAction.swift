@@ -176,6 +176,32 @@ enum SkillCategory: String, CaseIterable, Identifiable, Hashable {
 
 // MARK: - Rotation（編輯區）
 
+enum SkillRotationLevel: Int, CaseIterable, Identifiable, Hashable, Codable {
+    case level50 = 50
+    case level60 = 60
+    case level70 = 70
+    case level80 = 80
+    case level90 = 90
+    case level100 = 100
+
+    static let allCases: [SkillRotationLevel] = [
+        .level100,
+        .level90,
+        .level80,
+        .level70,
+        .level60,
+        .level50
+    ]
+
+    static let defaultLevel: SkillRotationLevel = .level100
+
+    var id: Int { rawValue }
+
+    var label: String {
+        "Lv.\(rawValue)"
+    }
+}
+
 enum RotationItem: Hashable, Codable {
     case action(BattleAction)
     case tincture(Tincture)

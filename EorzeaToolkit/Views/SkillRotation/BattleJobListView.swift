@@ -32,11 +32,12 @@ struct BattleJobListView: View {
 
                     Spacer()
 
-                    let count = viewModel.rotation(for: job.id).count
-                    if count > 0 {
-                        Text("\(count)")
+                    let savedLevels = viewModel.savedLevels(for: job.id)
+                    if !savedLevels.isEmpty {
+                        Text("Lv." + savedLevels.map { String($0.rawValue) }.joined(separator: " / "))
                             .font(.caption)
                             .fontWeight(.semibold)
+                            .lineLimit(1)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 2)
                             .background(Color.accentColor.opacity(0.15))
