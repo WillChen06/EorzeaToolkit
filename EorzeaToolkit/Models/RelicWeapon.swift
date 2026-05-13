@@ -55,7 +55,7 @@ enum MaterialQuantity: Codable, Equatable {
         } else if let value = try? container.decode(String.self) {
             self = .text(value)
         } else {
-            self = .text("?")
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "MaterialQuantity: expected Int or String")
         }
     }
 
