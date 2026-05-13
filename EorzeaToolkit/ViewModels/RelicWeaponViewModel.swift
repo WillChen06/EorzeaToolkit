@@ -2,10 +2,10 @@ import Foundation
 
 @Observable
 final class RelicWeaponViewModel {
-    private(set) var weaponSeries: WeaponSeries?
+    private(set) var weaponSeriesList: [WeaponSeries] = []
     private(set) var loadError: String?
 
-    private var progressByJob: [String: Set<Int>] = [:]
+    private var progressByKey: [String: Set<Int>] = [:]
     private let userDefaults: UserDefaults
 
     init(userDefaults: UserDefaults = .standard) {
@@ -15,29 +15,26 @@ final class RelicWeaponViewModel {
     func loadWeapons() {
         do {
             let data: RelicWeaponData = try LocalDataService.load("relic_weapons")
-            weaponSeries = data.weaponSeries
-            progressByJob = loadProgress(for: data.weaponSeries.id)
+            weaponSeriesList = data.weaponSeriesList
+            loadProgress(for: data.weaponSeriesList)
             loadError = nil
         } catch {
-            weaponSeries = nil
+            weaponSeriesList = []
             loadError = error.localizedDescription
         }
     }
 
-    func isStageCompleted(_ stage: WeaponStage, for job: String) -> Bool {
-        completedStages(for: job).contains(stage.stageIndex)
+    func isStageCompleted(_ stage: WeaponStage, for seriesID: String, job: String) -> Bool {
+        completedStages(for: seriesID, job: job).contains(stage.stageIndex)
     }
 
-    func completedStageCount(for job: String) -> Int {
-        completedStages(for: job).count
+    func completedStageCount(for seriesID: String, job: String) -> Int {
+        completedStages(for: seriesID, job: job).count
     }
 
-    func toggleStage(_ stage: WeaponStage, for job: String) {
-        guard let seriesID = weaponSeries?.id else {
-            return
-        }
-
-        var completedStages = progressByJob[job, default: []]
+    func toggleStage(_ stage: WeaponStage, for seriesID: String, job: String) {
+        let key = progressStorageKey(for: seriesID, job: job)
+        var completedStages = progressByKey[key, default: []]
 
         if completedStages.contains(stage.stageIndex) {
             completedStages.remove(stage.stageIndex)
@@ -45,40 +42,40 @@ final class RelicWeaponViewModel {
             completedStages.insert(stage.stageIndex)
         }
 
-        progressByJob[job] = completedStages
-        saveProgress(for: seriesID)
+        progressByKey[key] = completedStages
+        saveProgress(completedStages, for: seriesID, job: job)
     }
 
-    private func completedStages(for job: String) -> Set<Int> {
-        progressByJob[job, default: []]
+    private func completedStages(for seriesID: String, job: String) -> Set<Int> {
+        progressByKey[progressStorageKey(for: seriesID, job: job), default: []]
     }
 
-    private func loadProgress(for seriesID: String) -> [String: Set<Int>] {
-        guard let data = userDefaults.data(forKey: progressStorageKey(for: seriesID)) else {
-            return [:]
-        }
+    private func loadProgress(for seriesList: [WeaponSeries]) {
+        progressByKey = [:]
 
-        do {
-            let decoded = try JSONDecoder().decode([String: [Int]].self, from: data)
-            return decoded.mapValues(Set.init)
-        } catch {
-            return [:]
+        for series in seriesList {
+            for job in series.availableJobs {
+                let key = progressStorageKey(for: series.id, job: job)
+
+                guard let data = userDefaults.data(forKey: key),
+                      let decoded = try? JSONDecoder().decode([Int].self, from: data) else {
+                    continue
+                }
+
+                progressByKey[key] = Set(decoded)
+            }
         }
     }
 
-    private func saveProgress(for seriesID: String) {
-        let encodedProgress = progressByJob.mapValues { stages in
-            stages.sorted()
-        }
-
-        guard let data = try? JSONEncoder().encode(encodedProgress) else {
+    private func saveProgress(_ completedStages: Set<Int>, for seriesID: String, job: String) {
+        guard let data = try? JSONEncoder().encode(completedStages.sorted()) else {
             return
         }
 
-        userDefaults.set(data, forKey: progressStorageKey(for: seriesID))
+        userDefaults.set(data, forKey: progressStorageKey(for: seriesID, job: job))
     }
 
-    private func progressStorageKey(for seriesID: String) -> String {
-        "relicWeaponProgress.\(seriesID)"
+    private func progressStorageKey(for seriesID: String, job: String) -> String {
+        "relicWeaponProgress.\(seriesID).\(job)"
     }
 }

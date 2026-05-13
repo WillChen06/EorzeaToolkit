@@ -1,10 +1,10 @@
 import Foundation
 
 struct RelicWeaponData: Codable {
-    let weaponSeries: WeaponSeries
+    let weaponSeriesList: [WeaponSeries]
 
     enum CodingKeys: String, CodingKey {
-        case weaponSeries = "weapon_series"
+        case weaponSeriesList = "weapon_series_list"
     }
 }
 
@@ -44,18 +44,21 @@ struct WeaponStage: Codable, Identifiable {
 }
 
 enum MaterialQuantity: Codable, Equatable {
+    case none
     case number(Int)
     case text(String)
 
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
 
-        if let value = try? container.decode(Int.self) {
+        if container.decodeNil() {
+            self = .none
+        } else if let value = try? container.decode(Int.self) {
             self = .number(value)
         } else if let value = try? container.decode(String.self) {
             self = .text(value)
         } else {
-            throw DecodingError.dataCorruptedError(in: container, debugDescription: "MaterialQuantity: expected Int or String")
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "MaterialQuantity: expected Int, String, or null")
         }
     }
 
@@ -63,6 +66,8 @@ enum MaterialQuantity: Codable, Equatable {
         var container = encoder.singleValueContainer()
 
         switch self {
+        case .none:
+            try container.encodeNil()
         case .number(let value):
             try container.encode(value)
         case .text(let value):
