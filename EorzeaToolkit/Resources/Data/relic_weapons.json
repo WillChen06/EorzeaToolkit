@@ -1,61 +1,418 @@
 {
-  "expansions": [
-    {
-      "id": "arr",
-      "name": "新生艾奧傑亞",
-      "name_en": "A Realm Reborn",
-      "weapons": [
-        {
-          "id": "curtana_zenith",
-          "name": "聖劍天頂",
-          "name_en": "Curtana Zenith",
-          "job": "PLD",
-          "steps": [
-            {
-              "step": 1,
-              "title": "基礎武器取得",
-              "description": "完成職業任務取得聖劍",
-              "materials": [
-                { "name": "蠻神白銀鏡", "quantity": 3 }
-              ]
-            },
-            {
-              "step": 2,
-              "title": "天頂強化",
-              "description": "使用星極冰晶強化武器",
-              "materials": [
-                { "name": "星極冰晶", "quantity": 1 },
-                { "name": "白金錠", "quantity": 2 }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "bravura_zenith",
-          "name": "暴勇天頂",
-          "name_en": "Bravura Zenith",
-          "job": "WAR",
-          "steps": [
-            {
-              "step": 1,
-              "title": "基礎武器取得",
-              "description": "完成職業任務取得暴勇",
-              "materials": [
-                { "name": "蠻神白銀鏡", "quantity": 3 }
-              ]
-            },
-            {
-              "step": 2,
-              "title": "天頂強化",
-              "description": "使用星極冰晶強化武器",
-              "materials": [
-                { "name": "星極冰晶", "quantity": 1 },
-                { "name": "鈷鐵錠", "quantity": 2 }
-              ]
-            }
-          ]
-        }
-      ]
+  "weapon_series": {
+    "id": "zodiac",
+    "name_cn": "古武",
+    "name_tw": "古武",
+    "full_name_cn": "黄道武器",
+    "full_name_tw": "黃道武器",
+    "expansion": "2.x",
+    "level_cap": 50,
+    "available_jobs": [
+      "PLD",
+      "WAR",
+      "WHM",
+      "SCH",
+      "MNK",
+      "DRG",
+      "NIN",
+      "BRD",
+      "BLM",
+      "SMN"
+    ],
+    "stages": [
+      {
+        "name_cn": "前置任务",
+        "name_tw": "前置任務",
+        "task_description_cn": "ℚ 传说中的武器工匠      0",
+        "task_description_tw": "ℚ 傳說中的武器工匠      0",
+        "ilvl": null,
+        "materials": [],
+        "stage_index": 0
+      },
+      {
+        "name_cn": "古武+0",
+        "name_tw": "古武+0",
+        "task_description_cn": "ℚ 复苏的上古武器",
+        "task_description_tw": "ℚ 復甦的上古武器",
+        "ilvl": 80,
+        "materials": [
+          {
+            "name_cn": "原型武器（镶嵌魔晶石）",
+            "name_tw": "原型武器（鑲嵌魔晶石）",
+            "quantity": 1,
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": "骑士：神风弯刀：刚柔叁\n\n战士：野蛮巨斧：刚柔叁\n\n武僧：野性钢拳：武略叁\n\n龙骑：冠军骑枪：武略叁\n\n黑魔：染血咒杖：雄略叁\n\n白魔：狂人低语：咏唱叁\n\n诗人：长臂复合弓：神眼叁\n\n召唤：博学咏咒巫书：雄略叁\n\n学者：博学治愈巫书：咏唱叁\n\n忍者：吸血匕首：神眼叁",
+            "note_tw": "騎士：神風彎刀：剛柔叄\n\n戰士：野蠻巨斧：剛柔叄\n\n武僧：野性鋼拳：武略叄\n\n龍騎：冠軍騎槍：武略叄\n\n黑魔：染血咒杖：雄略叄\n\n白魔：狂人低語：詠唱叄\n\n詩人：長臂複合弓：神眼叄\n\n召喚：博學詠咒巫書：雄略叄\n\n學者：博學治癒巫書：詠唱叄\n\n忍者：吸血匕首：神眼叄"
+          },
+          {
+            "name_cn": "拉札罕淬火油",
+            "name_tw": "拉札罕淬火油",
+            "quantity": 1,
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": "三主城、伊修加德、摩杜纳、田园郡诗学商人均可兑换，分类选《特殊武器相关》（未接任务亦可兑换）。",
+            "note_tw": "三主城、伊修加德、摩杜納、田園郡詩學商人均可兌換，分類選《特殊武器相關》（未接任務亦可兌換）。"
+          }
+        ],
+        "stage_index": 1
+      },
+      {
+        "name_cn": "古武+1 / 天极",
+        "name_tw": "古武+1 / 天極",
+        "task_description_cn": "第n把携带古武和萨维奈灵药，在冶炼炉处兑换升级",
+        "task_description_tw": "第n把攜帶古武和薩維奈靈藥，在冶煉爐處兌換升級",
+        "ilvl": 90,
+        "materials": [
+          {
+            "name_cn": "萨维奈灵药",
+            "name_tw": "薩維奈靈藥",
+            "quantity": 3,
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": "三主城、伊修加德、摩杜纳、田园郡诗学商人均可兑换，分类选《特殊武器相关》（未接任务亦可兑换）。",
+            "note_tw": "三主城、伊修加德、摩杜納、田園郡詩學商人均可兌換，分類選《特殊武器相關》（未接任務亦可兌換）。"
+          }
+        ],
+        "stage_index": 2
+      },
+      {
+        "name_cn": "古武+1.5 / 魂晶",
+        "name_tw": "古武+1.5 / 魂晶",
+        "task_description_cn": "ℚ 寻找英雄的武器\n\n第n把直接带+1（天极）去地图刷Fate即可\n刷完找加尔赞，选择强化上古武器・天极\n\n魂晶计时器",
+        "task_description_tw": "ℚ 尋找英雄的武器\n\n第n把直接帶+1（天極）去地圖刷Fate即可\n刷完找加爾贊，選擇強化上古武器・天極\n\n魂晶計時器",
+        "ilvl": 100,
+        "materials": [
+          {
+            "name_cn": "十二魂晶",
+            "name_tw": "十二魂晶",
+            "quantity": 1,
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": "摩羯座：东部林区\n\n水瓶座：拉诺西亚高地\n\n双鱼座：拉诺西亚低地\n\n白羊座：中央拉诺西亚\n\n金牛座：东萨纳兰\n\n双子座：西萨纳兰\n\n巨蟹座：西拉诺西亚\n\n狮子座：拉诺西亚外地\n\n处女座：中央林区\n\n天秤座：中央萨纳兰\n\n天蝎座：南萨纳兰\n\n射手座：北部林区",
+            "note_tw": "摩羯座：東部林區\n\n水瓶座：拉諾西亞高地\n\n雙魚座：拉諾西亞低地\n\n白羊座：中央拉諾西亞\n\n金牛座：東薩納蘭\n\n雙子座：西薩納蘭\n\n巨蟹座：西拉諾西亞\n\n獅子座：拉諾西亞外地\n\n處女座：中央林區\n\n天秤座：中央薩納蘭\n\n天蠍座：南薩納蘭\n\n射手座：北部林區"
+          }
+        ],
+        "stage_index": 3
+      },
+      {
+        "name_cn": "古武+2 / 魂灵",
+        "name_tw": "古武+2 / 魂靈",
+        "task_description_cn": "ℚ 黄道文书 \n第n把携带+1.5（魂晶）前往古・茱萨奈（ 摩杜纳 X: 22.9, Y: 7.3）兑换小黄书\n刷完找加尔赞，选择强化上古武器・魂晶\n\n重复顺序：\n水一 + 滴水之恩\n风一 + 滴水/工匠\n水二/水狱一 + 慈母\n火一 + 工匠\n火二 + 梦想",
+        "task_description_tw": "ℚ 黃道文書 \n第n把攜帶+1.5（魂晶）前往古・茱薩奈（ 摩杜納 X: 22.9, Y: 7.3）兌換小黃書\n刷完找加爾贊，選擇強化上古武器・魂晶\n\n重複順序：\n水一 + 滴水之恩\n風一 + 滴水/工匠\n水二/水獄一 + 慈母\n火一 + 工匠\n火二 + 夢想",
+        "ilvl": 100,
+        "materials": [
+          {
+            "name_cn": "水天一卷",
+            "name_tw": "水天一卷",
+            "quantity": 100,
+            "source_cn": "诗学",
+            "source_tw": "詩學",
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "风天一卷",
+            "name_tw": "風天一卷",
+            "quantity": 100,
+            "source_cn": "诗学",
+            "source_tw": "詩學",
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "水天二卷",
+            "name_tw": "水天二卷",
+            "quantity": 100,
+            "source_cn": "诗学",
+            "source_tw": "詩學",
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "水狱一卷",
+            "name_tw": "水獄一卷",
+            "quantity": 100,
+            "source_cn": "诗学",
+            "source_tw": "詩學",
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "火天一卷",
+            "name_tw": "火天一卷",
+            "quantity": 100,
+            "source_cn": "诗学",
+            "source_tw": "詩學",
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "火天二卷",
+            "name_tw": "火天二卷",
+            "quantity": 100,
+            "source_cn": "诗学",
+            "source_tw": "詩學",
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "火狱一卷",
+            "name_tw": "火獄一卷",
+            "quantity": 100,
+            "source_cn": "诗学",
+            "source_tw": "詩學",
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "土天一卷",
+            "name_tw": "土天一卷",
+            "quantity": 100,
+            "source_cn": "诗学",
+            "source_tw": "詩學",
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "风天二卷",
+            "name_tw": "風天二卷",
+            "quantity": 100,
+            "source_cn": "诗学",
+            "source_tw": "詩學",
+            "note_cn": null,
+            "note_tw": null
+          }
+        ],
+        "stage_index": 4
+      },
+      {
+        "name_cn": "古武+3 / 新星",
+        "name_tw": "古武+3 / 新星",
+        "task_description_cn": "ℚ 天球的光芒\nℚ 新星璀璨 \n\n第n把携带古武+2（魂灵）和高位附魔墨水前往于贝尔坦  中萨纳兰 (X: 23.6, Y: 13.8)处拿书卷。\n打完石头找加尔赞，选择强化上古武器・魂灵",
+        "task_description_tw": "ℚ 天球的光芒\nℚ 新星璀璨 \n\n第n把攜帶古武+2（魂靈）和高位附魔墨水前往于貝爾坦  中薩納蘭 (X: 23.6, Y: 13.8)處拿書卷。\n打完石頭找加爾贊，選擇強化上古武器・魂靈",
+        "ilvl": 110,
+        "materials": [
+          {
+            "name_cn": "高位附魔墨水",
+            "name_tw": "高位附魔墨水",
+            "quantity": 3,
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": "三主城、伊修加德、摩杜纳、田园郡诗学商人均可兑换，分类选《特殊武器相关》（未接任务亦可兑换）。",
+            "note_tw": "三主城、伊修加德、摩杜納、田園郡詩學商人均可兌換，分類選《特殊武器相關》（未接任務亦可兌換）。"
+          },
+          {
+            "name_cn": "星光变石",
+            "name_tw": "星光變石",
+            "quantity": 75,
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": "1）布兰格维茵 摩杜纳 (X: 22, Y: 6.7)接《神秘地图》，接了这个任务之后，打 50/60 随机任务就可以获得一个神秘地图 ，解读地图并打开箱子后，就可以获得 5 块星光变石。\n\n之后《神秘地图》任务和其他日常一样在 23 点刷新，并可以重复接取。 \n\n \n\n2）在魔杜纳可以用 75 诗学换取神秘地图。 \n\n \n\n3）在自己所属的大国防联军，可以使用 50 点同盟徽章换取星光变石。",
+            "note_tw": "1）布蘭格維茵 摩杜納 (X: 22, Y: 6.7)接《神祕地圖》，接了這個任務之後，打 50/60 隨機任務就可以獲得一個神祕地圖 ，解讀地圖並打開箱子後，就可以獲得 5 塊星光變石。\n\n之後《神祕地圖》任務和其他日常一樣在 23 點刷新，並可以重複接取。 \n\n \n\n2）在魔杜納可以用 75 詩學換取神祕地圖。 \n\n \n\n3）在自己所屬的大國防聯軍，可以使用 50 點同盟徽章換取星光變石。"
+          },
+          {
+            "name_cn": "（神秘地图）",
+            "name_tw": "（神祕地圖）",
+            "quantity": 3750,
+            "source_cn": "同盟",
+            "source_tw": "同盟",
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "魔晶石",
+            "name_tw": "魔晶石",
+            "quantity": 75,
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": "选便宜的！从一型开始打！最多打5种！",
+            "note_tw": "選便宜的！從一型開始打！最多打5種！"
+          }
+        ],
+        "stage_index": 5
+      },
+      {
+        "name_cn": "古武+4 / 镇魂",
+        "name_tw": "古武+4 / 鎮魂",
+        "task_description_cn": "ℚ 注入武器的灵魂\n\n第n把古武拿着+ 3（新星）和加尔赞对话并选择将 “上古武器・新星” 绝灵化，然后去刷光。刷光完成后再次回来与他对话，并选择强化上古武器・新星。",
+        "task_description_tw": "ℚ 注入武器的靈魂\n\n第n把古武拿着+ 3（新星）和加爾贊對話並選擇將 “上古武器・新星” 絕靈化，然後去刷光。刷光完成後再次回來與他對話，並選擇強化上古武器・新星。",
+        "ilvl": 115,
+        "materials": [
+          {
+            "name_cn": "刷光\n\n推荐：黄金谷或极莫古力，火风土以外50极神亦可\n\n刷光数据收集表",
+            "name_tw": "刷光\n\n推薦：黃金谷或極莫古力，火風土以外50極神亦可\n\n刷光數據收集表",
+            "quantity": "2000点光",
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": null,
+            "note_tw": null
+          }
+        ],
+        "stage_index": 6
+      },
+      {
+        "name_cn": "古武+5 / 黄道武器",
+        "name_tw": "古武+5 / 黃道武器",
+        "task_description_cn": "ℚ 踏上黄道的征途\n\n第n把携带古武 + 4（镇魂）和任务给的 4 样材料回来找加尔赞对话，并选择再铸・黄道武器。\n\nℚ 滴水之恩\nℚ 挑战未知的工匠\nℚ 慈母手中物\nℚ 激情与梦想",
+        "task_description_tw": "ℚ 踏上黃道的征途\n\n第n把攜帶古武 + 4（鎮魂）和任務給的 4 樣材料回來找加爾贊對話，並選擇再鑄・黃道武器。\n\nℚ 滴水之恩\nℚ 挑戰未知的工匠\nℚ 慈母手中物\nℚ 激情與夢想",
+        "ilvl": 125,
+        "materials": [
+          {
+            "name_cn": "大炎兽核心",
+            "name_tw": "大炎獸核心",
+            "quantity": 80000,
+            "source_cn": "军票",
+            "source_tw": "軍票",
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "灵峰泉水",
+            "name_tw": "靈峯泉水",
+            "quantity": 800,
+            "source_cn": "诗学",
+            "source_tw": "詩學",
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "石绿湖水晶",
+            "name_tw": "石綠湖水晶",
+            "quantity": "100000G",
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": "船头杂用商人 拉诺西亚高地 (X: 26.1, Y: 26.4)",
+            "note_tw": "船頭雜用商人 拉諾西亞高地 (X: 26.1, Y: 26.4)"
+          },
+          {
+            "name_cn": "熔火指环HQ",
+            "name_tw": "熔火指環HQ",
+            "quantity": "制作或购买",
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "高质的木柴HQ",
+            "name_tw": "高質的木柴HQ",
+            "quantity": "制作或购买",
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "亚拉戈树脂",
+            "name_tw": "亞拉戈樹脂",
+            "quantity": "100000G",
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": "遗忘绿洲杂用商人 南萨纳兰 (X: 15.9, Y: 29.1)",
+            "note_tw": "遺忘綠洲雜用商人 南薩納蘭 (X: 15.9, Y: 29.1)"
+          },
+          {
+            "name_cn": "高质的研钵HQ",
+            "name_tw": "高質的研鉢HQ",
+            "quantity": "制作或购买",
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "高质的钵杵HQ",
+            "name_tw": "高質的鉢杵HQ",
+            "quantity": "制作或购买",
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "黄铜壶",
+            "name_tw": "黃銅壺",
+            "quantity": "100000G",
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": "和平苑杂用商人 黑衣森林北部林区 (X: 29.9, Y: 18.9)",
+            "note_tw": "和平苑雜用商人 黑衣森林北部林區 (X: 29.9, Y: 18.9)"
+          },
+          {
+            "name_cn": "秘制鳗鱼派HQ",
+            "name_tw": "祕製鰻魚派HQ",
+            "quantity": "制作或购买",
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "高质的古布料HQ",
+            "name_tw": "高質的古布料HQ",
+            "quantity": "制作或购买",
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "高质的羊皮纸HQ",
+            "name_tw": "高質的羊皮紙HQ",
+            "quantity": "制作或购买",
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "高质的安定粉HQ",
+            "name_tw": "高質的安定粉HQ",
+            "quantity": "制作或购买",
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": null,
+            "note_tw": null
+          },
+          {
+            "name_cn": "战神沙",
+            "name_tw": "戰神沙",
+            "quantity": "100000G",
+            "source_cn": null,
+            "source_tw": null,
+            "note_cn": "白云崖杂用商人 库尔札斯中央高地 (X: 13.3, Y: 16)",
+            "note_tw": "白雲崖雜用商人 庫爾札斯中央高地 (X: 13.3, Y: 16)"
+          }
+        ],
+        "stage_index": 7
+      },
+      {
+        "name_cn": "古武+6 / 本我",
+        "name_tw": "古武+6 / 本我",
+        "task_description_cn": "ℚ  力量觉醒\n\n第n把古武携带古武+5前往雷蒙  西拉诺西亚 (X: 34.3, Y: 31.7)领取圣魂刷光\n刷完后回北森找加尔赞对话，并选择让 “黄道武器” 觉醒。",
+        "task_description_tw": "ℚ  力量覺醒\n\n第n把古武攜帶古武+5前往雷蒙  西拉諾西亞 (X: 34.3, Y: 31.7)領取聖魂刷光\n刷完後回北森找加爾贊對話，並選擇讓 “黃道武器” 覺醒。",
+        "ilvl": 135,
+        "materials": [
+          {
+            "name_cn": "刷光\n\n推荐：黄金谷\n\n刷光数据收集表",
+            "name_tw": "刷光\n\n推薦：黃金谷\n\n刷光數據收集表",
+            "quantity": 600,
+            "source_cn": "诗学",
+            "source_tw": "詩學",
+            "note_cn": null,
+            "note_tw": null
+          }
+        ],
+        "stage_index": 8
+      }
+    ]
+  },
+  "_meta": {
+    "source": "发光武器材料进度追踪表 v1.55",
+    "translation_note": "name_tw / source_tw / note_tw are auto-converted via OpenCC.",
+    "field_notes": {
+      "note_cn / note_tw": "Material acquisition tips (location, NPC, exchange method) extracted from cell comments"
     }
-  ]
+  }
 }
