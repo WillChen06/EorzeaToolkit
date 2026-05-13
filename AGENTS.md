@@ -3,7 +3,7 @@
 This is a personal project using a lightweight Git Flow:
 
 - Branch from `main` for each feature or fix.
-- Use branch names like `feature/<short-topic>`, `fix/<short-topic>`, or the Codex default `codex/<short-topic>`.
+- Use branch names like `feature/<short-topic>`, `fix/<short-topic>`
 - Do not use a long-lived `develop` branch.
 - Keep commits atomic: one logical change per commit. Do not combine unrelated features or fixes in one commit.
 - Open a pull request into `main`; do not merge directly to `main`.

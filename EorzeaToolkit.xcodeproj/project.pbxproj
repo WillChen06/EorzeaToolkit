@@ -62,7 +62,7 @@
 		71206E4982454E1556AE20D8 /* TreasureMapDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapDetailView.swift; sourceTree = "<group>"; };
 		75BE3609C1A36C70D2704F19 /* maps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = maps.json; sourceTree = "<group>"; };
 		7A21CE703F501936991D2E7E /* ProgressRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressRecord.swift; sourceTree = "<group>"; };
-		84EEB99FC86E568BF0D2EA0D /* EorzeaToolkit.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = EorzeaToolkit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		84EEB99FC86E568BF0D2EA0D /* EorzeaToolkit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EorzeaToolkit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ABE1DA3A0D8692FCB447D0D /* zh-maps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "zh-maps.json"; sourceTree = "<group>"; };
 		9113B83FA58C9AC86332E63E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		914E93C547E3805E26F5F9D6 /* TreasureMapListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapListView.swift; sourceTree = "<group>"; };
@@ -270,8 +270,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1600;
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = C82D586A96653BA01D25D11D /* Build configuration list for PBXProject "EorzeaToolkit" */;
 			developmentRegion = en;
@@ -366,6 +364,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4YL95KDQ6V;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "艾歐澤亞工具箱";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -391,6 +390,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4YL95KDQ6V;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "艾歐澤亞工具箱";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
