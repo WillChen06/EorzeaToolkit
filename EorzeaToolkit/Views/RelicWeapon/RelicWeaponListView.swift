@@ -13,9 +13,12 @@ struct RelicWeaponListView: View {
     var body: some View {
         Group {
             if !viewModel.weaponSeriesList.isEmpty {
-                List(viewModel.weaponSeriesList) { series in
+                List(Array(viewModel.weaponSeriesList.enumerated()), id: \.element.id) { index, series in
                     NavigationLink(destination: RelicWeaponSeriesView(series: series, viewModel: viewModel)) {
-                        RelicWeaponSeriesRow(series: series)
+                        RelicWeaponSeriesRow(
+                            series: series,
+                            isLatest: index == viewModel.weaponSeriesList.count - 1
+                        )
                     }
                 }
                 .navigationTitle("發光武器")
@@ -39,6 +42,7 @@ struct RelicWeaponListView: View {
 
 private struct RelicWeaponSeriesRow: View {
     let series: WeaponSeries
+    let isLatest: Bool
 
     var body: some View {
         HStack(spacing: 12) {
@@ -58,7 +62,7 @@ private struct RelicWeaponSeriesRow: View {
                     Text(series.fullNameTw)
                         .font(.headline)
 
-                    if series.id == "phantom" {
+                    if isLatest {
                         Text("最新")
                             .font(.caption2.weight(.semibold))
                             .padding(.horizontal, 6)
