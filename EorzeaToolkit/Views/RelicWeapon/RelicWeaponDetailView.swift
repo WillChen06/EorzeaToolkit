@@ -164,6 +164,8 @@ private extension WeaponMaterial {
         let baseText: String
 
         switch quantity {
+        case .none:
+            baseText = nameTw
         case .number(let value):
             baseText = "\(nameTw) ×\(value)"
         case .text(let value):

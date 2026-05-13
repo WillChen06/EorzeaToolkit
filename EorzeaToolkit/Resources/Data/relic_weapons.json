@@ -1,418 +1,1786 @@
 {
-  "weapon_series": {
-    "id": "zodiac",
-    "name_cn": "古武",
-    "name_tw": "古武",
-    "full_name_cn": "黄道武器",
-    "full_name_tw": "黃道武器",
-    "expansion": "2.x",
-    "level_cap": 50,
-    "available_jobs": [
-      "PLD",
-      "WAR",
-      "WHM",
-      "SCH",
-      "MNK",
-      "DRG",
-      "NIN",
-      "BRD",
-      "BLM",
-      "SMN"
-    ],
-    "stages": [
-      {
-        "name_cn": "前置任务",
-        "name_tw": "前置任務",
-        "task_description_cn": "ℚ 传说中的武器工匠      0",
-        "task_description_tw": "ℚ 傳說中的武器工匠      0",
-        "ilvl": null,
-        "materials": [],
-        "stage_index": 0
-      },
-      {
-        "name_cn": "古武+0",
-        "name_tw": "古武+0",
-        "task_description_cn": "ℚ 复苏的上古武器",
-        "task_description_tw": "ℚ 復甦的上古武器",
-        "ilvl": 80,
-        "materials": [
-          {
-            "name_cn": "原型武器（镶嵌魔晶石）",
-            "name_tw": "原型武器（鑲嵌魔晶石）",
-            "quantity": 1,
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": "骑士：神风弯刀：刚柔叁\n\n战士：野蛮巨斧：刚柔叁\n\n武僧：野性钢拳：武略叁\n\n龙骑：冠军骑枪：武略叁\n\n黑魔：染血咒杖：雄略叁\n\n白魔：狂人低语：咏唱叁\n\n诗人：长臂复合弓：神眼叁\n\n召唤：博学咏咒巫书：雄略叁\n\n学者：博学治愈巫书：咏唱叁\n\n忍者：吸血匕首：神眼叁",
-            "note_tw": "騎士：神風彎刀：剛柔叄\n\n戰士：野蠻巨斧：剛柔叄\n\n武僧：野性鋼拳：武略叄\n\n龍騎：冠軍騎槍：武略叄\n\n黑魔：染血咒杖：雄略叄\n\n白魔：狂人低語：詠唱叄\n\n詩人：長臂複合弓：神眼叄\n\n召喚：博學詠咒巫書：雄略叄\n\n學者：博學治癒巫書：詠唱叄\n\n忍者：吸血匕首：神眼叄"
-          },
-          {
-            "name_cn": "拉札罕淬火油",
-            "name_tw": "拉札罕淬火油",
-            "quantity": 1,
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": "三主城、伊修加德、摩杜纳、田园郡诗学商人均可兑换，分类选《特殊武器相关》（未接任务亦可兑换）。",
-            "note_tw": "三主城、伊修加德、摩杜納、田園郡詩學商人均可兌換，分類選《特殊武器相關》（未接任務亦可兌換）。"
-          }
-        ],
-        "stage_index": 1
-      },
-      {
-        "name_cn": "古武+1 / 天极",
-        "name_tw": "古武+1 / 天極",
-        "task_description_cn": "第n把携带古武和萨维奈灵药，在冶炼炉处兑换升级",
-        "task_description_tw": "第n把攜帶古武和薩維奈靈藥，在冶煉爐處兌換升級",
-        "ilvl": 90,
-        "materials": [
-          {
-            "name_cn": "萨维奈灵药",
-            "name_tw": "薩維奈靈藥",
-            "quantity": 3,
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": "三主城、伊修加德、摩杜纳、田园郡诗学商人均可兑换，分类选《特殊武器相关》（未接任务亦可兑换）。",
-            "note_tw": "三主城、伊修加德、摩杜納、田園郡詩學商人均可兌換，分類選《特殊武器相關》（未接任務亦可兌換）。"
-          }
-        ],
-        "stage_index": 2
-      },
-      {
-        "name_cn": "古武+1.5 / 魂晶",
-        "name_tw": "古武+1.5 / 魂晶",
-        "task_description_cn": "ℚ 寻找英雄的武器\n\n第n把直接带+1（天极）去地图刷Fate即可\n刷完找加尔赞，选择强化上古武器・天极\n\n魂晶计时器",
-        "task_description_tw": "ℚ 尋找英雄的武器\n\n第n把直接帶+1（天極）去地圖刷Fate即可\n刷完找加爾贊，選擇強化上古武器・天極\n\n魂晶計時器",
-        "ilvl": 100,
-        "materials": [
-          {
-            "name_cn": "十二魂晶",
-            "name_tw": "十二魂晶",
-            "quantity": 1,
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": "摩羯座：东部林区\n\n水瓶座：拉诺西亚高地\n\n双鱼座：拉诺西亚低地\n\n白羊座：中央拉诺西亚\n\n金牛座：东萨纳兰\n\n双子座：西萨纳兰\n\n巨蟹座：西拉诺西亚\n\n狮子座：拉诺西亚外地\n\n处女座：中央林区\n\n天秤座：中央萨纳兰\n\n天蝎座：南萨纳兰\n\n射手座：北部林区",
-            "note_tw": "摩羯座：東部林區\n\n水瓶座：拉諾西亞高地\n\n雙魚座：拉諾西亞低地\n\n白羊座：中央拉諾西亞\n\n金牛座：東薩納蘭\n\n雙子座：西薩納蘭\n\n巨蟹座：西拉諾西亞\n\n獅子座：拉諾西亞外地\n\n處女座：中央林區\n\n天秤座：中央薩納蘭\n\n天蠍座：南薩納蘭\n\n射手座：北部林區"
-          }
-        ],
-        "stage_index": 3
-      },
-      {
-        "name_cn": "古武+2 / 魂灵",
-        "name_tw": "古武+2 / 魂靈",
-        "task_description_cn": "ℚ 黄道文书 \n第n把携带+1.5（魂晶）前往古・茱萨奈（ 摩杜纳 X: 22.9, Y: 7.3）兑换小黄书\n刷完找加尔赞，选择强化上古武器・魂晶\n\n重复顺序：\n水一 + 滴水之恩\n风一 + 滴水/工匠\n水二/水狱一 + 慈母\n火一 + 工匠\n火二 + 梦想",
-        "task_description_tw": "ℚ 黃道文書 \n第n把攜帶+1.5（魂晶）前往古・茱薩奈（ 摩杜納 X: 22.9, Y: 7.3）兌換小黃書\n刷完找加爾贊，選擇強化上古武器・魂晶\n\n重複順序：\n水一 + 滴水之恩\n風一 + 滴水/工匠\n水二/水獄一 + 慈母\n火一 + 工匠\n火二 + 夢想",
-        "ilvl": 100,
-        "materials": [
-          {
-            "name_cn": "水天一卷",
-            "name_tw": "水天一卷",
-            "quantity": 100,
-            "source_cn": "诗学",
-            "source_tw": "詩學",
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "风天一卷",
-            "name_tw": "風天一卷",
-            "quantity": 100,
-            "source_cn": "诗学",
-            "source_tw": "詩學",
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "水天二卷",
-            "name_tw": "水天二卷",
-            "quantity": 100,
-            "source_cn": "诗学",
-            "source_tw": "詩學",
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "水狱一卷",
-            "name_tw": "水獄一卷",
-            "quantity": 100,
-            "source_cn": "诗学",
-            "source_tw": "詩學",
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "火天一卷",
-            "name_tw": "火天一卷",
-            "quantity": 100,
-            "source_cn": "诗学",
-            "source_tw": "詩學",
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "火天二卷",
-            "name_tw": "火天二卷",
-            "quantity": 100,
-            "source_cn": "诗学",
-            "source_tw": "詩學",
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "火狱一卷",
-            "name_tw": "火獄一卷",
-            "quantity": 100,
-            "source_cn": "诗学",
-            "source_tw": "詩學",
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "土天一卷",
-            "name_tw": "土天一卷",
-            "quantity": 100,
-            "source_cn": "诗学",
-            "source_tw": "詩學",
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "风天二卷",
-            "name_tw": "風天二卷",
-            "quantity": 100,
-            "source_cn": "诗学",
-            "source_tw": "詩學",
-            "note_cn": null,
-            "note_tw": null
-          }
-        ],
-        "stage_index": 4
-      },
-      {
-        "name_cn": "古武+3 / 新星",
-        "name_tw": "古武+3 / 新星",
-        "task_description_cn": "ℚ 天球的光芒\nℚ 新星璀璨 \n\n第n把携带古武+2（魂灵）和高位附魔墨水前往于贝尔坦  中萨纳兰 (X: 23.6, Y: 13.8)处拿书卷。\n打完石头找加尔赞，选择强化上古武器・魂灵",
-        "task_description_tw": "ℚ 天球的光芒\nℚ 新星璀璨 \n\n第n把攜帶古武+2（魂靈）和高位附魔墨水前往于貝爾坦  中薩納蘭 (X: 23.6, Y: 13.8)處拿書卷。\n打完石頭找加爾贊，選擇強化上古武器・魂靈",
-        "ilvl": 110,
-        "materials": [
-          {
-            "name_cn": "高位附魔墨水",
-            "name_tw": "高位附魔墨水",
-            "quantity": 3,
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": "三主城、伊修加德、摩杜纳、田园郡诗学商人均可兑换，分类选《特殊武器相关》（未接任务亦可兑换）。",
-            "note_tw": "三主城、伊修加德、摩杜納、田園郡詩學商人均可兌換，分類選《特殊武器相關》（未接任務亦可兌換）。"
-          },
-          {
-            "name_cn": "星光变石",
-            "name_tw": "星光變石",
-            "quantity": 75,
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": "1）布兰格维茵 摩杜纳 (X: 22, Y: 6.7)接《神秘地图》，接了这个任务之后，打 50/60 随机任务就可以获得一个神秘地图 ，解读地图并打开箱子后，就可以获得 5 块星光变石。\n\n之后《神秘地图》任务和其他日常一样在 23 点刷新，并可以重复接取。 \n\n \n\n2）在魔杜纳可以用 75 诗学换取神秘地图。 \n\n \n\n3）在自己所属的大国防联军，可以使用 50 点同盟徽章换取星光变石。",
-            "note_tw": "1）布蘭格維茵 摩杜納 (X: 22, Y: 6.7)接《神祕地圖》，接了這個任務之後，打 50/60 隨機任務就可以獲得一個神祕地圖 ，解讀地圖並打開箱子後，就可以獲得 5 塊星光變石。\n\n之後《神祕地圖》任務和其他日常一樣在 23 點刷新，並可以重複接取。 \n\n \n\n2）在魔杜納可以用 75 詩學換取神祕地圖。 \n\n \n\n3）在自己所屬的大國防聯軍，可以使用 50 點同盟徽章換取星光變石。"
-          },
-          {
-            "name_cn": "（神秘地图）",
-            "name_tw": "（神祕地圖）",
-            "quantity": 3750,
-            "source_cn": "同盟",
-            "source_tw": "同盟",
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "魔晶石",
-            "name_tw": "魔晶石",
-            "quantity": 75,
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": "选便宜的！从一型开始打！最多打5种！",
-            "note_tw": "選便宜的！從一型開始打！最多打5種！"
-          }
-        ],
-        "stage_index": 5
-      },
-      {
-        "name_cn": "古武+4 / 镇魂",
-        "name_tw": "古武+4 / 鎮魂",
-        "task_description_cn": "ℚ 注入武器的灵魂\n\n第n把古武拿着+ 3（新星）和加尔赞对话并选择将 “上古武器・新星” 绝灵化，然后去刷光。刷光完成后再次回来与他对话，并选择强化上古武器・新星。",
-        "task_description_tw": "ℚ 注入武器的靈魂\n\n第n把古武拿着+ 3（新星）和加爾贊對話並選擇將 “上古武器・新星” 絕靈化，然後去刷光。刷光完成後再次回來與他對話，並選擇強化上古武器・新星。",
-        "ilvl": 115,
-        "materials": [
-          {
-            "name_cn": "刷光\n\n推荐：黄金谷或极莫古力，火风土以外50极神亦可\n\n刷光数据收集表",
-            "name_tw": "刷光\n\n推薦：黃金谷或極莫古力，火風土以外50極神亦可\n\n刷光數據收集表",
-            "quantity": "2000点光",
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": null,
-            "note_tw": null
-          }
-        ],
-        "stage_index": 6
-      },
-      {
-        "name_cn": "古武+5 / 黄道武器",
-        "name_tw": "古武+5 / 黃道武器",
-        "task_description_cn": "ℚ 踏上黄道的征途\n\n第n把携带古武 + 4（镇魂）和任务给的 4 样材料回来找加尔赞对话，并选择再铸・黄道武器。\n\nℚ 滴水之恩\nℚ 挑战未知的工匠\nℚ 慈母手中物\nℚ 激情与梦想",
-        "task_description_tw": "ℚ 踏上黃道的征途\n\n第n把攜帶古武 + 4（鎮魂）和任務給的 4 樣材料回來找加爾贊對話，並選擇再鑄・黃道武器。\n\nℚ 滴水之恩\nℚ 挑戰未知的工匠\nℚ 慈母手中物\nℚ 激情與夢想",
-        "ilvl": 125,
-        "materials": [
-          {
-            "name_cn": "大炎兽核心",
-            "name_tw": "大炎獸核心",
-            "quantity": 80000,
-            "source_cn": "军票",
-            "source_tw": "軍票",
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "灵峰泉水",
-            "name_tw": "靈峯泉水",
-            "quantity": 800,
-            "source_cn": "诗学",
-            "source_tw": "詩學",
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "石绿湖水晶",
-            "name_tw": "石綠湖水晶",
-            "quantity": "100000G",
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": "船头杂用商人 拉诺西亚高地 (X: 26.1, Y: 26.4)",
-            "note_tw": "船頭雜用商人 拉諾西亞高地 (X: 26.1, Y: 26.4)"
-          },
-          {
-            "name_cn": "熔火指环HQ",
-            "name_tw": "熔火指環HQ",
-            "quantity": "制作或购买",
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "高质的木柴HQ",
-            "name_tw": "高質的木柴HQ",
-            "quantity": "制作或购买",
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "亚拉戈树脂",
-            "name_tw": "亞拉戈樹脂",
-            "quantity": "100000G",
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": "遗忘绿洲杂用商人 南萨纳兰 (X: 15.9, Y: 29.1)",
-            "note_tw": "遺忘綠洲雜用商人 南薩納蘭 (X: 15.9, Y: 29.1)"
-          },
-          {
-            "name_cn": "高质的研钵HQ",
-            "name_tw": "高質的研鉢HQ",
-            "quantity": "制作或购买",
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "高质的钵杵HQ",
-            "name_tw": "高質的鉢杵HQ",
-            "quantity": "制作或购买",
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "黄铜壶",
-            "name_tw": "黃銅壺",
-            "quantity": "100000G",
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": "和平苑杂用商人 黑衣森林北部林区 (X: 29.9, Y: 18.9)",
-            "note_tw": "和平苑雜用商人 黑衣森林北部林區 (X: 29.9, Y: 18.9)"
-          },
-          {
-            "name_cn": "秘制鳗鱼派HQ",
-            "name_tw": "祕製鰻魚派HQ",
-            "quantity": "制作或购买",
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "高质的古布料HQ",
-            "name_tw": "高質的古布料HQ",
-            "quantity": "制作或购买",
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "高质的羊皮纸HQ",
-            "name_tw": "高質的羊皮紙HQ",
-            "quantity": "制作或购买",
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "高质的安定粉HQ",
-            "name_tw": "高質的安定粉HQ",
-            "quantity": "制作或购买",
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": null,
-            "note_tw": null
-          },
-          {
-            "name_cn": "战神沙",
-            "name_tw": "戰神沙",
-            "quantity": "100000G",
-            "source_cn": null,
-            "source_tw": null,
-            "note_cn": "白云崖杂用商人 库尔札斯中央高地 (X: 13.3, Y: 16)",
-            "note_tw": "白雲崖雜用商人 庫爾札斯中央高地 (X: 13.3, Y: 16)"
-          }
-        ],
-        "stage_index": 7
-      },
-      {
-        "name_cn": "古武+6 / 本我",
-        "name_tw": "古武+6 / 本我",
-        "task_description_cn": "ℚ  力量觉醒\n\n第n把古武携带古武+5前往雷蒙  西拉诺西亚 (X: 34.3, Y: 31.7)领取圣魂刷光\n刷完后回北森找加尔赞对话，并选择让 “黄道武器” 觉醒。",
-        "task_description_tw": "ℚ  力量覺醒\n\n第n把古武攜帶古武+5前往雷蒙  西拉諾西亞 (X: 34.3, Y: 31.7)領取聖魂刷光\n刷完後回北森找加爾贊對話，並選擇讓 “黃道武器” 覺醒。",
-        "ilvl": 135,
-        "materials": [
-          {
-            "name_cn": "刷光\n\n推荐：黄金谷\n\n刷光数据收集表",
-            "name_tw": "刷光\n\n推薦：黃金谷\n\n刷光數據收集表",
-            "quantity": 600,
-            "source_cn": "诗学",
-            "source_tw": "詩學",
-            "note_cn": null,
-            "note_tw": null
-          }
-        ],
-        "stage_index": 8
-      }
-    ]
-  },
+  "weapon_series_list": [
+    {
+      "id": "zodiac",
+      "name_cn": "古武",
+      "name_tw": "古武",
+      "full_name_cn": "黄道武器",
+      "full_name_tw": "黃道武器",
+      "expansion": "2.x",
+      "level_cap": 50,
+      "available_jobs": [
+        "PLD",
+        "WAR",
+        "WHM",
+        "SCH",
+        "MNK",
+        "DRG",
+        "NIN",
+        "BRD",
+        "BLM",
+        "SMN"
+      ],
+      "stages": [
+        {
+          "name_cn": "前置任务",
+          "name_tw": "前置任務",
+          "task_description_cn": "ℚ 传说中的武器工匠",
+          "task_description_tw": "ℚ 傳說中的武器工匠",
+          "ilvl": null,
+          "materials": [],
+          "stage_index": 0
+        },
+        {
+          "name_cn": "古武+0",
+          "name_tw": "古武+0",
+          "task_description_cn": "ℚ 复苏的上古武器",
+          "task_description_tw": "ℚ 復甦的上古武器",
+          "ilvl": 80,
+          "materials": [
+            {
+              "name_cn": "原型武器（镶嵌魔晶石）",
+              "name_tw": "原型武器（鑲嵌魔晶石）",
+              "quantity": 1,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "骑士：神风弯刀：刚柔叁\n\n战士：野蛮巨斧：刚柔叁\n\n武僧：野性钢拳：武略叁\n\n龙骑：冠军骑枪：武略叁\n\n黑魔：染血咒杖：雄略叁\n\n白魔：狂人低语：咏唱叁\n\n诗人：长臂复合弓：神眼叁\n\n召唤：博学咏咒巫书：雄略叁\n\n学者：博学治愈巫书：咏唱叁\n\n忍者：吸血匕首：神眼叁",
+              "note_tw": "騎士：神風彎刀：剛柔叄\n\n戰士：野蠻巨斧：剛柔叄\n\n武僧：野性鋼拳：武略叄\n\n龍騎：冠軍騎槍：武略叄\n\n黑魔：染血咒杖：雄略叄\n\n白魔：狂人低語：詠唱叄\n\n詩人：長臂複合弓：神眼叄\n\n召喚：博學詠咒巫書：雄略叄\n\n學者：博學治癒巫書：詠唱叄\n\n忍者：吸血匕首：神眼叄"
+            },
+            {
+              "name_cn": "拉札罕淬火油",
+              "name_tw": "拉札罕淬火油",
+              "quantity": 1,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "三主城、伊修加德、摩杜纳、田园郡诗学商人均可兑换，分类选《特殊武器相关》（未接任务亦可兑换）。",
+              "note_tw": "三主城、伊修加德、摩杜納、田園郡詩學商人均可兌換，分類選《特殊武器相關》（未接任務亦可兌換）。"
+            }
+          ],
+          "stage_index": 1
+        },
+        {
+          "name_cn": "古武+1 / 天极",
+          "name_tw": "古武+1 / 天極",
+          "task_description_cn": "第n把携带古武和萨维奈灵药，在冶炼炉处兑换升级",
+          "task_description_tw": "第n把攜帶古武和薩維奈靈藥，在冶煉爐處兌換升級",
+          "ilvl": 90,
+          "materials": [
+            {
+              "name_cn": "萨维奈灵药",
+              "name_tw": "薩維奈靈藥",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "三主城、伊修加德、摩杜纳、田园郡诗学商人均可兑换，分类选《特殊武器相关》（未接任务亦可兑换）。",
+              "note_tw": "三主城、伊修加德、摩杜納、田園郡詩學商人均可兌換，分類選《特殊武器相關》（未接任務亦可兌換）。"
+            }
+          ],
+          "stage_index": 2
+        },
+        {
+          "name_cn": "古武+1.5 / 魂晶",
+          "name_tw": "古武+1.5 / 魂晶",
+          "task_description_cn": "ℚ 寻找英雄的武器\n\n第n把直接带+1（天极）去地图刷Fate即可\n刷完找加尔赞，选择强化上古武器・天极\n\n魂晶计时器",
+          "task_description_tw": "ℚ 尋找英雄的武器\n\n第n把直接帶+1（天極）去地圖刷Fate即可\n刷完找加爾贊，選擇強化上古武器・天極\n\n魂晶計時器",
+          "ilvl": 100,
+          "materials": [
+            {
+              "name_cn": "十二魂晶",
+              "name_tw": "十二魂晶",
+              "quantity": 1,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "推荐用左边计时器\n\n摩羯座：东部林区\n\n水瓶座：拉诺西亚高地\n\n双鱼座：拉诺西亚低地\n\n白羊座：中央拉诺西亚\n\n金牛座：东萨纳兰\n\n双子座：西萨纳兰\n\n巨蟹座：西拉诺西亚\n\n狮子座：拉诺西亚外地\n\n处女座：中央林区\n\n天秤座：中央萨纳兰\n\n天蝎座：南萨纳兰\n\n射手座：北部林区",
+              "note_tw": "推薦用左邊計時器\n\n摩羯座：東部林區\n\n水瓶座：拉諾西亞高地\n\n雙魚座：拉諾西亞低地\n\n白羊座：中央拉諾西亞\n\n金牛座：東薩納蘭\n\n雙子座：西薩納蘭\n\n巨蟹座：西拉諾西亞\n\n獅子座：拉諾西亞外地\n\n處女座：中央林區\n\n天秤座：中央薩納蘭\n\n天蠍座：南薩納蘭\n\n射手座：北部林區"
+            }
+          ],
+          "stage_index": 3
+        },
+        {
+          "name_cn": "古武+2 / 魂灵",
+          "name_tw": "古武+2 / 魂靈",
+          "task_description_cn": "ℚ 黄道文书 \n第n把携带+1.5（魂晶）前往古・茱萨奈（ 摩杜纳 X: 22.9, Y: 7.3）兑换小黄书\n刷完找加尔赞，选择强化上古武器・魂晶\n\n重复顺序：\n水一 + 滴水之恩\n风一 + 滴水/工匠\n水二/水狱一 + 慈母\n火一 + 工匠\n火二 + 梦想",
+          "task_description_tw": "ℚ 黃道文書 \n第n把攜帶+1.5（魂晶）前往古・茱薩奈（ 摩杜納 X: 22.9, Y: 7.3）兌換小黃書\n刷完找加爾贊，選擇強化上古武器・魂晶\n\n重複順序：\n水一 + 滴水之恩\n風一 + 滴水/工匠\n水二/水獄一 + 慈母\n火一 + 工匠\n火二 + 夢想",
+          "ilvl": 100,
+          "materials": [
+            {
+              "name_cn": "水天一卷",
+              "name_tw": "水天一卷",
+              "quantity": 100,
+              "source_cn": "诗学",
+              "source_tw": "詩學",
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "风天一卷",
+              "name_tw": "風天一卷",
+              "quantity": 100,
+              "source_cn": "诗学",
+              "source_tw": "詩學",
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "水天二卷",
+              "name_tw": "水天二卷",
+              "quantity": 100,
+              "source_cn": "诗学",
+              "source_tw": "詩學",
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "水狱一卷",
+              "name_tw": "水獄一卷",
+              "quantity": 100,
+              "source_cn": "诗学",
+              "source_tw": "詩學",
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "火天一卷",
+              "name_tw": "火天一卷",
+              "quantity": 100,
+              "source_cn": "诗学",
+              "source_tw": "詩學",
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "火天二卷",
+              "name_tw": "火天二卷",
+              "quantity": 100,
+              "source_cn": "诗学",
+              "source_tw": "詩學",
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "火狱一卷",
+              "name_tw": "火獄一卷",
+              "quantity": 100,
+              "source_cn": "诗学",
+              "source_tw": "詩學",
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "土天一卷",
+              "name_tw": "土天一卷",
+              "quantity": 100,
+              "source_cn": "诗学",
+              "source_tw": "詩學",
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "风天二卷",
+              "name_tw": "風天二卷",
+              "quantity": 100,
+              "source_cn": "诗学",
+              "source_tw": "詩學",
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 4
+        },
+        {
+          "name_cn": "古武+3 / 新星",
+          "name_tw": "古武+3 / 新星",
+          "task_description_cn": "ℚ 天球的光芒\nℚ 新星璀璨 \n\n第n把携带古武+2（魂灵）和高位附魔墨水前往于贝尔坦  中萨纳兰 (X: 23.6, Y: 13.8)处拿书卷。\n打完石头找加尔赞，选择强化上古武器・魂灵",
+          "task_description_tw": "ℚ 天球的光芒\nℚ 新星璀璨 \n\n第n把攜帶古武+2（魂靈）和高位附魔墨水前往于貝爾坦  中薩納蘭 (X: 23.6, Y: 13.8)處拿書卷。\n打完石頭找加爾贊，選擇強化上古武器・魂靈",
+          "ilvl": 110,
+          "materials": [
+            {
+              "name_cn": "高位附魔墨水",
+              "name_tw": "高位附魔墨水",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "三主城、伊修加德、摩杜纳、田园郡诗学商人均可兑换，分类选《特殊武器相关》（未接任务亦可兑换）。",
+              "note_tw": "三主城、伊修加德、摩杜納、田園郡詩學商人均可兌換，分類選《特殊武器相關》（未接任務亦可兌換）。"
+            },
+            {
+              "name_cn": "星光变石",
+              "name_tw": "星光變石",
+              "quantity": 75,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "1）布兰格维茵 摩杜纳 (X: 22, Y: 6.7)接《神秘地图》，接了这个任务之后，打 50/60 随机任务就可以获得一个神秘地图 ，解读地图并打开箱子后，就可以获得 5 块星光变石。\n\n之后《神秘地图》任务和其他日常一样在 23 点刷新，并可以重复接取。 \n\n \n\n2）在魔杜纳可以用 75 诗学换取神秘地图。 \n\n \n\n3）在自己所属的大国防联军，可以使用 50 点同盟徽章换取星光变石。",
+              "note_tw": "1）布蘭格維茵 摩杜納 (X: 22, Y: 6.7)接《神祕地圖》，接了這個任務之後，打 50/60 隨機任務就可以獲得一個神祕地圖 ，解讀地圖並打開箱子後，就可以獲得 5 塊星光變石。\n\n之後《神祕地圖》任務和其他日常一樣在 23 點刷新，並可以重複接取。 \n\n \n\n2）在魔杜納可以用 75 詩學換取神祕地圖。 \n\n \n\n3）在自己所屬的大國防聯軍，可以使用 50 點同盟徽章換取星光變石，一把需要3750點同盟徽章。"
+            },
+            {
+              "name_cn": "魔晶石",
+              "name_tw": "魔晶石",
+              "quantity": 75,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "选便宜的！从一型开始打！最多打5种！",
+              "note_tw": "選便宜的！從一型開始打！最多打5種！"
+            }
+          ],
+          "stage_index": 5
+        },
+        {
+          "name_cn": "古武+4 / 镇魂",
+          "name_tw": "古武+4 / 鎮魂",
+          "task_description_cn": "ℚ 注入武器的灵魂\n\n第n把古武拿着+ 3（新星）和加尔赞对话并选择将 “上古武器・新星” 绝灵化，然后去刷光。刷光完成后再次回来与他对话，并选择强化上古武器・新星。",
+          "task_description_tw": "ℚ 注入武器的靈魂\n\n第n把古武拿着+ 3（新星）和加爾贊對話並選擇將 “上古武器・新星” 絕靈化，然後去刷光。刷光完成後再次回來與他對話，並選擇強化上古武器・新星。",
+          "ilvl": 115,
+          "materials": [
+            {
+              "name_cn": "刷光\n\n推荐：黄金谷或极莫古力，火风土以外50极神亦可\n\n刷光数据收集表",
+              "name_tw": "刷光\n\n推薦：黃金谷或極莫古力，火風土以外50極神亦可\n\n刷光數據收集表",
+              "quantity": "2000点光",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 6
+        },
+        {
+          "name_cn": "古武+5 / 黄道武器",
+          "name_tw": "古武+5 / 黃道武器",
+          "task_description_cn": "ℚ 踏上黄道的征途\n\n第n把携带古武 + 4（镇魂）和任务给的 4 样材料回来找加尔赞对话，并选择再铸・黄道武器。\n\nℚ 滴水之恩\nℚ 挑战未知的工匠\nℚ 慈母手中物\nℚ 激情与梦想",
+          "task_description_tw": "ℚ 踏上黃道的征途\n\n第n把攜帶古武 + 4（鎮魂）和任務給的 4 樣材料回來找加爾贊對話，並選擇再鑄・黃道武器。\n\nℚ 滴水之恩\nℚ 挑戰未知的工匠\nℚ 慈母手中物\nℚ 激情與夢想",
+          "ilvl": 125,
+          "materials": [
+            {
+              "name_cn": "大炎兽核心",
+              "name_tw": "大炎獸核心",
+              "quantity": 80000,
+              "source_cn": "军票",
+              "source_tw": "軍票",
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "灵峰泉水",
+              "name_tw": "靈峯泉水",
+              "quantity": 800,
+              "source_cn": "诗学",
+              "source_tw": "詩學",
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "石绿湖水晶",
+              "name_tw": "石綠湖水晶",
+              "quantity": "100000G",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "船头杂用商人 拉诺西亚高地 (X: 26.1, Y: 26.4)",
+              "note_tw": "船頭雜用商人 拉諾西亞高地 (X: 26.1, Y: 26.4)"
+            },
+            {
+              "name_cn": "熔火指环HQ",
+              "name_tw": "熔火指環HQ",
+              "quantity": "制作或购买",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "高质的木柴HQ",
+              "name_tw": "高質的木柴HQ",
+              "quantity": "制作或购买",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "亚拉戈树脂",
+              "name_tw": "亞拉戈樹脂",
+              "quantity": "100000G",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "遗忘绿洲杂用商人 南萨纳兰 (X: 15.9, Y: 29.1)",
+              "note_tw": "遺忘綠洲雜用商人 南薩納蘭 (X: 15.9, Y: 29.1)"
+            },
+            {
+              "name_cn": "高质的研钵HQ",
+              "name_tw": "高質的研鉢HQ",
+              "quantity": "制作或购买",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "高质的钵杵HQ",
+              "name_tw": "高質的鉢杵HQ",
+              "quantity": "制作或购买",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "黄铜壶",
+              "name_tw": "黃銅壺",
+              "quantity": "100000G",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "和平苑杂用商人 黑衣森林北部林区 (X: 29.9, Y: 18.9)",
+              "note_tw": "和平苑雜用商人 黑衣森林北部林區 (X: 29.9, Y: 18.9)"
+            },
+            {
+              "name_cn": "秘制鳗鱼派HQ",
+              "name_tw": "祕製鰻魚派HQ",
+              "quantity": "制作或购买",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "高质的古布料HQ",
+              "name_tw": "高質的古布料HQ",
+              "quantity": "制作或购买",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "高质的羊皮纸HQ",
+              "name_tw": "高質的羊皮紙HQ",
+              "quantity": "制作或购买",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "高质的安定粉HQ",
+              "name_tw": "高質的安定粉HQ",
+              "quantity": "制作或购买",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "战神沙",
+              "name_tw": "戰神沙",
+              "quantity": "100000G",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "白云崖杂用商人 库尔札斯中央高地 (X: 13.3, Y: 16)",
+              "note_tw": "白雲崖雜用商人 庫爾札斯中央高地 (X: 13.3, Y: 16)"
+            }
+          ],
+          "stage_index": 7
+        },
+        {
+          "name_cn": "古武+6 / 本我",
+          "name_tw": "古武+6 / 本我",
+          "task_description_cn": "ℚ  力量觉醒\n\n第n把古武携带古武+5前往雷蒙  西拉诺西亚 (X: 34.3, Y: 31.7)领取圣魂刷光\n刷完后回北森找加尔赞对话，并选择让 “黄道武器” 觉醒。",
+          "task_description_tw": "ℚ  力量覺醒\n\n第n把古武攜帶古武+5前往雷蒙  西拉諾西亞 (X: 34.3, Y: 31.7)領取聖魂刷光\n刷完後回北森找加爾贊對話，並選擇讓 “黃道武器” 覺醒。",
+          "ilvl": 135,
+          "materials": [
+            {
+              "name_cn": "刷光\n\n推荐：黄金谷\n\n刷光数据收集表",
+              "name_tw": "刷光\n\n推薦：黃金谷\n\n刷光數據收集表",
+              "quantity": 600,
+              "source_cn": "诗学",
+              "source_tw": "詩學",
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 8
+        },
+        {
+          "name_cn": "斗壶",
+          "name_tw": "鬥壺",
+          "task_description_cn": "ℚ  锅嫌壶黑\n需要完成任意一把古武·本我解锁",
+          "task_description_tw": "ℚ  鍋嫌壺黑\n需要完成任意一把古武·本我解鎖",
+          "ilvl": null,
+          "materials": [
+            {
+              "name_cn": "星光变石",
+              "name_tw": "星光變石",
+              "quantity": 50,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 9
+        },
+        {
+          "name_cn": "斗壶天极",
+          "name_tw": "鬥壺天極",
+          "task_description_cn": "",
+          "task_description_tw": "",
+          "ilvl": null,
+          "materials": [
+            {
+              "name_cn": "萨维奈灵药",
+              "name_tw": "薩維奈靈藥",
+              "quantity": 10,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 10
+        }
+      ]
+    },
+    {
+      "id": "anima",
+      "name_cn": "魂武",
+      "name_tw": "魂武",
+      "full_name_cn": "灵魂武器",
+      "full_name_tw": "靈魂武器",
+      "expansion": "3.x",
+      "level_cap": 60,
+      "available_jobs": [
+        "PLD",
+        "WAR",
+        "DRK",
+        "WHM",
+        "SCH",
+        "AST",
+        "MNK",
+        "DRG",
+        "NIN",
+        "BRD",
+        "MCH",
+        "BLM",
+        "SMN"
+      ],
+      "stages": [
+        {
+          "name_cn": "前置",
+          "name_tw": "前置",
+          "task_description_cn": "ℚ 其名元灵武器",
+          "task_description_tw": "ℚ 其名元靈武器",
+          "ilvl": null,
+          "materials": [],
+          "stage_index": 0
+        },
+        {
+          "name_cn": "0 / 创造新武器",
+          "name_tw": "0 / 創造新武器",
+          "task_description_cn": "ℚ 创造新武器\n摩杜纳 (23, 6) 2楼露台",
+          "task_description_tw": "ℚ 創造新武器\n摩杜納 (23, 6) 2樓露臺",
+          "ilvl": 170,
+          "materials": [
+            {
+              "name_cn": "星极水晶",
+              "name_tw": "星極水晶",
+              "quantity": 1,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "推荐使用古武+6兑换获得",
+              "note_tw": "推薦使用古武+6兌換獲得"
+            },
+            {
+              "name_cn": "灵极水晶",
+              "name_tw": "靈極水晶",
+              "quantity": 1,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "推荐使用古武+6兑换获得",
+              "note_tw": "推薦使用古武+6兌換獲得"
+            },
+            {
+                "name_cn": "流光之火/風/雷水晶",
+                "name_tw": "流光之火/風/雷水晶",
+                "quantity": 1,
+                "source_cn": null,
+                "source_tw": null,
+                "note_cn": "火：魔大陸\n風：阿巴拉提亞雲海\n雷：德拉瓦尼亞雲海",
+                "note_tw": "火：魔大陸\n風：阿巴拉提亞雲海\n雷：德拉瓦尼亞雲海"
+            },
+            {
+                "name_cn": "流光之冰/土/水水晶",
+                "name_tw": "流光之冰/土/水水晶",
+                "quantity": 1,
+                "source_cn": null,
+                "source_tw": null,
+                "note_cn": "冰：庫爾札斯西部高地\n土：德拉瓦尼亞山麓地\n水：德拉瓦尼亞河谷地",
+                "note_tw": "冰：庫爾札斯西部高地\n土：德拉瓦尼亞山麓地\n水：德拉瓦尼亞河谷地"
+            }
+          ],
+          "stage_index": 1
+        },
+        {
+          "name_cn": "1 / 觉醒",
+          "name_tw": "1 / 覺醒",
+          "task_description_cn": "ℚ 英雄的轨迹",
+          "task_description_tw": "ℚ 英雄的軌跡",
+          "ilvl": 200,
+          "materials": [
+            {
+              "name_cn": "副本十连",
+              "name_tw": "副本十連",
+              "quantity": null,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 2
+        },
+        {
+          "name_cn": "2 / 新元灵",
+          "name_tw": "2 / 新元靈",
+          "task_description_cn": "ℚ 闪耀的元灵武器\n 材料统计",
+          "task_description_tw": "ℚ 閃耀的元靈武器\n 材料統計",
+          "ilvl": 210,
+          "materials": [
+            {
+              "name_cn": "附魔橡胶",
+              "name_tw": "附魔橡膠",
+              "quantity": 1,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "神秘骨片×10（詩學兌換）+ 堅鋼投斧×4（軍票5000/製作/市場）",
+              "note_tw": "神秘骨片×10（詩學兌換）+ 堅鋼投斧×4（軍票5000/製作/市場）"
+            },
+            {
+              "name_cn": "亚拉戈上级硬化药",
+              "name_tw": "亞拉戈上級硬化藥",
+              "quantity": 1,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "神秘貝殼×10（詩學兌換）+ 鈦合金鏡×4（軍票5000/製作/市場）",
+              "note_tw": "神秘貝殼×10（詩學兌換）+ 鈦合金鏡×4（軍票5000/製作/市場）"
+            },
+            {
+              "name_cn": "亚拉戈上级魔触媒",
+              "name_tw": "亞拉戈上級魔觸媒",
+              "quantity": 1,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "神秘種子×10（詩學兌換）+ 國王餅×4（軍票5000/製作/市場）",
+              "note_tw": "神秘種子×10（詩學兌換）+ 國王餅×4（軍票5000/製作/市場）"
+            },
+            {
+              "name_cn": "神圣水",
+              "name_tw": "神聖水",
+              "quantity": 1,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "神秘原石×10（詩學兌換）+ 破魔箭×4（軍票5000/製作/市場）",
+              "note_tw": "神秘原石×10（詩學兌換）+ 破魔箭×4（軍票5000/製作/市場）"
+            }
+          ],
+          "stage_index": 3
+        },
+        {
+          "name_cn": "3 / 超导",
+          "name_tw": "3 / 超導",
+          "task_description_cn": "ℚ 人造元灵的声音",
+          "task_description_tw": "ℚ 人造元靈的聲音",
+          "ilvl": 230,
+          "materials": [
+            {
+              "name_cn": "亚拉戈绝灵油",
+              "name_tw": "亞拉戈絕靈油",
+              "quantity": null,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "诗学兑换",
+              "note_tw": "詩學兌換"
+            }
+          ],
+          "stage_index": 4
+        },
+        {
+          "name_cn": "4 / 培育人造元灵",
+          "name_tw": "4 / 培育人造元靈",
+          "task_description_cn": "ℚ 培育人造元灵 \n乌兰 田园郡 (6, 5)",
+          "task_description_tw": "ℚ 培育人造元靈 \n烏蘭 田園郡 (6, 5)",
+          "ilvl": 240,
+          "materials": [
+            {
+              "name_cn": "水晶砂",
+              "name_tw": "水晶砂",
+              "quantity": null,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "硬灵性岩",
+              "name_tw": "硬靈性巖",
+              "quantity": null,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "三主城、伊修加德、摩杜纳、田园郡诗学商人均可兑换，分类选《特殊武器相关》（未接任务亦可兑换）。",
+              "note_tw": "三主城、伊修加德、摩杜納、田園郡詩學商人均可兌換，分類選《特殊武器相關》（未接任務亦可兌換）。"
+            }
+          ],
+          "stage_index": 5
+        },
+        {
+          "name_cn": "5 / 灵慧",
+          "name_tw": "5 / 靈慧",
+          "task_description_cn": "ℚ 人造元灵的未来",
+          "task_description_tw": "ℚ 人造元靈的未來",
+          "ilvl": 260,
+          "materials": [
+            {
+              "name_cn": "活性化晶簇",
+              "name_tw": "活性化晶簇",
+              "quantity": null,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "* 詩學兌換：40×50 = 2,000\n\n* 任务“安费莉丝的委托”（田园）：每周给18个\n\n* 任务“安格莱特的委托”（田园）：每天给1个",
+              "note_tw": "* 詩學兌換：40×50 = 2,000\n\n* 任務“安費莉絲的委託”（田園）：每週給18個\n\n* 任務“安格萊特的委託”（田園）：每天給1個"
+            }
+          ],
+          "stage_index": 6
+        },
+        {
+          "name_cn": "6 / 人造元灵终绽放",
+          "name_tw": "6 / 人造元靈終綻放",
+          "task_description_cn": "ℚ 人造元灵终绽放\nℚ 制造新生魂石",
+          "task_description_tw": "ℚ 人造元靈終綻放\nℚ 製造新生魂石",
+          "ilvl": 270,
+          "materials": [
+            {
+              "name_cn": "刷光",
+              "name_tw": "刷光",
+              "quantity": null,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "推荐「零式天動之章 1」(A9s)\n高火力推荐「零式天動之章 2」(A10s)",
+              "note_tw": "推荐「零式天動之章 1」(A9s)\n高火力推荐「零式天動之章 2」(A10s)"
+            },
+            {
+              "name_cn": "神秘结晶",
+              "name_tw": "神祕結晶",
+              "quantity": 15,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 7
+        },
+        {
+          "name_cn": "7 / 灵光",
+          "name_tw": "7 / 靈光",
+          "task_description_cn": "ℚ 人造元灵搭档",
+          "task_description_tw": "ℚ 人造元靈搭檔",
+          "ilvl": 275,
+          "materials": [
+            {
+              "name_cn": "古代附魔墨水",
+              "name_tw": "古代附魔墨水",
+              "quantity": null,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "未接任务无法兑换",
+              "note_tw": "未接任務無法兌換"
+            },
+            {
+              "name_cn": "蠻神討伐x12",
+              "name_tw": "蠻神討伐x12",
+              "quantity": null,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 8
+        }
+      ]
+    },
+    {
+      "id": "eureka",
+      "name_cn": "优武",
+      "name_tw": "優武",
+      "full_name_cn": "优雷卡武器",
+      "full_name_tw": "優雷卡武器",
+      "expansion": "4.x",
+      "level_cap": 70,
+      "available_jobs": [
+        "WAR",
+        "DRK",
+        "WHM",
+        "SCH",
+        "AST",
+        "MNK",
+        "SAM",
+        "DRG",
+        "NIN",
+        "BRD",
+        "MCH",
+        "BLM",
+        "SMN",
+        "RDM"
+      ],
+      "stages": [
+        {
+          "name_cn": "禁地兵装",
+          "name_tw": "禁地兵裝",
+          "task_description_cn": "常风之地\n\n初始需要70校服（如果丢失可以去主城失物管理员处购买）",
+          "task_description_tw": "常風之地\n\n初始需要70校服（如果丟失可以去主城失物管理員處購買）",
+          "ilvl": 335,
+          "materials": [
+            {
+              "name_cn": "乱属性水晶",
+              "name_tw": "亂屬性水晶",
+              "quantity": 100,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "可在营地盖罗尔特处将 常风水晶 分解为 乱属性水晶。\n\n分解获得数量随机，一个个分解可以获得更高期望（但是更累）",
+              "note_tw": "可在營地蓋羅爾特處將 常風水晶 分解爲 亂屬性水晶。\n\n分解獲得數量隨機，一個個分解可以獲得更高期望（但是更累）"
+            }
+          ],
+          "stage_index": 0
+        },
+        {
+          "name_cn": "禁地兵裝+1",
+          "name_tw": "禁地兵裝+1",
+          "task_description_cn": "",
+          "task_description_tw": "",
+          "ilvl": 340,
+          "materials": [
+            {
+              "name_cn": "乱属性水晶",
+              "name_tw": "亂屬性水晶",
+              "quantity": 400,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "可在营地盖罗尔特处将 常风水晶 分解为 乱属性水晶。 \n\n分解获得数量随机，一个个分解可以获得更高期望（但是更累）",
+              "note_tw": "可在營地蓋羅爾特處將 常風水晶 分解爲 亂屬性水晶。 \n\n分解獲得數量隨機，一個個分解可以獲得更高期望（但是更累）"
+            }
+          ],
+          "stage_index": 1
+        },
+        {
+          "name_cn": "禁地兵裝+2",
+          "name_tw": "禁地兵裝+2",
+          "task_description_cn": "",
+          "task_description_tw": "",
+          "ilvl": 345,
+          "materials": [
+            {
+              "name_cn": "乱属性水晶",
+              "name_tw": "亂屬性水晶",
+              "quantity": 800,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "可在营地盖罗尔特处将 常风水晶 分解为 乱属性水晶。 \n\n分解获得数量随机，一个个分解可以获得更高期望（但是更累）",
+              "note_tw": "可在營地蓋羅爾特處將 常風水晶 分解爲 亂屬性水晶。 \n\n分解獲得數量隨機，一個個分解可以獲得更高期望（但是更累）"
+            }
+          ],
+          "stage_index": 2
+        },
+        {
+          "name_cn": "常风",
+          "name_tw": "常風",
+          "task_description_cn": "",
+          "task_description_tw": "",
+          "ilvl": 355,
+          "materials": [
+            {
+              "name_cn": "帕祖祖的羽毛",
+              "name_tw": "帕祖祖的羽毛",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "19 NM 暴风魔王 —— 帕祖祖\n\n金牌可获得3个\n\n可使用乱属性水晶 x 300兑换",
+              "note_tw": "19 NM 暴風魔王 —— 帕祖祖\n\n金牌可獲得3個\n\n可使用亂屬性水晶 x 300兌換"
+            }
+          ],
+          "stage_index": 3
+        },
+        {
+          "name_cn": "恒冰",
+          "name_tw": "恆冰",
+          "task_description_cn": "恒冰之地\n\nElv25之后获得优雷卡以太壶，之后刷光获得乱属性水晶",
+          "task_description_tw": "恆冰之地\n\nElv25之後獲得優雷卡以太壺，之後刷光獲得亂屬性水晶",
+          "ilvl": 360,
+          "materials": [
+            {
+              "name_cn": "结冰乱属性水晶",
+              "name_tw": "結冰亂屬性水晶",
+              "quantity": 5,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 4
+        },
+        {
+          "name_cn": "恒冰+1",
+          "name_tw": "恆冰+1",
+          "task_description_cn": "",
+          "task_description_tw": "",
+          "ilvl": 365,
+          "materials": [
+            {
+              "name_cn": "结冰乱属性水晶",
+              "name_tw": "結冰亂屬性水晶",
+              "quantity": 10,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "恒冰水晶",
+              "name_tw": "恆冰水晶",
+              "quantity": 500,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "NM获得",
+              "note_tw": "NM獲得"
+            }
+          ],
+          "stage_index": 5
+        },
+        {
+          "name_cn": "元素",
+          "name_tw": "元素",
+          "task_description_cn": "",
+          "task_description_tw": "",
+          "ilvl": 370,
+          "materials": [
+            {
+              "name_cn": "结冰乱属性水晶",
+              "name_tw": "結冰亂屬性水晶",
+              "quantity": 16,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "娄希的冰片",
+              "name_tw": "婁希的冰片",
+              "quantity": 5,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "34 NM 苍蓝冰刃 —— 娄希\n\n金牌可获得2个\n\n可使用恒冰水晶 x 50兑换（调查队的警卫员@营地内）",
+              "note_tw": "34 NM 蒼藍冰刃 —— 婁希\n\n金牌可獲得2個\n\n可使用恆冰水晶 x 50兌換（調查隊的警衛員@營地內）"
+            }
+          ],
+          "stage_index": 6
+        },
+        {
+          "name_cn": "元素+1",
+          "name_tw": "元素+1",
+          "task_description_cn": "涌火之地\n\n获得涌火武器之后跟盖罗尔特对话获得优雷卡以太壶【火】，和恒冰一样刷光，提取出爆炎乱属性水晶为武器增加副属性\n每次刷新获得词条数为当前+0或+1，最高5词条，建议增加词条就保存，5词条后开始刷属性",
+          "task_description_tw": "湧火之地\n\n獲得湧火武器之後跟蓋羅爾特對話獲得優雷卡以太壺【火】，和恆冰一樣刷光，提取出爆炎亂屬性水晶爲武器增加副屬性\n每次刷新獲得詞條數爲當前+0或+1，最高5詞條，建議增加詞條就保存，5詞條後開始刷屬性",
+          "ilvl": 375,
+          "materials": [
+            {
+              "name_cn": "记录文理技能",
+              "name_tw": "記錄文理技能",
+              "quantity": 10,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "涌火水晶",
+              "name_tw": "湧火水晶",
+              "quantity": 150,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "NM获得",
+              "note_tw": "NM獲得"
+            }
+          ],
+          "stage_index": 7
+        },
+        {
+          "name_cn": "元素+2",
+          "name_tw": "元素+2",
+          "task_description_cn": "",
+          "task_description_tw": "",
+          "ilvl": 380,
+          "materials": [
+            {
+              "name_cn": "记录文理技能",
+              "name_tw": "記錄文理技能",
+              "quantity": 20,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "涌火水晶",
+              "name_tw": "湧火水晶",
+              "quantity": 200,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "NM获得",
+              "note_tw": "NM獲得"
+            }
+          ],
+          "stage_index": 8
+        },
+        {
+          "name_cn": "涌火",
+          "name_tw": "湧火",
+          "task_description_cn": "",
+          "task_description_tw": "",
+          "ilvl": 385,
+          "materials": [
+            {
+              "name_cn": "记录文理技能",
+              "name_tw": "記錄文理技能",
+              "quantity": 30,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "涌火水晶",
+              "name_tw": "湧火水晶",
+              "quantity": 300,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "NM获得",
+              "note_tw": "NM獲得"
+            },
+            {
+              "name_cn": "彭忒西勒亚的火种",
+              "name_tw": "彭忒西勒亞的火種",
+              "quantity": 5,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "49 NM 炎蝶的女王 —— 彭忒西勒亚\n\n金牌可获得3个\n\n可使用涌火水晶 x 50兑换（调查队的警卫员@营地内）",
+              "note_tw": "49 NM 炎蝶的女王 —— 彭忒西勒亞\n\n金牌可獲得3個\n\n可使用湧火水晶 x 50兌換（調查隊的警衛員@營地內）"
+            }
+          ],
+          "stage_index": 9
+        },
+        {
+          "name_cn": "丰水",
+          "name_tw": "豐水",
+          "task_description_cn": "丰水之地",
+          "task_description_tw": "豐水之地",
+          "ilvl": 390,
+          "materials": [
+            {
+              "name_cn": "丰水水晶",
+              "name_tw": "豐水水晶",
+              "quantity": 50,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "NM获得",
+              "note_tw": "NM獲得"
+            }
+          ],
+          "stage_index": 10
+        },
+        {
+          "name_cn": "丰水+1",
+          "name_tw": "豐水+1",
+          "task_description_cn": "",
+          "task_description_tw": "",
+          "ilvl": 395,
+          "materials": [
+            {
+              "name_cn": "丰水水晶",
+              "name_tw": "豐水水晶",
+              "quantity": 100,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "NM获得",
+              "note_tw": "NM獲得"
+            }
+          ],
+          "stage_index": 11
+        },
+        {
+          "name_cn": "新兵装",
+          "name_tw": "新兵裝",
+          "task_description_cn": "",
+          "task_description_tw": "",
+          "ilvl": 400,
+          "materials": [
+            {
+              "name_cn": "丰水水晶",
+              "name_tw": "豐水水晶",
+              "quantity": 100,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "NM获得",
+              "note_tw": "NM獲得"
+            }
+          ],
+          "stage_index": 12
+        },
+        {
+          "name_cn": "优雷卡",
+          "name_tw": "優雷卡",
+          "task_description_cn": "",
+          "task_description_tw": "",
+          "ilvl": 405,
+          "materials": [
+            {
+              "name_cn": "丰水水晶",
+              "name_tw": "豐水水晶",
+              "quantity": 100,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "NM获得",
+              "note_tw": "NM獲得"
+            },
+            {
+              "name_cn": "水晶龙之鳞",
+              "name_tw": "水晶龍之鱗",
+              "quantity": 5,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "59 NM 水晶之龙 —— 起源守望者\n\n金牌可获得3个",
+              "note_tw": "59 NM 水晶之龍 —— 起源守望者\n\n金牌可獲得3個"
+            }
+          ],
+          "stage_index": 13
+        },
+        {
+          "name_cn": "优雷卡·改",
+          "name_tw": "優雷卡·改",
+          "task_description_cn": "仅增加优雷卡元素特效，没有其他属性增强（意义不大）",
+          "task_description_tw": "僅增加優雷卡元素特效，沒有其他屬性增強（意義不大）",
+          "ilvl": 405,
+          "materials": [
+            {
+              "name_cn": "优雷卡的断片",
+              "name_tw": "優雷卡的斷片",
+              "quantity": 100,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 14
+        }
+      ]
+    },
+    {
+      "id": "bozja",
+      "name_cn": "义武",
+      "name_tw": "義武",
+      "full_name_cn": "记忆武器",
+      "full_name_tw": "記憶武器",
+      "expansion": "5.x",
+      "level_cap": 80,
+      "available_jobs": [
+        "PLD",
+        "WAR",
+        "DRK",
+        "GNB",
+        "WHM",
+        "SCH",
+        "AST",
+        "MNK",
+        "DRG",
+        "SAM",
+        "NIN",
+        "BRD",
+        "MCH",
+        "DNC",
+        "BLM",
+        "SMN",
+        "RDM"
+      ],
+      "stages": [
+        {
+          "name_cn": "前置任务",
+          "name_tw": "前置任務",
+          "task_description_cn": "ℚ 失传的圣遗物",
+          "task_description_tw": "ℚ 失傳的聖遺物",
+          "ilvl": null,
+          "materials": [],
+          "stage_index": 0
+        },
+        {
+          "name_cn": "义军武器",
+          "name_tw": "義軍武器",
+          "task_description_cn": "ℚ 重现“女王之刃”\n第一把赠送",
+          "task_description_tw": "ℚ 重現“女王之刃”\n第一把贈送",
+          "ilvl": 485,
+          "materials": [
+            {
+              "name_cn": "萨维奈灵鳞粉",
+              "name_tw": "薩維奈靈鱗粉",
+              "quantity": 4,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "三主城、伊修加德、摩杜纳、田园郡诗学商人均可兑换，分类选《特殊武器相关》（未接任务亦可兑换）。",
+              "note_tw": "三主城、伊修加德、摩杜納、田園郡詩學商人均可兌換，分類選《特殊武器相關》（未接任務亦可兌換）。"
+            }
+          ],
+          "stage_index": 1
+        },
+        {
+          "name_cn": "改良型",
+          "name_tw": "改良型",
+          "task_description_cn": "ℚ 将记忆固定在义军武器之上",
+          "task_description_tw": "ℚ 將記憶固定在義軍武器之上",
+          "ilvl": 500,
+          "materials": [
+            {
+              "name_cn": "烦恼的记忆晶块",
+              "name_tw": "煩惱的記憶晶塊",
+              "quantity": 20,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "战线下层SM/击杀小怪概率获得\n\n库尔札斯西部高地/阿巴拉提亚云海FATE金牌100%获得",
+              "note_tw": "戰線下層SM/擊殺小怪概率獲得\n\n庫爾札斯西部高地/阿巴拉提亞雲海FATE金牌100%獲得"
+            },
+            {
+              "name_cn": "悲伤的记忆晶块",
+              "name_tw": "悲傷的記憶晶塊",
+              "quantity": 20,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "战线中层SM/击杀小怪概率获得\n\n龙堡参天高地/翻云雾海FATE金牌100%获得",
+              "note_tw": "戰線中層SM/擊殺小怪概率獲得\n\n龍堡參天高地/翻雲霧海FATE金牌100%獲得"
+            },
+            {
+              "name_cn": "恐惧的记忆晶块",
+              "name_tw": "恐懼的記憶晶塊",
+              "quantity": 20,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "战线上层SM/击杀小怪概率获得\n\n龙堡内陆低地/魔大陆FATE金牌100%获得",
+              "note_tw": "戰線上層SM/擊殺小怪概率獲得\n\n龍堡內陸低地/魔大陸FATE金牌100%獲得"
+            }
+          ],
+          "stage_index": 2
+        },
+        {
+          "name_cn": "回忆",
+          "name_tw": "回憶",
+          "task_description_cn": "ℚ 将勇猛的记忆固定在义军武器之上",
+          "task_description_tw": "ℚ 將勇猛的記憶固定在義軍武器之上",
+          "ilvl": 500,
+          "materials": [
+            {
+              "name_cn": "勇猛的记忆晶块",
+              "name_tw": "勇猛的記憶晶塊",
+              "quantity": 6,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "等级同步60级副本，100%概率获得\n\n随机任务：练级；每日一次\n\n南方博兹雅战线冲突战（SM）/ 击杀小怪概率获得",
+              "note_tw": "等級同步60級副本，100%概率獲得\n\n隨機任務：練級；每日一次\n\n南方博茲雅戰線衝突戰（SM）/ 擊殺小怪概率獲得"
+            }
+          ],
+          "stage_index": 3
+        },
+        {
+          "name_cn": "裁决",
+          "name_tw": "裁決",
+          "task_description_cn": "ℚ 义军武器，变形\n通关一次女王古殿后解锁",
+          "task_description_tw": "ℚ 義軍武器，變形\n通關一次女王古殿後解鎖",
+          "ilvl": 510,
+          "materials": [
+            {
+              "name_cn": "厌恶的记忆晶块",
+              "name_tw": "厭惡的記憶晶塊",
+              "quantity": 15,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "等级同步通关水晶塔系列任意副本 (古代人迷宫、希尔科斯塔、暗之世界)，100% 概率获得。\n\n参加南方博兹雅战线紧急遭遇战（CE）概率获得。\n\n参加帝国湖岸堡攻城战固定获得 5 块。",
+              "note_tw": "等級同步通關水晶塔系列任意副本 (古代人迷宮、希爾科斯塔、暗之世界)，100% 概率獲得。\n\n參加南方博茲雅戰線緊急遭遇戰（CE）概率獲得。\n\n參加帝國湖岸堡攻城戰固定獲得 5 塊。"
+            }
+          ],
+          "stage_index": 4
+        },
+        {
+          "name_cn": "球状物体，前来救急",
+          "name_tw": "球狀物體，前來救急",
+          "task_description_cn": "ℚ 球状物体，前来救急",
+          "task_description_tw": "ℚ 球狀物體，前來救急",
+          "ilvl": null,
+          "materials": [
+            {
+              "name_cn": "不祥的记忆晶块",
+              "name_tw": "不祥的記憶晶塊",
+              "quantity": 18,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "基拉巴尼亚地区（边区、山区、湖区） FATE 概率获得。\n\n等级同步通关玛哈之影系列任意副本（魔航船、玛哈、影之国），100% 概率获得。",
+              "note_tw": "基拉巴尼亞地區（邊區、山區、湖區） FATE 概率獲得。\n\n等級同步通關瑪哈之影系列任意副本（魔航船、瑪哈、影之國），100% 概率獲得。"
+            },
+            {
+              "name_cn": "忌讳的记忆晶块",
+              "name_tw": "忌諱的記憶晶塊",
+              "quantity": 18,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "奥萨德地区（红玉海、草原、延夏） FATE 概率获得。\n\n等级同步通关重返伊瓦利斯系列任意副本 (失落之都、灯塔、修道院)，100% 概率获得。",
+              "note_tw": "奧薩德地區（紅玉海、草原、延夏） FATE 概率獲得。\n\n等級同步通關重返伊瓦利斯系列任意副本 (失落之都、燈塔、修道院)，100% 概率獲得。"
+            }
+          ],
+          "stage_index": 5
+        },
+        {
+          "name_cn": "改良型裁决",
+          "name_tw": "改良型裁決",
+          "task_description_cn": "ℚ 义军武器的崭新未来",
+          "task_description_tw": "ℚ 義軍武器的嶄新未來",
+          "ilvl": 515,
+          "materials": [
+            {
+              "name_cn": "被丢掉的遗物",
+              "name_tw": "被丟掉的遺物",
+              "quantity": 15,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "女王古殿（一次3个） \n\n死宫（概率获得，与层数有关）",
+              "note_tw": "女王古殿（一次3個） \n\n死宮（概率獲得，與層數有關）"
+            }
+          ],
+          "stage_index": 6
+        },
+        {
+          "name_cn": "机械零件与灵药",
+          "name_tw": "機械零件與靈藥",
+          "task_description_cn": "ℚ 机械零件与灵药\nℚ 战斗记录与特殊合金\nℚ 记忆晶块与术式\n\n开放扎杜诺尔高原之后完成相应支线任务解锁",
+          "task_description_tw": "ℚ 機械零件與靈藥\nℚ 戰鬥記錄與特殊合金\nℚ 記憶晶塊與術式\n\n開放扎杜諾爾高原之後完成相應支線任務解鎖",
+          "ilvl": null,
+          "materials": [
+            {
+              "name_cn": "超小型传动轴",
+              "name_tw": "超小型傳動軸",
+              "quantity": 30,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "高原南方SM获得\n\n等级同步通关60级Raid亚历山大系列各章前2层（启动1、2；律动1、2；天动1、2）获得",
+              "note_tw": "高原南方SM獲得\n\n等級同步通關60級Raid亞歷山大系列各章前2層（啓動1、2；律動1、2；天動1、2）獲得"
+            },
+            {
+              "name_cn": "超小型弹簧",
+              "name_tw": "超小型彈簧",
+              "quantity": 30,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "高原南方CE获得\n\n等级同步通关60级Raid亚历山大系列各章后2层（启动3、4；律动3、4；天动3、4）获得",
+              "note_tw": "高原南方CE獲得\n\n等級同步通關60級Raid亞歷山大系列各章後2層（啓動3、4；律動3、4；天動3、4）獲得"
+            },
+            {
+              "name_cn": "激战记录：第一集",
+              "name_tw": "激戰記錄：第一集",
+              "quantity": 30,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "高原西方SM获得\n\n等级同步通关70级Raid欧米茄系列各章前2层（德尔塔1、2；西格玛1、2；阿尔法1、2）获得",
+              "note_tw": "高原西方SM獲得\n\n等級同步通關70級Raid歐米茄系列各章前2層（德爾塔1、2；西格瑪1、2；阿爾法1、2）獲得"
+            },
+            {
+              "name_cn": "激战记录：第二集",
+              "name_tw": "激戰記錄：第二集",
+              "quantity": 30,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "高原西方CE获得\n\n等级同步通关70级Raid欧米茄系列各章后2层（德尔塔3、4；西格玛3、4；阿尔法3、4）获得",
+              "note_tw": "高原西方CE獲得\n\n等級同步通關70級Raid歐米茄系列各章後2層（德爾塔3、4；西格瑪3、4；阿爾法3、4）獲得"
+            },
+            {
+              "name_cn": "沉重的记忆晶块",
+              "name_tw": "沉重的記憶晶塊",
+              "quantity": 30,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "高原北方SM获得\n\n等级同步通关80级Raid伊甸系列各章前2层（觉醒1、2；共鸣1、2；再生1、2）获得",
+              "note_tw": "高原北方SM獲得\n\n等級同步通關80級Raid伊甸系列各章前2層（覺醒1、2；共鳴1、2；再生1、2）獲得"
+            },
+            {
+              "name_cn": "粗暴的记忆晶块",
+              "name_tw": "粗暴的記憶晶塊",
+              "quantity": 30,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "高原北方CE获得\n\n等级同步通关80级Raid伊甸系列各章后2层（觉醒3、4；共鸣3、4；再生3、4）获得",
+              "note_tw": "高原北方CE獲得\n\n等級同步通關80級Raid伊甸系列各章後2層（覺醒3、4；共鳴3、4；再生3、4）獲得"
+            }
+          ],
+          "stage_index": 7
+        },
+        {
+          "name_cn": "女王武器",
+          "name_tw": "女王武器",
+          "task_description_cn": "ℚ  真正的义军武器",
+          "task_description_tw": "ℚ  真正的義軍武器",
+          "ilvl": 535,
+          "materials": [
+            {
+              "name_cn": "光辉的激情晶块",
+              "name_tw": "光輝的激情晶塊",
+              "quantity": 15,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "通关女王古殿，一次可获得 2 个。\n\n通关扎杜诺尔高原的旗舰达尔里阿达号攻略战，可获得 3 个\n\n同步状态下通关 70 级副本，100% 概率获得。\n\n通关天之御柱，通关后较低概率获得。",
+              "note_tw": "通關女王古殿，一次可獲得 2 個。\n\n通關扎杜諾爾高原的旗艦達爾裏阿達號攻略戰，可獲得 3 個\n\n同步狀態下通關 70 級副本，100% 概率獲得。\n\n通關天之御柱，通關後較低概率獲得。"
+            }
+          ],
+          "stage_index": 8
+        }
+      ]
+    },
+    {
+      "id": "mandervilles",
+      "name_cn": "曼武",
+      "name_tw": "曼武",
+      "full_name_cn": "曼德维尔武器",
+      "full_name_tw": "曼德維爾武器",
+      "expansion": "6.x",
+      "level_cap": 90,
+      "available_jobs": [
+        "PLD",
+        "WAR",
+        "DRK",
+        "GNB",
+        "WHM",
+        "SCH",
+        "AST",
+        "SGE",
+        "MNK",
+        "DRG",
+        "RPR",
+        "SAM",
+        "NIN",
+        "BRD",
+        "MCH",
+        "DNC",
+        "BLM",
+        "SMN",
+        "RDM"
+      ],
+      "stages": [
+        {
+          "name_cn": "前置任务",
+          "name_tw": "前置任務",
+          "task_description_cn": "ℚ 调查员系列任务",
+          "task_description_tw": "ℚ 調查員系列任務",
+          "ilvl": null,
+          "materials": [
+            {
+              "name_cn": "40个任务",
+              "name_tw": "40個任務",
+              "quantity": null,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 0
+        },
+        {
+          "name_cn": "1 / 曼德维尔家的古老武器",
+          "name_tw": "1 / 曼德維爾家的古老武器",
+          "task_description_cn": "ℚ 曼德维尔家的古老武器\nℚ 再次制作曼德维尔武器",
+          "task_description_tw": "ℚ 曼德維爾家的古老武器\nℚ 再次製作曼德維爾武器",
+          "ilvl": 615,
+          "materials": [
+            {
+              "name_cn": "稀少陨石",
+              "name_tw": "稀少隕石",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "玖布伦娜（拉札罕 12.2,10.9）",
+              "note_tw": "玖布倫娜（拉札罕 12.2,10.9）"
+            }
+          ],
+          "stage_index": 1
+        },
+        {
+          "name_cn": "2 / 觉醒吧！斗争本能！",
+          "name_tw": "2 / 覺醒吧！鬥爭本能！",
+          "task_description_cn": "ℚ 觉醒吧！斗争本能！\nℚ 令人惊异的曼德维尔武器",
+          "task_description_tw": "ℚ 覺醒吧！鬥爭本能！\nℚ 令人驚異的曼德維爾武器",
+          "ilvl": 630,
+          "materials": [
+            {
+              "name_cn": "稀少球粒陨石",
+              "name_tw": "稀少球粒隕石",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "玖布伦娜（拉札罕 12.2,10.9）",
+              "note_tw": "玖布倫娜（拉札罕 12.2,10.9）"
+            }
+          ],
+          "stage_index": 2
+        },
+        {
+          "name_cn": "3 / 工匠们的酒宴",
+          "name_tw": "3 / 工匠們的酒宴",
+          "task_description_cn": "ℚ 工匠们的酒宴\nℚ 灵活变化的曼德维尔武器",
+          "task_description_tw": "ℚ 工匠們的酒宴\nℚ 靈活變化的曼德維爾武器",
+          "ilvl": 645,
+          "materials": [
+            {
+              "name_cn": "稀少无球粒陨石",
+              "name_tw": "稀少無球粒隕石",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "玖布伦娜（拉札罕 12.2,10.9）",
+              "note_tw": "玖布倫娜（拉札罕 12.2,10.9）"
+            }
+          ],
+          "stage_index": 3
+        },
+        {
+          "name_cn": "4 / 起舞的工匠们",
+          "name_tw": "4 / 起舞的工匠們",
+          "task_description_cn": "ℚ 起舞的工匠们\nℚ 精美绝伦的曼德维尔武器",
+          "task_description_tw": "ℚ 起舞的工匠們\nℚ 精美絕倫的曼德維爾武器",
+          "ilvl": 665,
+          "materials": [
+            {
+              "name_cn": "雏晶",
+              "name_tw": "雛晶",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "玖布伦娜（拉札罕 12.2,10.9）",
+              "note_tw": "玖布倫娜（拉札罕 12.2,10.9）"
+            }
+          ],
+          "stage_index": 4
+        }
+      ]
+    },
+    {
+      "id": "phantom",
+      "name_cn": "幻武",
+      "name_tw": "幻武",
+      "full_name_cn": "幻境武器",
+      "full_name_tw": "幻境武器",
+      "expansion": "7.x",
+      "level_cap": 100,
+      "available_jobs": [
+        "PLD",
+        "WAR",
+        "DRK",
+        "GNB",
+        "WHM",
+        "SCH",
+        "AST",
+        "SGE",
+        "MNK",
+        "DRG",
+        "RPR",
+        "SAM",
+        "NIN",
+        "VPR",
+        "BRD",
+        "MCH",
+        "DNC",
+        "BLM",
+        "SMN",
+        "RDM",
+        "PCT"
+      ],
+      "stages": [
+        {
+          "name_cn": "前置任务",
+          "name_tw": "前置任務",
+          "task_description_cn": "ℚ 柯坦拉姆最后的冒险",
+          "task_description_tw": "ℚ 柯坦拉姆最後的冒險",
+          "ilvl": null,
+          "materials": [],
+          "stage_index": 0
+        },
+        {
+          "name_cn": "幻境中的武器",
+          "name_tw": "幻境中的武器",
+          "task_description_cn": "ℚ 幻境中的武器\n\n收集6种半魂晶\n岛内CE掉率20%，\nFate掉率5%",
+          "task_description_tw": "ℚ 幻境中的武器\n\n收集6種半魂晶\n島內CE掉率20%，\nFate掉率5%",
+          "ilvl": null,
+          "materials": [
+            {
+              "name_cn": "青色半魂晶",
+              "name_tw": "青色半魂晶",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "奥阔帕恰山Fate概率掉落",
+              "note_tw": "奧闊帕恰山Fate概率掉落"
+            },
+            {
+              "name_cn": "碧色半魂晶",
+              "name_tw": "碧色半魂晶",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "克扎玛乌卡湿地Fate概率掉落",
+              "note_tw": "克扎瑪烏卡溼地Fate概率掉落"
+            },
+            {
+              "name_cn": "绿色半魂晶",
+              "name_tw": "綠色半魂晶",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "亚克特尔树海Fate概率掉落",
+              "note_tw": "亞克特爾樹海Fate概率掉落"
+            },
+            {
+              "name_cn": "橙色半魂晶",
+              "name_tw": "橙色半魂晶",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "夏劳尼荒野Fate概率掉落",
+              "note_tw": "夏勞尼荒野Fate概率掉落"
+            },
+            {
+              "name_cn": "紫色半魂晶",
+              "name_tw": "紫色半魂晶",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "遗产之地Fate概率掉落",
+              "note_tw": "遺產之地Fate概率掉落"
+            },
+            {
+              "name_cn": "黄色半魂晶",
+              "name_tw": "黃色半魂晶",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "活着的记忆Fate概率掉落",
+              "note_tw": "活着的記憶Fate概率掉落"
+            }
+          ],
+          "stage_index": 1
+        },
+        {
+          "name_cn": "半影",
+          "name_tw": "半影",
+          "task_description_cn": "多多库利（幻境村 6.7, 7.1）",
+          "task_description_tw": "多多庫利（幻境村 6.7, 7.1）",
+          "ilvl": 745,
+          "materials": [
+            {
+              "name_cn": "新月矿石",
+              "name_tw": "新月礦石",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "尔密娜（幻境村 6.9,7.3）",
+              "note_tw": "爾密娜（幻境村 6.9,7.3）"
+            }
+          ],
+          "stage_index": 2
+        },
+        {
+          "name_cn": "古代工匠的技术",
+          "name_tw": "古代工匠的技術",
+          "task_description_cn": "ℚ 古代工匠的技术",
+          "task_description_tw": "ℚ 古代工匠的技術",
+          "ilvl": null,
+          "materials": [
+            {
+              "name_cn": "犎牛胶",
+              "name_tw": "犎牛膠",
+              "quantity": "金币",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "戈皮露 > 图莱尤拉 (X: 13.1, Y: 12.7)",
+              "note_tw": "戈皮露 > 圖萊尤拉 (X: 13.1, Y: 12.7)"
+            },
+            {
+              "name_cn": "乌托姆陨铁",
+              "name_tw": "烏託姆隕鐵",
+              "quantity": "双色宝石",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "拉尔·乌鲁可亚 > 克特尔树海 (X: 13.8, Y: 12.7)",
+              "note_tw": "拉爾·烏魯可亞 > 克特爾樹海 (X: 13.8, Y: 12.7)"
+            },
+            {
+              "name_cn": "人造暗物质α",
+              "name_tw": "人造暗物質α",
+              "quantity": "制作或购买",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "人造暗物质β",
+              "name_tw": "人造暗物質β",
+              "quantity": "制作或购买",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "人造暗物质γ",
+              "name_tw": "人造暗物質γ",
+              "quantity": "制作或购买",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 3
+        },
+        {
+          "name_cn": "蕴藏属性之力的魔法球",
+          "name_tw": "蘊藏屬性之力的魔法球",
+          "task_description_cn": "ℚ 蕴藏属性之力的魔法球\n\n点击任务道具图标可打开魔球盘，点击对应魔球可打开任务搜索器",
+          "task_description_tw": "ℚ 蘊藏屬性之力的魔法球\n\n點擊任務道具圖標可打開魔球盤，點擊對應魔球可打開任務搜索器",
+          "ilvl": null,
+          "materials": [
+            {
+              "name_cn": "刷光\n\n推荐每日随机打一次\n\n各副本具体光量查询",
+              "name_tw": "刷光\n\n推薦每日隨機打一次\n\n各副本具體光量查詢",
+              "quantity": "各10000点",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 4
+        },
+        {
+          "name_cn": "本影",
+          "name_tw": "本影",
+          "task_description_cn": "多多库利（幻境村 6.7, 7.1）",
+          "task_description_tw": "多多庫利（幻境村 6.7, 7.1）",
+          "ilvl": 760,
+          "materials": [
+            {
+              "name_cn": "上弦月矿石",
+              "name_tw": "上弦月礦石",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "尔密娜（幻境村 6.9,7.3）",
+              "note_tw": "爾密娜（幻境村 6.9,7.3）"
+            }
+          ],
+          "stage_index": 5
+        },
+        {
+          "name_cn": "寻找最适合的技术",
+          "name_tw": "尋找最適合的技術",
+          "task_description_cn": "ℚ 寻找最适合的技术",
+          "task_description_tw": "ℚ 尋找最適合的技術",
+          "ilvl": null,
+          "materials": [
+            {
+              "name_cn": "灵性黏土",
+              "name_tw": "靈性黏土",
+              "quantity": "金币",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "戈皮露 > 图莱尤拉 (X: 13.1, Y: 12.7)",
+              "note_tw": "戈皮露 > 圖萊尤拉 (X: 13.1, Y: 12.7)"
+            },
+            {
+              "name_cn": "附加属性用的部件",
+              "name_tw": "附加屬性用的部件",
+              "quantity": "制作或购买",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "附加属性用的金属材料",
+              "name_tw": "附加屬性用的金屬材料",
+              "quantity": "制作或购买",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            },
+            {
+              "name_cn": "附加属性用的合成树脂",
+              "name_tw": "附加屬性用的合成樹脂",
+              "quantity": "制作或购买",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 6
+        },
+        {
+          "name_cn": "古代工匠的技术",
+          "name_tw": "古代工匠的技術",
+          "task_description_cn": "ℚ 古代工匠的技术\n\n点击任务道具图标可打开幻境透镜，完成列表上的任务可获得水晶混合黏土",
+          "task_description_tw": "ℚ 古代工匠的技術\n\n點擊任務道具圖標可打開幻境透鏡，完成列表上的任務可獲得水晶混合黏土",
+          "ilvl": null,
+          "materials": [
+            {
+              "name_cn": "按任务列表挑战即可，没有特别想要体验的内容可以每日随机。\n获取数量查询",
+              "name_tw": "按任務列表挑戰即可，沒有特別想要體驗的內容可以每日隨機。\n獲取數量查詢",
+              "quantity": "共需要1200个水晶混合黏土，可以攒齐了一起交，也可以分阶段交。\n最后多余的丢掉即可。",
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": null,
+              "note_tw": null
+            }
+          ],
+          "stage_index": 7
+        },
+        {
+          "name_cn": "黯影",
+          "name_tw": "黯影",
+          "task_description_cn": "多多库利（幻境村 6.7, 7.1）",
+          "task_description_tw": "多多庫利（幻境村 6.7, 7.1）",
+          "ilvl": 775,
+          "materials": [
+            {
+              "name_cn": "下弦月矿石",
+              "name_tw": "下弦月礦石",
+              "quantity": 3,
+              "source_cn": null,
+              "source_tw": null,
+              "note_cn": "尔密娜（幻境村 6.9,7.3）",
+              "note_tw": "爾密娜（幻境村 6.9,7.3）"
+            }
+          ],
+          "stage_index": 8
+        }
+      ]
+    }
+  ],
   "_meta": {
     "source": "发光武器材料进度追踪表 v1.55",
-    "translation_note": "name_tw / source_tw / note_tw are auto-converted via OpenCC.",
+    "translation_note": "name_tw / source_tw / note_tw are auto-converted via OpenCC (s2t).",
     "field_notes": {
-      "note_cn / note_tw": "Material acquisition tips (location, NPC, exchange method) extracted from cell comments"
+      "note_cn / note_tw": "Material acquisition tips extracted from Excel cell comments",
+      "stage_name_note": "'--' and pure number stage names are augmented with the first quest name for readability"
     }
   }
 }
