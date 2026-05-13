@@ -34,11 +34,17 @@ struct SkillRotationEditorView: View {
     let job: BattleJob
     @Bindable var viewModel: SkillRotationViewModel
 
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+
     @State private var selectedLevel: SkillRotationLevel = .defaultLevel
     @State private var selectedCategory: SkillRotationCategory = .all
 
     private let columns = [GridItem(.adaptive(minimum: 56), spacing: 10)]
     private let rotationColumns = [GridItem(.adaptive(minimum: 60), spacing: 8, alignment: .leading)]
+
+    private var maxRotationVisibleRows: Int {
+        verticalSizeClass == .compact ? 7 : 8
+    }
 
     private var filteredActions: [BattleAction] {
         switch selectedCategory {
@@ -70,14 +76,10 @@ struct SkillRotationEditorView: View {
 
     var body: some View {
         GeometryReader { geometry in
-            let availableHeight = geometry.size.height
             let availableWidth = geometry.size.width
-            let minSkillGridHeight = availableHeight * 0.3
-            let filterSectionHeight: CGFloat = 96
-            let maxRotationBarHeight = max(0, availableHeight - minSkillGridHeight - filterSectionHeight)
 
             VStack(spacing: 0) {
-                rotationBar(availableWidth: availableWidth, maxHeight: maxRotationBarHeight)
+                rotationBar(availableWidth: availableWidth, maxVisibleRows: maxRotationVisibleRows)
 
                 Divider()
 
@@ -99,6 +101,7 @@ struct SkillRotationEditorView: View {
                     }
                     .padding(12)
                 }
+                .layoutPriority(1)
             }
         }
         .navigationTitle("\(job.displayName) · \(job.abbreviation)")
@@ -225,8 +228,7 @@ struct SkillRotationEditorView: View {
 
     // MARK: - Rotation bar
 
-    private func rotationBar(availableWidth: CGFloat, maxHeight: CGFloat) -> some View {
-        let headerApproxHeight: CGFloat = 30
+    private func rotationBar(availableWidth: CGFloat, maxVisibleRows: Int) -> some View {
         let cellWidth: CGFloat = 60
         let cellHeight: CGFloat = 44
         let spacing: CGFloat = 8
@@ -237,13 +239,11 @@ struct SkillRotationEditorView: View {
         let columnsPerRow = max(1, Int((gridAvailableWidth + spacing) / (cellWidth + spacing)))
         let rowCount = rotation.isEmpty ? 0 : Int(ceil(Double(rotation.count) / Double(columnsPerRow)))
 
-        let rowPitch = cellHeight + spacing
-        let usableHeightForRows = max(0, maxHeight - headerApproxHeight - gridVPadding)
-        let visibleRows = max(1, Int((usableHeightForRows + spacing) / rowPitch))
+        let visibleRows = min(rowCount, max(1, maxVisibleRows))
         let alignedGridHeight = CGFloat(visibleRows) * cellHeight
             + CGFloat(max(0, visibleRows - 1)) * spacing
             + gridVPadding
-        let needsScroll = rowCount > visibleRows
+        let needsScroll = rowCount > maxVisibleRows
 
         return VStack(alignment: .leading, spacing: 6) {
             HStack {
@@ -273,7 +273,7 @@ struct SkillRotationEditorView: View {
                     ScrollView {
                         rotationGrid
                     }
-                    .frame(maxHeight: alignedGridHeight)
+                    .frame(height: alignedGridHeight)
                     .onChange(of: rotation.count) { oldValue, newValue in
                         guard newValue > oldValue, let lastID = rotation.last?.id else { return }
                         withAnimation {
@@ -394,9 +394,10 @@ struct RotationSlotView: View {
                         .shadow(color: .black.opacity(0.2), radius: 1, y: 1)
                 }
                 .buttonStyle(.plain)
-                .offset(x: 6, y: -6)
             }
         }
+        .padding(.top, onDelete == nil ? 0 : 6)
+        .padding(.trailing, onDelete == nil ? 0 : 6)
     }
 }
 
