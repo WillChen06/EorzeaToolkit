@@ -176,7 +176,7 @@ enum SkillCategory: String, CaseIterable, Identifiable, Hashable {
 
 // MARK: - Rotation（編輯區）
 
-enum SkillRotationLevel: Int, CaseIterable, Identifiable, Hashable, Codable {
+enum SkillRotationLevel: Int, Identifiable, Hashable, Codable {
     case level50 = 50
     case level60 = 60
     case level70 = 70
