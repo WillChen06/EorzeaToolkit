@@ -19,7 +19,8 @@ struct RelicWeaponListView: View {
                 List {
                     Section {
                         Picker("模式", selection: $mode) {
-                            ForEach(RelicWeaponMode.allCases) { mode in
+                            ForEach(RelicWeaponMode.allCases) { option in
+                                Text(option.rawValue).tag(option)
                                 Text(mode.rawValue).tag(mode)
                             }
                         }
