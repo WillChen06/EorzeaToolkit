@@ -34,19 +34,26 @@ struct SkillRotationEditorView: View {
     let job: BattleJob
     @Bindable var viewModel: SkillRotationViewModel
 
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+
+    @State private var selectedLevel: SkillRotationLevel = .defaultLevel
     @State private var selectedCategory: SkillRotationCategory = .all
 
     private let columns = [GridItem(.adaptive(minimum: 56), spacing: 10)]
     private let rotationColumns = [GridItem(.adaptive(minimum: 60), spacing: 8, alignment: .leading)]
 
+    private var maxRotationVisibleRows: Int {
+        verticalSizeClass == .compact ? 7 : 8
+    }
+
     private var filteredActions: [BattleAction] {
         switch selectedCategory {
         case .all:
-            return viewModel.actions(for: job, category: nil)
+            return viewModel.actions(for: job, level: selectedLevel, category: nil)
         case .item:
             return []
         case .weaponskill, .spell, .ability:
-            return viewModel.actions(for: job, category: selectedCategory.skillCategory)
+            return viewModel.actions(for: job, level: selectedLevel, category: selectedCategory.skillCategory)
         }
     }
 
@@ -60,7 +67,7 @@ struct SkillRotationEditorView: View {
     }
 
     private var rotation: [RotationSlot] {
-        viewModel.rotation(for: job.id)
+        viewModel.rotation(for: job.id, level: selectedLevel)
     }
 
     private var showsTinctureSectionSeparator: Bool {
@@ -69,20 +76,21 @@ struct SkillRotationEditorView: View {
 
     var body: some View {
         GeometryReader { geometry in
-            let availableHeight = geometry.size.height
             let availableWidth = geometry.size.width
-            let minSkillGridHeight = availableHeight * 0.3
-            let categoryFilterSectionHeight: CGFloat = 52
-            let maxRotationBarHeight = max(0, availableHeight - minSkillGridHeight - categoryFilterSectionHeight)
 
             VStack(spacing: 0) {
-                rotationBar(availableWidth: availableWidth, maxHeight: maxRotationBarHeight)
+                rotationBar(availableWidth: availableWidth, maxVisibleRows: maxRotationVisibleRows)
 
                 Divider()
 
+                levelFilter
+                    .padding(.horizontal)
+                    .padding(.top, 10)
+                    .padding(.bottom, 6)
+
                 categoryFilter
                     .padding(.horizontal)
-                    .padding(.vertical, 10)
+                    .padding(.bottom, 10)
 
                 Divider()
 
@@ -93,6 +101,7 @@ struct SkillRotationEditorView: View {
                     }
                     .padding(12)
                 }
+                .layoutPriority(1)
             }
         }
         .navigationTitle("\(job.displayName) · \(job.abbreviation)")
@@ -101,7 +110,7 @@ struct SkillRotationEditorView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 if !rotation.isEmpty {
                     Button(role: .destructive) {
-                        viewModel.clearRotation(for: job.id)
+                        viewModel.clearRotation(for: job.id, level: selectedLevel)
                     } label: {
                         Image(systemName: "trash")
                     }
@@ -117,11 +126,11 @@ struct SkillRotationEditorView: View {
                 ForEach(filteredActions) { action in
                     SkillGridIcon(item: .action(action))
                         .onTapGesture {
-                            viewModel.addSkill(action, to: job.id)
+                            viewModel.addSkill(action, to: job.id, level: selectedLevel)
                         }
                         .contextMenu {
                             Button {
-                                viewModel.addSkill(action, to: job.id)
+                                viewModel.addSkill(action, to: job.id, level: selectedLevel)
                             } label: {
                                 Label("加入 Rotation", systemImage: "plus.circle")
                             }
@@ -149,11 +158,11 @@ struct SkillRotationEditorView: View {
                 ForEach(filteredTinctures) { tincture in
                     SkillGridIcon(item: .tincture(tincture))
                         .onTapGesture {
-                            viewModel.addTincture(tincture, to: job.id)
+                            viewModel.addTincture(tincture, to: job.id, level: selectedLevel)
                         }
                         .contextMenu {
                             Button {
-                                viewModel.addTincture(tincture, to: job.id)
+                                viewModel.addTincture(tincture, to: job.id, level: selectedLevel)
                             } label: {
                                 Label("加入 Rotation", systemImage: "plus.circle")
                             }
@@ -168,7 +177,20 @@ struct SkillRotationEditorView: View {
         }
     }
 
-    // MARK: - Category filter
+    // MARK: - Filters
+
+    @ViewBuilder
+    private var levelFilter: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(SkillRotationLevel.displayCases) { level in
+                    filterChip(label: level.label, isSelected: selectedLevel == level) {
+                        selectedLevel = level
+                    }
+                }
+            }
+        }
+    }
 
     @ViewBuilder
     private var categoryFilter: some View {
@@ -206,8 +228,7 @@ struct SkillRotationEditorView: View {
 
     // MARK: - Rotation bar
 
-    private func rotationBar(availableWidth: CGFloat, maxHeight: CGFloat) -> some View {
-        let headerApproxHeight: CGFloat = 30
+    private func rotationBar(availableWidth: CGFloat, maxVisibleRows: Int) -> some View {
         let cellWidth: CGFloat = 60
         let cellHeight: CGFloat = 44
         let spacing: CGFloat = 8
@@ -218,17 +239,15 @@ struct SkillRotationEditorView: View {
         let columnsPerRow = max(1, Int((gridAvailableWidth + spacing) / (cellWidth + spacing)))
         let rowCount = rotation.isEmpty ? 0 : Int(ceil(Double(rotation.count) / Double(columnsPerRow)))
 
-        let rowPitch = cellHeight + spacing
-        let usableHeightForRows = max(0, maxHeight - headerApproxHeight - gridVPadding)
-        let visibleRows = max(1, Int((usableHeightForRows + spacing) / rowPitch))
+        let visibleRows = min(rowCount, max(1, maxVisibleRows))
         let alignedGridHeight = CGFloat(visibleRows) * cellHeight
             + CGFloat(max(0, visibleRows - 1)) * spacing
             + gridVPadding
-        let needsScroll = rowCount > visibleRows
+        let needsScroll = rowCount > maxVisibleRows
 
         return VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("施放順序")
+                Text("施放順序 \(selectedLevel.label)")
                     .font(.subheadline)
                     .fontWeight(.semibold)
                 Text("(\(rotation.count))")
@@ -254,7 +273,7 @@ struct SkillRotationEditorView: View {
                     ScrollView {
                         rotationGrid
                     }
-                    .frame(maxHeight: alignedGridHeight)
+                    .frame(height: alignedGridHeight)
                     .onChange(of: rotation.count) { oldValue, newValue in
                         guard newValue > oldValue, let lastID = rotation.last?.id else { return }
                         withAnimation {
@@ -274,7 +293,7 @@ struct SkillRotationEditorView: View {
             ForEach(Array(rotation.enumerated()), id: \.element.id) { index, slot in
                 HStack(spacing: 8) {
                     RotationSlotView(slot: slot, iconSize: 44) {
-                        viewModel.removeSlot(id: slot.id, from: job.id)
+                        viewModel.removeSlot(id: slot.id, from: job.id, level: selectedLevel)
                     }
                     Image(systemName: "chevron.right")
                         .font(.system(size: 12, weight: .semibold))
@@ -291,7 +310,7 @@ struct SkillRotationEditorView: View {
                           let droppedID = UUID(uuidString: droppedIDString) else {
                         return false
                     }
-                    viewModel.moveSlot(in: job.id, fromID: droppedID, toIndex: index)
+                    viewModel.moveSlot(in: job.id, level: selectedLevel, fromID: droppedID, toIndex: index)
                     return true
                 }
             }
@@ -375,9 +394,10 @@ struct RotationSlotView: View {
                         .shadow(color: .black.opacity(0.2), radius: 1, y: 1)
                 }
                 .buttonStyle(.plain)
-                .offset(x: 6, y: -6)
             }
         }
+        .padding(.top, onDelete == nil ? 0 : 6)
+        .padding(.trailing, onDelete == nil ? 0 : 6)
     }
 }
 
