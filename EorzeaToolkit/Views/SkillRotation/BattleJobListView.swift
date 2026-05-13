@@ -34,7 +34,7 @@ struct BattleJobListView: View {
 
                     let savedLevels = viewModel.savedLevels(for: job.id)
                     if !savedLevels.isEmpty {
-                        Text("Lv." + savedLevels.map { String($0.rawValue) }.joined(separator: " / "))
+                        Text(savedLevels.map { $0.label }.joined(separator: " / "))
                             .font(.caption)
                             .fontWeight(.semibold)
                             .lineLimit(1)
