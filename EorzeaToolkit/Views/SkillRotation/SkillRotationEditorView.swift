@@ -180,12 +180,11 @@ struct SkillRotationEditorView: View {
     private var levelFilter: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                ForEach(SkillRotationLevel.allCases) { level in
+                ForEach(SkillRotationLevel.displayCases) { level in
                     filterChip(label: level.label, isSelected: selectedLevel == level) {
                         selectedLevel = level
                     }
                 }
-                Spacer(minLength: 0)
             }
         }
     }
