@@ -72,7 +72,7 @@ enum MaterialQuantity: Codable, Equatable {
 }
 
 struct WeaponMaterial: Codable, Identifiable {
-    var id: String { nameTw }
+    var id: String { "\(nameTw)-\(quantity)" }
 
     let nameTw: String
     let quantity: MaterialQuantity
