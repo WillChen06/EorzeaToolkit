@@ -67,12 +67,12 @@ enum MaterialQuantity: Codable, Equatable {
             try container.encode(value)
         case .text(let value):
             try container.encode(value)
-    var id: String { "\(nameTw)-\(sourceTw ?? "")-\(quantity)" }
+        }
     }
 }
 
 struct WeaponMaterial: Codable, Identifiable {
-    var id: String { "\(nameTw)-\(quantity)" }
+    var id: String { "\(nameTw)-\(sourceTw ?? "")-\(quantity)" }
 
     let nameTw: String
     let quantity: MaterialQuantity
