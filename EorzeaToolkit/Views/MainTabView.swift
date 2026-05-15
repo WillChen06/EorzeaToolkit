@@ -25,6 +25,13 @@ struct MainTabView: View {
             }
 
             NavigationStack {
+                MiniCactpotView()
+            }
+            .tabItem {
+                Label("仙人微彩", systemImage: "dice")
+            }
+
+            NavigationStack {
                 BattleJobListView()
             }
             .tabItem {

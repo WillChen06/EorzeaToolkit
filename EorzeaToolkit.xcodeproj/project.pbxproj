@@ -18,6 +18,7 @@
 		285A3EBFA26DE5C970C248F5 /* OceanFishingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82939FBA2993DFF50DDA0C1 /* OceanFishingViewModel.swift */; };
 		296E8C8D483BA5CEA3A1E5C8 /* BattleJobListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1437A0503262E55A4EF25C1E /* BattleJobListView.swift */; };
 		3031DC7EF96289AB33309399 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5207532D7062D6DDBE8CDC20 /* MainTabView.swift */; };
+		39D15658F95903B41E9AD8FA /* MiniCactpotPayoutTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99076C6C877461FC078861D2 /* MiniCactpotPayoutTableView.swift */; };
 		3AA0C51D1EB0981B82495E44 /* zh-maps.json in Resources */ = {isa = PBXBuildFile; fileRef = 8ABE1DA3A0D8692FCB447D0D /* zh-maps.json */; };
 		4214A86FBD74942F5B96DBA2 /* SkillRotationEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA6E672B7FC82997872CB7E /* SkillRotationEditorView.swift */; };
 		4282D6200B3411DBF17796D7 /* treasure_maps.json in Resources */ = {isa = PBXBuildFile; fileRef = 3C29DC0DEAD933ADBAB15DF0 /* treasure_maps.json */; };
@@ -26,14 +27,22 @@
 		4C7AD3C3FCB056B2866568A8 /* TreasureMapListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914E93C547E3805E26F5F9D6 /* TreasureMapListView.swift */; };
 		4F63129541BE2230E1099186 /* treasures.json in Resources */ = {isa = PBXBuildFile; fileRef = E1150D84F8DE9A515EB46A5B /* treasures.json */; };
 		543277F7B42D08F771CEF9F4 /* OceanFishingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6709100A9CF22B7F192B2D32 /* OceanFishingView.swift */; };
+		60CF8D0E7B571BEC7221003C /* MiniCactpotArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591BB419A097E836148E75BD /* MiniCactpotArrowView.swift */; };
+		641D00ACCE1F50156E9058F8 /* MiniCactpotBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCF822C3959BEB5548830EC9 /* MiniCactpotBoardView.swift */; };
 		65939C06BC1CE65AC4080A5A /* TreasureMapDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71206E4982454E1556AE20D8 /* TreasureMapDetailView.swift */; };
 		77EDFFF7DCF1E64CE83905AA /* GatheringNodesSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D893E5C581D7643F8081FBA8 /* GatheringNodesSheetView.swift */; };
+		781509C142A5924BB394064E /* MiniCactpotCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B439A14F2C5863AE74D6AC /* MiniCactpotCalculator.swift */; };
+		86F928A3B0CA8B7093D10F9C /* MiniCactpotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 972E196BCCAD143BC5C4A7A1 /* MiniCactpotView.swift */; };
 		8B4DAB5EFA326CA13D9E416B /* RelicWeaponDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7179CCAFE4C7C105A2AD6C7 /* RelicWeaponDetailView.swift */; };
 		8EDD234DECF8ED18B9984887 /* EorzeaToolkitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC69B62CFD0B7BAEEB1F2F0 /* EorzeaToolkitApp.swift */; };
 		95ECDDB514E25DA6AB0BCA37 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0E910E77FA98796228BC0DC /* Assets.xcassets */; };
+		9C9D207C18938D977F3DF314 /* MiniCactpotResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEC8B7996584951371DC7C0 /* MiniCactpotResult.swift */; };
 		B07E3909BF9E625D9CE02422 /* LocalDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA57853C57893DD24999BD39 /* LocalDataService.swift */; };
+		BB257A37F9B9EBA408C4709F /* MiniCactpotResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE09EB4A907E6A7B2C8C7AB /* MiniCactpotResultView.swift */; };
 		D41D468CA1207296BE2BD674 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 01FE0EEA33F14EFF845F9638 /* Localizable.strings */; };
+		D5E9020C65D5DE8D0ECC0A79 /* MiniCactpotCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C4EA20D68F7D66A5223D100 /* MiniCactpotCellView.swift */; };
 		D890C438BFCBAE8750212266 /* TreasureSpotListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37A5663D04F8D56BB8F3ABC /* TreasureSpotListView.swift */; };
+		DB54ED0FB25AA70101488DA2 /* MiniCactpotLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6479B38C42665F3310E4E957 /* MiniCactpotLine.swift */; };
 		E96505DB673C2FCC56EA4C7E /* treasure_maps_final.json in Resources */ = {isa = PBXBuildFile; fileRef = BF15A9AE3DC8EE6D4DEA9DB7 /* treasure_maps_final.json */; };
 		FA066DD46DB2A4CAA69AC3E3 /* RelicWeapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDC8E113EEA7483788B92 /* RelicWeapon.swift */; };
 		FEF4C46EBF93AB24A7030012 /* maps.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BE3609C1A36C70D2704F19 /* maps.json */; };
@@ -49,27 +58,36 @@
 		2AC69B62CFD0B7BAEEB1F2F0 /* EorzeaToolkitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EorzeaToolkitApp.swift; sourceTree = "<group>"; };
 		2ADBDC8E113EEA7483788B92 /* RelicWeapon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelicWeapon.swift; sourceTree = "<group>"; };
 		2E131506BE3D2AC67DB401A5 /* battle_actions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = battle_actions.json; sourceTree = "<group>"; };
+		2EEC8B7996584951371DC7C0 /* MiniCactpotResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotResult.swift; sourceTree = "<group>"; };
 		3C29DC0DEAD933ADBAB15DF0 /* treasure_maps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = treasure_maps.json; sourceTree = "<group>"; };
 		44C199F7F0439BDD9DF63DE5 /* relic_weapons.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = relic_weapons.json; sourceTree = "<group>"; };
 		5207532D7062D6DDBE8CDC20 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		591BB419A097E836148E75BD /* MiniCactpotArrowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotArrowView.swift; sourceTree = "<group>"; };
+		5C4EA20D68F7D66A5223D100 /* MiniCactpotCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotCellView.swift; sourceTree = "<group>"; };
 		6104222B27B687BA0EAA5CC5 /* BattleAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleAction.swift; sourceTree = "<group>"; };
+		6479B38C42665F3310E4E957 /* MiniCactpotLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotLine.swift; sourceTree = "<group>"; };
 		6709100A9CF22B7F192B2D32 /* OceanFishingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OceanFishingView.swift; sourceTree = "<group>"; };
 		6E008F2D00900B1E5C3A1A09 /* OceanFishing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OceanFishing.swift; sourceTree = "<group>"; };
 		6EA545E4D6687BEE1A40A1B1 /* TreasureMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMap.swift; sourceTree = "<group>"; };
+		6EE09EB4A907E6A7B2C8C7AB /* MiniCactpotResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotResultView.swift; sourceTree = "<group>"; };
 		71206E4982454E1556AE20D8 /* TreasureMapDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapDetailView.swift; sourceTree = "<group>"; };
 		75BE3609C1A36C70D2704F19 /* maps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = maps.json; sourceTree = "<group>"; };
 		84EEB99FC86E568BF0D2EA0D /* EorzeaToolkit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EorzeaToolkit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ABE1DA3A0D8692FCB447D0D /* zh-maps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "zh-maps.json"; sourceTree = "<group>"; };
 		9113B83FA58C9AC86332E63E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		914E93C547E3805E26F5F9D6 /* TreasureMapListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapListView.swift; sourceTree = "<group>"; };
+		972E196BCCAD143BC5C4A7A1 /* MiniCactpotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotView.swift; sourceTree = "<group>"; };
+		99076C6C877461FC078861D2 /* MiniCactpotPayoutTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotPayoutTableView.swift; sourceTree = "<group>"; };
 		AAA4A4DBD2933C011AE58698 /* RelicWeaponViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelicWeaponViewModel.swift; sourceTree = "<group>"; };
 		ABD11C8459A748FFAD797086 /* XIVAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XIVAPIService.swift; sourceTree = "<group>"; };
 		BF15A9AE3DC8EE6D4DEA9DB7 /* treasure_maps_final.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = treasure_maps_final.json; sourceTree = "<group>"; };
 		C82939FBA2993DFF50DDA0C1 /* OceanFishingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OceanFishingViewModel.swift; sourceTree = "<group>"; };
+		CCF822C3959BEB5548830EC9 /* MiniCactpotBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotBoardView.swift; sourceTree = "<group>"; };
 		D0E910E77FA98796228BC0DC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D2BC33C71CF25E0141DE065D /* ocean_fishing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ocean_fishing.json; sourceTree = "<group>"; };
 		D37A5663D04F8D56BB8F3ABC /* TreasureSpotListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureSpotListView.swift; sourceTree = "<group>"; };
 		D3B3A9C4147C7FB2EC139CAF /* SkillRotationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillRotationViewModel.swift; sourceTree = "<group>"; };
+		D6B439A14F2C5863AE74D6AC /* MiniCactpotCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotCalculator.swift; sourceTree = "<group>"; };
 		D893E5C581D7643F8081FBA8 /* GatheringNodesSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatheringNodesSheetView.swift; sourceTree = "<group>"; };
 		DA57853C57893DD24999BD39 /* LocalDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataService.swift; sourceTree = "<group>"; };
 		E1150D84F8DE9A515EB46A5B /* treasures.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = treasures.json; sourceTree = "<group>"; };
@@ -81,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				DA57853C57893DD24999BD39 /* LocalDataService.swift */,
+				D6B439A14F2C5863AE74D6AC /* MiniCactpotCalculator.swift */,
 				ABD11C8459A748FFAD797086 /* XIVAPIService.swift */,
 			);
 			path = Services;
@@ -90,12 +109,26 @@
 			isa = PBXGroup;
 			children = (
 				5207532D7062D6DDBE8CDC20 /* MainTabView.swift */,
+				1B7E0497ED3D887151FD52E8 /* MiniCactpot */,
 				1DC7051F3D5A74A78F869867 /* OceanFishing */,
 				5B224F3F1645633F718CCFFF /* RelicWeapon */,
 				6393423BDC861899040A4803 /* SkillRotation */,
 				EF10BFA3E01EFCB74288995A /* TreasureMap */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		1B7E0497ED3D887151FD52E8 /* MiniCactpot */ = {
+			isa = PBXGroup;
+			children = (
+				591BB419A097E836148E75BD /* MiniCactpotArrowView.swift */,
+				CCF822C3959BEB5548830EC9 /* MiniCactpotBoardView.swift */,
+				5C4EA20D68F7D66A5223D100 /* MiniCactpotCellView.swift */,
+				99076C6C877461FC078861D2 /* MiniCactpotPayoutTableView.swift */,
+				6EE09EB4A907E6A7B2C8C7AB /* MiniCactpotResultView.swift */,
+				972E196BCCAD143BC5C4A7A1 /* MiniCactpotView.swift */,
+			);
+			path = MiniCactpot;
 			sourceTree = "<group>";
 		};
 		1DC7051F3D5A74A78F869867 /* OceanFishing */ = {
@@ -110,6 +143,8 @@
 			isa = PBXGroup;
 			children = (
 				6104222B27B687BA0EAA5CC5 /* BattleAction.swift */,
+				6479B38C42665F3310E4E957 /* MiniCactpotLine.swift */,
+				2EEC8B7996584951371DC7C0 /* MiniCactpotResult.swift */,
 				6E008F2D00900B1E5C3A1A09 /* OceanFishing.swift */,
 				2ADBDC8E113EEA7483788B92 /* RelicWeapon.swift */,
 				6EA545E4D6687BEE1A40A1B1 /* TreasureMap.swift */,
@@ -308,6 +343,15 @@
 				77EDFFF7DCF1E64CE83905AA /* GatheringNodesSheetView.swift in Sources */,
 				B07E3909BF9E625D9CE02422 /* LocalDataService.swift in Sources */,
 				3031DC7EF96289AB33309399 /* MainTabView.swift in Sources */,
+				60CF8D0E7B571BEC7221003C /* MiniCactpotArrowView.swift in Sources */,
+				641D00ACCE1F50156E9058F8 /* MiniCactpotBoardView.swift in Sources */,
+				781509C142A5924BB394064E /* MiniCactpotCalculator.swift in Sources */,
+				D5E9020C65D5DE8D0ECC0A79 /* MiniCactpotCellView.swift in Sources */,
+				DB54ED0FB25AA70101488DA2 /* MiniCactpotLine.swift in Sources */,
+				39D15658F95903B41E9AD8FA /* MiniCactpotPayoutTableView.swift in Sources */,
+				9C9D207C18938D977F3DF314 /* MiniCactpotResult.swift in Sources */,
+				BB257A37F9B9EBA408C4709F /* MiniCactpotResultView.swift in Sources */,
+				86F928A3B0CA8B7093D10F9C /* MiniCactpotView.swift in Sources */,
 				123E3B8EC74C0BEEC7F15237 /* OceanFishing.swift in Sources */,
 				543277F7B42D08F771CEF9F4 /* OceanFishingView.swift in Sources */,
 				285A3EBFA26DE5C970C248F5 /* OceanFishingViewModel.swift in Sources */,
