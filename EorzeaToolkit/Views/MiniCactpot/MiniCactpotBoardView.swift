@@ -5,43 +5,40 @@ struct MiniCactpotBoardView: View {
     let highlightedLineID: Int?
     let cellAction: (Int) -> Void
 
-    private let gridWidth: CGFloat = 320
+    private let maxGridWidth: CGFloat = 340
     private let spacing: CGFloat = 10
 
-    private var cellSize: CGFloat {
-        (gridWidth - spacing * 4) / 5
+    private var columns: [GridItem] {
+        Array(repeating: GridItem(.flexible(), spacing: spacing), count: 5)
     }
 
     var body: some View {
-        VStack(spacing: spacing) {
-            HStack(spacing: spacing) {
-                ForEach(0..<5, id: \.self) { column in
-                    if let line = topLine(for: column) {
+        LazyVGrid(columns: columns, spacing: spacing) {
+            ForEach(0..<20, id: \.self) { index in
+                if index < 5 {
+                    if let line = topLine(for: index) {
                         MiniCactpotArrowView(line: line, isHighlighted: highlightedLineID == line.id)
-                            .frame(width: cellSize, height: cellSize)
+                            .frame(maxWidth: .infinity)
+                            .aspectRatio(1, contentMode: .fit)
                     }
-                }
-            }
-
-            ForEach(0..<3, id: \.self) { row in
-                HStack(spacing: spacing) {
+                } else if boardColumn(for: index) == 0 {
                     Color.clear
-                        .frame(width: cellSize, height: cellSize)
-
-                    ForEach(0..<3, id: \.self) { column in
-                        let cellIndex = row * 3 + column
-                        MiniCactpotCellView(value: cells[cellIndex]) {
-                            cellAction(cellIndex)
-                        }
-                        .frame(width: cellSize, height: cellSize)
-                    }
-
-                    let line = MiniCactpotLine.all[row]
+                        .aspectRatio(1, contentMode: .fit)
+                } else if boardColumn(for: index) == 4 {
+                    let line = MiniCactpotLine.all[boardRow(for: index)]
                     MiniCactpotArrowView(line: line, isHighlighted: highlightedLineID == line.id)
-                        .frame(width: cellSize, height: cellSize)
+                        .frame(maxWidth: .infinity)
+                        .aspectRatio(1, contentMode: .fit)
+                } else {
+                    let cellIndex = boardRow(for: index) * 3 + boardColumn(for: index) - 1
+                    MiniCactpotCellView(value: cells[cellIndex]) {
+                        cellAction(cellIndex)
+                    }
+                    .aspectRatio(1, contentMode: .fit)
                 }
             }
         }
+        .frame(maxWidth: maxGridWidth)
         .frame(maxWidth: .infinity)
         .padding(.vertical, 4)
     }
@@ -57,6 +54,14 @@ struct MiniCactpotBoardView: View {
         default:
             nil
         }
+    }
+
+    private func boardRow(for gridIndex: Int) -> Int {
+        (gridIndex - 5) / 5
+    }
+
+    private func boardColumn(for gridIndex: Int) -> Int {
+        (gridIndex - 5) % 5
     }
 }
 
