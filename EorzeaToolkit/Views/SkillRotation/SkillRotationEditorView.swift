@@ -326,15 +326,8 @@ struct SkillGridIcon: View {
     let item: RotationItem
 
     var body: some View {
-        AsyncImage(url: item.iconURL) { phase in
-            switch phase {
-            case .success(let image):
-                image.resizable().scaledToFit()
-            case .failure:
-                placeholder
-            default:
-                placeholder
-            }
+        CachedIconImage(url: item.iconURL) {
+            placeholder
         }
         .frame(width: 56, height: 56)
         .background(Color(.systemGray6))
@@ -370,13 +363,8 @@ struct RotationSlotView: View {
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            AsyncImage(url: slot.item.iconURL) { phase in
-                switch phase {
-                case .success(let image):
-                    image.resizable().scaledToFit()
-                default:
-                    Color(.systemGray5)
-                }
+            CachedIconImage(url: slot.item.iconURL) {
+                Color(.systemGray5)
             }
             .frame(width: iconSize, height: iconSize)
             .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -425,13 +413,8 @@ struct SkillDetailCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {
-                AsyncImage(url: action.iconURL) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image.resizable().scaledToFit()
-                    default:
-                        Color(.systemGray5)
-                    }
+                CachedIconImage(url: action.iconURL) {
+                    Color(.systemGray5)
                 }
                 .frame(width: 56, height: 56)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -512,13 +495,8 @@ struct TinctureDetailCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {
-                AsyncImage(url: tincture.iconURL) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image.resizable().scaledToFit()
-                    default:
-                        Color(.systemGray5)
-                    }
+                CachedIconImage(url: tincture.iconURL) {
+                    Color(.systemGray5)
                 }
                 .frame(width: 56, height: 56)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
