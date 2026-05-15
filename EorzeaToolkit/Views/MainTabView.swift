@@ -18,13 +18,6 @@ struct MainTabView: View {
             }
 
             NavigationStack {
-                OceanFishingView()
-            }
-            .tabItem {
-                Label("海釣", systemImage: "fish")
-            }
-
-            NavigationStack {
                 MiniCactpotView()
             }
             .tabItem {
