@@ -5,60 +5,58 @@ struct MiniCactpotBoardView: View {
     let highlightedLineID: Int?
     let cellAction: (Int) -> Void
 
-    private let arrowSize: CGFloat = 30
-    private let boardWidth: CGFloat = 260
+    private let gridWidth: CGFloat = 320
     private let spacing: CGFloat = 10
 
     private var cellSize: CGFloat {
-        (boardWidth - spacing * 2) / 3
-    }
-
-    private var columns: [GridItem] {
-        Array(repeating: GridItem(.fixed(cellSize), spacing: spacing), count: 3)
+        (gridWidth - spacing * 4) / 5
     }
 
     var body: some View {
-        VStack(spacing: 8) {
-            ZStack(alignment: .topLeading) {
-                MiniCactpotArrowView(line: MiniCactpotLine.all[6], isHighlighted: highlightedLineID == 6)
-                    .position(x: arrowSize / 2, y: arrowSize / 2)
-
-                ForEach(MiniCactpotLine.all[3...5]) { line in
-                    MiniCactpotArrowView(line: line, isHighlighted: highlightedLineID == line.id)
-                        .position(x: columnCenter(for: line.id - 3), y: arrowSize / 2)
+        VStack(spacing: spacing) {
+            HStack(spacing: spacing) {
+                ForEach(0..<5, id: \.self) { column in
+                    if let line = topLine(for: column) {
+                        MiniCactpotArrowView(line: line, isHighlighted: highlightedLineID == line.id)
+                            .frame(width: cellSize, height: cellSize)
+                    }
                 }
-
-                MiniCactpotArrowView(line: MiniCactpotLine.all[7], isHighlighted: highlightedLineID == 7)
-                    .position(x: boardWidth - arrowSize / 2, y: arrowSize / 2)
             }
-            .frame(width: boardWidth, height: arrowSize)
 
-            HStack(alignment: .top, spacing: spacing) {
-                LazyVGrid(columns: columns, spacing: 10) {
-                    ForEach(cells.indices, id: \.self) { index in
-                        MiniCactpotCellView(value: cells[index]) {
-                            cellAction(index)
+            ForEach(0..<3, id: \.self) { row in
+                HStack(spacing: spacing) {
+                    Color.clear
+                        .frame(width: cellSize, height: cellSize)
+
+                    ForEach(0..<3, id: \.self) { column in
+                        let cellIndex = row * 3 + column
+                        MiniCactpotCellView(value: cells[cellIndex]) {
+                            cellAction(cellIndex)
                         }
                         .frame(width: cellSize, height: cellSize)
                     }
-                }
-                .frame(width: boardWidth)
 
-                VStack(spacing: spacing) {
-                    ForEach(MiniCactpotLine.all[0...2]) { line in
-                        MiniCactpotArrowView(line: line, isHighlighted: highlightedLineID == line.id)
-                            .frame(width: arrowSize, height: cellSize)
-                    }
+                    let line = MiniCactpotLine.all[row]
+                    MiniCactpotArrowView(line: line, isHighlighted: highlightedLineID == line.id)
+                        .frame(width: cellSize, height: cellSize)
                 }
-                .frame(width: arrowSize)
             }
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 4)
     }
 
-    private func columnCenter(for column: Int) -> CGFloat {
-        cellSize / 2 + CGFloat(column) * (cellSize + spacing)
+    private func topLine(for column: Int) -> MiniCactpotLine? {
+        switch column {
+        case 0:
+            MiniCactpotLine.all[6]
+        case 1...3:
+            MiniCactpotLine.all[column + 2]
+        case 4:
+            MiniCactpotLine.all[7]
+        default:
+            nil
+        }
     }
 }
 
