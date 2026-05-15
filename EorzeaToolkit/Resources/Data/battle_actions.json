@@ -10733,7 +10733,7 @@
     "range_note": "-1 means melee range (3 yalms), 0 means self-target",
     "effect_range_note": "0 or 1 means single target, higher values are AoE radius in yalms",
     "cast_recast_note": "values in 100ms units. 0 cast = instant. 25 recast = 2.5s GCD",
-    "icon_url_template": "https://beta.xivapi.com/api/1/asset/ui/icon/{icon_path}?format=png",
+    "icon_url_template": "https://xivapi.com/i/{icon_path_without_hr1_tex}.png",
     "description_note": "Skill descriptions require ActionTransient.csv (not included)",
     "translation_note": "name_tw and description_tw are auto-converted from Simplified Chinese using OpenCC (s2t). FF14's Traditional Chinese client has some skills with completely different translations (e.g. 钢铁信念 -> 守護, not 鋼鐵信念). For accurate TW names, the Traditional Chinese version's Action.csv is needed, but is not available in the current datamining repos. Consider using the Japanese names (name_ja from xivapi) as a universal fallback."
   },
