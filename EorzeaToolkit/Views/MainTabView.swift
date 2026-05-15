@@ -4,6 +4,13 @@ struct MainTabView: View {
     var body: some View {
         TabView {
             NavigationStack {
+                ItemSearchView()
+            }
+            .tabItem {
+                Label("道具", systemImage: "shippingbox")
+            }
+
+            NavigationStack {
                 TreasureMapListView()
             }
             .tabItem {
