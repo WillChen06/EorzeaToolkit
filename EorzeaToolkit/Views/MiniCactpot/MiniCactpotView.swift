@@ -8,10 +8,6 @@ struct MiniCactpotView: View {
         cells.compactMap { $0 }.count
     }
 
-    private var usedNumbers: Set<Int> {
-        Set(cells.compactMap { $0 })
-    }
-
     private var results: [MiniCactpotResult] {
         guard openedCount >= 4 else {
             return []
@@ -45,14 +41,14 @@ struct MiniCactpotView: View {
             Section {
                 MiniCactpotPayoutTableView()
             }
-
-            Section {
-                Button("重置", role: .destructive) {
-                    cells = Array(repeating: nil, count: 9)
-                }
-            }
         }
         .navigationTitle("仙人微彩")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("重置", role: .destructive, action: resetCells)
+                    .disabled(openedCount == 0)
+            }
+        }
         .confirmationDialog(
             "選擇數字",
             isPresented: numberPickerBinding,
@@ -97,6 +93,10 @@ struct MiniCactpotView: View {
         cells.enumerated().contains { index, value in
             index != selectedCellIndex && value == number
         }
+    }
+
+    private func resetCells() {
+        cells = Array(repeating: nil, count: 9)
     }
 }
 

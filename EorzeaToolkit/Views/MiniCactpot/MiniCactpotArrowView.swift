@@ -6,9 +6,9 @@ struct MiniCactpotArrowView: View {
 
     var body: some View {
         Text(line.arrowSymbol)
-            .font(.headline.weight(.bold))
+            .font(.callout.weight(.bold))
             .foregroundStyle(isHighlighted ? .orange : .secondary)
-            .frame(width: 34, height: 34)
+            .frame(width: 30, height: 30)
             .background(
                 Circle()
                     .fill(isHighlighted ? Color.orange.opacity(0.18) : Color.clear)
