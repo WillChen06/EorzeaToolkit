@@ -47,10 +47,7 @@ final class ItemSearchViewModel {
 
         loadTask = Task {
             do {
-                let loadedItems = try await Task.detached(priority: .userInitiated) {
-                    let response: ItemDataResponse = try LocalDataService.load("items")
-                    return response.items
-                }.value
+                let loadedItems = try await ItemDataService.loadCachedOrBundledItems()
 
                 guard !Task.isCancelled else {
                     return
@@ -59,6 +56,7 @@ final class ItemSearchViewModel {
                 items = loadedItems
                 loadState = .loaded
                 runSearch(for: query, debounce: false)
+                await refreshRemoteItemsIfNeeded()
             } catch {
                 guard !Task.isCancelled else {
                     return
@@ -133,6 +131,25 @@ final class ItemSearchViewModel {
 
         let nextResultCount = min(results.count + pageSize, totalMatchCount)
         results = Array(allSearchResults.prefix(nextResultCount))
+    }
+
+    private func refreshRemoteItemsIfNeeded() async {
+        do {
+            guard let refreshedItems = try await ItemDataService.refreshItemsIfNeeded() else {
+                return
+            }
+
+            guard !Task.isCancelled else {
+                return
+            }
+
+            items = refreshedItems
+            runSearch(for: query, debounce: false)
+        } catch {
+            guard !Task.isCancelled else {
+                return
+            }
+        }
     }
 
     nonisolated private static func searchItems(_ items: [Item], query: String) -> ItemSearchResult {

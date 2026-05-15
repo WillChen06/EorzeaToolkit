@@ -27,6 +27,7 @@
 		641D00ACCE1F50156E9058F8 /* MiniCactpotBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCF822C3959BEB5548830EC9 /* MiniCactpotBoardView.swift */; };
 		65939C06BC1CE65AC4080A5A /* TreasureMapDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71206E4982454E1556AE20D8 /* TreasureMapDetailView.swift */; };
 		6B01AA11C9D847A7AA17A001 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B01AA11C9D847A7AA17B001 /* Item.swift */; };
+		6B01AA11C9D847A7AA17A004 /* ItemDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B01AA11C9D847A7AA17B004 /* ItemDataService.swift */; };
 		6B01AA11C9D847A7AA17A002 /* ItemSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B01AA11C9D847A7AA17B002 /* ItemSearchViewModel.swift */; };
 		6B01AA11C9D847A7AA17A003 /* ItemSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B01AA11C9D847A7AA17B003 /* ItemSearchView.swift */; };
 		77EDFFF7DCF1E64CE83905AA /* GatheringNodesSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D893E5C581D7643F8081FBA8 /* GatheringNodesSheetView.swift */; };
@@ -69,6 +70,7 @@
 		6EA545E4D6687BEE1A40A1B1 /* TreasureMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMap.swift; sourceTree = "<group>"; };
 		6EE09EB4A907E6A7B2C8C7AB /* MiniCactpotResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotResultView.swift; sourceTree = "<group>"; };
 		6B01AA11C9D847A7AA17B001 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		6B01AA11C9D847A7AA17B004 /* ItemDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDataService.swift; sourceTree = "<group>"; };
 		6B01AA11C9D847A7AA17B002 /* ItemSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSearchViewModel.swift; sourceTree = "<group>"; };
 		6B01AA11C9D847A7AA17B003 /* ItemSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSearchView.swift; sourceTree = "<group>"; };
 		71206E4982454E1556AE20D8 /* TreasureMapDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapDetailView.swift; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 		09FBACC73703D8AAA186D7B5 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				6B01AA11C9D847A7AA17B004 /* ItemDataService.swift */,
 				DA57853C57893DD24999BD39 /* LocalDataService.swift */,
 				D6B439A14F2C5863AE74D6AC /* MiniCactpotCalculator.swift */,
 				ABD11C8459A748FFAD797086 /* XIVAPIService.swift */,
@@ -342,6 +345,7 @@
 				8EDD234DECF8ED18B9984887 /* EorzeaToolkitApp.swift in Sources */,
 				77EDFFF7DCF1E64CE83905AA /* GatheringNodesSheetView.swift in Sources */,
 				6B01AA11C9D847A7AA17A001 /* Item.swift in Sources */,
+				6B01AA11C9D847A7AA17A004 /* ItemDataService.swift in Sources */,
 				6B01AA11C9D847A7AA17A003 /* ItemSearchView.swift in Sources */,
 				6B01AA11C9D847A7AA17A002 /* ItemSearchViewModel.swift in Sources */,
 				B07E3909BF9E625D9CE02422 /* LocalDataService.swift in Sources */,
