@@ -9,41 +9,56 @@ struct MiniCactpotBoardView: View {
     private let spacing: CGFloat = 10
 
     var body: some View {
-        VStack(spacing: spacing) {
-            HStack(spacing: spacing) {
-                ForEach(0..<5, id: \.self) { column in
-                    if let line = topLine(for: column) {
-                        MiniCactpotArrowView(line: line, isHighlighted: highlightedLineID == line.id)
-                            .frame(maxWidth: .infinity)
-                            .aspectRatio(1, contentMode: .fit)
-                    }
-                }
-            }
+        Grid(horizontalSpacing: spacing, verticalSpacing: spacing) {
+            topArrowRow
 
             ForEach(0..<3, id: \.self) { row in
-                HStack(spacing: spacing) {
-                    let line = MiniCactpotLine.all[row]
-                    MiniCactpotArrowView(line: line, isHighlighted: highlightedLineID == line.id)
-                        .frame(maxWidth: .infinity)
-                        .aspectRatio(1, contentMode: .fit)
-
-                    ForEach(0..<3, id: \.self) { column in
-                        let cellIndex = row * 3 + column
-                        MiniCactpotCellView(value: cells[cellIndex]) {
-                            cellAction(cellIndex)
-                        }
-                        .aspectRatio(1, contentMode: .fit)
-                    }
-
-                    Color.clear
-                        .frame(maxWidth: .infinity)
-                        .aspectRatio(1, contentMode: .fit)
-                }
+                boardRow(row)
             }
         }
         .frame(maxWidth: maxGridWidth)
         .frame(maxWidth: .infinity)
         .padding(.vertical, 4)
+    }
+
+    private var topArrowRow: some View {
+        GridRow {
+            ForEach(0..<5, id: \.self) { column in
+                boardSlot {
+                    if let line = topLine(for: column) {
+                        MiniCactpotArrowView(line: line, isHighlighted: highlightedLineID == line.id)
+                    }
+                }
+            }
+        }
+    }
+
+    private func boardRow(_ row: Int) -> some View {
+        GridRow {
+            let line = MiniCactpotLine.all[row]
+            boardSlot {
+                MiniCactpotArrowView(line: line, isHighlighted: highlightedLineID == line.id)
+            }
+
+            ForEach(0..<3, id: \.self) { column in
+                let cellIndex = row * 3 + column
+                boardSlot {
+                    MiniCactpotCellView(value: cells[cellIndex]) {
+                        cellAction(cellIndex)
+                    }
+                }
+            }
+
+            boardSlot {
+                Color.clear
+            }
+        }
+    }
+
+    private func boardSlot<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        content()
+            .frame(maxWidth: .infinity)
+            .aspectRatio(1, contentMode: .fit)
     }
 
     private func topLine(for column: Int) -> MiniCactpotLine? {
