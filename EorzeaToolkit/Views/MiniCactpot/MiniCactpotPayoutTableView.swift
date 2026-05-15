@@ -14,6 +14,7 @@ struct MiniCactpotPayoutTableView: View {
                     Text("獎勵（金碟幣）")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
                 }
 
                 ForEach(payoutRows, id: \.self) { sum in
