@@ -22,7 +22,8 @@ struct MiniCactpotBoardView: View {
 
             ForEach(0..<3, id: \.self) { row in
                 HStack(spacing: spacing) {
-                    Color.clear
+                    let line = MiniCactpotLine.all[row]
+                    MiniCactpotArrowView(line: line, isHighlighted: highlightedLineID == line.id)
                         .frame(maxWidth: .infinity)
                         .aspectRatio(1, contentMode: .fit)
 
@@ -34,8 +35,7 @@ struct MiniCactpotBoardView: View {
                         .aspectRatio(1, contentMode: .fit)
                     }
 
-                    let line = MiniCactpotLine.all[row]
-                    MiniCactpotArrowView(line: line, isHighlighted: highlightedLineID == line.id)
+                    Color.clear
                         .frame(maxWidth: .infinity)
                         .aspectRatio(1, contentMode: .fit)
                 }
