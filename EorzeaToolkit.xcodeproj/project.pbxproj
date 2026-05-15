@@ -12,7 +12,6 @@
 		09BA766A39AC9B547891F46D /* ocean_fishing.json in Resources */ = {isa = PBXBuildFile; fileRef = D2BC33C71CF25E0141DE065D /* ocean_fishing.json */; };
 		123E3B8EC74C0BEEC7F15237 /* OceanFishing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E008F2D00900B1E5C3A1A09 /* OceanFishing.swift */; };
 		13687D58E10C0A7C44F7A8E6 /* BattleAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6104222B27B687BA0EAA5CC5 /* BattleAction.swift */; };
-		1B45FE4D097CAAD65F323597 /* ProgressTrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62257207F987500AC387985D /* ProgressTrackerView.swift */; };
 		208E3A2EFC90291197BD41E9 /* RelicWeaponViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA4A4DBD2933C011AE58698 /* RelicWeaponViewModel.swift */; };
 		21464979E774C1BA47C4D78E /* RelicWeaponListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD54A6B8AEDE3EC50910827 /* RelicWeaponListView.swift */; };
 		24FC49E9D42BE14C86DE72D7 /* battle_actions.json in Resources */ = {isa = PBXBuildFile; fileRef = 2E131506BE3D2AC67DB401A5 /* battle_actions.json */; };
@@ -36,7 +35,6 @@
 		D41D468CA1207296BE2BD674 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 01FE0EEA33F14EFF845F9638 /* Localizable.strings */; };
 		D890C438BFCBAE8750212266 /* TreasureSpotListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37A5663D04F8D56BB8F3ABC /* TreasureSpotListView.swift */; };
 		E96505DB673C2FCC56EA4C7E /* treasure_maps_final.json in Resources */ = {isa = PBXBuildFile; fileRef = BF15A9AE3DC8EE6D4DEA9DB7 /* treasure_maps_final.json */; };
-		ED28E2085B4B170426957A74 /* ProgressRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A21CE703F501936991D2E7E /* ProgressRecord.swift */; };
 		FA066DD46DB2A4CAA69AC3E3 /* RelicWeapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDC8E113EEA7483788B92 /* RelicWeapon.swift */; };
 		FEF4C46EBF93AB24A7030012 /* maps.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BE3609C1A36C70D2704F19 /* maps.json */; };
 		FFF024FF24FAD6D839367CC2 /* SkillRotationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B3A9C4147C7FB2EC139CAF /* SkillRotationViewModel.swift */; };
@@ -55,13 +53,11 @@
 		44C199F7F0439BDD9DF63DE5 /* relic_weapons.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = relic_weapons.json; sourceTree = "<group>"; };
 		5207532D7062D6DDBE8CDC20 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		6104222B27B687BA0EAA5CC5 /* BattleAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleAction.swift; sourceTree = "<group>"; };
-		62257207F987500AC387985D /* ProgressTrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTrackerView.swift; sourceTree = "<group>"; };
 		6709100A9CF22B7F192B2D32 /* OceanFishingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OceanFishingView.swift; sourceTree = "<group>"; };
 		6E008F2D00900B1E5C3A1A09 /* OceanFishing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OceanFishing.swift; sourceTree = "<group>"; };
 		6EA545E4D6687BEE1A40A1B1 /* TreasureMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMap.swift; sourceTree = "<group>"; };
 		71206E4982454E1556AE20D8 /* TreasureMapDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapDetailView.swift; sourceTree = "<group>"; };
 		75BE3609C1A36C70D2704F19 /* maps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = maps.json; sourceTree = "<group>"; };
-		7A21CE703F501936991D2E7E /* ProgressRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressRecord.swift; sourceTree = "<group>"; };
 		84EEB99FC86E568BF0D2EA0D /* EorzeaToolkit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EorzeaToolkit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ABE1DA3A0D8692FCB447D0D /* zh-maps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "zh-maps.json"; sourceTree = "<group>"; };
 		9113B83FA58C9AC86332E63E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -95,7 +91,6 @@
 			children = (
 				5207532D7062D6DDBE8CDC20 /* MainTabView.swift */,
 				1DC7051F3D5A74A78F869867 /* OceanFishing */,
-				E8FDB16057A396C814A04AFA /* Progress */,
 				5B224F3F1645633F718CCFFF /* RelicWeapon */,
 				6393423BDC861899040A4803 /* SkillRotation */,
 				EF10BFA3E01EFCB74288995A /* TreasureMap */,
@@ -116,7 +111,6 @@
 			children = (
 				6104222B27B687BA0EAA5CC5 /* BattleAction.swift */,
 				6E008F2D00900B1E5C3A1A09 /* OceanFishing.swift */,
-				7A21CE703F501936991D2E7E /* ProgressRecord.swift */,
 				2ADBDC8E113EEA7483788B92 /* RelicWeapon.swift */,
 				6EA545E4D6687BEE1A40A1B1 /* TreasureMap.swift */,
 			);
@@ -212,14 +206,6 @@
 				ABF50FBB49DC0E73DFC76187 /* Data */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		E8FDB16057A396C814A04AFA /* Progress */ = {
-			isa = PBXGroup;
-			children = (
-				62257207F987500AC387985D /* ProgressTrackerView.swift */,
-			);
-			path = Progress;
 			sourceTree = "<group>";
 		};
 		ED9C9F6EFB39522231714773 = {
@@ -325,8 +311,6 @@
 				123E3B8EC74C0BEEC7F15237 /* OceanFishing.swift in Sources */,
 				543277F7B42D08F771CEF9F4 /* OceanFishingView.swift in Sources */,
 				285A3EBFA26DE5C970C248F5 /* OceanFishingViewModel.swift in Sources */,
-				ED28E2085B4B170426957A74 /* ProgressRecord.swift in Sources */,
-				1B45FE4D097CAAD65F323597 /* ProgressTrackerView.swift in Sources */,
 				FA066DD46DB2A4CAA69AC3E3 /* RelicWeapon.swift in Sources */,
 				8B4DAB5EFA326CA13D9E416B /* RelicWeaponDetailView.swift in Sources */,
 				21464979E774C1BA47C4D78E /* RelicWeaponListView.swift in Sources */,

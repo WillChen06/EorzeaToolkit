@@ -30,13 +30,6 @@ struct MainTabView: View {
             .tabItem {
                 Label("技能循環", systemImage: "bolt.circle")
             }
-
-            NavigationStack {
-                ProgressTrackerView()
-            }
-            .tabItem {
-                Label("進度", systemImage: "checklist")
-            }
         }
     }
 }
