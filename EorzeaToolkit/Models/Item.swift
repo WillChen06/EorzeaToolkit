@@ -26,6 +26,6 @@ struct Item: Codable, Identifiable, Hashable, Sendable {
     }
 
     var iconURL: URL? {
-        URL(string: "https://beta.xivapi.com/api/1/asset/ui/icon/\(iconPath)?format=png")
+        XIVIconURL.make(from: iconPath)
     }
 }
