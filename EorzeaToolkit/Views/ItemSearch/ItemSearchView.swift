@@ -61,10 +61,20 @@ struct ItemSearchView: View {
                 }
 
                 if viewModel.hiddenResultCount > 0 {
-                    Text("還有 \(viewModel.hiddenResultCount) 筆未顯示，請輸入更精確的關鍵字")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                    Button {
+                        viewModel.loadMoreResults()
+                    } label: {
+                        VStack(spacing: 4) {
+                            Text("載入更多")
+                                .font(.subheadline.weight(.semibold))
+
+                            Text("已顯示 \(viewModel.results.count) / \(viewModel.totalMatchCount) 筆，還有 \(viewModel.hiddenResultCount) 筆")
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                        }
                         .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                    .buttonStyle(.plain)
                         .listRowBackground(Color.clear)
                 }
             }

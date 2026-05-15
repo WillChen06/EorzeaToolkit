@@ -18,14 +18,19 @@ final class ItemSearchViewModel {
     var query = ""
 
     private var items: [Item] = []
+    private var allSearchResults: [Item] = []
     private var loadTask: Task<Void, Never>?
     private var searchTask: Task<Void, Never>?
 
-    private let resultLimit = 50
+    private let pageSize = 50
     private let searchDebounceNanoseconds: UInt64 = 300_000_000
 
     var hiddenResultCount: Int {
         max(totalMatchCount - results.count, 0)
+    }
+
+    var canLoadMoreResults: Bool {
+        results.count < totalMatchCount
     }
 
     var hasLoadedItems: Bool {
@@ -60,6 +65,7 @@ final class ItemSearchViewModel {
                 }
 
                 items = []
+                allSearchResults = []
                 results = []
                 totalMatchCount = 0
                 isSearching = false
@@ -78,6 +84,7 @@ final class ItemSearchViewModel {
 
         let trimmedQuery = rawQuery.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedQuery.isEmpty else {
+            allSearchResults = []
             results = []
             totalMatchCount = 0
             isSearching = false
@@ -85,6 +92,7 @@ final class ItemSearchViewModel {
         }
 
         guard hasLoadedItems else {
+            allSearchResults = []
             results = []
             totalMatchCount = 0
             return
@@ -92,7 +100,6 @@ final class ItemSearchViewModel {
 
         isSearching = true
         let sourceItems = items
-        let limit = resultLimit
         let delay = searchDebounceNanoseconds
 
         searchTask = Task {
@@ -105,23 +112,32 @@ final class ItemSearchViewModel {
             }
 
             let searchResult = await Task.detached(priority: .userInitiated) {
-                Self.searchItems(sourceItems, query: trimmedQuery, limit: limit)
+                Self.searchItems(sourceItems, query: trimmedQuery)
             }.value
 
             guard !Task.isCancelled else {
                 return
             }
 
-            results = searchResult.items
+            allSearchResults = searchResult.items
             totalMatchCount = searchResult.totalCount
+            results = Array(searchResult.items.prefix(pageSize))
             isSearching = false
         }
     }
 
-    nonisolated private static func searchItems(_ items: [Item], query: String, limit: Int) -> ItemSearchResult {
+    func loadMoreResults() {
+        guard canLoadMoreResults else {
+            return
+        }
+
+        let nextResultCount = min(results.count + pageSize, totalMatchCount)
+        results = Array(allSearchResults.prefix(nextResultCount))
+    }
+
+    nonisolated private static func searchItems(_ items: [Item], query: String) -> ItemSearchResult {
         let normalizedQuery = normalize(query)
         var matches: [ItemSearchMatch] = []
-        matches.reserveCapacity(limit)
 
         for item in items {
             let normalizedNameTw = normalize(item.nameTw)
@@ -155,7 +171,7 @@ final class ItemSearchViewModel {
             return lhs.item.displayName.localizedStandardCompare(rhs.item.displayName) == .orderedAscending
         }
 
-        return ItemSearchResult(items: matches.prefix(limit).map(\.item), totalCount: matches.count)
+        return ItemSearchResult(items: matches.map(\.item), totalCount: matches.count)
     }
 
     nonisolated private static func normalize(_ value: String) -> String {
