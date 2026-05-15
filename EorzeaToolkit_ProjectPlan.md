@@ -2,7 +2,7 @@
 
 ## 專案概述
 
-一款 iOS App，讓玩家在 App 內快速查閱 FF14 遊戲資料（藏寶圖位置、海釣資訊、副本資訊、發光武器等），並可追蹤個人進度，不需每次重新 Google 搜尋。
+一款 iOS App，讓玩家在 App 內快速查閱 FF14 遊戲資料（藏寶圖位置、副本資訊、發光武器等），並可追蹤個人進度，不需每次重新 Google 搜尋。
 
 ## 技術規格
 
@@ -28,7 +28,6 @@
 
 - 藏寶圖地點座標與地圖對照
 - 發光武器（版本武器）製作步驟與素材
-- 海釣時刻表（固定循環規則）
 - 副本攻略筆記
 
 ### API 為輔（未來擴充）
@@ -49,7 +48,6 @@ EorzeaToolkit/
 │   ├── Models/
 │   │   ├── TreasureMap.swift              # 藏寶圖資料模型
 │   │   ├── RelicWeapon.swift              # 發光武器資料模型
-│   │   ├── OceanFishing.swift             # 海釣資料模型
 │   │   └── ProgressRecord.swift           # 進度追蹤模型（SwiftData）
 │   ├── Views/
 │   │   ├── MainTabView.swift              # 主要 Tab 導航
@@ -59,22 +57,18 @@ EorzeaToolkit/
 │   │   ├── RelicWeapon/
 │   │   │   ├── RelicWeaponListView.swift
 │   │   │   └── RelicWeaponDetailView.swift
-│   │   ├── OceanFishing/
-│   │   │   └── OceanFishingView.swift
 │   │   └── Progress/
 │   │       └── ProgressTrackerView.swift
 │   ├── ViewModels/
 │   │   ├── TreasureMapViewModel.swift
-│   │   ├── RelicWeaponViewModel.swift
-│   │   └── OceanFishingViewModel.swift
+│   │   └── RelicWeaponViewModel.swift
 │   ├── Services/
 │   │   ├── LocalDataService.swift         # 讀取本地 JSON
 │   │   └── XIVAPIService.swift            # API 請求（未來擴充）
 │   ├── Resources/
 │   │   └── Data/
 │   │       ├── treasure_maps.json         # 藏寶圖資料
-│   │       ├── relic_weapons.json         # 發光武器資料
-│   │       └── ocean_fishing.json         # 海釣資料
+│   │       └── relic_weapons.json         # 發光武器資料
 │   └── Localization/
 │       ├── zh-Hant.lproj/
 │       │   └── Localizable.strings
@@ -109,19 +103,13 @@ EorzeaToolkit/
 - [ ] 進度條 UI（已完成 / 總步驟）
 - [ ] 支援多個目標同時追蹤
 
-### Phase 4：海釣時刻表
-
-- [ ] 海釣時間循環計算邏輯
-- [ ] 當前/下次航班顯示
-- [ ] 目標魚種與釣餌對照
-
-### Phase 5：Polish & 擴充
+### Phase 4：Polish & 擴充
 
 - [ ] 多語系支援（英文、日文）
 - [ ] 收藏功能
 - [ ] API 整合（XIVAPI v2）
 - [ ] 深色模式適配
-- [ ] Widget（桌面小工具，如海釣倒數）
+- [ ] Widget（桌面小工具）
 
 ## JSON 資料結構範例
 
