@@ -9,15 +9,8 @@ struct BattleJobListView: View {
                 SkillRotationEditorView(job: job, viewModel: viewModel)
             } label: {
                 HStack(spacing: 14) {
-                    AsyncImage(url: job.iconURL) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image.resizable().scaledToFit()
-                        case .failure:
-                            placeholder
-                        default:
-                            placeholder
-                        }
+                    CachedIconImage(url: job.iconURL) {
+                        placeholder
                     }
                     .frame(width: 44, height: 44)
                     .clipShape(RoundedRectangle(cornerRadius: 8))

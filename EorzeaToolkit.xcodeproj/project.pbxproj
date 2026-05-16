@@ -10,6 +10,8 @@
 		025A67D3151B3C43DC2C3142 /* relic_weapons.json in Resources */ = {isa = PBXBuildFile; fileRef = 44C199F7F0439BDD9DF63DE5 /* relic_weapons.json */; };
 		0872DD5E815FE236F8EFC813 /* XIVAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD11C8459A748FFAD797086 /* XIVAPIService.swift */; };
 		13687D58E10C0A7C44F7A8E6 /* BattleAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6104222B27B687BA0EAA5CC5 /* BattleAction.swift */; };
+		6B02AA11C9D847A7AA17A001 /* CachedIconImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B02AA11C9D847A7AA17B001 /* CachedIconImage.swift */; };
+		6B02AA11C9D847A7AA17F001 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6B02AA11C9D847A7AA17E001 /* Kingfisher */; };
 		208E3A2EFC90291197BD41E9 /* RelicWeaponViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA4A4DBD2933C011AE58698 /* RelicWeaponViewModel.swift */; };
 		21464979E774C1BA47C4D78E /* RelicWeaponListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD54A6B8AEDE3EC50910827 /* RelicWeaponListView.swift */; };
 		24FC49E9D42BE14C86DE72D7 /* battle_actions.json in Resources */ = {isa = PBXBuildFile; fileRef = 2E131506BE3D2AC67DB401A5 /* battle_actions.json */; };
@@ -52,6 +54,7 @@
 
 /* Begin PBXFileReference section */
 		0CA6E672B7FC82997872CB7E /* SkillRotationEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillRotationEditorView.swift; sourceTree = "<group>"; };
+		6B02AA11C9D847A7AA17B001 /* CachedIconImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedIconImage.swift; sourceTree = "<group>"; };
 		130A2C5428DE74BF52D22DC7 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		1437A0503262E55A4EF25C1E /* BattleJobListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleJobListView.swift; sourceTree = "<group>"; };
 		1CD54A6B8AEDE3EC50910827 /* RelicWeaponListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelicWeaponListView.swift; sourceTree = "<group>"; };
@@ -96,6 +99,17 @@
 		E7179CCAFE4C7C105A2AD6C7 /* RelicWeaponDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelicWeaponDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFrameworksBuildPhase section */
+		6B02AA11C9D847A7AA17F002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B02AA11C9D847A7AA17F001 /* Kingfisher in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXGroup section */
 		09FBACC73703D8AAA186D7B5 /* Services */ = {
 			isa = PBXGroup;
@@ -111,6 +125,7 @@
 		112289ADD8C5B2DC43F0C83A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6B02AA11C9D847A7AA17B001 /* CachedIconImage.swift */,
 				5207532D7062D6DDBE8CDC20 /* MainTabView.swift */,
 				6B01AA11C9D847A7AA17C003 /* ItemSearch */,
 				1B7E0497ED3D887151FD52E8 /* MiniCactpot */,
@@ -273,6 +288,7 @@
 			buildConfigurationList = C0848946B33B4CE061F86164 /* Build configuration list for PBXNativeTarget "EorzeaToolkit" */;
 			buildPhases = (
 				472441B38736B955D77BD405 /* Sources */,
+				6B02AA11C9D847A7AA17F002 /* Frameworks */,
 				6B0C4DDA1E7F131F9CCFE971 /* Resources */,
 			);
 			buildRules = (
@@ -281,6 +297,7 @@
 			);
 			name = EorzeaToolkit;
 			packageProductDependencies = (
+				6B02AA11C9D847A7AA17E001 /* Kingfisher */,
 			);
 			productName = EorzeaToolkit;
 			productReference = 84EEB99FC86E568BF0D2EA0D /* EorzeaToolkit.app */;
@@ -309,6 +326,9 @@
 			productRefGroup = 860D61CF36579136B7EA5281 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
+			packageReferences = (
+				6B02AA11C9D847A7AA17D001 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			targets = (
 				A24CF7D10E3961865033402C /* EorzeaToolkit */,
 			);
@@ -343,6 +363,7 @@
 				13687D58E10C0A7C44F7A8E6 /* BattleAction.swift in Sources */,
 				296E8C8D483BA5CEA3A1E5C8 /* BattleJobListView.swift in Sources */,
 				8EDD234DECF8ED18B9984887 /* EorzeaToolkitApp.swift in Sources */,
+				6B02AA11C9D847A7AA17A001 /* CachedIconImage.swift in Sources */,
 				77EDFFF7DCF1E64CE83905AA /* GatheringNodesSheetView.swift in Sources */,
 				6B01AA11C9D847A7AA17A001 /* Item.swift in Sources */,
 				6B01AA11C9D847A7AA17A004 /* ItemDataService.swift in Sources */,
@@ -584,6 +605,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6B02AA11C9D847A7AA17D001 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6B02AA11C9D847A7AA17E001 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6B02AA11C9D847A7AA17D001 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5923048CE9C047CD2F1B71B4 /* Project object */;
 }

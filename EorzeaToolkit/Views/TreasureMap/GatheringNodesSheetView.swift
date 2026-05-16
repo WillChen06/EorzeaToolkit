@@ -216,18 +216,11 @@ struct GatheringNodeMapView: View {
 
             // 採集點圖標
             if let iconURL = node.typeIconURL {
-                AsyncImage(url: iconURL) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .frame(width: 32, height: 32)
-                            .position(x: markerX, y: markerY)
-                    default:
-                        fallbackMarker
-                            .position(x: markerX, y: markerY)
-                    }
+                CachedIconImage(url: iconURL) {
+                    fallbackMarker
                 }
+                .frame(width: 32, height: 32)
+                .position(x: markerX, y: markerY)
             } else {
                 fallbackMarker
                     .position(x: markerX, y: markerY)

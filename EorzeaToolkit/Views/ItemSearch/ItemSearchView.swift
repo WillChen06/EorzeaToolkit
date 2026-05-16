@@ -149,23 +149,12 @@ private struct ItemIconView: View {
     let size: CGFloat
 
     var body: some View {
-        AsyncImage(url: item.iconURL) { phase in
-            switch phase {
-            case .empty:
-                placeholder
-            case .success(let image):
-                image
-                    .resizable()
-                    .scaledToFit()
-                    .padding(size * 0.08)
-                    .background(.thinMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-            case .failure:
-                placeholder
-            @unknown default:
-                placeholder
-            }
+        CachedIconImage(url: item.iconURL) {
+            placeholder
         }
+        .padding(size * 0.08)
+        .background(.thinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
         .frame(width: size, height: size)
         .accessibilityHidden(true)
     }
