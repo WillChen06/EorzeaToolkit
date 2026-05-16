@@ -1,4 +1,3 @@
-import Kingfisher
 import SwiftUI
 
 struct ItemSearchView: View {
@@ -150,21 +149,14 @@ private struct ItemIconView: View {
     let size: CGFloat
 
     var body: some View {
-        KFImage(item.iconURL)
-            .placeholder {
-                placeholder
-            }
-            .fade(duration: 0.25)
-            .resizable()
-            .contentConfigure { image in
-                image
-                    .scaledToFit()
-                    .padding(size * 0.08)
-                    .background(.thinMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-            }
-            .frame(width: size, height: size)
-            .accessibilityHidden(true)
+        CachedIconImage(url: item.iconURL) {
+            placeholder
+        }
+        .padding(size * 0.08)
+        .background(.thinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .frame(width: size, height: size)
+        .accessibilityHidden(true)
     }
 
     private var placeholder: some View {

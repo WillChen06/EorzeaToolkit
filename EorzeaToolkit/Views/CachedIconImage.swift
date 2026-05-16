@@ -8,6 +8,7 @@ struct CachedIconImage<Placeholder: View>: View {
 
     var body: some View {
         KFImage(url)
+            .cancelOnDisappear(true)
             .placeholder(placeholder)
             .fade(duration: 0.25)
             .resizable()
