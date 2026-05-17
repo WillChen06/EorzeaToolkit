@@ -114,7 +114,7 @@ struct ItemSearchView: View {
 
     private var filterBarText: String {
         if viewModel.filter.isActive {
-            return viewModel.filter.summaryParts.joined(separator: " · ")
+            return viewModel.filterSummaryParts.joined(separator: " · ")
         }
 
         return "調整搜尋篩選"
@@ -178,80 +178,38 @@ struct ItemSearchView: View {
 private struct ItemFilterSheet: View {
     let viewModel: ItemSearchViewModel
     @Environment(\.dismiss) private var dismiss
+    @State private var selectedFilterPage: ItemFilterPage = .general
+    @State private var expandedUICategoryGroupIds: Set<Int> = []
 
     private let rarityColumns = [
         GridItem(.adaptive(minimum: 88), spacing: 8)
+    ]
+    private let jobColumns = [
+        GridItem(.adaptive(minimum: 88), spacing: 8)
+    ]
+    private let equipSlotColumns = [
+        GridItem(.adaptive(minimum: 92), spacing: 8)
     ]
 
     var body: some View {
         NavigationStack {
             Form {
-                Section("品級 (iLv)") {
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Text("\(viewModel.filter.ilvlRange.lowerBound)")
-                                .font(.headline.monospacedDigit())
-
-                            Spacer()
-
-                            Text("\(viewModel.filter.ilvlRange.upperBound)")
-                                .font(.headline.monospacedDigit())
+                if hasAdvancedFilters {
+                    Section {
+                        Picker("篩選類型", selection: $selectedFilterPage) {
+                            ForEach(ItemFilterPage.allCases) { page in
+                                Text(page.label).tag(page)
+                            }
                         }
-                        .accessibilityElement(children: .combine)
-                        .accessibilityLabel("品級範圍 \(viewModel.filter.ilvlRange.lowerBound) 到 \(viewModel.filter.ilvlRange.upperBound)")
-
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("最低")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-
-                            Slider(
-                                value: minimumItemLevelBinding,
-                                in: Double(ItemFilter.defaultIlvlRange.lowerBound)...Double(viewModel.filter.ilvlRange.upperBound),
-                                step: 1
-                            )
-                        }
-
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("最高")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-
-                            Slider(
-                                value: maximumItemLevelBinding,
-                                in: Double(viewModel.filter.ilvlRange.lowerBound)...Double(ItemFilter.defaultIlvlRange.upperBound),
-                                step: 1
-                            )
-                        }
+                        .pickerStyle(.segmented)
                     }
-                    .padding(.vertical, 4)
                 }
 
-                Section("稀有度") {
-                    LazyVGrid(columns: rarityColumns, alignment: .leading, spacing: 8) {
-                        ForEach(ItemFilter.defaultRarities.sorted(), id: \.self) { rarity in
-                            rarityButton(for: rarity)
-                        }
-                    }
-                    .padding(.vertical, 4)
-                }
-
-                Section("可否 HQ") {
-                    Picker("可否 HQ", selection: hqStateBinding) {
-                        Text("不限").tag(ItemBoolFilterState.any)
-                        Text("可HQ").tag(ItemBoolFilterState.only)
-                        Text("不可HQ").tag(ItemBoolFilterState.exclude)
-                    }
-                    .pickerStyle(.segmented)
-                }
-
-                Section("是否可交易") {
-                    Picker("是否可交易", selection: tradableStateBinding) {
-                        Text("不限").tag(ItemBoolFilterState.any)
-                        Text("可交易").tag(ItemBoolFilterState.only)
-                        Text("不可交易").tag(ItemBoolFilterState.exclude)
-                    }
-                    .pickerStyle(.segmented)
+                switch selectedFilterPage {
+                case .general:
+                    generalFilterSections
+                case .advanced:
+                    advancedFilterSections
                 }
             }
             .navigationTitle("篩選")
@@ -269,6 +227,132 @@ private struct ItemFilterSheet: View {
                         dismiss()
                     }
                 }
+            }
+        }
+    }
+
+    private var hasAdvancedFilters: Bool {
+        !viewModel.uiCategoryGroups.isEmpty ||
+            !viewModel.availableJobFilterOptions.isEmpty ||
+            !viewModel.equipSlots.isEmpty
+    }
+
+    @ViewBuilder
+    private var generalFilterSections: some View {
+        Section("品級 (iLv)") {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("\(viewModel.filter.ilvlRange.lowerBound)")
+                        .font(.headline.monospacedDigit())
+
+                    Spacer()
+
+                    Text("\(viewModel.filter.ilvlRange.upperBound)")
+                        .font(.headline.monospacedDigit())
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("品級範圍 \(viewModel.filter.ilvlRange.lowerBound) 到 \(viewModel.filter.ilvlRange.upperBound)")
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("最低")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    Slider(
+                        value: minimumItemLevelBinding,
+                        in: Double(ItemFilter.defaultIlvlRange.lowerBound)...Double(viewModel.filter.ilvlRange.upperBound),
+                        step: 1
+                    )
+                }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("最高")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    Slider(
+                        value: maximumItemLevelBinding,
+                        in: Double(viewModel.filter.ilvlRange.lowerBound)...Double(ItemFilter.defaultIlvlRange.upperBound),
+                        step: 1
+                    )
+                }
+            }
+            .padding(.vertical, 4)
+        }
+
+        Section("稀有度") {
+            LazyVGrid(columns: rarityColumns, alignment: .leading, spacing: 8) {
+                ForEach(ItemFilter.defaultRarities.sorted(), id: \.self) { rarity in
+                    rarityButton(for: rarity)
+                }
+            }
+            .padding(.vertical, 4)
+        }
+
+        Section("可否 HQ") {
+            Picker("可否 HQ", selection: hqStateBinding) {
+                Text("不限").tag(ItemBoolFilterState.any)
+                Text("可HQ").tag(ItemBoolFilterState.only)
+                Text("不可HQ").tag(ItemBoolFilterState.exclude)
+            }
+            .pickerStyle(.segmented)
+        }
+
+        Section("是否可交易") {
+            Picker("是否可交易", selection: tradableStateBinding) {
+                Text("不限").tag(ItemBoolFilterState.any)
+                Text("可交易").tag(ItemBoolFilterState.only)
+                Text("不可交易").tag(ItemBoolFilterState.exclude)
+            }
+            .pickerStyle(.segmented)
+        }
+    }
+
+    @ViewBuilder
+    private var advancedFilterSections: some View {
+        if !viewModel.uiCategoryGroups.isEmpty {
+            Section("物品分類") {
+                ForEach(viewModel.uiCategoryGroups) { group in
+                    DisclosureGroup(
+                        isExpanded: uiCategoryGroupBinding(for: group.id)
+                    ) {
+                        ForEach(group.categories) { category in
+                            uiCategoryButton(category)
+                        }
+                    } label: {
+                        HStack {
+                            Text(group.title)
+
+                            Spacer()
+
+                            Text("\(group.categories.count)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+        }
+
+        if !viewModel.availableJobFilterOptions.isEmpty {
+            Section("可裝備職業") {
+                LazyVGrid(columns: jobColumns, alignment: .leading, spacing: 8) {
+                    ForEach(viewModel.availableJobFilterOptions) { option in
+                        jobButton(option)
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+        }
+
+        if !viewModel.equipSlots.isEmpty {
+            Section("裝備部位") {
+                LazyVGrid(columns: equipSlotColumns, alignment: .leading, spacing: 8) {
+                    ForEach(viewModel.equipSlots) { equipSlot in
+                        equipSlotButton(equipSlot)
+                    }
+                }
+                .padding(.vertical, 4)
             }
         }
     }
@@ -302,6 +386,18 @@ private struct ItemFilterSheet: View {
             viewModel.filter.tradableState
         } set: { newValue in
             viewModel.updateTradableState(newValue)
+        }
+    }
+
+    private func uiCategoryGroupBinding(for groupId: Int) -> Binding<Bool> {
+        Binding {
+            expandedUICategoryGroupIds.contains(groupId)
+        } set: { isExpanded in
+            if isExpanded {
+                expandedUICategoryGroupIds.insert(groupId)
+            } else {
+                expandedUICategoryGroupIds.remove(groupId)
+            }
         }
     }
 
@@ -344,6 +440,102 @@ private struct ItemFilterSheet: View {
             return .pink
         default:
             return .secondary
+        }
+    }
+
+    private func uiCategoryButton(_ category: UICategory) -> some View {
+        let isSelected = viewModel.filter.selectedUICategoryIds.contains(category.id)
+
+        return Button {
+            viewModel.toggleUICategory(category.id)
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .imageScale(.small)
+
+                Text(category.displayName)
+                    .foregroundStyle(.primary)
+
+                Spacer(minLength: 0)
+            }
+            .font(.subheadline)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(category.displayName)
+        .accessibilityValue(isSelected ? "已選取" : "未選取")
+    }
+
+    private func jobButton(_ option: ItemJobFilterOption) -> some View {
+        let isSelected = viewModel.filter.selectedJobAbbrs.contains(option.abbreviation)
+
+        return Button {
+            viewModel.toggleJob(option.abbreviation)
+        } label: {
+            VStack(spacing: 5) {
+                CachedIconImage(url: option.iconURL) {
+                    Circle()
+                        .fill(.secondary.opacity(0.18))
+                        .overlay {
+                            Text(option.abbreviation.prefix(1))
+                                .font(.caption.weight(.bold))
+                                .foregroundStyle(.secondary)
+                        }
+                }
+                .frame(width: 28, height: 28)
+                .clipShape(Circle())
+
+                Text(option.displayName)
+                    .font(.caption.weight(.semibold))
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
+                    .multilineTextAlignment(.center)
+            }
+            .foregroundStyle(isSelected ? .white : .primary)
+            .frame(maxWidth: .infinity, minHeight: 62)
+        }
+        .buttonStyle(.borderedProminent)
+        .tint(isSelected ? .accentColor : .secondary.opacity(0.18))
+        .accessibilityLabel(option.displayName)
+        .accessibilityValue(isSelected ? "已選取" : "未選取")
+    }
+
+    private func equipSlotButton(_ equipSlot: EquipSlot) -> some View {
+        let isSelected = viewModel.filter.selectedEquipSlots.contains(equipSlot.id)
+
+        return Button {
+            viewModel.toggleEquipSlot(equipSlot.id)
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .imageScale(.small)
+
+                Text(equipSlot.displayName)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            .font(.subheadline.weight(.semibold))
+            .frame(maxWidth: .infinity, minHeight: 34)
+        }
+        .buttonStyle(.bordered)
+        .tint(isSelected ? .accentColor : .secondary)
+        .accessibilityLabel(equipSlot.displayName)
+        .accessibilityValue(isSelected ? "已選取" : "未選取")
+    }
+}
+
+private enum ItemFilterPage: String, CaseIterable, Identifiable {
+    case general
+    case advanced
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .general:
+            return "一般"
+        case .advanced:
+            return "進階"
         }
     }
 }

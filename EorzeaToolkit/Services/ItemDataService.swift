@@ -26,21 +26,21 @@ enum ItemDataService {
         }
     }
 
-    static func loadCachedOrBundledItems() async throws -> [Item] {
-        if let cachedItems = try? await loadCachedItems() {
-            return cachedItems
+    static func loadCachedOrBundledData() async throws -> ItemDataResponse {
+        if let cachedData = try? await loadCachedData() {
+            return cachedData
         }
 
         discardCachedItems()
 
         do {
-            return try await loadBundledItems()
+            return try await loadBundledData()
         } catch {
             throw ItemDataError.noAvailableData(error)
         }
     }
 
-    static func refreshItemsIfNeeded() async throws -> [Item]? {
+    static func refreshDataIfNeeded() async throws -> ItemDataResponse? {
         let (manifestData, _) = try await URLSession.shared.data(from: manifestURL)
         let manifest = try JSONDecoder().decode(ItemDataManifest.self, from: manifestData)
         let cachedItemsURL = try cachedItemsURL
@@ -60,7 +60,7 @@ enum ItemDataService {
         try writeCachedItems(itemData)
         cachedVersion = manifest.version
 
-        return response.items
+        return response
     }
 
     private static var cachedVersion: String? {
@@ -78,7 +78,7 @@ enum ItemDataService {
         }
     }
 
-    private static func loadCachedItems() async throws -> [Item]? {
+    private static func loadCachedData() async throws -> ItemDataResponse? {
         let url = try cachedItemsURL
 
         guard FileManager.default.fileExists(atPath: url.path) else {
@@ -87,14 +87,13 @@ enum ItemDataService {
 
         return try await Task.detached(priority: .userInitiated) {
             let data = try Data(contentsOf: url)
-            return try JSONDecoder().decode(ItemDataResponse.self, from: data).items
+            return try JSONDecoder().decode(ItemDataResponse.self, from: data)
         }.value
     }
 
-    private static func loadBundledItems() async throws -> [Item] {
+    private static func loadBundledData() async throws -> ItemDataResponse {
         try await Task.detached(priority: .userInitiated) {
-            let response: ItemDataResponse = try LocalDataService.load("items")
-            return response.items
+            try LocalDataService.load("items")
         }.value
     }
 
