@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ItemSearchView: View {
     @State private var viewModel = ItemSearchViewModel()
+    @State private var isShowingFilterSheet = false
 
     var body: some View {
         Group {
@@ -10,7 +11,7 @@ struct ItemSearchView: View {
                 ProgressView("載入道具資料")
                     .navigationTitle("道具搜尋")
             case .loaded:
-                searchContent
+                loadedContent
                     .navigationTitle("道具搜尋")
             case .failed(let message):
                 ContentUnavailableView(
@@ -29,9 +30,94 @@ struct ItemSearchView: View {
             placement: .navigationBarDrawer(displayMode: .always),
             prompt: "輸入道具名稱..."
         )
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                filterButton
+            }
+        }
+        .sheet(isPresented: $isShowingFilterSheet) {
+            ItemFilterSheet(viewModel: viewModel)
+        }
         .task {
             viewModel.loadItems()
         }
+    }
+
+    private var filterButton: some View {
+        Button {
+            isShowingFilterSheet = true
+        } label: {
+            ZStack(alignment: .topTrailing) {
+                Image(systemName: "slider.horizontal.3")
+                    .font(.title3)
+                    .frame(width: 30, height: 30)
+
+                if viewModel.filter.isActive {
+                    Text("\(viewModel.filter.activeFilterCount)")
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(.white)
+                        .frame(width: 16, height: 16)
+                        .background(.red, in: Circle())
+                        .padding(.top, 1)
+                        .padding(.trailing, 1)
+                }
+            }
+            .frame(width: 38, height: 38)
+        }
+        .accessibilityLabel("篩選")
+    }
+
+    private var loadedContent: some View {
+        VStack(spacing: 0) {
+            if shouldShowFilterBar {
+                filterBar
+            }
+
+            searchContent
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
+
+    private var shouldShowFilterBar: Bool {
+        viewModel.filter.isActive ||
+            !viewModel.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+            viewModel.isSearching
+    }
+
+    private var filterBar: some View {
+        Button {
+            isShowingFilterSheet = true
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: "line.3.horizontal.decrease.circle")
+                    .imageScale(.small)
+
+                Text(filterBarText)
+                    .lineLimit(1)
+
+                Spacer(minLength: 0)
+
+                Text("篩選")
+                    .fontWeight(.semibold)
+            }
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .background(.bar)
+    }
+
+    private var filterBarText: String {
+        if viewModel.filter.isActive {
+            return viewModel.filter.summaryParts.joined(separator: " · ")
+        }
+
+        return "調整搜尋篩選"
     }
 
     @ViewBuilder
@@ -85,6 +171,179 @@ struct ItemSearchView: View {
                         .padding()
                 }
             }
+        }
+    }
+}
+
+private struct ItemFilterSheet: View {
+    let viewModel: ItemSearchViewModel
+    @Environment(\.dismiss) private var dismiss
+
+    private let rarityColumns = [
+        GridItem(.adaptive(minimum: 88), spacing: 8)
+    ]
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("品級 (iLv)") {
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Text("\(viewModel.filter.ilvlRange.lowerBound)")
+                                .font(.headline.monospacedDigit())
+
+                            Spacer()
+
+                            Text("\(viewModel.filter.ilvlRange.upperBound)")
+                                .font(.headline.monospacedDigit())
+                        }
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("品級範圍 \(viewModel.filter.ilvlRange.lowerBound) 到 \(viewModel.filter.ilvlRange.upperBound)")
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("最低")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                            Slider(
+                                value: minimumItemLevelBinding,
+                                in: Double(ItemFilter.defaultIlvlRange.lowerBound)...Double(viewModel.filter.ilvlRange.upperBound),
+                                step: 1
+                            )
+                        }
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("最高")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                            Slider(
+                                value: maximumItemLevelBinding,
+                                in: Double(viewModel.filter.ilvlRange.lowerBound)...Double(ItemFilter.defaultIlvlRange.upperBound),
+                                step: 1
+                            )
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+
+                Section("稀有度") {
+                    LazyVGrid(columns: rarityColumns, alignment: .leading, spacing: 8) {
+                        ForEach(ItemFilter.defaultRarities.sorted(), id: \.self) { rarity in
+                            rarityButton(for: rarity)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+
+                Section("可否 HQ") {
+                    Picker("可否 HQ", selection: hqStateBinding) {
+                        Text("不限").tag(ItemBoolFilterState.any)
+                        Text("可HQ").tag(ItemBoolFilterState.only)
+                        Text("不可HQ").tag(ItemBoolFilterState.exclude)
+                    }
+                    .pickerStyle(.segmented)
+                }
+
+                Section("是否可交易") {
+                    Picker("是否可交易", selection: tradableStateBinding) {
+                        Text("不限").tag(ItemBoolFilterState.any)
+                        Text("可交易").tag(ItemBoolFilterState.only)
+                        Text("不可交易").tag(ItemBoolFilterState.exclude)
+                    }
+                    .pickerStyle(.segmented)
+                }
+            }
+            .navigationTitle("篩選")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("清除") {
+                        viewModel.resetFilter()
+                    }
+                    .disabled(!viewModel.filter.isActive)
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("完成") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+
+    private var minimumItemLevelBinding: Binding<Double> {
+        Binding {
+            Double(viewModel.filter.ilvlRange.lowerBound)
+        } set: { newValue in
+            viewModel.updateMinimumItemLevel(Int(newValue.rounded()))
+        }
+    }
+
+    private var maximumItemLevelBinding: Binding<Double> {
+        Binding {
+            Double(viewModel.filter.ilvlRange.upperBound)
+        } set: { newValue in
+            viewModel.updateMaximumItemLevel(Int(newValue.rounded()))
+        }
+    }
+
+    private var hqStateBinding: Binding<ItemBoolFilterState> {
+        Binding {
+            viewModel.filter.hqState
+        } set: { newValue in
+            viewModel.updateHQState(newValue)
+        }
+    }
+
+    private var tradableStateBinding: Binding<ItemBoolFilterState> {
+        Binding {
+            viewModel.filter.tradableState
+        } set: { newValue in
+            viewModel.updateTradableState(newValue)
+        }
+    }
+
+    private func rarityButton(for rarity: Int) -> some View {
+        let isSelected = viewModel.filter.selectedRarities.contains(rarity)
+        let name = ItemFilter.rarityName(for: rarity) ?? "\(rarity)"
+
+        return Button {
+            viewModel.toggleRarity(rarity)
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .imageScale(.small)
+
+                Text(name)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(isSelected ? rarityColor(for: rarity) : .secondary)
+            .frame(maxWidth: .infinity, minHeight: 34)
+        }
+        .buttonStyle(.bordered)
+        .tint(isSelected ? rarityColor(for: rarity) : .secondary)
+        .accessibilityLabel("\(name)稀有度")
+        .accessibilityValue(isSelected ? "已選取" : "未選取")
+    }
+
+    private func rarityColor(for rarity: Int) -> Color {
+        switch rarity {
+        case 1:
+            return .gray
+        case 2:
+            return .green
+        case 3:
+            return .blue
+        case 4:
+            return .purple
+        case 7:
+            return .pink
+        default:
+            return .secondary
         }
     }
 }
