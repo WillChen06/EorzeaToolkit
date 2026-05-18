@@ -45,37 +45,28 @@ private struct HomeView: View {
     }
 
     private var heroBanner: some View {
-        AsyncImage(url: HomeFeature.heroImageURL) { phase in
-            switch phase {
-            case .empty:
-                ProgressView()
-                    .frame(maxWidth: .infinity, minHeight: 140)
-            case .success(let image):
-                image
-                    .resizable()
-                    .scaledToFill()
-            case .failure:
-                HomePlaceholderImage(systemImage: "sparkles", tint: HomeStyle.crystal)
-            @unknown default:
-                HomePlaceholderImage(systemImage: "sparkles", tint: HomeStyle.crystal)
-            }
-        }
+        HomeHeroBanner()
         .frame(maxWidth: .infinity)
-        .frame(height: 150)
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .strokeBorder(HomeStyle.gold.opacity(0.55), lineWidth: 1)
-        }
+        .frame(height: 168)
         .shadow(color: HomeStyle.shadow, radius: 14, y: 8)
-        .accessibilityHidden(true)
     }
 
     private var featureSection: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("功能")
-                .font(.headline)
-                .foregroundStyle(HomeStyle.ink)
+            HStack(alignment: .firstTextBaseline) {
+                Text("功能")
+                    .font(.headline)
+                    .foregroundStyle(HomeStyle.ink)
+
+                Spacer()
+
+                Text("5 個工具")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(HomeStyle.gold)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(HomeStyle.gold.opacity(0.12), in: Capsule())
+            }
 
             VStack(spacing: 12) {
                 ForEach(Array(pairedFeatures.enumerated()), id: \.offset) { _, row in
@@ -109,8 +100,6 @@ private enum HomeFeature: CaseIterable, Identifiable {
     case miniCactpot
     case skillRotation
 
-    static let heroImageURL = URL(string: "https://placehold.co/1200x420/efe3c4/5b4630?text=Eorzea+Toolkit")
-
     var id: Self { self }
 
     var title: String {
@@ -131,13 +120,13 @@ private enum HomeFeature: CaseIterable, Identifiable {
     var subtitle: String {
         switch self {
         case .itemSearch:
-            "查詢道具資料、來源與相關資訊"
+            "查詢道具資料"
         case .treasureMap:
-            "查看藏寶圖位置與地點提示"
+            "採集點與寶藏點"
         case .relicWeapon:
-            "追蹤發光武器資料與製作階段"
+            "情報與進度追蹤"
         case .miniCactpot:
-            "輔助推算仙人微彩最佳選擇"
+            "推算最佳選擇"
         case .skillRotation:
             "查看職業技能與循環參考"
         }
@@ -158,18 +147,18 @@ private enum HomeFeature: CaseIterable, Identifiable {
         }
     }
 
-    var imageURL: URL? {
+    var accent: Color {
         switch self {
         case .itemSearch:
-            URL(string: "https://placehold.co/420x260/f8efdb/6c5632?text=Item")
+            HomeStyle.crystal
         case .treasureMap:
-            URL(string: "https://placehold.co/420x260/f8efdb/6c5632?text=Map")
+            HomeStyle.gold
         case .relicWeapon:
-            URL(string: "https://placehold.co/420x260/f8efdb/6c5632?text=Weapon")
+            HomeStyle.aetherBlue
         case .miniCactpot:
-            URL(string: "https://placehold.co/420x260/f8efdb/6c5632?text=Cactpot")
+            HomeStyle.crimson
         case .skillRotation:
-            URL(string: "https://placehold.co/720x260/f8efdb/6c5632?text=Rotation")
+            HomeStyle.crystal
         }
     }
 
@@ -222,54 +211,39 @@ private struct HomeFeatureCard: View {
     }
 
     private var standardLayout: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        HStack(spacing: 6) {
             featureImage
-                .frame(height: 86)
+                .frame(width: 58, height: 84)
 
             VStack(alignment: .leading, spacing: 5) {
                 featureTitle
                 featureSubtitle
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             Spacer(minLength: 0)
-
-            chevron
-                .frame(maxWidth: .infinity, alignment: .trailing)
         }
-        .frame(minHeight: 208, alignment: .top)
+        .frame(minHeight: 112, alignment: .center)
     }
 
     private var wideLayout: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 8) {
             featureImage
-                .frame(width: 96, height: 88)
+                .frame(width: 72, height: 88)
 
             VStack(alignment: .leading, spacing: 6) {
                 featureTitle
                 featureSubtitle
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
-            Spacer(minLength: 8)
-            chevron
+            Spacer(minLength: 0)
         }
         .frame(minHeight: 104, alignment: .center)
     }
 
     private var featureImage: some View {
-        AsyncImage(url: feature.imageURL) { phase in
-            switch phase {
-            case .empty:
-                HomePlaceholderImage(systemImage: feature.systemImage, tint: HomeStyle.gold)
-            case .success(let image):
-                image
-                    .resizable()
-                    .scaledToFill()
-            case .failure:
-                HomePlaceholderImage(systemImage: feature.systemImage, tint: HomeStyle.gold)
-            @unknown default:
-                HomePlaceholderImage(systemImage: feature.systemImage, tint: HomeStyle.gold)
-            }
-        }
+        HomeFeatureArtwork(feature: feature)
         .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: 6, style: .continuous)
@@ -294,52 +268,213 @@ private struct HomeFeatureCard: View {
             .fixedSize(horizontal: false, vertical: true)
     }
 
-    private var chevron: some View {
-        Image(systemName: "chevron.right")
-            .font(.caption.weight(.bold))
-            .foregroundStyle(HomeStyle.gold)
-            .accessibilityHidden(true)
+}
+
+private struct HomeHeroBanner: View {
+    var body: some View {
+        ZStack {
+            HomeStyle.bannerBackground
+
+            GeometryReader { geometry in
+                let size = geometry.size
+
+                ZStack {
+                    Path { path in
+                        path.move(to: CGPoint(x: 0, y: size.height * 0.78))
+                        path.addLine(to: CGPoint(x: size.width * 0.22, y: size.height * 0.45))
+                        path.addLine(to: CGPoint(x: size.width * 0.36, y: size.height * 0.66))
+                        path.addLine(to: CGPoint(x: size.width * 0.56, y: size.height * 0.34))
+                        path.addLine(to: CGPoint(x: size.width * 0.78, y: size.height * 0.63))
+                        path.addLine(to: CGPoint(x: size.width, y: size.height * 0.40))
+                    }
+                    .stroke(HomeStyle.gold.opacity(0.22), style: StrokeStyle(lineWidth: 1.2, lineCap: .round, lineJoin: .round))
+
+                    Circle()
+                        .stroke(HomeStyle.gold.opacity(0.16), lineWidth: 1)
+                        .frame(width: size.width * 0.54, height: size.width * 0.54)
+                        .offset(x: size.width * 0.34, y: -size.height * 0.58)
+
+                    HomeCrystalMark()
+                        .frame(width: 72, height: 92)
+                        .offset(x: size.width * 0.30, y: 4)
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Eorzea Toolkit")
+                    .font(.system(.title2, design: .serif, weight: .semibold))
+                    .foregroundStyle(HomeStyle.ink)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+
+                Text("整理冒險途中會反覆打開的工具")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(HomeStyle.mutedInk)
+                    .lineLimit(2)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+            .padding(18)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .strokeBorder(HomeStyle.gold.opacity(0.55), lineWidth: 1)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Eorzea Toolkit，整理冒險途中會反覆打開的工具")
     }
 }
 
-private struct HomePlaceholderImage: View {
-    let systemImage: String
-    let tint: Color
+private struct HomeFeatureArtwork: View {
+    let feature: HomeFeature
 
     var body: some View {
         ZStack {
             HomeStyle.placeholderBackground
 
-            Image(systemName: systemImage)
+            Circle()
+                .fill(feature.accent.opacity(0.12))
+                .frame(width: 64, height: 64)
+
+            Circle()
+                .strokeBorder(HomeStyle.gold.opacity(0.35), lineWidth: 1)
+                .frame(width: 58, height: 58)
+
+            Image(systemName: feature.systemImage)
                 .font(.system(size: 30, weight: .semibold))
-                .foregroundStyle(tint)
+                .foregroundStyle(feature.accent)
+
+            VStack {
+                Spacer()
+
+                Rectangle()
+                    .fill(HomeStyle.gold.opacity(0.18))
+                    .frame(height: 1)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 10)
+            }
         }
+    }
+}
+
+private struct HomeCrystalMark: View {
+    var body: some View {
+        ZStack {
+            Diamond()
+                .fill(HomeStyle.crystal.opacity(0.20))
+                .blur(radius: 6)
+
+            Diamond()
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            HomeStyle.crystal.opacity(0.95),
+                            HomeStyle.aetherBlue.opacity(0.72)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .overlay {
+                    Diamond()
+                        .stroke(Color.white.opacity(0.45), lineWidth: 1)
+                }
+
+            Diamond()
+                .stroke(HomeStyle.gold.opacity(0.55), lineWidth: 1)
+                .scaleEffect(1.18)
+        }
+    }
+}
+
+private struct Diamond: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
+        path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.midY))
+        path.closeSubpath()
+        return path
     }
 }
 
 private enum HomeStyle {
     static let background = LinearGradient(
         colors: [
-            Color(red: 0.96, green: 0.92, blue: 0.82),
-            Color(red: 0.88, green: 0.80, blue: 0.64)
+            parchmentTop,
+            parchmentBottom
         ],
         startPoint: .top,
         endPoint: .bottom
     )
-    static let cardBackground = Color(red: 0.99, green: 0.96, blue: 0.88)
-    static let placeholderBackground = LinearGradient(
+    static let bannerBackground = LinearGradient(
         colors: [
-            Color(red: 0.98, green: 0.93, blue: 0.78),
-            Color(red: 0.90, green: 0.82, blue: 0.64)
+            parchmentLight,
+            parchmentTop,
+            parchmentBottom
         ],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
-    static let ink = Color(red: 0.22, green: 0.18, blue: 0.12)
-    static let mutedInk = Color(red: 0.42, green: 0.34, blue: 0.23)
-    static let gold = Color(red: 0.62, green: 0.47, blue: 0.22)
-    static let crystal = Color(red: 0.20, green: 0.55, blue: 0.68)
-    static let shadow = Color(red: 0.20, green: 0.14, blue: 0.06).opacity(0.18)
+    static let placeholderBackground = LinearGradient(
+        colors: [
+            parchmentLight,
+            parchmentTop
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+    static let cardBackground = dynamicColor(
+        light: UIColor(red: 0.99, green: 0.96, blue: 0.88, alpha: 1),
+        dark: UIColor(red: 0.24, green: 0.20, blue: 0.15, alpha: 1)
+    )
+    static let parchmentLight = dynamicColor(
+        light: UIColor(red: 0.99, green: 0.96, blue: 0.86, alpha: 1),
+        dark: UIColor(red: 0.30, green: 0.25, blue: 0.18, alpha: 1)
+    )
+    static let parchmentTop = dynamicColor(
+        light: UIColor(red: 0.96, green: 0.92, blue: 0.82, alpha: 1),
+        dark: UIColor(red: 0.18, green: 0.16, blue: 0.13, alpha: 1)
+    )
+    static let parchmentBottom = dynamicColor(
+        light: UIColor(red: 0.88, green: 0.80, blue: 0.64, alpha: 1),
+        dark: UIColor(red: 0.12, green: 0.11, blue: 0.09, alpha: 1)
+    )
+    static let ink = dynamicColor(
+        light: UIColor(red: 0.22, green: 0.18, blue: 0.12, alpha: 1),
+        dark: UIColor(red: 0.93, green: 0.87, blue: 0.74, alpha: 1)
+    )
+    static let mutedInk = dynamicColor(
+        light: UIColor(red: 0.42, green: 0.34, blue: 0.23, alpha: 1),
+        dark: UIColor(red: 0.76, green: 0.68, blue: 0.54, alpha: 1)
+    )
+    static let gold = dynamicColor(
+        light: UIColor(red: 0.62, green: 0.47, blue: 0.22, alpha: 1),
+        dark: UIColor(red: 0.78, green: 0.62, blue: 0.34, alpha: 1)
+    )
+    static let crystal = dynamicColor(
+        light: UIColor(red: 0.20, green: 0.55, blue: 0.68, alpha: 1),
+        dark: UIColor(red: 0.42, green: 0.78, blue: 0.88, alpha: 1)
+    )
+    static let aetherBlue = dynamicColor(
+        light: UIColor(red: 0.26, green: 0.36, blue: 0.64, alpha: 1),
+        dark: UIColor(red: 0.48, green: 0.58, blue: 0.88, alpha: 1)
+    )
+    static let crimson = dynamicColor(
+        light: UIColor(red: 0.58, green: 0.22, blue: 0.18, alpha: 1),
+        dark: UIColor(red: 0.86, green: 0.42, blue: 0.36, alpha: 1)
+    )
+    static let shadow = dynamicColor(
+        light: UIColor(red: 0.20, green: 0.14, blue: 0.06, alpha: 0.18),
+        dark: UIColor(red: 0.02, green: 0.02, blue: 0.02, alpha: 0.32)
+    )
+
+    private static func dynamicColor(light: UIColor, dark: UIColor) -> Color {
+        Color(uiColor: UIColor { traitCollection in
+            traitCollection.userInterfaceStyle == .dark ? dark : light
+        })
+    }
 }
 
 #Preview {
