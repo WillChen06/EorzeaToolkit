@@ -1,9 +1,16 @@
 import SwiftUI
 
 struct HomeView: View {
-    private let pairedFeatures: [[HomeFeature]] = [
-        [.itemSearch, .treasureMap],
-        [.relicWeapon, .miniCactpot]
+    private let features: [HomeFeature] = [
+        .itemSearch,
+        .treasureMap,
+        .relicWeapon,
+        .miniCactpot,
+        .skillRotation
+    ]
+    private let featureColumns = [
+        GridItem(.flexible(), spacing: 12),
+        GridItem(.flexible(), spacing: 12)
     ]
 
     var body: some View {
@@ -13,9 +20,19 @@ struct HomeView: View {
                 heroBanner
                 featureSection
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 18)
             .padding(.top, 24)
             .padding(.bottom, 32)
+            .background {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(HomeStyle.parchmentLight.opacity(0.42))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .strokeBorder(HomeStyle.gold.opacity(0.22), lineWidth: 1)
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 10)
+            }
         }
         .background(HomeStyle.background.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
@@ -33,54 +50,57 @@ struct HomeView: View {
                 .font(.subheadline.weight(.medium))
                 .foregroundStyle(HomeStyle.mutedInk)
         }
+        .frame(maxWidth: .infinity, alignment: .center)
         .accessibilityElement(children: .combine)
     }
 
     private var heroBanner: some View {
         HomeHeroBanner()
             .frame(maxWidth: .infinity)
-            .frame(height: 168)
+            .frame(height: 204)
             .shadow(color: HomeStyle.shadow, radius: 14, y: 8)
     }
 
     private var featureSection: some View {
         VStack(alignment: .leading, spacing: 14) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("功能")
-                    .font(.headline)
-                    .foregroundStyle(HomeStyle.ink)
+            sectionHeader
 
-                Spacer()
-
-                Text("5 個工具")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(HomeStyle.gold)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
-                    .background(HomeStyle.gold.opacity(0.12), in: Capsule())
-            }
-
-            VStack(spacing: 12) {
-                ForEach(Array(pairedFeatures.enumerated()), id: \.offset) { _, row in
-                    HStack(spacing: 12) {
-                        ForEach(row) { feature in
-                            NavigationLink {
-                                feature.destination
-                            } label: {
-                                HomeFeatureCard(feature: feature)
-                            }
-                            .buttonStyle(.plain)
-                        }
+            LazyVGrid(columns: featureColumns, spacing: 12) {
+                ForEach(features) { feature in
+                    NavigationLink {
+                        feature.destination
+                    } label: {
+                        HomeFeatureCard(feature: feature)
                     }
+                    .buttonStyle(.plain)
                 }
-
-                NavigationLink {
-                    HomeFeature.skillRotation.destination
-                } label: {
-                    HomeFeatureCard(feature: .skillRotation, style: .wide)
-                }
-                .buttonStyle(.plain)
             }
+        }
+    }
+
+    private var sectionHeader: some View {
+        HStack(spacing: 10) {
+            HomeSectionRule()
+
+            Text("功能")
+                .font(.headline)
+                .foregroundStyle(HomeStyle.ink)
+
+            HomeSectionRule()
+        }
+    }
+}
+
+private struct HomeSectionRule: View {
+    var body: some View {
+        HStack(spacing: 4) {
+            Rectangle()
+                .fill(HomeStyle.gold.opacity(0.38))
+                .frame(height: 1)
+
+            Diamond()
+                .fill(HomeStyle.gold.opacity(0.50))
+                .frame(width: 5, height: 5)
         }
     }
 }

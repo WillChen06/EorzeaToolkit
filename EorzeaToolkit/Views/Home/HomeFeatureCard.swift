@@ -1,29 +1,27 @@
 import SwiftUI
 
 struct HomeFeatureCard: View {
-    enum Style {
-        case standard
-        case wide
-    }
-
     let feature: HomeFeature
-    var style: Style = .standard
 
     var body: some View {
-        Group {
-            switch style {
-            case .standard:
-                standardLayout
-            case .wide:
-                wideLayout
-            }
-        }
+        cardLayout
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(HomeStyle.cardBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .overlay {
+        .background {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .strokeBorder(HomeStyle.gold.opacity(0.42), lineWidth: 1)
+                .fill(HomeStyle.cardPressedBackground)
+                .offset(y: 2)
+        }
+        .overlay {
+            ZStack {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .strokeBorder(HomeStyle.gold.opacity(0.44), lineWidth: 1)
+
+                CardCornerOrnaments()
+                    .stroke(HomeStyle.gold.opacity(0.34), lineWidth: 1)
+                    .padding(6)
+            }
         }
         .shadow(color: HomeStyle.shadow.opacity(0.55), radius: 10, y: 5)
         .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -31,10 +29,11 @@ struct HomeFeatureCard: View {
         .accessibilityLabel("\(feature.title)，\(feature.subtitle)")
     }
 
-    private var standardLayout: some View {
-        HStack(spacing: 6) {
+    private var cardLayout: some View {
+        HStack(spacing: 14) {
             featureImage
-                .frame(width: 58, height: 84)
+                .frame(width: 48, height: 72)
+                .padding(.leading, 6)
 
             VStack(alignment: .leading, spacing: 5) {
                 featureTitle
@@ -44,23 +43,7 @@ struct HomeFeatureCard: View {
 
             Spacer(minLength: 0)
         }
-        .frame(minHeight: 112, alignment: .center)
-    }
-
-    private var wideLayout: some View {
-        HStack(spacing: 8) {
-            featureImage
-                .frame(width: 72, height: 88)
-
-            VStack(alignment: .leading, spacing: 6) {
-                featureTitle
-                featureSubtitle
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            Spacer(minLength: 0)
-        }
-        .frame(minHeight: 104, alignment: .center)
+        .frame(minHeight: 96, alignment: .center)
     }
 
     private var featureImage: some View {
@@ -68,7 +51,7 @@ struct HomeFeatureCard: View {
             .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .strokeBorder(HomeStyle.gold.opacity(0.3), lineWidth: 1)
+                    .strokeBorder(HomeStyle.gold.opacity(0.34), lineWidth: 1)
             }
             .accessibilityHidden(true)
     }
@@ -87,5 +70,30 @@ struct HomeFeatureCard: View {
             .foregroundStyle(HomeStyle.mutedInk)
             .lineLimit(2)
             .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+private struct CardCornerOrnaments: Shape {
+    func path(in rect: CGRect) -> Path {
+        let inset: CGFloat = 3
+        let length = min(rect.width, rect.height) * 0.16
+
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX + inset, y: rect.minY + length))
+        path.addLine(to: CGPoint(x: rect.minX + inset, y: rect.minY + inset))
+        path.addLine(to: CGPoint(x: rect.minX + length, y: rect.minY + inset))
+
+        path.move(to: CGPoint(x: rect.maxX - length, y: rect.minY + inset))
+        path.addLine(to: CGPoint(x: rect.maxX - inset, y: rect.minY + inset))
+        path.addLine(to: CGPoint(x: rect.maxX - inset, y: rect.minY + length))
+
+        path.move(to: CGPoint(x: rect.minX + inset, y: rect.maxY - length))
+        path.addLine(to: CGPoint(x: rect.minX + inset, y: rect.maxY - inset))
+        path.addLine(to: CGPoint(x: rect.minX + length, y: rect.maxY - inset))
+
+        path.move(to: CGPoint(x: rect.maxX - length, y: rect.maxY - inset))
+        path.addLine(to: CGPoint(x: rect.maxX - inset, y: rect.maxY - inset))
+        path.addLine(to: CGPoint(x: rect.maxX - inset, y: rect.maxY - length))
+        return path
     }
 }

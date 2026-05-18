@@ -18,6 +18,20 @@ enum HomeStyle {
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
+    static let heroArtworkBackground = LinearGradient(
+        colors: [
+            dynamicColor(
+                light: UIColor(red: 0.84, green: 0.88, blue: 0.84, alpha: 1),
+                dark: UIColor(red: 0.20, green: 0.24, blue: 0.25, alpha: 1)
+            ),
+            dynamicColor(
+                light: UIColor(red: 0.72, green: 0.66, blue: 0.48, alpha: 1),
+                dark: UIColor(red: 0.14, green: 0.13, blue: 0.10, alpha: 1)
+            )
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
     static let placeholderBackground = LinearGradient(
         colors: [
             parchmentLight,
@@ -26,9 +40,24 @@ enum HomeStyle {
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
+    static let artworkBackground = LinearGradient(
+        colors: [
+            parchmentLight,
+            dynamicColor(
+                light: UIColor(red: 0.93, green: 0.87, blue: 0.72, alpha: 1),
+                dark: UIColor(red: 0.22, green: 0.18, blue: 0.13, alpha: 1)
+            )
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
     static let cardBackground = dynamicColor(
         light: UIColor(red: 0.99, green: 0.96, blue: 0.88, alpha: 1),
         dark: UIColor(red: 0.24, green: 0.20, blue: 0.15, alpha: 1)
+    )
+    static let cardPressedBackground = dynamicColor(
+        light: UIColor(red: 0.95, green: 0.90, blue: 0.78, alpha: 1),
+        dark: UIColor(red: 0.29, green: 0.24, blue: 0.17, alpha: 1)
     )
     static let parchmentLight = dynamicColor(
         light: UIColor(red: 0.99, green: 0.96, blue: 0.86, alpha: 1),
