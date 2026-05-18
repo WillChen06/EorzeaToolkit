@@ -1,13 +1,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    private let features: [HomeFeature] = [
-        .itemSearch,
-        .treasureMap,
-        .relicWeapon,
-        .miniCactpot,
-        .skillRotation
-    ]
+    private let features = HomeFeature.allCases
     private let featureColumns = [
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12)
@@ -86,21 +80,35 @@ struct HomeView: View {
                 .font(.headline)
                 .foregroundStyle(HomeStyle.ink)
 
-            HomeSectionRule()
+            HomeSectionRule(flipped: true)
         }
     }
 }
 
 private struct HomeSectionRule: View {
+    var flipped = false
+
     var body: some View {
         HStack(spacing: 4) {
-            Rectangle()
-                .fill(HomeStyle.gold.opacity(0.38))
-                .frame(height: 1)
-
-            Diamond()
-                .fill(HomeStyle.gold.opacity(0.50))
-                .frame(width: 5, height: 5)
+            if flipped {
+                diamond
+                rule
+            } else {
+                rule
+                diamond
+            }
         }
+    }
+
+    private var rule: some View {
+        Rectangle()
+            .fill(HomeStyle.gold.opacity(0.38))
+            .frame(height: 1)
+    }
+
+    private var diamond: some View {
+        Diamond()
+            .fill(HomeStyle.gold.opacity(0.50))
+            .frame(width: 5, height: 5)
     }
 }
