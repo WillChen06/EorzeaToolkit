@@ -78,7 +78,7 @@ private struct HomeView: View {
                 .foregroundStyle(HomeStyle.ink)
 
             VStack(spacing: 12) {
-                ForEach(pairedFeatures, id: \.self) { row in
+                ForEach(Array(pairedFeatures.enumerated()), id: \.offset) { _, row in
                     HStack(spacing: 12) {
                         ForEach(row) { feature in
                             NavigationLink {
