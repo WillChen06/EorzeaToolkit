@@ -12,7 +12,13 @@ struct RelicWeaponListView: View {
 
     var body: some View {
         Group {
-            if !viewModel.weaponSeriesList.isEmpty {
+            if let loadError = viewModel.loadError {
+                ContentUnavailableView(
+                    "無法載入發光武器資料",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(loadError)
+                )
+            } else if !viewModel.weaponSeriesList.isEmpty {
                 List(Array(viewModel.weaponSeriesList.enumerated()), id: \.element.id) { index, series in
                     NavigationLink(destination: RelicWeaponSeriesView(series: series, viewModel: viewModel)) {
                         RelicWeaponSeriesRow(
@@ -22,12 +28,6 @@ struct RelicWeaponListView: View {
                     }
                 }
                 .listStyle(.insetGrouped)
-            } else if let loadError = viewModel.loadError {
-                ContentUnavailableView(
-                    "無法載入發光武器資料",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text(loadError)
-                )
             } else if viewModel.hasLoadedWeapons {
                 ContentUnavailableView(
                     "尚無發光武器資料",

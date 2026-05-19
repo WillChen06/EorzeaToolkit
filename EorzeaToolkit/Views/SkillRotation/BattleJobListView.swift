@@ -5,7 +5,13 @@ struct BattleJobListView: View {
 
     var body: some View {
         Group {
-            if !viewModel.jobs.isEmpty {
+            if let loadError = viewModel.loadError {
+                ContentUnavailableView(
+                    "無法載入技能資料",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(loadError)
+                )
+            } else if !viewModel.jobs.isEmpty {
                 List(viewModel.jobs) { job in
                     NavigationLink {
                         SkillRotationEditorView(job: job, viewModel: viewModel)
@@ -47,12 +53,6 @@ struct BattleJobListView: View {
                     }
                 }
                 .listStyle(.insetGrouped)
-            } else if let loadError = viewModel.loadError {
-                ContentUnavailableView(
-                    "無法載入技能資料",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text(loadError)
-                )
             } else if viewModel.hasLoadedJobs {
                 ContentUnavailableView(
                     "尚無技能資料",

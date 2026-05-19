@@ -6,7 +6,13 @@ struct TreasureMapListView: View {
 
     var body: some View {
         Group {
-            if !viewModel.maps.isEmpty {
+            if let loadError = viewModel.loadError {
+                ContentUnavailableView(
+                    "無法載入藏寶圖資料",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(loadError)
+                )
+            } else if !viewModel.maps.isEmpty {
                 List(viewModel.maps) { map in
                     NavigationLink(destination: TreasureMapDetailView(map: map, zones: viewModel.zones(for: map), viewModel: viewModel)) {
                         TreasureMapRow(map: map) {
@@ -15,12 +21,6 @@ struct TreasureMapListView: View {
                     }
                 }
                 .listStyle(.insetGrouped)
-            } else if let loadError = viewModel.loadError {
-                ContentUnavailableView(
-                    "無法載入藏寶圖資料",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text(loadError)
-                )
             } else if viewModel.hasLoadedMaps {
                 ContentUnavailableView(
                     "尚無藏寶圖資料",
