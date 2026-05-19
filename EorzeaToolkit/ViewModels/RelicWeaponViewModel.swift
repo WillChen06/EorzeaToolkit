@@ -3,6 +3,7 @@ import Foundation
 @Observable
 final class RelicWeaponViewModel {
     private(set) var weaponSeriesList: [WeaponSeries] = []
+    private(set) var hasLoadedWeapons = false
     private(set) var loadError: String?
 
     private var progressByKey: [String: Set<Int>] = [:]
@@ -17,9 +18,11 @@ final class RelicWeaponViewModel {
             let data: RelicWeaponData = try LocalDataService.load("relic_weapons")
             weaponSeriesList = data.weaponSeriesList
             loadProgress(for: data.weaponSeriesList)
+            hasLoadedWeapons = true
             loadError = nil
         } catch {
             weaponSeriesList = []
+            hasLoadedWeapons = true
             loadError = error.localizedDescription
         }
     }

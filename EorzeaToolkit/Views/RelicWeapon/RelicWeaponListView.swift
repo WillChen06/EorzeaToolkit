@@ -12,7 +12,13 @@ struct RelicWeaponListView: View {
 
     var body: some View {
         Group {
-            if !viewModel.weaponSeriesList.isEmpty {
+            if let loadError = viewModel.loadError {
+                ContentUnavailableView(
+                    "無法載入發光武器資料",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(loadError)
+                )
+            } else if !viewModel.weaponSeriesList.isEmpty {
                 List(Array(viewModel.weaponSeriesList.enumerated()), id: \.element.id) { index, series in
                     NavigationLink(destination: RelicWeaponSeriesView(series: series, viewModel: viewModel)) {
                         RelicWeaponSeriesRow(
@@ -21,11 +27,12 @@ struct RelicWeaponListView: View {
                         )
                     }
                 }
-            } else if let loadError = viewModel.loadError {
+                .listStyle(.insetGrouped)
+            } else if viewModel.hasLoadedWeapons {
                 ContentUnavailableView(
-                    "無法載入發光武器資料",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text(loadError)
+                    "尚無發光武器資料",
+                    systemImage: "sparkles",
+                    description: Text("目前沒有可顯示的武器系列")
                 )
             } else {
                 ProgressView("載入發光武器資料")
@@ -44,50 +51,69 @@ private struct RelicWeaponSeriesRow: View {
     let isLatest: Bool
 
     var body: some View {
-        HStack(spacing: 12) {
-            VStack(alignment: .center, spacing: 2) {
-                Text(series.nameTw)
-                    .font(.headline)
-                    .foregroundStyle(.primary)
+        HStack(spacing: 14) {
+            seriesBadge
 
-                Text("Lv.\(series.levelCap)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            .frame(width: 58)
-
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 7) {
                 HStack(spacing: 6) {
                     Text(series.fullNameTw)
                         .font(.headline)
+                        .lineLimit(1)
 
                     if isLatest {
-                        Text("最新")
-                            .font(.caption2.weight(.semibold))
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .foregroundStyle(.blue)
-                            .background(Color.blue.opacity(0.12))
-                            .clipShape(Capsule())
+                        latestBadge
                     }
                 }
 
-                HStack(spacing: 8) {
-                    Text(series.expansion)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-
-                    Text("\(series.stages.count) 個階段")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-
-                    Text("\(series.availableJobs.count) 個職業")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
+                metadataRow
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 6)
+    }
+
+    private var seriesBadge: some View {
+        VStack(spacing: 2) {
+            Text(series.nameTw)
+                .font(.headline.weight(.bold))
+                .foregroundStyle(HomeStyle.aetherBlue)
+
+            Text("Lv.\(series.levelCap)")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.secondary)
+        }
+        .frame(width: 56, height: 56)
+        .background(HomeStyle.aetherBlue.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .strokeBorder(HomeStyle.aetherBlue.opacity(0.28), lineWidth: 1)
+        }
+    }
+
+    private var metadataRow: some View {
+        HStack(spacing: 8) {
+            Text(series.expansion)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+
+            metadataText("\(series.stages.count) 個階段")
+            metadataText("\(series.availableJobs.count) 個職業")
+        }
+    }
+
+    private var latestBadge: some View {
+        Text("最新")
+            .font(.caption2.weight(.semibold))
+            .padding(.horizontal, 7)
+            .padding(.vertical, 3)
+            .foregroundStyle(HomeStyle.aetherBlue)
+            .background(HomeStyle.aetherBlue.opacity(0.12), in: Capsule())
+    }
+
+    private func metadataText(_ text: String) -> some View {
+        Text(text)
+            .font(.caption)
+            .foregroundStyle(.secondary)
     }
 }
 

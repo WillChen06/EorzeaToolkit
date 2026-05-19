@@ -1,10 +1,18 @@
 import SwiftUI
 
+enum HomeArtworkAsset {
+    static let heroBanner = "home_hero_banner"
+
+    static func exists(named assetName: String) -> Bool {
+        UIImage(named: assetName) != nil
+    }
+}
+
 struct HomeFeatureArtwork: View {
     let feature: HomeFeature
 
     var body: some View {
-        if feature.hasArtwork {
+        if HomeArtworkAsset.exists(named: feature.assetName) {
             Image(feature.assetName)
                 .resizable()
                 .scaledToFill()
