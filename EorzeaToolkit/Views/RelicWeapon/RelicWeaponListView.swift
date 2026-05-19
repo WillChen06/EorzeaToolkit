@@ -21,19 +21,18 @@ struct RelicWeaponListView: View {
                         )
                     }
                 }
-                .navigationTitle("發光武器")
             } else if let loadError = viewModel.loadError {
                 ContentUnavailableView(
                     "無法載入發光武器資料",
                     systemImage: "exclamationmark.triangle",
                     description: Text(loadError)
                 )
-                .navigationTitle("發光武器")
             } else {
                 ProgressView("載入發光武器資料")
-                    .navigationTitle("發光武器")
             }
         }
+        .navigationTitle("發光武器")
+        .navigationBarTitleDisplayMode(.inline)
         .task {
             viewModel.loadWeapons()
         }

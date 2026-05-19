@@ -9,19 +9,18 @@ struct ItemSearchView: View {
             switch viewModel.loadState {
             case .idle, .loading:
                 ProgressView("載入道具資料")
-                    .navigationTitle("道具搜尋")
             case .loaded:
                 loadedContent
-                    .navigationTitle("道具搜尋")
             case .failed(let message):
                 ContentUnavailableView(
                     "無法載入道具資料",
                     systemImage: "exclamationmark.triangle",
                     description: Text(message)
                 )
-                .navigationTitle("道具搜尋")
             }
         }
+        .navigationTitle("道具搜尋")
+        .navigationBarTitleDisplayMode(.inline)
         .searchable(
             text: Binding(
                 get: { viewModel.query },

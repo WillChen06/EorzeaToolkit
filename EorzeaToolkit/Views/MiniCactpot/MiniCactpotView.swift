@@ -43,6 +43,7 @@ struct MiniCactpotView: View {
             }
         }
         .navigationTitle("仙人微彩")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("重置", role: .destructive, action: resetCells)
