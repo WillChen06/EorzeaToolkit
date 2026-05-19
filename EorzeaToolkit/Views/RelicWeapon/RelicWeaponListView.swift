@@ -23,11 +23,19 @@ struct RelicWeaponListView: View {
                 }
                 .listStyle(.insetGrouped)
             } else if let loadError = viewModel.loadError {
-                FeatureStatusView("無法載入發光武器資料", systemImage: "exclamationmark.triangle", description: loadError)
+                ContentUnavailableView(
+                    "無法載入發光武器資料",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(loadError)
+                )
             } else if viewModel.hasLoadedWeapons {
-                FeatureStatusView("尚無發光武器資料", systemImage: "sparkles", description: "目前沒有可顯示的武器系列")
+                ContentUnavailableView(
+                    "尚無發光武器資料",
+                    systemImage: "sparkles",
+                    description: Text("目前沒有可顯示的武器系列")
+                )
             } else {
-                FeatureStatusView("載入發光武器資料", systemImage: "sparkles", isLoading: true)
+                ProgressView("載入發光武器資料")
             }
         }
         .navigationTitle("發光武器")

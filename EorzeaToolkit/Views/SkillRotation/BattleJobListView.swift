@@ -48,11 +48,19 @@ struct BattleJobListView: View {
                 }
                 .listStyle(.insetGrouped)
             } else if let loadError = viewModel.loadError {
-                FeatureStatusView("無法載入技能資料", systemImage: "exclamationmark.triangle", description: loadError)
+                ContentUnavailableView(
+                    "無法載入技能資料",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(loadError)
+                )
             } else if viewModel.hasLoadedJobs {
-                FeatureStatusView("尚無技能資料", systemImage: "bolt.circle", description: "目前沒有可顯示的職業")
+                ContentUnavailableView(
+                    "尚無技能資料",
+                    systemImage: "bolt.circle",
+                    description: Text("目前沒有可顯示的職業")
+                )
             } else {
-                FeatureStatusView("載入技能資料", systemImage: "bolt.circle", isLoading: true)
+                ProgressView("載入技能資料")
             }
         }
         .navigationTitle("技能循環")

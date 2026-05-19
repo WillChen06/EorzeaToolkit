@@ -8,11 +8,15 @@ struct ItemSearchView: View {
         Group {
             switch viewModel.loadState {
             case .idle, .loading:
-                FeatureStatusView("載入道具資料", systemImage: "magnifyingglass", isLoading: true)
+                ProgressView("載入道具資料")
             case .loaded:
                 loadedContent
             case .failed(let message):
-                FeatureStatusView("無法載入道具資料", systemImage: "exclamationmark.triangle", description: message)
+                ContentUnavailableView(
+                    "無法載入道具資料",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(message)
+                )
             }
         }
         .navigationTitle("道具搜尋")
@@ -118,12 +122,20 @@ struct ItemSearchView: View {
     @ViewBuilder
     private var searchContent: some View {
         if viewModel.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            FeatureStatusView("搜尋道具", systemImage: "magnifyingglass", description: "輸入道具名稱開始搜尋")
+            ContentUnavailableView(
+                "搜尋道具",
+                systemImage: "magnifyingglass",
+                description: Text("輸入道具名稱開始搜尋")
+            )
         } else if viewModel.results.isEmpty {
             if viewModel.isSearching {
-                FeatureStatusView("搜尋中", systemImage: "magnifyingglass", isLoading: true)
+                ProgressView("搜尋中")
             } else {
-                FeatureStatusView("找不到道具", systemImage: "shippingbox", description: "請試著輸入其他名稱")
+                ContentUnavailableView(
+                    "找不到道具",
+                    systemImage: "shippingbox",
+                    description: Text("請試著輸入其他名稱")
+                )
             }
         } else {
             List {

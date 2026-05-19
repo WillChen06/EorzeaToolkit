@@ -16,11 +16,19 @@ struct TreasureMapListView: View {
                 }
                 .listStyle(.insetGrouped)
             } else if let loadError = viewModel.loadError {
-                FeatureStatusView("無法載入藏寶圖資料", systemImage: "exclamationmark.triangle", description: loadError)
+                ContentUnavailableView(
+                    "無法載入藏寶圖資料",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(loadError)
+                )
             } else if viewModel.hasLoadedMaps {
-                FeatureStatusView("尚無藏寶圖資料", systemImage: "map", description: "目前沒有可顯示的藏寶圖")
+                ContentUnavailableView(
+                    "尚無藏寶圖資料",
+                    systemImage: "map",
+                    description: Text("目前沒有可顯示的藏寶圖")
+                )
             } else {
-                FeatureStatusView("載入藏寶圖資料", systemImage: "map", isLoading: true)
+                ProgressView("載入藏寶圖資料")
             }
         }
         .navigationTitle("藏寶圖")
