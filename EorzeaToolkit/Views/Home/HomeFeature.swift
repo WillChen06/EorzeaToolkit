@@ -8,6 +8,8 @@ enum HomeFeature: CaseIterable, Identifiable {
     case skillRotation
 
     var id: Self { self }
+    
+    var hasArtwork: Bool { UIImage(named: assetName) != nil }
 
     var title: String {
         switch self {
@@ -42,15 +44,30 @@ enum HomeFeature: CaseIterable, Identifiable {
     var systemImage: String {
         switch self {
         case .itemSearch:
-            "magnifyingglass"
+            "magnifyingglass.circle"
         case .treasureMap:
-            "map"
+            "map.circle"
         case .relicWeapon:
-            "sparkles"
+            "sparkles.square.filled.on.square"
         case .miniCactpot:
-            "dice"
+            "dice.fill"
         case .skillRotation:
             "bolt.circle"
+        }
+    }
+
+    var assetName: String {
+        switch self {
+        case .itemSearch:
+            "home_item_search"
+        case .treasureMap:
+            "home_treasure_map"
+        case .relicWeapon:
+            "home_relic_weapon"
+        case .miniCactpot:
+            "home_mini_cactpot"
+        case .skillRotation:
+            "home_skill_rotation"
         }
     }
 

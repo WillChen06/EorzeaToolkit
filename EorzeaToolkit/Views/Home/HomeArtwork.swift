@@ -4,29 +4,48 @@ struct HomeFeatureArtwork: View {
     let feature: HomeFeature
 
     var body: some View {
-        ZStack {
-            HomeStyle.placeholderBackground
+        if feature.hasArtwork {
+            Image(feature.assetName)
+                .resizable()
+                .scaledToFill()
+        } else {
+            placeholderArtwork
+        }
+    }
 
-            Circle()
-                .fill(feature.accent.opacity(0.12))
-                .frame(width: 64, height: 64)
+    private var placeholderArtwork: some View {
+        GeometryReader { geometry in
+            let side = min(geometry.size.width, geometry.size.height)
 
-            Circle()
-                .strokeBorder(HomeStyle.gold.opacity(0.35), lineWidth: 1)
-                .frame(width: 58, height: 58)
+            ZStack {
+                HomeStyle.artworkBackground
 
-            Image(systemName: feature.systemImage)
-                .font(.system(size: 30, weight: .semibold))
-                .foregroundStyle(feature.accent)
+                Circle()
+                    .fill(feature.accent.opacity(0.10))
+                    .frame(width: side * 0.82, height: side * 0.82)
 
-            VStack {
-                Spacer()
+                Circle()
+                    .strokeBorder(HomeStyle.gold.opacity(0.34), lineWidth: 1)
+                    .frame(width: side * 0.72, height: side * 0.72)
 
-                Rectangle()
-                    .fill(HomeStyle.gold.opacity(0.18))
-                    .frame(height: 1)
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 10)
+                Diamond()
+                    .stroke(HomeStyle.gold.opacity(0.22), lineWidth: 1)
+                    .frame(width: side * 0.78, height: side * 0.78)
+
+                Image(systemName: feature.systemImage)
+                    .font(.system(size: side * 0.34, weight: .semibold))
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(feature.accent)
+
+                VStack {
+                    Spacer()
+
+                    Rectangle()
+                        .fill(HomeStyle.gold.opacity(0.18))
+                        .frame(height: 1)
+                        .padding(.horizontal, max(10, geometry.size.width * 0.20))
+                        .padding(.bottom, 8)
+                }
             }
         }
     }
