@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct HomeHeroBanner: View {
-    private let assetName = "home_hero_banner"
-
     var body: some View {
         VStack(spacing: 0) {
             heroArtwork
@@ -42,8 +40,8 @@ struct HomeHeroBanner: View {
 
     private var heroArtwork: some View {
         Group {
-            if UIImage(named: assetName) != nil {
-                Image(assetName)
+            if HomeArtworkAsset.exists(named: HomeArtworkAsset.heroBanner) {
+                Image(HomeArtworkAsset.heroBanner)
                     .resizable()
                     .scaledToFill()
             } else {

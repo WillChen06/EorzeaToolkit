@@ -5,6 +5,8 @@ final class TreasureMapViewModel {
     private(set) var maps: [TreasureMap] = []
     private(set) var zonesByItemId: [Int: [TreasureZone]] = [:]
     private(set) var zoneNames: [String: ZoneNameEntry] = [:]
+    private(set) var hasLoadedMaps = false
+    private(set) var loadError: String?
     private var spotsByKey: [String: [TreasureSpot]] = [:]  // "itemId-mapId" → spots
     private var mapInfosByKey: [String: MapInfo] = [:]
     private var mapInfosByPlacename: [Int: MapInfo] = [:]
@@ -47,8 +49,18 @@ final class TreasureMapViewModel {
 
                 zonesByItemId[itemId] = zones
             }
+
+            hasLoadedMaps = true
+            loadError = nil
         } catch {
-            print("Failed to load treasure maps: \(error)")
+            maps = []
+            zonesByItemId = [:]
+            zoneNames = [:]
+            spotsByKey = [:]
+            mapInfosByKey = [:]
+            mapInfosByPlacename = [:]
+            hasLoadedMaps = true
+            loadError = error.localizedDescription
         }
     }
 

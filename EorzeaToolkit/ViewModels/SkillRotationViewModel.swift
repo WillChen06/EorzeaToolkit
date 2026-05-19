@@ -60,6 +60,8 @@ final class SkillRotationViewModel {
     private(set) var jobs: [BattleJob] = []
     private(set) var tinctures: [Tincture] = []
     private(set) var tinctureStatJobs: [String: TinctureStatJob] = [:]
+    private(set) var hasLoadedJobs = false
+    private(set) var loadError: String?
 
     /// 編輯中的 Rotation，依職業 id 與等級分存。
     var rotationsByJobId: [Int: [SkillRotationLevel: [RotationSlot]]] = [:]
@@ -80,8 +82,14 @@ final class SkillRotationViewModel {
             tinctures = data.tinctures
             tinctureStatJobs = data.tinctureStatJobs
             restoreRotations()
+            hasLoadedJobs = true
+            loadError = nil
         } catch {
-            print("Failed to load battle actions: \(error)")
+            jobs = []
+            tinctures = []
+            tinctureStatJobs = [:]
+            hasLoadedJobs = true
+            loadError = error.localizedDescription
         }
     }
 
