@@ -42,6 +42,7 @@ struct BattleJobListView: View {
             }
         }
         .navigationTitle("技能循環")
+        .navigationBarTitleDisplayMode(.inline)
         .task { viewModel.load() }
     }
 

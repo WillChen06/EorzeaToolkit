@@ -59,6 +59,7 @@ struct TreasureMapListView: View {
             }
         }
         .navigationTitle("藏寶圖")
+        .navigationBarTitleDisplayMode(.inline)
         .task {
             viewModel.loadMaps()
         }
