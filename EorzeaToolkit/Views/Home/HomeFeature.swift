@@ -8,6 +8,8 @@ enum HomeFeature: CaseIterable, Identifiable {
     case skillRotation
 
     var id: Self { self }
+    
+    var hasArtwork: Bool { UIImage(named: assetName) != nil }
 
     var title: String {
         switch self {

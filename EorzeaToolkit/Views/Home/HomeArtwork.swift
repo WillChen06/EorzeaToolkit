@@ -4,7 +4,7 @@ struct HomeFeatureArtwork: View {
     let feature: HomeFeature
 
     var body: some View {
-        if UIImage(named: feature.assetName) != nil {
+        if feature.hasArtwork {
             Image(feature.assetName)
                 .resizable()
                 .scaledToFill()

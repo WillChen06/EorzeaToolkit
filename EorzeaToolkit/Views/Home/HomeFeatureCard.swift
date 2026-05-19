@@ -10,7 +10,7 @@ struct HomeFeatureCard: View {
         .background(HomeStyle.cardBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
         .background {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(HomeStyle.cardPressedBackground)
+                .fill(HomeStyle.cardDepthBackground)
                 .offset(y: 2)
         }
         .overlay {
