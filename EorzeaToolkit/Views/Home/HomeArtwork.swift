@@ -1,7 +1,15 @@
 import SwiftUI
 
 enum HomeArtworkAsset {
+    static let heroAspectRatio: CGFloat = 3.0
+    static let featureAspectRatio: CGFloat = 2.0 / 3.0
+
     static let heroBanner = "home_hero_banner"
+    static let itemSearch = "home_item_search"
+    static let treasureMap = "home_treasure_map"
+    static let relicWeapon = "home_relic_weapon"
+    static let miniCactpot = "home_mini_cactpot"
+    static let skillRotation = "home_skill_rotation"
 
     static func exists(named assetName: String) -> Bool {
         UIImage(named: assetName) != nil

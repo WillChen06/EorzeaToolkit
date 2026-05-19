@@ -57,15 +57,15 @@ enum HomeFeature: CaseIterable, Identifiable {
     var assetName: String {
         switch self {
         case .itemSearch:
-            "home_item_search"
+            HomeArtworkAsset.itemSearch
         case .treasureMap:
-            "home_treasure_map"
+            HomeArtworkAsset.treasureMap
         case .relicWeapon:
-            "home_relic_weapon"
+            HomeArtworkAsset.relicWeapon
         case .miniCactpot:
-            "home_mini_cactpot"
+            HomeArtworkAsset.miniCactpot
         case .skillRotation:
-            "home_skill_rotation"
+            HomeArtworkAsset.skillRotation
         }
     }
 
