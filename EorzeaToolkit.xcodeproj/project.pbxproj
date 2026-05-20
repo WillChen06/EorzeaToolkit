@@ -38,6 +38,12 @@
 		6B01AA11C9D847A7AA17A004 /* ItemDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B01AA11C9D847A7AA17B004 /* ItemDataService.swift */; };
 		6B01AA11C9D847A7AA17A002 /* ItemSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B01AA11C9D847A7AA17B002 /* ItemSearchViewModel.swift */; };
 		6B01AA11C9D847A7AA17A003 /* ItemSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B01AA11C9D847A7AA17B003 /* ItemSearchView.swift */; };
+		6B03AA11C9D847A7AA17A001 /* MarketPrice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B03AA11C9D847A7AA17B001 /* MarketPrice.swift */; };
+		6B03AA11C9D847A7AA17A002 /* MarketPriceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B03AA11C9D847A7AA17B002 /* MarketPriceService.swift */; };
+		6B03AA11C9D847A7AA17A003 /* MarketPriceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B03AA11C9D847A7AA17B003 /* MarketPriceViewModel.swift */; };
+		6B03AA11C9D847A7AA17A004 /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B03AA11C9D847A7AA17B004 /* ItemDetailView.swift */; };
+		6B03AA11C9D847A7AA17A005 /* ItemIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B03AA11C9D847A7AA17B005 /* ItemIconView.swift */; };
+		6B03AA11C9D847A7AA17A006 /* MarketPriceSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B03AA11C9D847A7AA17B006 /* MarketPriceSection.swift */; };
 		77EDFFF7DCF1E64CE83905AA /* GatheringNodesSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D893E5C581D7643F8081FBA8 /* GatheringNodesSheetView.swift */; };
 		781509C142A5924BB394064E /* MiniCactpotCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B439A14F2C5863AE74D6AC /* MiniCactpotCalculator.swift */; };
 		86724EC32FB715E8002B6048 /* items.json in Resources */ = {isa = PBXBuildFile; fileRef = 86724EC22FB715E8002B6048 /* items.json */; };
@@ -88,6 +94,12 @@
 		6B01AA11C9D847A7AA17B004 /* ItemDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDataService.swift; sourceTree = "<group>"; };
 		6B01AA11C9D847A7AA17B002 /* ItemSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSearchViewModel.swift; sourceTree = "<group>"; };
 		6B01AA11C9D847A7AA17B003 /* ItemSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSearchView.swift; sourceTree = "<group>"; };
+		6B03AA11C9D847A7AA17B001 /* MarketPrice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketPrice.swift; sourceTree = "<group>"; };
+		6B03AA11C9D847A7AA17B002 /* MarketPriceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketPriceService.swift; sourceTree = "<group>"; };
+		6B03AA11C9D847A7AA17B003 /* MarketPriceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketPriceViewModel.swift; sourceTree = "<group>"; };
+		6B03AA11C9D847A7AA17B004 /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
+		6B03AA11C9D847A7AA17B005 /* ItemIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemIconView.swift; sourceTree = "<group>"; };
+		6B03AA11C9D847A7AA17B006 /* MarketPriceSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketPriceSection.swift; sourceTree = "<group>"; };
 		71206E4982454E1556AE20D8 /* TreasureMapDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapDetailView.swift; sourceTree = "<group>"; };
 		75BE3609C1A36C70D2704F19 /* maps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = maps.json; sourceTree = "<group>"; };
 		84EEB99FC86E568BF0D2EA0D /* EorzeaToolkit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EorzeaToolkit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,6 +140,7 @@
 			children = (
 				6B01AA11C9D847A7AA17B004 /* ItemDataService.swift */,
 				DA57853C57893DD24999BD39 /* LocalDataService.swift */,
+				6B03AA11C9D847A7AA17B002 /* MarketPriceService.swift */,
 				D6B439A14F2C5863AE74D6AC /* MiniCactpotCalculator.swift */,
 				ABD11C8459A748FFAD797086 /* XIVAPIService.swift */,
 			);
@@ -178,7 +191,10 @@
 		6B01AA11C9D847A7AA17C003 /* ItemSearch */ = {
 			isa = PBXGroup;
 			children = (
+				6B03AA11C9D847A7AA17B004 /* ItemDetailView.swift */,
+				6B03AA11C9D847A7AA17B005 /* ItemIconView.swift */,
 				6B01AA11C9D847A7AA17B003 /* ItemSearchView.swift */,
+				6B03AA11C9D847A7AA17B006 /* MarketPriceSection.swift */,
 			);
 			path = ItemSearch;
 			sourceTree = "<group>";
@@ -188,6 +204,7 @@
 			children = (
 				6104222B27B687BA0EAA5CC5 /* BattleAction.swift */,
 				6B01AA11C9D847A7AA17B001 /* Item.swift */,
+				6B03AA11C9D847A7AA17B001 /* MarketPrice.swift */,
 				6479B38C42665F3310E4E957 /* MiniCactpotLine.swift */,
 				2EEC8B7996584951371DC7C0 /* MiniCactpotResult.swift */,
 				2ADBDC8E113EEA7483788B92 /* RelicWeapon.swift */,
@@ -234,6 +251,7 @@
 			isa = PBXGroup;
 			children = (
 				6B01AA11C9D847A7AA17B002 /* ItemSearchViewModel.swift */,
+				6B03AA11C9D847A7AA17B003 /* MarketPriceViewModel.swift */,
 				AAA4A4DBD2933C011AE58698 /* RelicWeaponViewModel.swift */,
 				D3B3A9C4147C7FB2EC139CAF /* SkillRotationViewModel.swift */,
 				27A14791E8C11AA209AA0562 /* TreasureMapViewModel.swift */,
@@ -397,6 +415,12 @@
 				6B01AA11C9D847A7AA17A002 /* ItemSearchViewModel.swift in Sources */,
 				B07E3909BF9E625D9CE02422 /* LocalDataService.swift in Sources */,
 				3031DC7EF96289AB33309399 /* MainTabView.swift in Sources */,
+				6B03AA11C9D847A7AA17A001 /* MarketPrice.swift in Sources */,
+				6B03AA11C9D847A7AA17A002 /* MarketPriceService.swift in Sources */,
+				6B03AA11C9D847A7AA17A003 /* MarketPriceViewModel.swift in Sources */,
+				6B03AA11C9D847A7AA17A004 /* ItemDetailView.swift in Sources */,
+				6B03AA11C9D847A7AA17A005 /* ItemIconView.swift in Sources */,
+				6B03AA11C9D847A7AA17A006 /* MarketPriceSection.swift in Sources */,
 				6A1100000000000000000005 /* HomeArtwork.swift in Sources */,
 				6A1100000000000000000002 /* HomeFeature.swift in Sources */,
 				6A1100000000000000000003 /* HomeFeatureCard.swift in Sources */,
