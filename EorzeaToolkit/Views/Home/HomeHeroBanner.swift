@@ -2,27 +2,7 @@ import SwiftUI
 
 struct HomeHeroBanner: View {
     var body: some View {
-        VStack(spacing: 0) {
-            heroArtwork
-                .frame(height: 118)
-
-            VStack(alignment: .leading, spacing: 7) {
-                Text("Eorzea Toolkit")
-                    .font(.system(.title2, design: .serif, weight: .semibold))
-                    .foregroundStyle(HomeStyle.ink)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-
-                Text("整理冒險途中會反覆打開的工具")
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(HomeStyle.mutedInk)
-                    .lineLimit(2)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 14)
-            .background(HomeStyle.bannerBackground)
-        }
+        heroArtwork
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .overlay {
             ZStack {
@@ -34,8 +14,7 @@ struct HomeHeroBanner: View {
                     .padding(6)
             }
         }
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("Eorzea Toolkit，整理冒險途中會反覆打開的工具")
+        .accessibilityLabel("Eorzea Toolkit 主視覺")
     }
 
     private var heroArtwork: some View {
@@ -47,11 +26,6 @@ struct HomeHeroBanner: View {
             } else {
                 placeholderHeroArtwork
             }
-        }
-        .overlay(alignment: .bottom) {
-            Rectangle()
-                .fill(HomeStyle.gold.opacity(0.18))
-                .frame(height: 1)
         }
         .clipped()
     }
