@@ -137,7 +137,7 @@ private struct MarketListingsSection: View {
     @State private var isExpanded = false
 
     private var visibleListings: [MarketListing] {
-        Array(listings.prefix(isExpanded ? 10 : 3))
+        Array(listings.prefix(isExpanded ? listings.count : 3))
     }
 
     var body: some View {
@@ -156,7 +156,7 @@ private struct MarketListingsSection: View {
                         isExpanded.toggle()
                     } label: {
                         Label(
-                            isExpanded ? "收合" : "顯示全部 \(min(listings.count, 10)) 筆",
+                            isExpanded ? "收合" : "顯示全部 \(listings.count) 筆",
                             systemImage: isExpanded ? "chevron.up" : "chevron.down"
                         )
                             .font(.subheadline.weight(.semibold))

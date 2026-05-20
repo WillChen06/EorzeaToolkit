@@ -36,16 +36,12 @@ enum MarketPriceScope: String, CaseIterable, Identifiable, Sendable {
         }
     }
 
-    var displayName: String {
-        apiName
-    }
-
     var displayLabel: String {
         switch self {
         case .chocobo:
             return "DC 陸行鳥"
         default:
-            return displayName
+            return apiName
         }
     }
 }
