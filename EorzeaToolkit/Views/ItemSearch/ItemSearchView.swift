@@ -560,67 +560,6 @@ private struct ItemSearchRow: View {
     }
 }
 
-private struct ItemDetailView: View {
-    let item: Item
-
-    var body: some View {
-        List {
-            Section {
-                VStack(spacing: 16) {
-                    ItemIconView(item: item, size: 96)
-
-                    VStack(spacing: 6) {
-                        Text(item.displayName)
-                            .font(.title2.weight(.semibold))
-                            .multilineTextAlignment(.center)
-
-                        Text("iLv \(item.ilvl)")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 20)
-            }
-
-            Section("後續擴充") {
-                Label("取得方式、配方、採集與市場價格將在後續 Phase 補上", systemImage: "clock")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .navigationTitle(item.displayName)
-        .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-private struct ItemIconView: View {
-    let item: Item
-    let size: CGFloat
-
-    var body: some View {
-        CachedIconImage(url: item.iconURL) {
-            placeholder
-        }
-        .padding(size * 0.08)
-        .background(.thinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .frame(width: size, height: size)
-        .accessibilityHidden(true)
-    }
-
-    private var placeholder: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(.blue.opacity(0.12))
-
-            Image(systemName: "shippingbox.fill")
-                .font(.system(size: size * 0.46, weight: .semibold))
-                .foregroundStyle(.blue)
-        }
-    }
-}
-
 #Preview {
     NavigationStack {
         ItemSearchView()
