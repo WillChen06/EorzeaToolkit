@@ -140,7 +140,7 @@ struct ItemSearchView: View {
         } else {
             List {
                 ForEach(viewModel.results) { item in
-                    NavigationLink(destination: ItemDetailView(item: item)) {
+                    NavigationLink(destination: ItemDetailView(item: item, itemsByID: viewModel.itemsByID)) {
                         ItemSearchRow(item: item)
                     }
                 }

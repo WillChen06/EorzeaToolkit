@@ -44,6 +44,10 @@
 		6B03AA11C9D847A7AA17A004 /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B03AA11C9D847A7AA17B004 /* ItemDetailView.swift */; };
 		6B03AA11C9D847A7AA17A005 /* ItemIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B03AA11C9D847A7AA17B005 /* ItemIconView.swift */; };
 		6B03AA11C9D847A7AA17A006 /* MarketPriceSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B03AA11C9D847A7AA17B006 /* MarketPriceSection.swift */; };
+		6B04AA11C9D847A7AA17A001 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B04AA11C9D847A7AA17B001 /* Recipe.swift */; };
+		6B04AA11C9D847A7AA17A002 /* RecipeDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B04AA11C9D847A7AA17B002 /* RecipeDataService.swift */; };
+		6B04AA11C9D847A7AA17A003 /* RecipeSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B04AA11C9D847A7AA17B003 /* RecipeSection.swift */; };
+		6B04AA11C9D847A7AA17A004 /* recipes.json in Resources */ = {isa = PBXBuildFile; fileRef = 6B04AA11C9D847A7AA17B004 /* recipes.json */; };
 		77EDFFF7DCF1E64CE83905AA /* GatheringNodesSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D893E5C581D7643F8081FBA8 /* GatheringNodesSheetView.swift */; };
 		781509C142A5924BB394064E /* MiniCactpotCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B439A14F2C5863AE74D6AC /* MiniCactpotCalculator.swift */; };
 		86724EC32FB715E8002B6048 /* items.json in Resources */ = {isa = PBXBuildFile; fileRef = 86724EC22FB715E8002B6048 /* items.json */; };
@@ -100,6 +104,10 @@
 		6B03AA11C9D847A7AA17B004 /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
 		6B03AA11C9D847A7AA17B005 /* ItemIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemIconView.swift; sourceTree = "<group>"; };
 		6B03AA11C9D847A7AA17B006 /* MarketPriceSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketPriceSection.swift; sourceTree = "<group>"; };
+		6B04AA11C9D847A7AA17B001 /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
+		6B04AA11C9D847A7AA17B002 /* RecipeDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDataService.swift; sourceTree = "<group>"; };
+		6B04AA11C9D847A7AA17B003 /* RecipeSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeSection.swift; sourceTree = "<group>"; };
+		6B04AA11C9D847A7AA17B004 /* recipes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = recipes.json; sourceTree = "<group>"; };
 		71206E4982454E1556AE20D8 /* TreasureMapDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapDetailView.swift; sourceTree = "<group>"; };
 		75BE3609C1A36C70D2704F19 /* maps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = maps.json; sourceTree = "<group>"; };
 		84EEB99FC86E568BF0D2EA0D /* EorzeaToolkit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EorzeaToolkit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -142,6 +150,7 @@
 				DA57853C57893DD24999BD39 /* LocalDataService.swift */,
 				6B03AA11C9D847A7AA17B002 /* MarketPriceService.swift */,
 				D6B439A14F2C5863AE74D6AC /* MiniCactpotCalculator.swift */,
+				6B04AA11C9D847A7AA17B002 /* RecipeDataService.swift */,
 				ABD11C8459A748FFAD797086 /* XIVAPIService.swift */,
 			);
 			path = Services;
@@ -195,6 +204,7 @@
 				6B03AA11C9D847A7AA17B005 /* ItemIconView.swift */,
 				6B01AA11C9D847A7AA17B003 /* ItemSearchView.swift */,
 				6B03AA11C9D847A7AA17B006 /* MarketPriceSection.swift */,
+				6B04AA11C9D847A7AA17B003 /* RecipeSection.swift */,
 			);
 			path = ItemSearch;
 			sourceTree = "<group>";
@@ -207,6 +217,7 @@
 				6B03AA11C9D847A7AA17B001 /* MarketPrice.swift */,
 				6479B38C42665F3310E4E957 /* MiniCactpotLine.swift */,
 				2EEC8B7996584951371DC7C0 /* MiniCactpotResult.swift */,
+				6B04AA11C9D847A7AA17B001 /* Recipe.swift */,
 				2ADBDC8E113EEA7483788B92 /* RelicWeapon.swift */,
 				6EA545E4D6687BEE1A40A1B1 /* TreasureMap.swift */,
 			);
@@ -286,6 +297,7 @@
 			children = (
 				2E131506BE3D2AC67DB401A5 /* battle_actions.json */,
 				75BE3609C1A36C70D2704F19 /* maps.json */,
+				6B04AA11C9D847A7AA17B004 /* recipes.json */,
 				44C199F7F0439BDD9DF63DE5 /* relic_weapons.json */,
 				BF15A9AE3DC8EE6D4DEA9DB7 /* treasure_maps_final.json */,
 				3C29DC0DEAD933ADBAB15DF0 /* treasure_maps.json */,
@@ -389,6 +401,7 @@
 				86724EC32FB715E8002B6048 /* items.json in Resources */,
 				24FC49E9D42BE14C86DE72D7 /* battle_actions.json in Resources */,
 				FEF4C46EBF93AB24A7030012 /* maps.json in Resources */,
+				6B04AA11C9D847A7AA17A004 /* recipes.json in Resources */,
 				025A67D3151B3C43DC2C3142 /* relic_weapons.json in Resources */,
 				4282D6200B3411DBF17796D7 /* treasure_maps.json in Resources */,
 				E96505DB673C2FCC56EA4C7E /* treasure_maps_final.json in Resources */,
@@ -421,6 +434,9 @@
 				6B03AA11C9D847A7AA17A004 /* ItemDetailView.swift in Sources */,
 				6B03AA11C9D847A7AA17A005 /* ItemIconView.swift in Sources */,
 				6B03AA11C9D847A7AA17A006 /* MarketPriceSection.swift in Sources */,
+				6B04AA11C9D847A7AA17A001 /* Recipe.swift in Sources */,
+				6B04AA11C9D847A7AA17A002 /* RecipeDataService.swift in Sources */,
+				6B04AA11C9D847A7AA17A003 /* RecipeSection.swift in Sources */,
 				6A1100000000000000000005 /* HomeArtwork.swift in Sources */,
 				6A1100000000000000000002 /* HomeFeature.swift in Sources */,
 				6A1100000000000000000003 /* HomeFeatureCard.swift in Sources */,
