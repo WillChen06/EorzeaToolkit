@@ -1,24 +1,35 @@
 import SwiftUI
 
 struct RecipeSection: View {
-    let recipes: [Recipe]
+    let recipes: [Recipe]?
     let itemsByID: [Int: Item]
     let onSelectIngredient: (Item) -> Void
 
     var body: some View {
         Section("配方") {
-            if recipes.isEmpty {
-                Label("無法製作", systemImage: "hammer")
+            if let recipes {
+                if recipes.isEmpty {
+                    Label("無法製作", systemImage: "hammer")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(recipes, id: \.self) { recipe in
+                        RecipeCard(
+                            recipe: recipe,
+                            itemsByID: itemsByID,
+                            onSelectIngredient: onSelectIngredient
+                        )
+                    }
+                }
+            } else {
+                HStack(spacing: 10) {
+                    ProgressView()
+                        .controlSize(.small)
+
+                    Text("查詢配方")
+                }
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-            } else {
-                ForEach(recipes.indices, id: \.self) { index in
-                    RecipeCard(
-                        recipe: recipes[index],
-                        itemsByID: itemsByID,
-                        onSelectIngredient: onSelectIngredient
-                    )
-                }
             }
         }
     }
@@ -34,16 +45,14 @@ private struct RecipeCard: View {
             header
 
             VStack(spacing: 0) {
-                ForEach(recipe.ingredients.indices, id: \.self) { index in
-                    let ingredient = recipe.ingredients[index]
-
+                ForEach(recipe.ingredients, id: \.self) { ingredient in
                     RecipeIngredientRow(
                         ingredient: ingredient,
                         item: itemsByID[ingredient.itemID],
                         onSelect: onSelectIngredient
                     )
 
-                    if index < recipe.ingredients.index(before: recipe.ingredients.endIndex) {
+                    if ingredient != recipe.ingredients.last {
                         Divider()
                             .padding(.leading, 44)
                     }

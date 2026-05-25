@@ -4,7 +4,7 @@ struct ItemDetailView: View {
     let item: Item
     let itemsByID: [Int: Item]
 
-    @State private var recipes: [Recipe] = []
+    @State private var recipes: [Recipe]?
     @State private var selectedRecipeItem: Item?
 
     init(item: Item, itemsByID: [Int: Item] = [:]) {
@@ -52,6 +52,7 @@ struct ItemDetailView: View {
             ItemDetailView(item: item, itemsByID: itemsByID)
         }
         .task(id: item.id) {
+            recipes = nil
             recipes = await RecipeDataService.recipes(for: item.id)
         }
     }

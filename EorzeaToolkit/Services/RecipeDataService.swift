@@ -21,6 +21,7 @@ private actor RecipeDataCache {
             recipesByResultID = data.recipes
             return data.recipes[String(itemID), default: []]
         } catch {
+            assertionFailure("Failed to load recipes.json: \(error)")
             recipesByResultID = [:]
             return []
         }
