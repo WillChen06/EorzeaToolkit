@@ -192,6 +192,7 @@ final class ItemSearchViewModel {
     private(set) var uiCategories: [UICategory] = []
     private(set) var classjobCategories: [ClassJobCategory] = []
     private(set) var equipSlots: [EquipSlot] = []
+    private(set) var itemsByID: [Int: Item] = [:]
 
     var query = ""
 
@@ -277,6 +278,7 @@ final class ItemSearchViewModel {
                 }
 
                 items = []
+                itemsByID = [:]
                 allSearchResults = []
                 results = []
                 totalMatchCount = 0
@@ -363,6 +365,7 @@ final class ItemSearchViewModel {
 
     private func applyLoadedData(_ data: ItemDataResponse) {
         items = data.items
+        itemsByID = Dictionary(uniqueKeysWithValues: data.items.map { ($0.id, $0) })
         uiCategories = data.uiCategories
         classjobCategories = data.classjobCategories
         equipSlots = data.equipSlots.filter { $0.id > 0 }
