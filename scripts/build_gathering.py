@@ -28,7 +28,8 @@ cc = opencc.OpenCC('s2t')
 
 def load_place_names(path):
     """PlaceName.csv -> { zoneid(str): 繁中地名 }，經 OpenCC s2t"""
-    rows = list(csv.reader(open(path, encoding='utf-8-sig')))
+    with open(path, encoding='utf-8-sig') as f:
+        rows = list(csv.reader(f))
     names = {}
     for r in rows[3:]:
         if not r or not r[0].strip():
@@ -40,12 +41,14 @@ def load_place_names(path):
 
 
 def load_item_ids(path):
-    d = json.load(open(path, encoding='utf-8'))
+    with open(path, encoding='utf-8') as f:
+        d = json.load(f)
     return set(it['id'] for it in d['items'])
 
 
 def build(nodes_path, place_path, items_path, out_path):
-    nodes = json.load(open(nodes_path, encoding='utf-8'))
+    with open(nodes_path, encoding='utf-8') as f:
+        nodes = json.load(f)
     place_names = load_place_names(place_path)
     item_ids = load_item_ids(items_path)
 
@@ -110,8 +113,8 @@ def build(nodes_path, place_path, items_path, out_path):
         },
         'gathering': {str(k): v for k, v in index.items()},
     }
-    json.dump(output, open(out_path, 'w', encoding='utf-8'),
-              ensure_ascii=False, separators=(',', ':'))
+    with open(out_path, 'w', encoding='utf-8') as f:
+        json.dump(output, f, ensure_ascii=False, separators=(',', ':'))
 
     print('完成:', out_path)
     print('  可採集道具數:', output['_meta']['gatherable_item_count'])

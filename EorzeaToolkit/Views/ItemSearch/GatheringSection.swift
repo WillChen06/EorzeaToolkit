@@ -10,7 +10,7 @@ struct GatheringSection: View {
     var body: some View {
         if !nodes.isEmpty {
             Section("採集") {
-                ForEach(visibleNodes, id: \.self) { node in
+                ForEach(Array(visibleNodes.enumerated()), id: \.offset) { _, node in
                     GatheringNodeCard(node: node)
                 }
 

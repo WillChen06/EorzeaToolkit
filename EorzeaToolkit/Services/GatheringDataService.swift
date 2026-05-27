@@ -1,4 +1,5 @@
 import Foundation
+import os
 
 enum GatheringDataService {
     private static let cache = GatheringDataCache()
@@ -21,9 +22,12 @@ private actor GatheringDataCache {
             gatheringByItemID = data.gathering
             return data.gathering[String(itemID), default: []]
         } catch {
+            logger.error("Failed to load gathering.json: \(error.localizedDescription, privacy: .public)")
             assertionFailure("Failed to load gathering.json: \(error)")
             gatheringByItemID = [:]
             return []
         }
     }
 }
+
+private let logger = Logger(subsystem: "EorzeaToolkit", category: "GatheringDataService")

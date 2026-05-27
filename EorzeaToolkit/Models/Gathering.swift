@@ -55,7 +55,7 @@ struct ItemGatheringNode: Decodable, Hashable, Sendable {
     }
 
     var spawnTimeText: String? {
-        guard isLimited, !spawns.isEmpty else {
+        guard (isLimited || isEphemeral), !spawns.isEmpty else {
             return nil
         }
 
