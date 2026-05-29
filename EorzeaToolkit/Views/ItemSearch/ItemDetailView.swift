@@ -57,7 +57,7 @@ struct ItemDetailView: View {
         .navigationDestination(item: $selectedRecipeItem) { item in
             ItemDetailView(item: item, itemsByID: itemsByID)
         }
-        .task(id: marketPriceLoadTaskID) {
+        .onChange(of: marketPriceLoadTaskID, initial: true) {
             marketPriceViewModel.load(item: item, scope: marketPriceSettings.selectedScope)
         }
         .task(id: item.id) {
