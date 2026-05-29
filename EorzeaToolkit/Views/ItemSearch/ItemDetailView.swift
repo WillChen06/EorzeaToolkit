@@ -5,6 +5,7 @@ struct ItemDetailView: View {
     let itemsByID: [Int: Item]
 
     @State private var recipes: [Recipe]?
+    @State private var gatheringNodes: [ItemGatheringNode] = []
     @State private var selectedRecipeItem: Item?
 
     init(item: Item, itemsByID: [Int: Item] = [:]) {
@@ -40,8 +41,10 @@ struct ItemDetailView: View {
                 onSelectIngredient: { selectedRecipeItem = $0 }
             )
 
+            GatheringSection(nodes: gatheringNodes)
+
             Section("後續擴充") {
-                Label("取得方式、採集與用途反查將在後續 Phase 補上", systemImage: "clock")
+                Label("取得方式聚合與用途反查將在後續 Phase 補上", systemImage: "clock")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -53,7 +56,11 @@ struct ItemDetailView: View {
         }
         .task(id: item.id) {
             recipes = nil
-            recipes = await RecipeDataService.recipes(for: item.id)
+            gatheringNodes = []
+            async let loadedRecipes = RecipeDataService.recipes(for: item.id)
+            async let loadedGatheringNodes = GatheringDataService.nodes(for: item.id)
+            recipes = await loadedRecipes
+            gatheringNodes = await loadedGatheringNodes
         }
     }
 }
