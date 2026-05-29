@@ -4,9 +4,12 @@ struct ItemDetailView: View {
     let item: Item
     let itemsByID: [Int: Item]
 
+    @Environment(MarketPriceSettings.self) private var marketPriceSettings
+
     @State private var recipes: [Recipe]?
     @State private var gatheringNodes: [ItemGatheringNode] = []
     @State private var selectedRecipeItem: Item?
+    @State private var marketPriceViewModel = MarketPriceViewModel()
 
     init(item: Item, itemsByID: [Int: Item] = [:]) {
         self.item = item
@@ -33,7 +36,7 @@ struct ItemDetailView: View {
                 .padding(.vertical, 20)
             }
 
-            MarketPriceSection(item: item)
+            MarketPriceSection(item: item, viewModel: marketPriceViewModel)
 
             RecipeSection(
                 recipes: recipes,
@@ -54,6 +57,9 @@ struct ItemDetailView: View {
         .navigationDestination(item: $selectedRecipeItem) { item in
             ItemDetailView(item: item, itemsByID: itemsByID)
         }
+        .onChange(of: marketPriceLoadTaskID, initial: true) {
+            marketPriceViewModel.load(item: item, scope: marketPriceSettings.selectedScope)
+        }
         .task(id: item.id) {
             recipes = nil
             gatheringNodes = []
@@ -62,5 +68,9 @@ struct ItemDetailView: View {
             recipes = await loadedRecipes
             gatheringNodes = await loadedGatheringNodes
         }
+    }
+
+    private var marketPriceLoadTaskID: String {
+        "\(item.id)-\(marketPriceSettings.selectedScope.id)"
     }
 }
