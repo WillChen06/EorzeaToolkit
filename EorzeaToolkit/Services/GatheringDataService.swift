@@ -12,13 +12,15 @@ enum GatheringDataService {
 private actor GatheringDataCache {
     private var gatheringByItemID: [String: [ItemGatheringNode]]?
 
-    func nodes(for itemID: Int) -> [ItemGatheringNode] {
+    func nodes(for itemID: Int) async -> [ItemGatheringNode] {
         if let gatheringByItemID {
             return gatheringByItemID[String(itemID), default: []]
         }
 
         do {
-            let data: GatheringDataResponse = try LocalDataService.load("gathering")
+            let data: GatheringDataResponse = try await Task.detached(priority: .userInitiated) {
+                try LocalDataService.load("gathering")
+            }.value
             gatheringByItemID = data.gathering
             return data.gathering[String(itemID), default: []]
         } catch {

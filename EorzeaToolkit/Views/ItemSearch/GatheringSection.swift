@@ -10,8 +10,8 @@ struct GatheringSection: View {
     var body: some View {
         if !nodes.isEmpty {
             Section("採集") {
-                ForEach(Array(visibleNodes.enumerated()), id: \.offset) { _, node in
-                    GatheringNodeCard(node: node)
+                ForEach(visibleRows) { row in
+                    GatheringNodeCard(node: row.node)
                 }
 
                 if shouldShowToggle {
@@ -46,6 +46,20 @@ struct GatheringSection: View {
         return Array(nodes.prefix(collapsedLimit))
     }
 
+    private var visibleRows: [GatheringNodeRow] {
+        var occurrenceCounts: [ItemGatheringNode: Int] = [:]
+
+        return visibleNodes.map { node in
+            let occurrence = occurrenceCounts[node, default: 0]
+            occurrenceCounts[node] = occurrence + 1
+
+            return GatheringNodeRow(
+                id: "\(node.stableDisplayID)#\(occurrence)",
+                node: node
+            )
+        }
+    }
+
     private var shouldShowToggle: Bool {
         nodes.count > collapsedLimit
     }
@@ -53,6 +67,11 @@ struct GatheringSection: View {
     private var toggleTitle: String {
         isExpanded ? "收起採集地點" : "顯示全部採集地點"
     }
+}
+
+private struct GatheringNodeRow: Identifiable {
+    let id: String
+    let node: ItemGatheringNode
 }
 
 private struct GatheringNodeCard: View {
@@ -92,6 +111,27 @@ private struct GatheringNodeCard: View {
         }
         .padding(.vertical, 6)
         .accessibilityElement(children: .combine)
+    }
+}
+
+private extension ItemGatheringNode {
+    var stableDisplayID: String {
+        [
+            job,
+            method,
+            "\(level)",
+            "\(zoneID)",
+            zoneName,
+            "\(x)",
+            "\(y)",
+            "\(mapID)",
+            "\(isHidden)",
+            "\(isLegendary)",
+            "\(isEphemeral)",
+            "\(isLimited)",
+            spawns.map(String.init).joined(separator: ","),
+            "\(duration)"
+        ].joined(separator: "|")
     }
 }
 
