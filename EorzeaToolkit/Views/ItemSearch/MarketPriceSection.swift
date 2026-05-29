@@ -2,9 +2,9 @@ import SwiftUI
 
 struct MarketPriceSection: View {
     let item: Item
+    let viewModel: MarketPriceViewModel
 
     @Environment(MarketPriceSettings.self) private var marketPriceSettings
-    @State private var viewModel = MarketPriceViewModel()
 
     var body: some View {
         Group {
@@ -18,13 +18,6 @@ struct MarketPriceSection: View {
                 MarketRecentSalesSection(sales: marketPrice.recentSales)
             }
         }
-        .task(id: loadTaskID) {
-            viewModel.load(item: item, scope: marketPriceSettings.selectedScope)
-        }
-    }
-
-    private var loadTaskID: String {
-        "\(item.id)-\(marketPriceSettings.selectedScope.id)"
     }
 
     @ViewBuilder
