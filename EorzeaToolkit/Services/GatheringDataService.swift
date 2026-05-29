@@ -11,24 +11,38 @@ enum GatheringDataService {
 
 private actor GatheringDataCache {
     private var gatheringByItemID: [String: [ItemGatheringNode]]?
+    private var loadTask: Task<[String: [ItemGatheringNode]], Never>?
 
     func nodes(for itemID: Int) async -> [ItemGatheringNode] {
+        let gatheringByItemID = await loadGatheringByItemID()
+        return gatheringByItemID[String(itemID), default: []]
+    }
+
+    private func loadGatheringByItemID() async -> [String: [ItemGatheringNode]] {
         if let gatheringByItemID {
-            return gatheringByItemID[String(itemID), default: []]
+            return gatheringByItemID
         }
 
-        do {
-            let data: GatheringDataResponse = try await Task.detached(priority: .userInitiated) {
-                try LocalDataService.load("gathering")
-            }.value
-            gatheringByItemID = data.gathering
-            return data.gathering[String(itemID), default: []]
-        } catch {
-            logger.error("Failed to load gathering.json: \(error.localizedDescription, privacy: .public)")
-            assertionFailure("Failed to load gathering.json: \(error)")
-            gatheringByItemID = [:]
-            return []
+        if let loadTask {
+            return await loadTask.value
         }
+
+        let task = Task.detached(priority: .userInitiated) {
+            do {
+                let data: GatheringDataResponse = try LocalDataService.load("gathering")
+                return data.gathering
+            } catch {
+                logger.error("Failed to load gathering.json: \(error.localizedDescription, privacy: .public)")
+                assertionFailure("Failed to load gathering.json: \(error)")
+                return [:]
+            }
+        }
+
+        loadTask = task
+        let gatheringByItemID = await task.value
+        self.gatheringByItemID = gatheringByItemID
+        loadTask = nil
+        return gatheringByItemID
     }
 }
 
