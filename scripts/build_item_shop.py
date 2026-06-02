@@ -10,7 +10,7 @@ build_item_shop.py — 將 Item.csv (PriceMid) + GilShopItem.csv 轉成 item_sho
 """
 import csv, json, sys
 
-ITEM_PRICE_MID_COL = 26  # Item.csv 欄位 Price{Mid}(已驗證)
+ITEM_PRICE_MID_HEADER = 'Price{Mid}'
 
 
 def build(item_csv, shop_item_csv, out_path):
@@ -18,11 +18,16 @@ def build(item_csv, shop_item_csv, out_path):
     with open(item_csv, encoding='utf-8-sig') as f:
         rows = list(csv.reader(f))
 
+    header = rows[1]
+    if ITEM_PRICE_MID_HEADER not in header:
+        raise ValueError(f'找不到欄位 {ITEM_PRICE_MID_HEADER!r},請確認 CSV 版本')
+
+    price_mid_col = header.index(ITEM_PRICE_MID_HEADER)
     prices = {}
     for r in rows[3:]:
         if not r or not r[0].isdigit():
             continue
-        pm = r[ITEM_PRICE_MID_COL]
+        pm = r[price_mid_col]
         if pm.isdigit() and int(pm) > 0:
             prices[int(r[0])] = int(pm)
 

@@ -25,6 +25,6 @@ struct ShopPurchaseSection: View {
             return String(localized: "common.notProvided")
         }
 
-        return "\(priceMid.formatted()) G"
+        return String(localized: "shopPurchase.priceFormat \(priceMid.formatted())")
     }
 }

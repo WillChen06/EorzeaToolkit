@@ -15,4 +15,5 @@
 "obtain.source.gathering" = "採集";
 "obtain.source.shop" = "商店購買";
 "obtain.source.market" = "市場交易";
+"shopPurchase.priceFormat %@" = "%@ G";
 "shopPurchase.sourceNote" = "售價資料來源為遊戲資料，NPC 位置資訊暫不提供。";

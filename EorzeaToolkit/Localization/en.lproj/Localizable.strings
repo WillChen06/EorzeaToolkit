@@ -15,4 +15,5 @@
 "obtain.source.gathering" = "Gathering";
 "obtain.source.shop" = "Shop Purchase";
 "obtain.source.market" = "Market Board";
+"shopPurchase.priceFormat %@" = "%@ G";
 "shopPurchase.sourceNote" = "Price data comes from game data. NPC location details are not available yet.";
