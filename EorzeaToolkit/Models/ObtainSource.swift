@@ -26,7 +26,7 @@ enum ObtainSource: String, CaseIterable, Identifiable, Sendable {
         case .recipe:
             return "hammer"
         case .gathering:
-            return "figure.outdoor.cycle"
+            return "leaf"
         case .shop:
             return "storefront"
         case .market:
