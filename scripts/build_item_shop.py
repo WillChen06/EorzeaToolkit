@@ -15,7 +15,9 @@ ITEM_PRICE_MID_COL = 26  # Item.csv 欄位 Price{Mid}(已驗證)
 
 def build(item_csv, shop_item_csv, out_path):
     # 1) Item.csv 建 id -> price_mid
-    rows = list(csv.reader(open(item_csv, encoding='utf-8-sig')))
+    with open(item_csv, encoding='utf-8-sig') as f:
+        rows = list(csv.reader(f))
+
     prices = {}
     for r in rows[3:]:
         if not r or not r[0].isdigit():
@@ -25,7 +27,9 @@ def build(item_csv, shop_item_csv, out_path):
             prices[int(r[0])] = int(pm)
 
     # 2) GilShopItem.csv 建 set(item_id) —— 出現過就算「商店有賣」
-    shop_rows = list(csv.reader(open(shop_item_csv, encoding='utf-8-sig')))[3:]
+    with open(shop_item_csv, encoding='utf-8-sig') as f:
+        shop_rows = list(csv.reader(f))[3:]
+
     in_shop = set()
     for r in shop_rows:
         if len(r) > 1 and r[1].isdigit():
@@ -57,8 +61,9 @@ def build(item_csv, shop_item_csv, out_path):
         },
         'shop': table,
     }
-    json.dump(output, open(out_path, 'w', encoding='utf-8'),
-              ensure_ascii=False, separators=(',', ':'))
+    with open(out_path, 'w', encoding='utf-8') as f:
+        json.dump(output, f, ensure_ascii=False, separators=(',', ':'))
+
     print('完成:', out_path)
     print('  收錄道具數:', len(table))
     print('  有 PriceMid 的:', len(prices))

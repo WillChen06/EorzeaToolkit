@@ -11,13 +11,13 @@ enum ObtainSource: String, CaseIterable, Identifiable, Sendable {
     var title: String {
         switch self {
         case .recipe:
-            return "製作"
+            return String(localized: "obtain.source.recipe")
         case .gathering:
-            return "採集"
+            return String(localized: "obtain.source.gathering")
         case .shop:
-            return "商店購買"
+            return String(localized: "obtain.source.shop")
         case .market:
-            return "市場交易"
+            return String(localized: "obtain.source.market")
         }
     }
 

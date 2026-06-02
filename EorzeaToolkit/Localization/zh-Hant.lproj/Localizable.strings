@@ -6,3 +6,13 @@
 "common.level" = "等級";
 "common.search" = "搜尋";
 "common.noData" = "暫無資料";
+"common.notProvided" = "未提供";
+
+/* Obtain Sources */
+"obtain.section.title" = "取得方式";
+"obtain.section.jumpHint %@" = "捲動到%@區塊";
+"obtain.source.recipe" = "製作";
+"obtain.source.gathering" = "採集";
+"obtain.source.shop" = "商店購買";
+"obtain.source.market" = "市場交易";
+"shopPurchase.sourceNote" = "售價資料來源為遊戲資料，NPC 位置資訊暫不提供。";

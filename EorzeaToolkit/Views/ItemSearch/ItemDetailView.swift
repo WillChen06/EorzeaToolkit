@@ -53,8 +53,10 @@ struct ItemDetailView: View {
                     .id(ObtainSource.recipe)
                 }
 
-                GatheringSection(nodes: gatheringNodes)
-                    .id(ObtainSource.gathering)
+                if !gatheringNodes.isEmpty {
+                    GatheringSection(nodes: gatheringNodes)
+                        .id(ObtainSource.gathering)
+                }
 
                 if let shopEntry, shopEntry.isShopPurchase {
                     ShopPurchaseSection(entry: shopEntry)

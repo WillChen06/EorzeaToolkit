@@ -6,7 +6,7 @@ struct ObtainSourceSection: View {
 
     var body: some View {
         if sources.count >= 2 {
-            Section("取得方式") {
+            Section(String(localized: "obtain.section.title")) {
                 ForEach(sources) { source in
                     Button {
                         onSelect(source)
@@ -20,11 +20,12 @@ struct ObtainSourceSection: View {
                             Image(systemName: "arrow.down")
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundStyle(.secondary)
+                                .accessibilityHidden(true)
                         }
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
-                    .accessibilityHint("捲動到\(source.title)區塊")
+                    .accessibilityHint(String(localized: "obtain.section.jumpHint \(source.title)"))
                 }
             }
         }
