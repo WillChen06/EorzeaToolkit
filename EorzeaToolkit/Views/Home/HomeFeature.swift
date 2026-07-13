@@ -54,18 +54,18 @@ enum HomeFeature: CaseIterable, Identifiable {
         }
     }
 
-    var assetName: String {
+    var artworkImage: Image {
         switch self {
         case .itemSearch:
-            HomeArtworkAsset.itemSearch
+            Image(.homeItemSearch)
         case .treasureMap:
-            HomeArtworkAsset.treasureMap
+            Image(.homeTreasureMap)
         case .relicWeapon:
-            HomeArtworkAsset.relicWeapon
+            Image(.homeRelicWeapon)
         case .miniCactpot:
-            HomeArtworkAsset.miniCactpot
+            Image(.homeMiniCactpot)
         case .skillRotation:
-            HomeArtworkAsset.skillRotation
+            Image(.homeSkillRotation)
         }
     }
 

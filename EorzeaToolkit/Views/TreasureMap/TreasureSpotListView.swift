@@ -36,7 +36,7 @@ private struct TreasureSpotCard: View {
     var body: some View {
         ZStack {
             // 藏寶圖背景
-            Image("treasure_map")
+            Image(.treasureMap)
                 .resizable()
 
             // 地圖裁切 + 標記
@@ -84,7 +84,7 @@ private struct TreasureSpotCard: View {
                 // 下方：隊伍人數
                 HStack {
                     HStack(spacing: 4) {
-                        Image("treasuremap_player")
+                        Image(.treasuremapPlayer)
                             .resizable()
                             .frame(width: 18, height: 18)
                         Text("\(spot.partySize)")
@@ -139,7 +139,7 @@ private struct CroppedMapView: View {
         }
         .clipped()
         .overlay {
-            Image("treasure_marker")
+            Image(.treasureMarker)
                 .resizable()
                 .frame(width: 28, height: 28)
         }
