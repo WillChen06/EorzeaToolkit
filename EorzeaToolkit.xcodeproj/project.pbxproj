@@ -52,15 +52,16 @@
 		6B05AA11C9D847A7AA17A002 /* GatheringDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B05AA11C9D847A7AA17B002 /* GatheringDataService.swift */; };
 		6B05AA11C9D847A7AA17A003 /* GatheringSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B05AA11C9D847A7AA17B003 /* GatheringSection.swift */; };
 		6B05AA11C9D847A7AA17A004 /* gathering.json in Resources */ = {isa = PBXBuildFile; fileRef = 6B05AA11C9D847A7AA17B004 /* gathering.json */; };
-		6B07AA11C9D847A7AA17A001 /* Fishing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B07AA11C9D847A7AA17B001 /* Fishing.swift */; };
-		6B07AA11C9D847A7AA17A002 /* FishingDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B07AA11C9D847A7AA17B002 /* FishingDataService.swift */; };
 		6B06AA11C9D847A7AA17A001 /* ItemShop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B06AA11C9D847A7AA17B001 /* ItemShop.swift */; };
 		6B06AA11C9D847A7AA17A002 /* ObtainSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B06AA11C9D847A7AA17B002 /* ObtainSource.swift */; };
 		6B06AA11C9D847A7AA17A003 /* ItemShopDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B06AA11C9D847A7AA17B003 /* ItemShopDataService.swift */; };
 		6B06AA11C9D847A7AA17A004 /* ObtainSourceSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B06AA11C9D847A7AA17B004 /* ObtainSourceSection.swift */; };
 		6B06AA11C9D847A7AA17A005 /* ShopPurchaseSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B06AA11C9D847A7AA17B005 /* ShopPurchaseSection.swift */; };
+		6B07AA11C9D847A7AA17A001 /* Fishing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B07AA11C9D847A7AA17B001 /* Fishing.swift */; };
+		6B07AA11C9D847A7AA17A002 /* FishingDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B07AA11C9D847A7AA17B002 /* FishingDataService.swift */; };
 		77EDFFF7DCF1E64CE83905AA /* GatheringNodesSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D893E5C581D7643F8081FBA8 /* GatheringNodesSheetView.swift */; };
 		781509C142A5924BB394064E /* MiniCactpotCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B439A14F2C5863AE74D6AC /* MiniCactpotCalculator.swift */; };
+		865BA155300535DB00A42FED /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 865BA154300535DB00A42FED /* Localizable.xcstrings */; };
 		866878522FE6771400F1562B /* fishing.json in Resources */ = {isa = PBXBuildFile; fileRef = 866878512FE6771400F1562B /* fishing.json */; };
 		86724EC32FB715E8002B6048 /* items.json in Resources */ = {isa = PBXBuildFile; fileRef = 86724EC22FB715E8002B6048 /* items.json */; };
 		86F6CC762FCD36AF00C961EE /* item_shop.json in Resources */ = {isa = PBXBuildFile; fileRef = 86F6CC752FCD36AF00C961EE /* item_shop.json */; };
@@ -71,7 +72,6 @@
 		9C9D207C18938D977F3DF314 /* MiniCactpotResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEC8B7996584951371DC7C0 /* MiniCactpotResult.swift */; };
 		B07E3909BF9E625D9CE02422 /* LocalDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA57853C57893DD24999BD39 /* LocalDataService.swift */; };
 		BB257A37F9B9EBA408C4709F /* MiniCactpotResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE09EB4A907E6A7B2C8C7AB /* MiniCactpotResultView.swift */; };
-		D41D468CA1207296BE2BD674 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 01FE0EEA33F14EFF845F9638 /* Localizable.strings */; };
 		D5E9020C65D5DE8D0ECC0A79 /* MiniCactpotCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C4EA20D68F7D66A5223D100 /* MiniCactpotCellView.swift */; };
 		D890C438BFCBAE8750212266 /* TreasureSpotListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37A5663D04F8D56BB8F3ABC /* TreasureSpotListView.swift */; };
 		DB54ED0FB25AA70101488DA2 /* MiniCactpotLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6479B38C42665F3310E4E957 /* MiniCactpotLine.swift */; };
@@ -83,7 +83,6 @@
 
 /* Begin PBXFileReference section */
 		0CA6E672B7FC82997872CB7E /* SkillRotationEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillRotationEditorView.swift; sourceTree = "<group>"; };
-		130A2C5428DE74BF52D22DC7 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		1437A0503262E55A4EF25C1E /* BattleJobListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleJobListView.swift; sourceTree = "<group>"; };
 		1CD54A6B8AEDE3EC50910827 /* RelicWeaponListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelicWeaponListView.swift; sourceTree = "<group>"; };
 		27A14791E8C11AA209AA0562 /* TreasureMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapViewModel.swift; sourceTree = "<group>"; };
@@ -123,23 +122,23 @@
 		6B05AA11C9D847A7AA17B002 /* GatheringDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatheringDataService.swift; sourceTree = "<group>"; };
 		6B05AA11C9D847A7AA17B003 /* GatheringSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatheringSection.swift; sourceTree = "<group>"; };
 		6B05AA11C9D847A7AA17B004 /* gathering.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = gathering.json; sourceTree = "<group>"; };
-		6B07AA11C9D847A7AA17B001 /* Fishing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fishing.swift; sourceTree = "<group>"; };
-		6B07AA11C9D847A7AA17B002 /* FishingDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FishingDataService.swift; sourceTree = "<group>"; };
 		6B06AA11C9D847A7AA17B001 /* ItemShop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemShop.swift; sourceTree = "<group>"; };
 		6B06AA11C9D847A7AA17B002 /* ObtainSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObtainSource.swift; sourceTree = "<group>"; };
 		6B06AA11C9D847A7AA17B003 /* ItemShopDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemShopDataService.swift; sourceTree = "<group>"; };
 		6B06AA11C9D847A7AA17B004 /* ObtainSourceSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObtainSourceSection.swift; sourceTree = "<group>"; };
 		6B06AA11C9D847A7AA17B005 /* ShopPurchaseSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopPurchaseSection.swift; sourceTree = "<group>"; };
+		6B07AA11C9D847A7AA17B001 /* Fishing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fishing.swift; sourceTree = "<group>"; };
+		6B07AA11C9D847A7AA17B002 /* FishingDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FishingDataService.swift; sourceTree = "<group>"; };
 		6EA545E4D6687BEE1A40A1B1 /* TreasureMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMap.swift; sourceTree = "<group>"; };
 		6EE09EB4A907E6A7B2C8C7AB /* MiniCactpotResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotResultView.swift; sourceTree = "<group>"; };
 		71206E4982454E1556AE20D8 /* TreasureMapDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapDetailView.swift; sourceTree = "<group>"; };
 		75BE3609C1A36C70D2704F19 /* maps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = maps.json; sourceTree = "<group>"; };
 		84EEB99FC86E568BF0D2EA0D /* EorzeaToolkit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EorzeaToolkit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		865BA154300535DB00A42FED /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		866878512FE6771400F1562B /* fishing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = fishing.json; sourceTree = "<group>"; };
 		86724EC22FB715E8002B6048 /* items.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = items.json; sourceTree = "<group>"; };
 		86F6CC752FCD36AF00C961EE /* item_shop.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = item_shop.json; sourceTree = "<group>"; };
 		8ABE1DA3A0D8692FCB447D0D /* zh-maps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "zh-maps.json"; sourceTree = "<group>"; };
-		9113B83FA58C9AC86332E63E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		914E93C547E3805E26F5F9D6 /* TreasureMapListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapListView.swift; sourceTree = "<group>"; };
 		972E196BCCAD143BC5C4A7A1 /* MiniCactpotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotView.swift; sourceTree = "<group>"; };
 		99076C6C877461FC078861D2 /* MiniCactpotPayoutTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotPayoutTableView.swift; sourceTree = "<group>"; };
@@ -323,7 +322,7 @@
 		A1E3F1C3DA971BE9828BFFEA /* Localization */ = {
 			isa = PBXGroup;
 			children = (
-				01FE0EEA33F14EFF845F9638 /* Localizable.strings */,
+				865BA154300535DB00A42FED /* Localizable.xcstrings */,
 			);
 			path = Localization;
 			sourceTree = "<group>";
@@ -436,7 +435,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				95ECDDB514E25DA6AB0BCA37 /* Assets.xcassets in Resources */,
-				D41D468CA1207296BE2BD674 /* Localizable.strings in Resources */,
 				86724EC32FB715E8002B6048 /* items.json in Resources */,
 				24FC49E9D42BE14C86DE72D7 /* battle_actions.json in Resources */,
 				6B05AA11C9D847A7AA17A004 /* gathering.json in Resources */,
@@ -446,6 +444,7 @@
 				6B04AA11C9D847A7AA17A004 /* recipes.json in Resources */,
 				025A67D3151B3C43DC2C3142 /* relic_weapons.json in Resources */,
 				4282D6200B3411DBF17796D7 /* treasure_maps.json in Resources */,
+				865BA155300535DB00A42FED /* Localizable.xcstrings in Resources */,
 				E96505DB673C2FCC56EA4C7E /* treasure_maps_final.json in Resources */,
 				4F63129541BE2230E1099186 /* treasures.json in Resources */,
 				3AA0C51D1EB0981B82495E44 /* zh-maps.json in Resources */,
@@ -520,18 +519,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		01FE0EEA33F14EFF845F9638 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				9113B83FA58C9AC86332E63E /* en */,
-				130A2C5428DE74BF52D22DC7 /* zh-Hant */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		23785079FC4C459E2D0D0C78 /* Release */ = {
@@ -641,12 +628,14 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.9;
 			};
@@ -699,11 +688,13 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.9;
 			};
