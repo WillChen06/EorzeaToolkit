@@ -18,46 +18,9 @@ struct HomeHeroBanner: View {
     }
 
     private var heroArtwork: some View {
-        Group {
-            if HomeArtworkAsset.exists(named: HomeArtworkAsset.heroBanner) {
-                Image(HomeArtworkAsset.heroBanner)
-                    .resizable()
-                    .scaledToFill()
-            } else {
-                placeholderHeroArtwork
-            }
-        }
-        .clipped()
-    }
-
-    private var placeholderHeroArtwork: some View {
-        ZStack {
-            HomeStyle.heroArtworkBackground
-
-            GeometryReader { geometry in
-                let size = geometry.size
-
-                ZStack {
-                    Circle()
-                        .stroke(HomeStyle.gold.opacity(0.18), lineWidth: 1)
-                        .frame(width: size.width * 0.56, height: size.width * 0.56)
-                        .offset(x: size.width * 0.30, y: -size.height * 0.74)
-
-                    Path { path in
-                        path.move(to: CGPoint(x: -8, y: size.height * 0.86))
-                        path.addLine(to: CGPoint(x: size.width * 0.20, y: size.height * 0.48))
-                        path.addLine(to: CGPoint(x: size.width * 0.36, y: size.height * 0.67))
-                        path.addLine(to: CGPoint(x: size.width * 0.54, y: size.height * 0.36))
-                        path.addLine(to: CGPoint(x: size.width * 0.74, y: size.height * 0.64))
-                        path.addLine(to: CGPoint(x: size.width + 8, y: size.height * 0.38))
-                    }
-                    .stroke(HomeStyle.gold.opacity(0.26), style: StrokeStyle(lineWidth: 1.2, lineCap: .round, lineJoin: .round))
-
-                    HomeCrystalMark()
-                        .frame(width: 64, height: 82)
-                        .offset(x: size.width * 0.32, y: 2)
-                }
-            }
-        }
+        Image(.homeHeroBanner)
+            .resizable()
+            .scaledToFill()
+            .clipped()
     }
 }
