@@ -8,6 +8,7 @@ struct ItemDetailView: View {
 
     @State private var recipes: [Recipe]?
     @State private var gatheringNodes: [ItemGatheringNode] = []
+    @State private var fishingSpots: [ItemFishingSpot] = []
     @State private var shopEntry: ItemShopEntry?
     @State private var selectedRecipeItem: Item?
     @State private var marketPriceViewModel = MarketPriceViewModel()
@@ -53,8 +54,8 @@ struct ItemDetailView: View {
                     .id(ObtainSource.recipe)
                 }
 
-                if !gatheringNodes.isEmpty {
-                    GatheringSection(nodes: gatheringNodes)
+                if hasGatheringSources {
+                    GatheringSection(nodes: gatheringNodes, fishingSpots: fishingSpots)
                         .id(ObtainSource.gathering)
                 }
 
@@ -81,12 +82,15 @@ struct ItemDetailView: View {
             .task(id: item.id) {
                 recipes = nil
                 gatheringNodes = []
+                fishingSpots = []
                 shopEntry = nil
                 async let loadedRecipes = RecipeDataService.recipes(for: item.id)
                 async let loadedGatheringNodes = GatheringDataService.nodes(for: item.id)
+                async let loadedFishingSpots = FishingDataService.spots(for: item.id)
                 async let loadedShopEntry = ItemShopDataService.shopEntry(for: item.id)
                 recipes = await loadedRecipes
                 gatheringNodes = await loadedGatheringNodes
+                fishingSpots = await loadedFishingSpots
                 shopEntry = await loadedShopEntry
             }
         }
@@ -96,13 +100,17 @@ struct ItemDetailView: View {
         "\(item.id)-\(marketPriceSettings.selectedScope.id)"
     }
 
+    private var hasGatheringSources: Bool {
+        !gatheringNodes.isEmpty || !fishingSpots.isEmpty
+    }
+
     private var obtainSources: [ObtainSource] {
         ObtainSource.allCases.filter { source in
             switch source {
             case .recipe:
                 return recipes?.isEmpty == false
             case .gathering:
-                return !gatheringNodes.isEmpty
+                return hasGatheringSources
             case .shop:
                 return shopEntry?.isShopPurchase == true
             case .market:

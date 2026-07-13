@@ -84,7 +84,7 @@ struct ItemGatheringNode: Decodable, Hashable, Sendable {
     }
 }
 
-private extension Double {
+extension Double {
     var formattedCoordinate: String {
         String(format: "%.1f", self)
     }
