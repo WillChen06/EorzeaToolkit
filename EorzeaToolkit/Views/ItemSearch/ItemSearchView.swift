@@ -8,18 +8,18 @@ struct ItemSearchView: View {
         Group {
             switch viewModel.loadState {
             case .idle, .loading:
-                ProgressView("載入道具資料")
+                ProgressView(L10n.ItemSearch.loadingItems)
             case .loaded:
                 loadedContent
             case .failed(let message):
                 ContentUnavailableView(
-                    "無法載入道具資料",
+                    L10n.ItemSearch.loadFailedTitle,
                     systemImage: "exclamationmark.triangle",
                     description: Text(message)
                 )
             }
         }
-        .navigationTitle("道具搜尋")
+        .navigationTitle(L10n.ItemSearch.title)
         .navigationBarTitleDisplayMode(.inline)
         .searchable(
             text: Binding(
@@ -27,7 +27,7 @@ struct ItemSearchView: View {
                 set: { viewModel.updateSearchQuery($0) }
             ),
             placement: .navigationBarDrawer(displayMode: .always),
-            prompt: "輸入道具名稱..."
+            prompt: L10n.ItemSearch.searchPrompt
         )
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -63,7 +63,7 @@ struct ItemSearchView: View {
             }
             .frame(width: 38, height: 38)
         }
-        .accessibilityLabel("篩選")
+        .accessibilityLabel(Text(L10n.ItemSearch.filterAccessibility))
     }
 
     private var loadedContent: some View {
@@ -92,12 +92,17 @@ struct ItemSearchView: View {
                 Image(systemName: "line.3.horizontal.decrease.circle")
                     .imageScale(.small)
 
-                Text(filterBarText)
-                    .lineLimit(1)
+                if viewModel.filter.isActive {
+                    Text(activeFilterBarText)
+                        .lineLimit(1)
+                } else {
+                    Text(L10n.ItemSearch.adjustFilter)
+                        .lineLimit(1)
+                }
 
                 Spacer(minLength: 0)
 
-                Text("篩選")
+                Text(L10n.ItemSearch.filterAction)
                     .fontWeight(.semibold)
             }
             .font(.footnote)
@@ -111,30 +116,26 @@ struct ItemSearchView: View {
         .background(.bar)
     }
 
-    private var filterBarText: String {
-        if viewModel.filter.isActive {
-            return viewModel.filterSummaryParts.joined(separator: " · ")
-        }
-
-        return "調整搜尋篩選"
+    private var activeFilterBarText: String {
+        viewModel.filterSummaryParts.joined(separator: " · ")
     }
 
     @ViewBuilder
     private var searchContent: some View {
         if viewModel.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             ContentUnavailableView(
-                "搜尋道具",
+                L10n.ItemSearch.emptySearchTitle,
                 systemImage: "magnifyingglass",
-                description: Text("輸入道具名稱開始搜尋")
+                description: Text(L10n.ItemSearch.emptySearchDescription)
             )
         } else if viewModel.results.isEmpty {
             if viewModel.isSearching {
-                ProgressView("搜尋中")
+                ProgressView(L10n.ItemSearch.searching)
             } else {
                 ContentUnavailableView(
-                    "找不到道具",
+                    L10n.ItemSearch.noResultsTitle,
                     systemImage: "shippingbox",
-                    description: Text("請試著輸入其他名稱")
+                    description: Text(L10n.ItemSearch.noResultsDescription)
                 )
             }
         } else {
@@ -150,10 +151,14 @@ struct ItemSearchView: View {
                         viewModel.loadMoreResults()
                     } label: {
                         VStack(spacing: 4) {
-                            Text("載入更多")
+                            Text(L10n.ItemSearch.loadMore)
                                 .font(.subheadline.weight(.semibold))
 
-                            Text("已顯示 \(viewModel.results.count) / \(viewModel.totalMatchCount) 筆，還有 \(viewModel.hiddenResultCount) 筆")
+                            Text(L10n.ItemSearch.resultsStatus(
+                                visibleCount: viewModel.results.count,
+                                totalCount: viewModel.totalMatchCount,
+                                hiddenCount: viewModel.hiddenResultCount
+                            ))
                                 .font(.footnote)
                                 .foregroundStyle(.secondary)
                         }
@@ -195,7 +200,7 @@ private struct ItemFilterSheet: View {
             Form {
                 if hasAdvancedFilters {
                     Section {
-                        Picker("篩選類型", selection: $selectedFilterPage) {
+                        Picker(L10n.ItemSearch.Filter.type, selection: $selectedFilterPage) {
                             ForEach(ItemFilterPage.allCases) { page in
                                 Text(page.label).tag(page)
                             }
@@ -211,18 +216,18 @@ private struct ItemFilterSheet: View {
                     advancedFilterSections
                 }
             }
-            .navigationTitle("篩選")
+            .navigationTitle(L10n.ItemSearch.Filter.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("清除") {
+                    Button(L10n.Common.clear) {
                         viewModel.resetFilter()
                     }
                     .disabled(!viewModel.filter.isActive)
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("完成") {
+                    Button(L10n.Common.done) {
                         dismiss()
                     }
                 }
@@ -238,7 +243,7 @@ private struct ItemFilterSheet: View {
 
     @ViewBuilder
     private var generalFilterSections: some View {
-        Section("品級 (iLv)") {
+        Section(L10n.ItemSearch.Filter.itemLevel) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Text("\(viewModel.filter.ilvlRange.lowerBound)")
@@ -250,10 +255,13 @@ private struct ItemFilterSheet: View {
                         .font(.headline.monospacedDigit())
                 }
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("品級範圍 \(viewModel.filter.ilvlRange.lowerBound) 到 \(viewModel.filter.ilvlRange.upperBound)")
+                .accessibilityLabel(Text(L10n.ItemSearch.Filter.itemLevelRange(
+                    lowerBound: viewModel.filter.ilvlRange.lowerBound,
+                    upperBound: viewModel.filter.ilvlRange.upperBound
+                )))
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("最低")
+                    Text(L10n.ItemSearch.Filter.itemLevelMinimum)
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
@@ -265,7 +273,7 @@ private struct ItemFilterSheet: View {
                 }
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("最高")
+                    Text(L10n.ItemSearch.Filter.itemLevelMaximum)
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
@@ -279,7 +287,7 @@ private struct ItemFilterSheet: View {
             .padding(.vertical, 4)
         }
 
-        Section("稀有度") {
+        Section(L10n.ItemSearch.Filter.rarity) {
             LazyVGrid(columns: rarityColumns, alignment: .leading, spacing: 8) {
                 ForEach(ItemFilter.defaultRarities.sorted(), id: \.self) { rarity in
                     rarityButton(for: rarity)
@@ -288,20 +296,20 @@ private struct ItemFilterSheet: View {
             .padding(.vertical, 4)
         }
 
-        Section("可否 HQ") {
-            Picker("可否 HQ", selection: hqStateBinding) {
-                Text("不限").tag(ItemBoolFilterState.any)
-                Text("可HQ").tag(ItemBoolFilterState.only)
-                Text("不可HQ").tag(ItemBoolFilterState.exclude)
+        Section(L10n.ItemSearch.Filter.hq) {
+            Picker(L10n.ItemSearch.Filter.hq, selection: hqStateBinding) {
+                Text(L10n.ItemSearch.Filter.hqAny).tag(ItemBoolFilterState.any)
+                Text(L10n.ItemSearch.Filter.hqOnly).tag(ItemBoolFilterState.only)
+                Text(L10n.ItemSearch.Filter.hqExclude).tag(ItemBoolFilterState.exclude)
             }
             .pickerStyle(.segmented)
         }
 
-        Section("是否可交易") {
-            Picker("是否可交易", selection: tradableStateBinding) {
-                Text("不限").tag(ItemBoolFilterState.any)
-                Text("可交易").tag(ItemBoolFilterState.only)
-                Text("不可交易").tag(ItemBoolFilterState.exclude)
+        Section(L10n.ItemSearch.Filter.tradable) {
+            Picker(L10n.ItemSearch.Filter.tradable, selection: tradableStateBinding) {
+                Text(L10n.ItemSearch.Filter.tradableAny).tag(ItemBoolFilterState.any)
+                Text(L10n.ItemSearch.Filter.tradableOnly).tag(ItemBoolFilterState.only)
+                Text(L10n.ItemSearch.Filter.tradableExclude).tag(ItemBoolFilterState.exclude)
             }
             .pickerStyle(.segmented)
         }
@@ -310,7 +318,7 @@ private struct ItemFilterSheet: View {
     @ViewBuilder
     private var advancedFilterSections: some View {
         if !viewModel.uiCategoryGroups.isEmpty {
-            Section("物品分類") {
+            Section(L10n.ItemSearch.Filter.category) {
                 ForEach(viewModel.uiCategoryGroups) { group in
                     DisclosureGroup(
                         isExpanded: uiCategoryGroupBinding(for: group.id)
@@ -334,7 +342,7 @@ private struct ItemFilterSheet: View {
         }
 
         if !viewModel.availableJobFilterOptions.isEmpty {
-            Section("可裝備職業") {
+            Section(L10n.ItemSearch.Filter.jobs) {
                 LazyVGrid(columns: jobColumns, alignment: .leading, spacing: 8) {
                     ForEach(viewModel.availableJobFilterOptions) { option in
                         jobButton(option)
@@ -345,7 +353,7 @@ private struct ItemFilterSheet: View {
         }
 
         if !viewModel.equipSlots.isEmpty {
-            Section("裝備部位") {
+            Section(L10n.ItemSearch.Filter.equipSlot) {
                 LazyVGrid(columns: equipSlotColumns, alignment: .leading, spacing: 8) {
                     ForEach(viewModel.equipSlots) { equipSlot in
                         equipSlotButton(equipSlot)
@@ -421,8 +429,8 @@ private struct ItemFilterSheet: View {
         }
         .buttonStyle(.bordered)
         .tint(isSelected ? rarityColor(for: rarity) : .secondary)
-        .accessibilityLabel("\(name)稀有度")
-        .accessibilityValue(isSelected ? "已選取" : "未選取")
+        .accessibilityLabel(Text(L10n.ItemSearch.Filter.rarityAccessibility(name)))
+        .accessibilityValue(Text(isSelected ? L10n.Common.selected : L10n.Common.notSelected))
     }
 
     private func rarityColor(for rarity: Int) -> Color {
@@ -462,7 +470,7 @@ private struct ItemFilterSheet: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(category.displayName)
-        .accessibilityValue(isSelected ? "已選取" : "未選取")
+        .accessibilityValue(Text(isSelected ? L10n.Common.selected : L10n.Common.notSelected))
     }
 
     private func jobButton(_ option: ItemJobFilterOption) -> some View {
@@ -496,7 +504,7 @@ private struct ItemFilterSheet: View {
         .buttonStyle(.borderedProminent)
         .tint(isSelected ? .accentColor : .secondary.opacity(0.18))
         .accessibilityLabel(option.displayName)
-        .accessibilityValue(isSelected ? "已選取" : "未選取")
+        .accessibilityValue(Text(isSelected ? L10n.Common.selected : L10n.Common.notSelected))
     }
 
     private func equipSlotButton(_ equipSlot: EquipSlot) -> some View {
@@ -519,7 +527,7 @@ private struct ItemFilterSheet: View {
         .buttonStyle(.bordered)
         .tint(isSelected ? .accentColor : .secondary)
         .accessibilityLabel(equipSlot.displayName)
-        .accessibilityValue(isSelected ? "已選取" : "未選取")
+        .accessibilityValue(Text(isSelected ? L10n.Common.selected : L10n.Common.notSelected))
     }
 }
 
@@ -529,12 +537,12 @@ private enum ItemFilterPage: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var label: String {
+    var label: LocalizedStringKey {
         switch self {
         case .general:
-            return "一般"
+            return L10n.ItemSearch.Filter.general
         case .advanced:
-            return "進階"
+            return L10n.ItemSearch.Filter.advanced
         }
     }
 }
@@ -551,7 +559,7 @@ private struct ItemSearchRow: View {
                     .font(.headline)
                     .foregroundStyle(.primary)
 
-                Text("iLv \(item.ilvl)")
+                Text(L10n.ItemSearch.itemLevel(item.ilvl))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
