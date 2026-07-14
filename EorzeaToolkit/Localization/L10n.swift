@@ -4,8 +4,13 @@ enum L10n {
     enum Common {
         static let clear: LocalizedStringKey = "common.clear"
         static let done: LocalizedStringKey = "common.done"
+        static let retry: LocalizedStringKey = "common.retry"
         static let selected: LocalizedStringKey = "common.selected"
         static let notSelected: LocalizedStringKey = "common.notSelected"
+
+        static var noDataText: String {
+            String(localized: "common.noData")
+        }
     }
 
     enum ItemSearch {
@@ -59,6 +64,56 @@ enum L10n {
             static func rarityAccessibility(_ name: String) -> LocalizedStringKey {
                 "itemSearch.filter.rarity.accessibility \(name)"
             }
+        }
+
+        enum Market {
+            static let section: LocalizedStringKey = "itemSearch.market.section"
+            static let scope: LocalizedStringKey = "itemSearch.market.scope"
+            static let loading: LocalizedStringKey = "itemSearch.market.loading"
+            static let untradable: LocalizedStringKey = "itemSearch.market.untradable"
+            static let empty: LocalizedStringKey = "itemSearch.market.empty"
+            static let nqLowestPrice: LocalizedStringKey = "itemSearch.market.metric.nqLowestPrice"
+            static let currentLowestPrice: LocalizedStringKey = "itemSearch.market.metric.currentLowestPrice"
+            static let hqLowestPrice: LocalizedStringKey = "itemSearch.market.metric.hqLowestPrice"
+            static let recentAveragePrice: LocalizedStringKey = "itemSearch.market.metric.recentAveragePrice"
+            static let openUniversalis: LocalizedStringKey = "itemSearch.market.openUniversalis"
+            static let listings: LocalizedStringKey = "itemSearch.market.listings.section"
+            static let emptyListings: LocalizedStringKey = "itemSearch.market.listings.empty"
+            static let recentSales: LocalizedStringKey = "itemSearch.market.recentSales.section"
+            static let emptyRecentSales: LocalizedStringKey = "itemSearch.market.recentSales.empty"
+
+            static func lastUpdated(_ dateText: String) -> LocalizedStringKey {
+                "itemSearch.market.lastUpdated \(dateText)"
+            }
+
+            static func showAllListings(count: Int) -> LocalizedStringKey {
+                "itemSearch.market.listings.showAll \(count)"
+            }
+        }
+
+        enum Recipe {
+            static let section: LocalizedStringKey = "itemSearch.recipe.section"
+            static let unavailable: LocalizedStringKey = "itemSearch.recipe.unavailable"
+            static let loading: LocalizedStringKey = "itemSearch.recipe.loading"
+            static let specialRecipe: LocalizedStringKey = "itemSearch.recipe.specialRecipe"
+
+            static func resultAmount(_ amount: Int) -> LocalizedStringKey {
+                "itemSearch.recipe.resultAmount \(amount)"
+            }
+
+            static func fallbackItem(id: Int) -> String {
+                String(localized: "itemSearch.recipe.fallbackItem \(id)")
+            }
+        }
+
+        enum Gathering {
+            static let section: LocalizedStringKey = "itemSearch.gathering.section"
+            static let showAll: LocalizedStringKey = "itemSearch.gathering.showAll"
+            static let collapse: LocalizedStringKey = "itemSearch.gathering.collapse"
+            static let showAllHint: LocalizedStringKey = "itemSearch.gathering.showAllHint"
+            static let collapseHint: LocalizedStringKey = "itemSearch.gathering.collapseHint"
+            static let openFishingGuide: LocalizedStringKey = "itemSearch.gathering.openFishingGuide"
+            static let openFishingGuideHint: LocalizedStringKey = "itemSearch.gathering.openFishingGuideHint"
         }
     }
 }

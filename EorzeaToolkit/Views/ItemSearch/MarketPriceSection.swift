@@ -8,7 +8,7 @@ struct MarketPriceSection: View {
 
     var body: some View {
         Group {
-            Section("市場價格") {
+            Section(L10n.ItemSearch.Market.section) {
                 marketScopePicker
                 marketStatusContent
             }
@@ -25,7 +25,7 @@ struct MarketPriceSection: View {
         if !item.isUntradable {
             @Bindable var settings = marketPriceSettings
 
-            Picker("查詢範圍", selection: $settings.selectedScope) {
+            Picker(L10n.ItemSearch.Market.scope, selection: $settings.selectedScope) {
                 ForEach(MarketPriceScope.allCases) { scope in
                     Text(scope.displayLabel).tag(scope)
                 }
@@ -42,16 +42,16 @@ struct MarketPriceSection: View {
                 ProgressView()
                     .controlSize(.small)
 
-                Text("查詢市場價格")
+                Text(L10n.ItemSearch.Market.loading)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
         case .untradable:
-            Label("此道具無法在市場交易", systemImage: "cart.badge.minus")
+            Label(L10n.ItemSearch.Market.untradable, systemImage: "cart.badge.minus")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         case .empty:
-            Label("目前無市場資料", systemImage: "chart.line.downtrend.xyaxis")
+            Label(L10n.ItemSearch.Market.empty, systemImage: "chart.line.downtrend.xyaxis")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         case .loaded(let marketPrice):
@@ -65,7 +65,7 @@ struct MarketPriceSection: View {
                 Button {
                     viewModel.load(item: item, scope: marketPriceSettings.selectedScope)
                 } label: {
-                    Label("重試", systemImage: "arrow.clockwise")
+                    Label(L10n.Common.retry, systemImage: "arrow.clockwise")
                 }
             }
         }
@@ -83,19 +83,19 @@ private struct MarketPriceSummaryView: View {
 
             VStack(spacing: 10) {
                 MarketPriceMetricRow(
-                    title: item.canBeHq ? "NQ 最低價" : "當前最低價",
+                    title: item.canBeHq ? L10n.ItemSearch.Market.nqLowestPrice : L10n.ItemSearch.Market.currentLowestPrice,
                     value: marketPriceText(marketPrice.lowestPriceNQ)
                 )
 
                 if item.canBeHq {
                     MarketPriceMetricRow(
-                        title: "HQ 最低價",
+                        title: L10n.ItemSearch.Market.hqLowestPrice,
                         value: marketPriceText(marketPrice.lowestPriceHQ)
                     )
                 }
 
                 MarketPriceMetricRow(
-                    title: "近期平均成交價",
+                    title: L10n.ItemSearch.Market.recentAveragePrice,
                     value: marketPriceText(marketPrice.averagePrice)
                 )
             }
@@ -110,13 +110,13 @@ private struct MarketPriceSummaryView: View {
             }
 
             if let lastUploadDate = marketPrice.lastUploadDate {
-                Text("最後更新 \(lastUploadDate.formatted(date: .abbreviated, time: .shortened))")
+                Text(L10n.ItemSearch.Market.lastUpdated(lastUploadDate.formatted(date: .abbreviated, time: .shortened)))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
             Link(destination: MarketPriceService.universalisMarketURL(itemID: item.id)) {
-                Label("在 Universalis 開啟", systemImage: "safari")
+                Label(L10n.ItemSearch.Market.openUniversalis, systemImage: "safari")
                     .font(.subheadline.weight(.semibold))
             }
         }
@@ -134,9 +134,9 @@ private struct MarketListingsSection: View {
     }
 
     var body: some View {
-        Section("目前上架") {
+        Section(L10n.ItemSearch.Market.listings) {
             if listings.isEmpty {
-                Label("目前無上架資訊", systemImage: "cart")
+                Label(L10n.ItemSearch.Market.emptyListings, systemImage: "cart")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             } else {
@@ -149,7 +149,7 @@ private struct MarketListingsSection: View {
                         isExpanded.toggle()
                     } label: {
                         Label(
-                            isExpanded ? "收合" : "顯示全部 \(listings.count) 筆",
+                            isExpanded ? L10n.ItemSearch.Gathering.collapse : L10n.ItemSearch.Market.showAllListings(count: listings.count),
                             systemImage: isExpanded ? "chevron.up" : "chevron.down"
                         )
                             .font(.subheadline.weight(.semibold))
@@ -165,9 +165,9 @@ private struct MarketRecentSalesSection: View {
     let sales: [MarketSale]
 
     var body: some View {
-        Section("近期成交") {
+        Section(L10n.ItemSearch.Market.recentSales) {
             if sales.isEmpty {
-                Label("尚無近期成交", systemImage: "clock")
+                Label(L10n.ItemSearch.Market.emptyRecentSales, systemImage: "clock")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             } else {
@@ -271,7 +271,7 @@ private struct MarketTransactionRow: View {
 }
 
 private struct MarketPriceMetricRow: View {
-    let title: String
+    let title: LocalizedStringKey
     let value: String
 
     var body: some View {
@@ -291,7 +291,7 @@ private struct MarketPriceMetricRow: View {
 
 private func marketPriceText(_ price: Int?) -> String {
     guard let price else {
-        return "無資料"
+        return L10n.Common.noDataText
     }
 
     return "\(price.formatted()) gil"
