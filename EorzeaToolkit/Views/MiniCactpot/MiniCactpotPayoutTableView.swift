@@ -4,14 +4,14 @@ struct MiniCactpotPayoutTableView: View {
     private let payoutRows = MiniCactpotCalculator.payout.keys.sorted()
 
     var body: some View {
-        DisclosureGroup("獎勵表") {
+        DisclosureGroup {
             Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 8) {
                 GridRow {
-                    Text("和")
+                    Text(L10n.MiniCactpot.Payout.sum)
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
-                    Text("獎勵（金碟幣）")
+                    Text(L10n.MiniCactpot.Payout.reward)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity, alignment: .trailing)
@@ -30,6 +30,8 @@ struct MiniCactpotPayoutTableView: View {
                 }
             }
             .padding(.vertical, 6)
+        } label: {
+            Text(L10n.MiniCactpot.Payout.title)
         }
     }
 }

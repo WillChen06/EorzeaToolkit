@@ -6,6 +6,7 @@ enum L10n {
         static let collapse: LocalizedStringKey = "common.collapse"
         static let done: LocalizedStringKey = "common.done"
         static let retry: LocalizedStringKey = "common.retry"
+        static let reset: LocalizedStringKey = "common.reset"
         static let selected: LocalizedStringKey = "common.selected"
         static let notSelected: LocalizedStringKey = "common.notSelected"
 
@@ -115,6 +116,54 @@ enum L10n {
             static let collapseHint: LocalizedStringKey = "itemSearch.gathering.collapseHint"
             static let openFishingGuide: LocalizedStringKey = "itemSearch.gathering.openFishingGuide"
             static let openFishingGuideHint: LocalizedStringKey = "itemSearch.gathering.openFishingGuideHint"
+        }
+    }
+
+    enum MiniCactpot {
+        static let title: LocalizedStringKey = "miniCactpot.title"
+        static let selectNumber: LocalizedStringKey = "miniCactpot.selectNumber"
+
+        static func progressNeedMore(openedCount: Int, remainingCount: Int) -> LocalizedStringKey {
+            "miniCactpot.progress.needMore \(openedCount) \(remainingCount)"
+        }
+
+        static func progressReady(openedCount: Int) -> LocalizedStringKey {
+            "miniCactpot.progress.ready \(openedCount)"
+        }
+
+        static func lineName(_ line: MiniCactpotLine) -> LocalizedStringKey {
+            LocalizedStringKey(line.nameKey)
+        }
+
+        static func lineNameText(_ line: MiniCactpotLine) -> String {
+            String(localized: String.LocalizationValue(stringLiteral: line.nameKey))
+        }
+
+        enum Result {
+            static let allLines: LocalizedStringKey = "miniCactpot.result.allLines"
+
+            static func recommendation(lineName: String) -> LocalizedStringKey {
+                "miniCactpot.result.recommendation \(lineName)"
+            }
+
+            static func expectedValue(_ expectedValue: String) -> LocalizedStringKey {
+                "miniCactpot.result.expectedValue \(expectedValue)"
+            }
+        }
+
+        enum Payout {
+            static let title: LocalizedStringKey = "miniCactpot.payout.title"
+            static let sum: LocalizedStringKey = "miniCactpot.payout.sum"
+            static let reward: LocalizedStringKey = "miniCactpot.payout.reward"
+        }
+
+        enum Cell {
+            static let empty: LocalizedStringKey = "miniCactpot.cell.empty"
+            static let selectHint: LocalizedStringKey = "miniCactpot.cell.selectHint"
+
+            static func number(_ number: Int) -> LocalizedStringKey {
+                "miniCactpot.cell.number \(number)"
+            }
         }
     }
 }

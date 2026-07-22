@@ -42,16 +42,16 @@ struct MiniCactpotView: View {
                 MiniCactpotPayoutTableView()
             }
         }
-        .navigationTitle("仙人微彩")
+        .navigationTitle(L10n.MiniCactpot.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("重置", role: .destructive, action: resetCells)
+                Button(L10n.Common.reset, role: .destructive, action: resetCells)
                     .disabled(openedCount == 0)
             }
         }
         .confirmationDialog(
-            "選擇數字",
+            L10n.MiniCactpot.selectNumber,
             isPresented: numberPickerBinding,
             titleVisibility: .visible
         ) {
@@ -64,7 +64,7 @@ struct MiniCactpotView: View {
                 }
 
                 if cells[selectedCellIndex] != nil {
-                    Button("清除", role: .destructive) {
+                    Button(L10n.Common.clear, role: .destructive) {
                         cells[selectedCellIndex] = nil
                     }
                 }
@@ -72,12 +72,12 @@ struct MiniCactpotView: View {
         }
     }
 
-    private var progressText: String {
+    private var progressText: LocalizedStringKey {
         if openedCount < 4 {
-            return "已開 \(openedCount)/4 格 · 再開 \(4 - openedCount) 格"
+            return L10n.MiniCactpot.progressNeedMore(openedCount: openedCount, remainingCount: 4 - openedCount)
         }
 
-        return "已開 \(openedCount) 格 · 已可計算"
+        return L10n.MiniCactpot.progressReady(openedCount: openedCount)
     }
 
     private var numberPickerBinding: Binding<Bool> {
