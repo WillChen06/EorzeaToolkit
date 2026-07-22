@@ -49,8 +49,8 @@ struct TreasureMap: Codable, Identifiable {
 
         var label: String {
             switch self {
-            case .solo: return "單人"
-            case .party: return "8人"
+            case .solo: return L10n.TreasureMap.MapType.soloText
+            case .party: return L10n.TreasureMap.MapType.partyText
             }
         }
     }
@@ -79,8 +79,8 @@ enum GatheringJob: String {
 
     var label: String {
         switch self {
-        case .miner: return "採掘師"
-        case .botanist: return "園藝師"
+        case .miner: return L10n.TreasureMap.GatheringJob.minerText
+        case .botanist: return L10n.TreasureMap.GatheringJob.botanistText
         }
     }
 }
@@ -99,11 +99,11 @@ struct GatheringNodeDisplay: Identifiable {
 
     var typeName: String {
         switch type {
-        case 0: return "礦脈"
-        case 1: return "石場"
-        case 2: return "良材"
-        case 3: return "草叢"
-        default: return "未知"
+        case 0: return L10n.TreasureMap.GatheringNode.mineralDepositText
+        case 1: return L10n.TreasureMap.GatheringNode.rockyOutcropText
+        case 2: return L10n.TreasureMap.GatheringNode.matureTreeText
+        case 3: return L10n.TreasureMap.GatheringNode.lushVegetationText
+        default: return L10n.TreasureMap.GatheringNode.unknownText
         }
     }
 

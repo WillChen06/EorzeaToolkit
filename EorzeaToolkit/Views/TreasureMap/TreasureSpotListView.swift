@@ -61,7 +61,7 @@ private struct TreasureSpotCard: View {
                     Spacer()
 
                     VStack(alignment: .trailing, spacing: 2) {
-                        Text("X: \(spot.coords.x, specifier: "%.1f") Y: \(spot.coords.y, specifier: "%.1f")")
+                        Text(L10n.TreasureMap.coordinatesXY(x: coordinateText(spot.coords.x), y: coordinateText(spot.coords.y)))
                             .font(.caption)
                             .fontWeight(.bold)
                             .foregroundStyle(.white)
@@ -151,4 +151,8 @@ private struct CroppedMapView: View {
                 ProgressView()
             }
     }
+}
+
+private func coordinateText(_ value: Double) -> String {
+    value.formatted(.number.precision(.fractionLength(1)))
 }

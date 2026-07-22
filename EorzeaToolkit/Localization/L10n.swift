@@ -166,4 +166,107 @@ enum L10n {
             }
         }
     }
+
+    enum TreasureMap {
+        static let title: LocalizedStringKey = "treasureMap.title"
+        static let loadFailedTitle: LocalizedStringKey = "treasureMap.loadFailedTitle"
+        static let emptyTitle: LocalizedStringKey = "treasureMap.emptyTitle"
+        static let emptyDescription: LocalizedStringKey = "treasureMap.emptyDescription"
+        static let loading: LocalizedStringKey = "treasureMap.loading"
+        static let gatheringNodes: LocalizedStringKey = "treasureMap.gatheringNodes"
+
+        static func level(_ level: Int) -> LocalizedStringKey {
+            "treasureMap.level \(level)"
+        }
+
+        static func expansion(_ expansion: String) -> LocalizedStringKey {
+            "treasureMap.expansion \(expansion)"
+        }
+
+        static func selectMap(count: Int) -> LocalizedStringKey {
+            "treasureMap.selectMap \(count)"
+        }
+
+        static func spotCount(_ count: Int) -> LocalizedStringKey {
+            "treasureMap.spotCount \(count)"
+        }
+
+        static func gatheringSheetTitle(grade: String, name: String, level: Int) -> LocalizedStringKey {
+            "treasureMap.gathering.title \(grade) \(name) \(level)"
+        }
+
+        static func jobSection(jobLabel: String, count: Int) -> LocalizedStringKey {
+            "treasureMap.gathering.jobSection \(jobLabel) \(count)"
+        }
+
+        static func coordinatePair(x: String, y: String) -> LocalizedStringKey {
+            "treasureMap.coordinates.pair \(x) \(y)"
+        }
+
+        static func coordinatesXY(x: String, y: String) -> LocalizedStringKey {
+            "treasureMap.coordinates.xy \(x) \(y)"
+        }
+
+        static func nodeMapTitle(zoneName: String, typeName: String) -> LocalizedStringKey {
+            "treasureMap.gathering.nodeMapTitle \(zoneName) \(typeName)"
+        }
+
+        static func nodeType(_ typeName: String) -> LocalizedStringKey {
+            "treasureMap.gathering.nodeType \(typeName)"
+        }
+
+        static func nodeCoordinates(x: String, y: String) -> LocalizedStringKey {
+            "treasureMap.gathering.nodeCoordinates \(x) \(y)"
+        }
+
+        static func unknownRegion(id: Int) -> String {
+            String(localized: "treasureMap.unknownRegion.id \(id)")
+        }
+
+        static var unknownRegionText: String {
+            String(localized: "treasureMap.unknownRegion")
+        }
+
+        enum MapType {
+            static var soloText: String {
+                String(localized: "treasureMap.mapType.solo")
+            }
+
+            static var partyText: String {
+                String(localized: "treasureMap.mapType.party")
+            }
+        }
+
+        enum GatheringJob {
+            static var minerText: String {
+                String(localized: "treasureMap.gathering.job.miner")
+            }
+
+            static var botanistText: String {
+                String(localized: "treasureMap.gathering.job.botanist")
+            }
+        }
+
+        enum GatheringNode {
+            static var mineralDepositText: String {
+                String(localized: "treasureMap.gathering.node.mineralDeposit")
+            }
+
+            static var rockyOutcropText: String {
+                String(localized: "treasureMap.gathering.node.rockyOutcrop")
+            }
+
+            static var matureTreeText: String {
+                String(localized: "treasureMap.gathering.node.matureTree")
+            }
+
+            static var lushVegetationText: String {
+                String(localized: "treasureMap.gathering.node.lushVegetation")
+            }
+
+            static var unknownText: String {
+                String(localized: "treasureMap.gathering.node.unknown")
+            }
+        }
+    }
 }

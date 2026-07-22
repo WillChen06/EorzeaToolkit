@@ -8,7 +8,7 @@ struct TreasureMapListView: View {
         Group {
             if let loadError = viewModel.loadError {
                 ContentUnavailableView(
-                    "無法載入藏寶圖資料",
+                    L10n.TreasureMap.loadFailedTitle,
                     systemImage: "exclamationmark.triangle",
                     description: Text(loadError)
                 )
@@ -23,15 +23,15 @@ struct TreasureMapListView: View {
                 .listStyle(.insetGrouped)
             } else if viewModel.hasLoadedMaps {
                 ContentUnavailableView(
-                    "尚無藏寶圖資料",
+                    L10n.TreasureMap.emptyTitle,
                     systemImage: "map",
-                    description: Text("目前沒有可顯示的藏寶圖")
+                    description: Text(L10n.TreasureMap.emptyDescription)
                 )
             } else {
-                ProgressView("載入藏寶圖資料")
+                ProgressView(L10n.TreasureMap.loading)
             }
         }
-        .navigationTitle("藏寶圖")
+        .navigationTitle(L10n.TreasureMap.title)
         .navigationBarTitleDisplayMode(.inline)
         .task {
             viewModel.loadMaps()
@@ -81,7 +81,7 @@ private struct TreasureMapRow: View {
                 .font(.headline.weight(.bold))
                 .foregroundStyle(accent)
 
-            Text("Lv.\(map.level)")
+            Text(L10n.TreasureMap.level(map.level))
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(.secondary)
         }
@@ -96,11 +96,15 @@ private struct TreasureMapRow: View {
     private var metadataRow: some View {
         HStack(spacing: 7) {
             metadataBadge(map.type.label, accent: accent)
-            metadataText("v\(map.expansion)")
+            metadataText(L10n.TreasureMap.expansion(map.expansion))
 
             if hasGatheringNodes {
                 Button(action: showGatheringNodes) {
-                    Label("採集點", systemImage: "leaf")
+                    Label {
+                        Text(L10n.TreasureMap.gatheringNodes)
+                    } icon: {
+                        Image(systemName: "leaf")
+                    }
                         .font(.caption.weight(.semibold))
                         .labelStyle(.titleAndIcon)
                         .padding(.horizontal, 7)
@@ -125,7 +129,7 @@ private struct TreasureMapRow: View {
             .foregroundStyle(accent)
     }
 
-    private func metadataText(_ text: String) -> some View {
+    private func metadataText(_ text: LocalizedStringKey) -> some View {
         Text(text)
             .font(.caption)
             .foregroundStyle(.secondary)
