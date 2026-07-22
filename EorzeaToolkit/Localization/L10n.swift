@@ -136,7 +136,7 @@ enum L10n {
         }
 
         static func lineNameText(_ line: MiniCactpotLine) -> String {
-            String(localized: String.LocalizationValue(line.nameKey))
+            String(localized: String.LocalizationValue(stringLiteral: line.nameKey))
         }
 
         enum Result {
