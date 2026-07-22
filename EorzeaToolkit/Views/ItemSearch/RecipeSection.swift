@@ -6,10 +6,10 @@ struct RecipeSection: View {
     let onSelectIngredient: (Item) -> Void
 
     var body: some View {
-        Section("配方") {
+        Section(L10n.ItemSearch.Recipe.section) {
             if let recipes {
                 if recipes.isEmpty {
-                    Label("無法製作", systemImage: "hammer")
+                    Label(L10n.ItemSearch.Recipe.unavailable, systemImage: "hammer")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 } else {
@@ -26,7 +26,7 @@ struct RecipeSection: View {
                     ProgressView()
                         .controlSize(.small)
 
-                    Text("查詢配方")
+                    Text(L10n.ItemSearch.Recipe.loading)
                 }
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -64,8 +64,13 @@ private struct RecipeCard: View {
 
     private var header: some View {
         HStack(alignment: .firstTextBaseline) {
-            Text(recipe.craftJob ?? "特殊配方")
-                .font(.headline)
+            if let craftJob = recipe.craftJob {
+                Text(craftJob)
+                    .font(.headline)
+            } else {
+                Text(L10n.ItemSearch.Recipe.specialRecipe)
+                    .font(.headline)
+            }
 
             Text(levelText)
                 .font(.subheadline)
@@ -74,7 +79,7 @@ private struct RecipeCard: View {
             Spacer(minLength: 12)
 
             if recipe.resultAmount > 1 {
-                Text("產出 ×\(recipe.resultAmount)")
+                Text(L10n.ItemSearch.Recipe.resultAmount(recipe.resultAmount))
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, 8)
@@ -117,7 +122,7 @@ private struct RecipeIngredientRow: View {
     }
 
     private var fallbackName: String {
-        "道具 #\(ingredient.itemID)"
+        L10n.ItemSearch.Recipe.fallbackItem(id: ingredient.itemID)
     }
 
     private func rowContent(name: String, item: Item?) -> some View {

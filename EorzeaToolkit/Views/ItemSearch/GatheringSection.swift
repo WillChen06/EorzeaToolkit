@@ -10,7 +10,7 @@ struct GatheringSection: View {
 
     var body: some View {
         if totalCount > 0 {
-            Section("採集") {
+            Section(L10n.ItemSearch.Gathering.section) {
                 ForEach(visibleRows) { row in
                     switch row.content {
                     case .gathering(let node):
@@ -38,7 +38,7 @@ struct GatheringSection: View {
                         .foregroundStyle(Color.accentColor)
                     }
                     .buttonStyle(.plain)
-                    .accessibilityHint(isExpanded ? "收起採集地點清單" : "展開全部採集地點")
+                    .accessibilityHint(Text(isExpanded ? L10n.ItemSearch.Gathering.collapseHint : L10n.ItemSearch.Gathering.showAllHint))
                 }
             }
         }
@@ -77,8 +77,8 @@ struct GatheringSection: View {
         totalCount > collapsedLimit
     }
 
-    private var toggleTitle: String {
-        isExpanded ? "收起採集地點" : "顯示全部採集地點"
+    private var toggleTitle: LocalizedStringKey {
+        isExpanded ? L10n.ItemSearch.Gathering.collapse : L10n.ItemSearch.Gathering.showAll
     }
 }
 
@@ -210,12 +210,12 @@ private struct FishingSpotCard: View {
 
             if let url = spot.teamcraftLinkURL {
                 Link(destination: url) {
-                    Label("查看完整釣法", systemImage: "arrow.up.forward.square")
+                    Label(L10n.ItemSearch.Gathering.openFishingGuide, systemImage: "arrow.up.forward.square")
                         .font(.subheadline.weight(.semibold))
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.small)
-                .accessibilityHint("在系統瀏覽器開啟 Teamcraft")
+                .accessibilityHint(Text(L10n.ItemSearch.Gathering.openFishingGuideHint))
             }
         }
         .padding(.vertical, 6)
