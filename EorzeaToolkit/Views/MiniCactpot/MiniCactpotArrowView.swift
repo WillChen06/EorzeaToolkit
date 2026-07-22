@@ -19,7 +19,7 @@ struct MiniCactpotArrowView: View {
             )
             .scaleEffect(isHighlighted ? 1.1 : 1)
             .animation(.snappy(duration: 0.18), value: isHighlighted)
-            .accessibilityLabel(line.name)
+            .accessibilityLabel(Text(L10n.MiniCactpot.lineName(line)))
             .accessibilityAddTraits(isHighlighted ? .isSelected : [])
     }
 }

@@ -21,8 +21,16 @@ struct MiniCactpotCellView: View {
             .aspectRatio(1, contentMode: .fit)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(value.map { "數字 \($0)" } ?? "空格")
-        .accessibilityHint("點兩下選擇數字")
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityHint(Text(L10n.MiniCactpot.Cell.selectHint))
+    }
+
+    private var accessibilityLabel: Text {
+        if let value {
+            return Text(L10n.MiniCactpot.Cell.number(value))
+        }
+
+        return Text(L10n.MiniCactpot.Cell.empty)
     }
 }
 

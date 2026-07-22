@@ -7,24 +7,24 @@ struct MiniCactpotResultView: View {
         if let bestResult = results.first {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("推薦：\(bestResult.line.name)")
+                    Text(L10n.MiniCactpot.Result.recommendation(lineName: L10n.MiniCactpot.lineNameText(bestResult.line)))
                         .font(.headline)
 
-                    Text("期望值 \(bestResult.expectedValue, format: .number.precision(.fractionLength(1))) 金碟幣")
+                    Text(L10n.MiniCactpot.Result.expectedValue(expectedValueText(bestResult.expectedValue)))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
                 .padding(.vertical, 4)
             }
 
-            Section("全部線路") {
+            Section(L10n.MiniCactpot.Result.allLines) {
                 ForEach(results) { result in
                     HStack {
-                        Text(result.line.name)
+                        Text(L10n.MiniCactpot.lineName(result.line))
 
                         Spacer()
 
-                        Text("\(result.expectedValue, format: .number.precision(.fractionLength(1)))")
+                        Text(expectedValueText(result.expectedValue))
                             .font(.body.monospacedDigit())
                             .foregroundStyle(result.id == bestResult.id ? .orange : .secondary)
                     }
@@ -32,6 +32,10 @@ struct MiniCactpotResultView: View {
                 }
             }
         }
+    }
+
+    private func expectedValueText(_ expectedValue: Double) -> String {
+        expectedValue.formatted(.number.precision(.fractionLength(1)))
     }
 }
 
