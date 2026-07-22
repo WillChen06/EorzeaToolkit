@@ -3,6 +3,7 @@ import SwiftUI
 enum L10n {
     enum Common {
         static let clear: LocalizedStringKey = "common.clear"
+        static let collapse: LocalizedStringKey = "common.collapse"
         static let done: LocalizedStringKey = "common.done"
         static let retry: LocalizedStringKey = "common.retry"
         static let selected: LocalizedStringKey = "common.selected"

@@ -149,7 +149,7 @@ private struct MarketListingsSection: View {
                         isExpanded.toggle()
                     } label: {
                         Label(
-                            isExpanded ? L10n.ItemSearch.Gathering.collapse : L10n.ItemSearch.Market.showAllListings(count: listings.count),
+                            isExpanded ? L10n.Common.collapse : L10n.ItemSearch.Market.showAllListings(count: listings.count),
                             systemImage: isExpanded ? "chevron.up" : "chevron.down"
                         )
                             .font(.subheadline.weight(.semibold))
