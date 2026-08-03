@@ -42,7 +42,7 @@ final class TreasureMapViewModel {
                     if let info = mapInfos[String(mapId)], info.dungeon {
                         return nil
                     }
-                    let name = zhNames[String(mapId)]?.zh ?? "未知地區 (\(mapId))"
+                    let name = zhNames[String(mapId)]?.zh ?? L10n.TreasureMap.unknownRegion(id: mapId)
                     return TreasureZone(mapId: mapId, name: name, spotCount: count)
                 }
                 .sorted { $0.mapId < $1.mapId }
@@ -78,7 +78,7 @@ final class TreasureMapViewModel {
 
     func gatheringNodes(for map: TreasureMap) -> [GatheringNodeDisplay] {
         map.gatheringNodes.map { node in
-            let zoneName = zoneNames[String(node.zoneId)]?.tw ?? "未知地區"
+            let zoneName = zoneNames[String(node.zoneId)]?.tw ?? L10n.TreasureMap.unknownRegionText
             return GatheringNodeDisplay(type: node.type, zoneName: zoneName, zoneId: node.zoneId, x: node.x, y: node.y)
         }
     }

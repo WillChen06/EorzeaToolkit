@@ -7,7 +7,7 @@ struct TreasureMapDetailView: View {
 
     var body: some View {
         List {
-            Section("選擇地圖（\(zones.count)）") {
+            Section(L10n.TreasureMap.selectMap(count: zones.count)) {
                 ForEach(zones) { zone in
                     NavigationLink {
                         TreasureSpotListView(
@@ -19,7 +19,7 @@ struct TreasureMapDetailView: View {
                         HStack {
                             Text(zone.name)
                             Spacer()
-                            Text("\(zone.spotCount) 個點位")
+                            Text(L10n.TreasureMap.spotCount(zone.spotCount))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }

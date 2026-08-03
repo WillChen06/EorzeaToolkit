@@ -29,7 +29,7 @@ struct GatheringNodesSheetView: View {
                 .padding()
             }
             .background(Color(.systemGroupedBackground))
-            .navigationTitle("\(map.grade) - \(map.name) (Lv.\(map.level) 採集點)")
+            .navigationTitle(L10n.TreasureMap.gatheringSheetTitle(grade: map.grade, name: map.name, level: map.level))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -55,7 +55,7 @@ struct GatheringNodesSheetView: View {
     @ViewBuilder
     private func jobSection(job: GatheringJob, nodes: [GatheringNodeDisplay]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("\(job.label) (\(nodes.count)個)")
+            Text(L10n.TreasureMap.jobSection(jobLabel: job.label, count: nodes.count))
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundStyle(Color(.sRGB, red: 0.82, green: 0.7, blue: 0.42))
@@ -89,7 +89,7 @@ struct GatheringNodesSheetView: View {
 
             Spacer()
 
-            Text("(\(node.x, specifier: "%.1f"), \(node.y, specifier: "%.1f"))")
+            Text(L10n.TreasureMap.coordinatePair(x: coordinateText(node.x), y: coordinateText(node.y)))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
@@ -136,7 +136,7 @@ struct GatheringNodeMapView: View {
             VStack(spacing: 0) {
                 // 標題
                 HStack {
-                    Text("\(node.zoneName) - \(node.typeName)")
+                    Text(L10n.TreasureMap.nodeMapTitle(zoneName: node.zoneName, typeName: node.typeName))
                         .font(.title3)
                         .fontWeight(.bold)
                         .foregroundStyle(.white)
@@ -173,10 +173,10 @@ struct GatheringNodeMapView: View {
 
                 // 資訊
                 VStack(spacing: 8) {
-                    Text("類型：\(node.typeName)")
+                    Text(L10n.TreasureMap.nodeType(node.typeName))
                         .font(.body)
                         .foregroundStyle(.white)
-                    Text("座標：X: \(node.x, specifier: "%.1f"), Y: \(node.y, specifier: "%.1f")")
+                    Text(L10n.TreasureMap.nodeCoordinates(x: coordinateText(node.x), y: coordinateText(node.y)))
                         .font(.body)
                         .foregroundStyle(.white)
                 }
@@ -239,4 +239,8 @@ struct GatheringNodeMapView: View {
             .aspectRatio(1, contentMode: .fit)
             .overlay { ProgressView().tint(.white) }
     }
+}
+
+func coordinateText(_ value: Double) -> String {
+    value.formatted(.number.precision(.fractionLength(1)))
 }
