@@ -152,7 +152,3 @@ private struct CroppedMapView: View {
             }
     }
 }
-
-private func coordinateText(_ value: Double) -> String {
-    value.formatted(.number.precision(.fractionLength(1)))
-}

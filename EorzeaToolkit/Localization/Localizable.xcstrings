@@ -2545,9 +2545,21 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ (%lld nodes)"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%@ (1 node)"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%@ (%lld nodes)"
+                }
+              }
+            }
           }
         },
         "zh-Hant" : {
@@ -2893,7 +2905,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未知地區 (%lld)"
+            "value" : "未知地區（%lld）"
           }
         }
       }
