@@ -1,10 +1,26 @@
 import SwiftUI
 
-private enum RelicWeaponMode: String, CaseIterable, Identifiable {
-    case view = "檢視"
-    case tracking = "追蹤"
+private enum RelicWeaponMode: CaseIterable, Identifiable {
+    case view
+    case tracking
 
-    var id: String { rawValue }
+    var id: String {
+        switch self {
+        case .view:
+            "view"
+        case .tracking:
+            "tracking"
+        }
+    }
+
+    var title: LocalizedStringKey {
+        switch self {
+        case .view:
+            L10n.RelicWeapon.modeView
+        case .tracking:
+            L10n.RelicWeapon.modeTracking
+        }
+    }
 }
 
 struct RelicWeaponListView: View {
@@ -14,7 +30,7 @@ struct RelicWeaponListView: View {
         Group {
             if let loadError = viewModel.loadError {
                 ContentUnavailableView(
-                    "無法載入發光武器資料",
+                    L10n.RelicWeapon.loadFailedTitle,
                     systemImage: "exclamationmark.triangle",
                     description: Text(loadError)
                 )
@@ -30,15 +46,15 @@ struct RelicWeaponListView: View {
                 .listStyle(.insetGrouped)
             } else if viewModel.hasLoadedWeapons {
                 ContentUnavailableView(
-                    "尚無發光武器資料",
+                    L10n.RelicWeapon.emptyTitle,
                     systemImage: "sparkles",
-                    description: Text("目前沒有可顯示的武器系列")
+                    description: Text(L10n.RelicWeapon.emptyDescription)
                 )
             } else {
-                ProgressView("載入發光武器資料")
+                ProgressView(L10n.RelicWeapon.loading)
             }
         }
-        .navigationTitle("發光武器")
+        .navigationTitle(L10n.RelicWeapon.title)
         .navigationBarTitleDisplayMode(.inline)
         .task {
             viewModel.loadWeapons()
@@ -78,7 +94,7 @@ private struct RelicWeaponSeriesRow: View {
                 .font(.headline.weight(.bold))
                 .foregroundStyle(HomeStyle.aetherBlue)
 
-            Text("Lv.\(series.levelCap)")
+            Text(L10n.RelicWeapon.level(series.levelCap))
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(.secondary)
         }
@@ -96,13 +112,13 @@ private struct RelicWeaponSeriesRow: View {
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.secondary)
 
-            metadataText("\(series.stages.count) 個階段")
-            metadataText("\(series.availableJobs.count) 個職業")
+            metadataText(L10n.RelicWeapon.stageCount(series.stages.count))
+            metadataText(L10n.RelicWeapon.jobCount(series.availableJobs.count))
         }
     }
 
     private var latestBadge: some View {
-        Text("最新")
+        Text(L10n.RelicWeapon.latest)
             .font(.caption2.weight(.semibold))
             .padding(.horizontal, 7)
             .padding(.vertical, 3)
@@ -110,7 +126,7 @@ private struct RelicWeaponSeriesRow: View {
             .background(HomeStyle.aetherBlue.opacity(0.12), in: Capsule())
     }
 
-    private func metadataText(_ text: String) -> some View {
+    private func metadataText(_ text: LocalizedStringKey) -> some View {
         Text(text)
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -128,9 +144,9 @@ private struct RelicWeaponSeriesView: View {
     var body: some View {
         List {
             Section {
-                Picker("模式", selection: $mode) {
+                Picker(L10n.RelicWeapon.mode, selection: $mode) {
                     ForEach(RelicWeaponMode.allCases) { option in
-                        Text(option.rawValue).tag(option)
+                        Text(option.title).tag(option)
                     }
                 }
                 .pickerStyle(.segmented)
@@ -140,7 +156,7 @@ private struct RelicWeaponSeriesView: View {
                 trackingSummarySection
             }
 
-            Section("製作階段") {
+            Section(L10n.RelicWeapon.stagesSection) {
                 ForEach(series.stages) { stage in
                     RelicWeaponStageDisclosureView(
                         stage: stage,
@@ -155,7 +171,7 @@ private struct RelicWeaponSeriesView: View {
             }
         }
         .listStyle(.insetGrouped)
-        .navigationTitle("發光武器 - \(series.nameTw)（\(series.fullNameTw)）")
+        .navigationTitle(L10n.RelicWeapon.seriesTitle(shortName: series.nameTw, fullName: series.fullNameTw))
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             updateSelectedJobIfNeeded()
@@ -164,9 +180,9 @@ private struct RelicWeaponSeriesView: View {
 
     private var trackingSummarySection: some View {
         Section {
-            Picker("職業", selection: $selectedJob) {
+            Picker(L10n.RelicWeapon.job, selection: $selectedJob) {
                 ForEach(series.availableJobs, id: \.self) { job in
-                    Text(job.displayName).tag(job)
+                    Text(L10n.RelicWeapon.jobName(job)).tag(job)
                 }
             }
 
@@ -176,12 +192,12 @@ private struct RelicWeaponSeriesView: View {
                 let percentage = totalCount == 0 ? 0 : Int((Double(completedCount) / Double(totalCount) * 100).rounded())
 
                 HStack {
-                    Text("進度")
+                    Text(L10n.RelicWeapon.progress)
                         .font(.subheadline.weight(.semibold))
 
                     Spacer()
 
-                    Text("\(completedCount) / \(totalCount) 階段完成 (\(percentage)%)")
+                    Text(L10n.RelicWeapon.progressSummary(completedCount: completedCount, totalCount: totalCount, percentage: percentage))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -216,57 +232,6 @@ private struct RelicWeaponSeriesView: View {
 
         if !series.availableJobs.contains(selectedJob) {
             selectedJob = series.availableJobs[0]
-        }
-    }
-}
-
-private extension String {
-    var displayName: String {
-        switch self {
-        case "PLD":
-            "騎士"
-        case "WAR":
-            "戰士"
-        case "DRK":
-            "暗黑騎士"
-        case "GNB":
-            "絕槍戰士"
-        case "WHM":
-            "白魔法師"
-        case "SCH":
-            "學者"
-        case "AST":
-            "占星術士"
-        case "SGE":
-            "賢者"
-        case "MNK":
-            "武僧"
-        case "DRG":
-            "龍騎士"
-        case "NIN":
-            "忍者"
-        case "SAM":
-            "武士"
-        case "RPR":
-            "鐮刀師"
-        case "VPR":
-            "蝰蛇劍士"
-        case "BRD":
-            "吟遊詩人"
-        case "MCH":
-            "機工士"
-        case "DNC":
-            "舞者"
-        case "BLM":
-            "黑魔法師"
-        case "SMN":
-            "召喚師"
-        case "RDM":
-            "赤魔法師"
-        case "PCT":
-            "繪靈法師"
-        default:
-            self
         }
     }
 }
