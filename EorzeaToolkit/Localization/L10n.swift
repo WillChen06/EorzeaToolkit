@@ -370,4 +370,95 @@ enum L10n {
             }
         }
     }
+
+    enum SkillRotation {
+        static let title: LocalizedStringKey = "skillRotation.title"
+        static let loadFailedTitle: LocalizedStringKey = "skillRotation.loadFailedTitle"
+        static let emptyTitle: LocalizedStringKey = "skillRotation.emptyTitle"
+        static let emptyDescription: LocalizedStringKey = "skillRotation.emptyDescription"
+        static let loading: LocalizedStringKey = "skillRotation.loading"
+        static let addToRotation: LocalizedStringKey = "skillRotation.addToRotation"
+        static let itemSection: LocalizedStringKey = "skillRotation.itemSection"
+        static let reorderHint: LocalizedStringKey = "skillRotation.rotation.reorderHint"
+        static let emptyRotationHint: LocalizedStringKey = "skillRotation.rotation.emptyHint"
+        static let distance: LocalizedStringKey = "skillRotation.stat.distance"
+        static let effectRange: LocalizedStringKey = "skillRotation.stat.effectRange"
+        static let cast: LocalizedStringKey = "skillRotation.stat.cast"
+        static let recast: LocalizedStringKey = "skillRotation.stat.recast"
+        static let effect: LocalizedStringKey = "skillRotation.stat.effect"
+
+        static func editorTitle(jobName: String, abbreviation: String) -> LocalizedStringKey {
+            "skillRotation.editor.title \(jobName) \(abbreviation)"
+        }
+
+        static func rotationTitle(level: String) -> LocalizedStringKey {
+            "skillRotation.rotation.title \(level)"
+        }
+
+        static func rotationCount(_ count: Int) -> LocalizedStringKey {
+            "skillRotation.rotation.count \(count)"
+        }
+
+        static func level(_ level: Int) -> LocalizedStringKey {
+            "skillRotation.level \(level)"
+        }
+
+        static func itemLevel(_ itemLevel: Int) -> LocalizedStringKey {
+            "skillRotation.itemLevel \(itemLevel)"
+        }
+
+        static func skillCategory(_ category: SkillCategory) -> LocalizedStringKey {
+            switch category {
+            case .weaponskill:
+                return "skillRotation.category.weaponskill"
+            case .spell:
+                return "skillRotation.category.spell"
+            case .ability:
+                return "skillRotation.category.ability"
+            }
+        }
+
+        static func skillCategoryText(_ category: SkillCategory) -> String {
+            switch category {
+            case .weaponskill:
+                return String(localized: "skillRotation.category.weaponskill")
+            case .spell:
+                return String(localized: "skillRotation.category.spell")
+            case .ability:
+                return String(localized: "skillRotation.category.ability")
+            }
+        }
+
+        static var allCategoryText: String {
+            String(localized: "skillRotation.category.all")
+        }
+
+        static var itemCategoryText: String {
+            String(localized: "skillRotation.category.item")
+        }
+
+        static var meleeRangeText: String {
+            String(localized: "skillRotation.range.melee")
+        }
+
+        static var selfRangeText: String {
+            String(localized: "skillRotation.range.self")
+        }
+
+        static func metersText(_ meters: Int) -> String {
+            String(localized: "skillRotation.range.meters \(meters)")
+        }
+
+        static var instantCastText: String {
+            String(localized: "skillRotation.cast.instant")
+        }
+
+        static func secondsText(_ seconds: String) -> String {
+            String(localized: "skillRotation.seconds \(seconds)")
+        }
+
+        static func effectValueText(statName: String) -> String {
+            String(localized: "skillRotation.effect.value \(statName)")
+        }
+    }
 }

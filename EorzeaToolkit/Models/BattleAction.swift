@@ -86,22 +86,22 @@ struct BattleAction: Codable, Identifiable, Hashable {
 
     var rangeText: String {
         switch range {
-        case -1: return "近戰"
-        case 0: return "自身"
-        default: return "\(range) 米"
+        case -1: return L10n.SkillRotation.meleeRangeText
+        case 0: return L10n.SkillRotation.selfRangeText
+        default: return L10n.SkillRotation.metersText(range)
         }
     }
 
     var effectRangeText: String? {
-        effectRange > 1 ? "\(effectRange) 米" : nil
+        effectRange > 1 ? L10n.SkillRotation.metersText(effectRange) : nil
     }
 
     var castText: String {
-        cast100ms == 0 ? "即時" : String(format: "%.1f 秒", Double(cast100ms) / 10.0)
+        cast100ms == 0 ? L10n.SkillRotation.instantCastText : L10n.SkillRotation.secondsText(Self.secondsValueText(cast100ms))
     }
 
     var recastText: String? {
-        recast100ms > 0 ? String(format: "%.1f 秒", Double(recast100ms) / 10.0) : nil
+        recast100ms > 0 ? L10n.SkillRotation.secondsText(Self.secondsValueText(recast100ms)) : nil
     }
 
     /// 移除遊戲內條件判斷模板（如 `<If(...)>`），讓說明文字較易閱讀。
@@ -116,6 +116,10 @@ struct BattleAction: Codable, Identifiable, Hashable {
             .map { $0.trimmingCharacters(in: .whitespaces) }
             .filter { !$0.isEmpty }
             .joined(separator: "\n")
+    }
+
+    private static func secondsValueText(_ value: Int) -> String {
+        String(format: "%.1f", Double(value) / 10.0)
     }
 }
 
@@ -166,11 +170,7 @@ enum SkillCategory: String, CaseIterable, Identifiable, Hashable {
     var id: String { rawValue }
 
     var label: String {
-        switch self {
-        case .weaponskill: return "戰技"
-        case .spell: return "魔法"
-        case .ability: return "能力"
-        }
+        L10n.SkillRotation.skillCategoryText(self)
     }
 }
 

@@ -12,11 +12,11 @@ private enum SkillRotationCategory: String, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .all: return "全部"
+        case .all: return L10n.SkillRotation.allCategoryText
         case .weaponskill: return SkillCategory.weaponskill.label
         case .spell: return SkillCategory.spell.label
         case .ability: return SkillCategory.ability.label
-        case .item: return "道具"
+        case .item: return L10n.SkillRotation.itemCategoryText
         }
     }
 
@@ -104,7 +104,7 @@ struct SkillRotationEditorView: View {
                 .layoutPriority(1)
             }
         }
-        .navigationTitle("\(job.displayName) · \(job.abbreviation)")
+        .navigationTitle(L10n.SkillRotation.editorTitle(jobName: job.displayName, abbreviation: job.abbreviation))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -132,7 +132,7 @@ struct SkillRotationEditorView: View {
                             Button {
                                 viewModel.addSkill(action, to: job.id, level: selectedLevel)
                             } label: {
-                                Label("加入 Rotation", systemImage: "plus.circle")
+                                Label(L10n.SkillRotation.addToRotation, systemImage: "plus.circle")
                             }
                         } preview: {
                             RotationItemDetailCard(item: .action(action), statName: nil)
@@ -146,7 +146,7 @@ struct SkillRotationEditorView: View {
     private var tinctureGrid: some View {
         if !filteredTinctures.isEmpty {
             if showsTinctureSectionSeparator {
-                Text("道具")
+                Text(L10n.SkillRotation.itemSection)
                     .font(.caption)
                     .fontWeight(.semibold)
                     .foregroundStyle(.secondary)
@@ -164,7 +164,7 @@ struct SkillRotationEditorView: View {
                             Button {
                                 viewModel.addTincture(tincture, to: job.id, level: selectedLevel)
                             } label: {
-                                Label("加入 Rotation", systemImage: "plus.circle")
+                                Label(L10n.SkillRotation.addToRotation, systemImage: "plus.circle")
                             }
                         } preview: {
                             RotationItemDetailCard(
@@ -247,15 +247,15 @@ struct SkillRotationEditorView: View {
 
         return VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("施放順序 \(selectedLevel.label)")
+                Text(L10n.SkillRotation.rotationTitle(level: selectedLevel.label))
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                Text("(\(rotation.count))")
+                Text(L10n.SkillRotation.rotationCount(rotation.count))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Spacer()
                 if !rotation.isEmpty {
-                    Text("長按拖曳可排序")
+                    Text(L10n.SkillRotation.reorderHint)
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
@@ -263,7 +263,7 @@ struct SkillRotationEditorView: View {
             .padding(.horizontal)
 
             if rotation.isEmpty {
-                Text("點選下方技能加入施放順序")
+                Text(L10n.SkillRotation.emptyRotationHint)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)
@@ -424,22 +424,22 @@ struct SkillDetailCard: View {
                         .font(.headline)
                     HStack(spacing: 6) {
                         if let cat = action.skillCategory {
-                            tag(cat.label, color: categoryColor(cat))
+                            tag(L10n.SkillRotation.skillCategory(cat), color: categoryColor(cat))
                         }
-                        tag("Lv.\(action.level)", color: .secondary)
+                        tag(L10n.SkillRotation.level(action.level), color: .secondary)
                     }
                 }
                 Spacer()
             }
 
             HStack(spacing: 16) {
-                statBlock(title: "距離", value: action.rangeText)
+                statBlock(title: L10n.SkillRotation.distance, value: action.rangeText)
                 if let er = action.effectRangeText {
-                    statBlock(title: "範圍", value: er)
+                    statBlock(title: L10n.SkillRotation.effectRange, value: er)
                 }
-                statBlock(title: "詠唱", value: action.castText)
+                statBlock(title: L10n.SkillRotation.cast, value: action.castText)
                 if let rc = action.recastText {
-                    statBlock(title: "復唱", value: rc)
+                    statBlock(title: L10n.SkillRotation.recast, value: rc)
                 }
             }
 
@@ -456,7 +456,7 @@ struct SkillDetailCard: View {
         .background(Color(.systemBackground))
     }
 
-    private func tag(_ text: String, color: Color) -> some View {
+    private func tag(_ text: LocalizedStringKey, color: Color) -> some View {
         Text(text)
             .font(.caption)
             .padding(.horizontal, 6)
@@ -466,7 +466,7 @@ struct SkillDetailCard: View {
             .clipShape(Capsule())
     }
 
-    private func statBlock(title: String, value: String) -> some View {
+    private func statBlock(title: LocalizedStringKey, value: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(title)
                 .font(.caption2)
@@ -505,8 +505,8 @@ struct TinctureDetailCard: View {
                     Text(tincture.displayName)
                         .font(.headline)
                     HStack(spacing: 6) {
-                        tag("道具", color: .purple)
-                        tag("iLv.\(tincture.itemLevel)", color: .secondary)
+                        tag(L10n.SkillRotation.itemSection, color: .purple)
+                        tag(L10n.SkillRotation.itemLevel(tincture.itemLevel), color: .secondary)
                     }
                 }
                 Spacer()
@@ -514,14 +514,14 @@ struct TinctureDetailCard: View {
 
             Divider()
 
-            statBlock(title: "效果", value: "\(statName) +10%")
+            statBlock(title: L10n.SkillRotation.effect, value: L10n.SkillRotation.effectValueText(statName: statName))
         }
         .padding(16)
         .frame(minWidth: 280, maxWidth: 360, alignment: .leading)
         .background(Color(.systemBackground))
     }
 
-    private func tag(_ text: String, color: Color) -> some View {
+    private func tag(_ text: LocalizedStringKey, color: Color) -> some View {
         Text(text)
             .font(.caption)
             .padding(.horizontal, 6)
@@ -531,7 +531,7 @@ struct TinctureDetailCard: View {
             .clipShape(Capsule())
     }
 
-    private func statBlock(title: String, value: String) -> some View {
+    private func statBlock(title: LocalizedStringKey, value: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(title)
                 .font(.caption2)
