@@ -323,49 +323,50 @@ enum L10n {
         static func jobName(_ abbreviation: String) -> LocalizedStringKey {
             switch abbreviation {
             case "PLD":
-                "relicWeapon.job.pld"
+                return "relicWeapon.job.pld"
             case "WAR":
-                "relicWeapon.job.war"
+                return "relicWeapon.job.war"
             case "DRK":
-                "relicWeapon.job.drk"
+                return "relicWeapon.job.drk"
             case "GNB":
-                "relicWeapon.job.gnb"
+                return "relicWeapon.job.gnb"
             case "WHM":
-                "relicWeapon.job.whm"
+                return "relicWeapon.job.whm"
             case "SCH":
-                "relicWeapon.job.sch"
+                return "relicWeapon.job.sch"
             case "AST":
-                "relicWeapon.job.ast"
+                return "relicWeapon.job.ast"
             case "SGE":
-                "relicWeapon.job.sge"
+                return "relicWeapon.job.sge"
             case "MNK":
-                "relicWeapon.job.mnk"
+                return "relicWeapon.job.mnk"
             case "DRG":
-                "relicWeapon.job.drg"
+                return "relicWeapon.job.drg"
             case "NIN":
-                "relicWeapon.job.nin"
+                return "relicWeapon.job.nin"
             case "SAM":
-                "relicWeapon.job.sam"
+                return "relicWeapon.job.sam"
             case "RPR":
-                "relicWeapon.job.rpr"
+                return "relicWeapon.job.rpr"
             case "VPR":
-                "relicWeapon.job.vpr"
+                return "relicWeapon.job.vpr"
             case "BRD":
-                "relicWeapon.job.brd"
+                return "relicWeapon.job.brd"
             case "MCH":
-                "relicWeapon.job.mch"
+                return "relicWeapon.job.mch"
             case "DNC":
-                "relicWeapon.job.dnc"
+                return "relicWeapon.job.dnc"
             case "BLM":
-                "relicWeapon.job.blm"
+                return "relicWeapon.job.blm"
             case "SMN":
-                "relicWeapon.job.smn"
+                return "relicWeapon.job.smn"
             case "RDM":
-                "relicWeapon.job.rdm"
+                return "relicWeapon.job.rdm"
             case "PCT":
-                "relicWeapon.job.pct"
+                return "relicWeapon.job.pct"
             default:
-                LocalizedStringKey(abbreviation)
+                assertionFailure("Unhandled relic weapon job abbreviation: \(abbreviation)")
+                return LocalizedStringKey(abbreviation)
             }
         }
     }
