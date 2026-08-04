@@ -269,4 +269,105 @@ enum L10n {
             }
         }
     }
+
+    enum RelicWeapon {
+        static let title: LocalizedStringKey = "relicWeapon.title"
+        static let loadFailedTitle: LocalizedStringKey = "relicWeapon.loadFailedTitle"
+        static let emptyTitle: LocalizedStringKey = "relicWeapon.emptyTitle"
+        static let emptyDescription: LocalizedStringKey = "relicWeapon.emptyDescription"
+        static let loading: LocalizedStringKey = "relicWeapon.loading"
+        static let latest: LocalizedStringKey = "relicWeapon.latest"
+        static let mode: LocalizedStringKey = "relicWeapon.mode"
+        static let modeView: LocalizedStringKey = "relicWeapon.mode.view"
+        static let modeTracking: LocalizedStringKey = "relicWeapon.mode.tracking"
+        static let stagesSection: LocalizedStringKey = "relicWeapon.stages.section"
+        static let job: LocalizedStringKey = "relicWeapon.job"
+        static let progress: LocalizedStringKey = "relicWeapon.progress"
+        static let quest: LocalizedStringKey = "relicWeapon.quest"
+        static let materials: LocalizedStringKey = "relicWeapon.materials"
+        static let noExtraMaterials: LocalizedStringKey = "relicWeapon.materials.none"
+        static let markComplete: LocalizedStringKey = "relicWeapon.tracking.markComplete"
+        static let markIncomplete: LocalizedStringKey = "relicWeapon.tracking.markIncomplete"
+        static let showNote: LocalizedStringKey = "relicWeapon.materials.note.show"
+        static let hideNote: LocalizedStringKey = "relicWeapon.materials.note.hide"
+        static let itemLevelUnavailable: LocalizedStringKey = "relicWeapon.itemLevel.unavailable"
+
+        static func level(_ level: Int) -> LocalizedStringKey {
+            "relicWeapon.level \(level)"
+        }
+
+        static func stageCount(_ count: Int) -> LocalizedStringKey {
+            "relicWeapon.stageCount \(count)"
+        }
+
+        static func jobCount(_ count: Int) -> LocalizedStringKey {
+            "relicWeapon.jobCount \(count)"
+        }
+
+        static func seriesTitle(shortName: String, fullName: String) -> LocalizedStringKey {
+            "relicWeapon.series.title \(shortName) \(fullName)"
+        }
+
+        static func stage(_ index: Int) -> LocalizedStringKey {
+            "relicWeapon.stage \(index)"
+        }
+
+        static func progressSummary(completedCount: Int, totalCount: Int, percentage: Int) -> LocalizedStringKey {
+            "relicWeapon.progress.summary \(completedCount) \(totalCount) \(percentage)"
+        }
+
+        static func itemLevel(_ itemLevel: Int) -> LocalizedStringKey {
+            "relicWeapon.itemLevel \(itemLevel)"
+        }
+
+        static func jobName(_ abbreviation: String) -> LocalizedStringKey {
+            switch abbreviation {
+            case "PLD":
+                return "relicWeapon.job.pld"
+            case "WAR":
+                return "relicWeapon.job.war"
+            case "DRK":
+                return "relicWeapon.job.drk"
+            case "GNB":
+                return "relicWeapon.job.gnb"
+            case "WHM":
+                return "relicWeapon.job.whm"
+            case "SCH":
+                return "relicWeapon.job.sch"
+            case "AST":
+                return "relicWeapon.job.ast"
+            case "SGE":
+                return "relicWeapon.job.sge"
+            case "MNK":
+                return "relicWeapon.job.mnk"
+            case "DRG":
+                return "relicWeapon.job.drg"
+            case "NIN":
+                return "relicWeapon.job.nin"
+            case "SAM":
+                return "relicWeapon.job.sam"
+            case "RPR":
+                return "relicWeapon.job.rpr"
+            case "VPR":
+                return "relicWeapon.job.vpr"
+            case "BRD":
+                return "relicWeapon.job.brd"
+            case "MCH":
+                return "relicWeapon.job.mch"
+            case "DNC":
+                return "relicWeapon.job.dnc"
+            case "BLM":
+                return "relicWeapon.job.blm"
+            case "SMN":
+                return "relicWeapon.job.smn"
+            case "RDM":
+                return "relicWeapon.job.rdm"
+            case "PCT":
+                return "relicWeapon.job.pct"
+            default:
+                assertionFailure("Unhandled relic weapon job abbreviation: \(abbreviation)")
+                return LocalizedStringKey(abbreviation)
+            }
+        }
+    }
 }

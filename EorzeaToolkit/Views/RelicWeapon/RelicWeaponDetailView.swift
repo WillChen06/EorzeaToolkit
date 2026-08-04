@@ -22,14 +22,14 @@ struct RelicWeaponStageDisclosureView: View {
                             .foregroundStyle(isCompleted ? .green : .secondary)
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(isCompleted ? "標記為未完成" : "標記為完成")
+                    .accessibilityLabel(isCompleted ? L10n.RelicWeapon.markIncomplete : L10n.RelicWeapon.markComplete)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(stage.nameTw.replacingOccurrences(of: " / ", with: " "))
                         .font(.headline)
 
-                    Text("階段 \(stage.stageIndex)")
+                    Text(L10n.RelicWeapon.stage(stage.stageIndex))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -57,7 +57,7 @@ private struct RelicWeaponStageDetailView: View {
         VStack(alignment: .leading, spacing: 14) {
             if !stage.taskDescriptionTw.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("任務")
+                    Text(L10n.RelicWeapon.quest)
                         .font(.subheadline.weight(.semibold))
 
                     Text(stage.taskDescriptionTw)
@@ -68,11 +68,11 @@ private struct RelicWeaponStageDetailView: View {
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("素材")
+                Text(L10n.RelicWeapon.materials)
                     .font(.subheadline.weight(.semibold))
 
                 if stage.materials.isEmpty {
-                    Text("無需額外素材")
+                    Text(L10n.RelicWeapon.noExtraMaterials)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 } else {
@@ -125,7 +125,7 @@ private struct RelicWeaponMaterialRow: View {
                     }
                     .buttonStyle(.plain)
                     .foregroundStyle(.blue)
-                    .accessibilityLabel(isNoteExpanded ? "隱藏取得備註" : "顯示取得備註")
+                    .accessibilityLabel(isNoteExpanded ? L10n.RelicWeapon.hideNote : L10n.RelicWeapon.showNote)
                 }
             }
 
@@ -141,12 +141,12 @@ private struct RelicWeaponMaterialRow: View {
 }
 
 private extension WeaponStage {
-    var ilvlLabel: String {
+    var ilvlLabel: LocalizedStringKey {
         guard let ilvl else {
-            return "iLv --"
+            return L10n.RelicWeapon.itemLevelUnavailable
         }
 
-        return "iLv \(ilvl)"
+        return L10n.RelicWeapon.itemLevel(ilvl)
     }
 }
 
