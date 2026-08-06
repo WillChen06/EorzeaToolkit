@@ -505,7 +505,7 @@ struct TinctureDetailCard: View {
                     Text(tincture.displayName)
                         .font(.headline)
                     HStack(spacing: 6) {
-                        tag(L10n.SkillRotation.itemSection, color: .purple)
+                        tag(L10n.SkillRotation.itemCategory, color: .purple)
                         tag(L10n.SkillRotation.itemLevel(tincture.itemLevel), color: .secondary)
                     }
                 }

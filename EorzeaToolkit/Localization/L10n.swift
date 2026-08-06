@@ -379,6 +379,7 @@ enum L10n {
         static let loading: LocalizedStringKey = "skillRotation.loading"
         static let addToRotation: LocalizedStringKey = "skillRotation.addToRotation"
         static let itemSection: LocalizedStringKey = "skillRotation.itemSection"
+        static let itemCategory: LocalizedStringKey = "skillRotation.category.item"
         static let reorderHint: LocalizedStringKey = "skillRotation.rotation.reorderHint"
         static let emptyRotationHint: LocalizedStringKey = "skillRotation.rotation.emptyHint"
         static let distance: LocalizedStringKey = "skillRotation.stat.distance"

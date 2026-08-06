@@ -373,7 +373,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "加入 Rotation"
+            "value" : "加入施放順序"
           }
         }
       }
@@ -503,13 +503,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ +10%"
+            "value" : "%@ +10%%"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ +10%"
+            "value" : "%@ +10%%"
           }
         }
       }
