@@ -12,7 +12,7 @@ struct ShopPurchaseSection: View {
                 Text(priceText)
                     .font(.title3.weight(.semibold).monospacedDigit())
 
-                Text(String(localized: "shopPurchase.sourceNote"))
+                Text(L10n.ShopPurchase.sourceNote)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -22,9 +22,9 @@ struct ShopPurchaseSection: View {
 
     private var priceText: String {
         guard let priceMid = entry.priceMid else {
-            return String(localized: "common.notProvided")
+            return L10n.Common.notProvidedText
         }
 
-        return String(localized: "shopPurchase.priceFormat \(priceMid.formatted())")
+        return L10n.ShopPurchase.priceText(priceMid.formatted())
     }
 }

@@ -13,6 +13,10 @@ enum L10n {
         static var noDataText: String {
             String(localized: "common.noData")
         }
+
+        static var notProvidedText: String {
+            String(localized: "common.notProvided")
+        }
     }
 
     enum Home {
@@ -171,6 +175,39 @@ enum L10n {
             static let collapseHint: LocalizedStringKey = "itemSearch.gathering.collapseHint"
             static let openFishingGuide: LocalizedStringKey = "itemSearch.gathering.openFishingGuide"
             static let openFishingGuideHint: LocalizedStringKey = "itemSearch.gathering.openFishingGuideHint"
+        }
+    }
+
+    enum Obtain {
+        static let sectionTitle: LocalizedStringKey = "obtain.section.title"
+
+        static func jumpHint(sourceTitle: String) -> LocalizedStringKey {
+            "obtain.section.jumpHint \(sourceTitle)"
+        }
+
+        static func sourceTitleText(_ source: ObtainSource) -> String {
+            NSLocalizedString(sourceTitleKey(source), comment: "")
+        }
+
+        private static func sourceTitleKey(_ source: ObtainSource) -> String {
+            switch source {
+            case .recipe:
+                "obtain.source.recipe"
+            case .gathering:
+                "obtain.source.gathering"
+            case .shop:
+                "obtain.source.shop"
+            case .market:
+                "obtain.source.market"
+            }
+        }
+    }
+
+    enum ShopPurchase {
+        static let sourceNote: LocalizedStringKey = "shopPurchase.sourceNote"
+
+        static func priceText(_ price: String) -> String {
+            String(localized: "shopPurchase.priceFormat \(price)")
         }
     }
 

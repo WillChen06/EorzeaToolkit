@@ -6,7 +6,7 @@ struct ObtainSourceSection: View {
 
     var body: some View {
         if sources.count >= 2 {
-            Section(String(localized: "obtain.section.title")) {
+            Section(L10n.Obtain.sectionTitle) {
                 ForEach(sources) { source in
                     Button {
                         onSelect(source)
@@ -25,7 +25,7 @@ struct ObtainSourceSection: View {
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
-                    .accessibilityHint(String(localized: "obtain.section.jumpHint \(source.title)"))
+                    .accessibilityHint(Text(L10n.Obtain.jumpHint(sourceTitle: source.title)))
                 }
             }
         }
