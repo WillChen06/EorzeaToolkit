@@ -46,8 +46,10 @@ jobs:
           reason=""
 
           if [ "$EVENT_ACTION" = "synchronize" ]; then
-            # Previous runs record the reviewed head SHA in their summary comment.
-            # A marker survives runs cancelled by cancel-in-progress, so no push is skipped.
+            # Previous runs record the reviewed head SHA in their summary comment. The marker
+            # only advances when a review actually finished, so commits pushed while a run was
+            # cancelled by cancel-in-progress stay inside the next incremental diff.
+            # A `gh api` failure leaves last_sha empty and falls back to a full review on purpose.
             last_sha="$(gh api "repos/${REPO}/issues/${PR_NUMBER}/comments" --paginate \
               --jq '.[] | select(.user.login == "github-actions[bot]") | .body' \
               | grep -oE 'claude-reviewed: [0-9a-f]{40}' \
