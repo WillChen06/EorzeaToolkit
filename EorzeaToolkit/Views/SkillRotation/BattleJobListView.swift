@@ -7,7 +7,7 @@ struct BattleJobListView: View {
         Group {
             if let loadError = viewModel.loadError {
                 ContentUnavailableView(
-                    "無法載入技能資料",
+                    L10n.SkillRotation.loadFailedTitle,
                     systemImage: "exclamationmark.triangle",
                     description: Text(loadError)
                 )
@@ -55,15 +55,15 @@ struct BattleJobListView: View {
                 .listStyle(.insetGrouped)
             } else if viewModel.hasLoadedJobs {
                 ContentUnavailableView(
-                    "尚無技能資料",
+                    L10n.SkillRotation.emptyTitle,
                     systemImage: "bolt.circle",
-                    description: Text("目前沒有可顯示的職業")
+                    description: Text(L10n.SkillRotation.emptyDescription)
                 )
             } else {
-                ProgressView("載入技能資料")
+                ProgressView(L10n.SkillRotation.loading)
             }
         }
-        .navigationTitle("技能循環")
+        .navigationTitle(L10n.SkillRotation.title)
         .navigationBarTitleDisplayMode(.inline)
         .task { viewModel.load() }
     }
