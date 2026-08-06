@@ -3828,13 +3828,13 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : ", "
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "、"
           }
         }
