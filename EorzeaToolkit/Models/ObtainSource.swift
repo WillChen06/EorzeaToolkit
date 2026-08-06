@@ -9,16 +9,7 @@ enum ObtainSource: String, CaseIterable, Identifiable, Sendable {
     var id: String { rawValue }
 
     var title: String {
-        switch self {
-        case .recipe:
-            return String(localized: "obtain.source.recipe")
-        case .gathering:
-            return String(localized: "obtain.source.gathering")
-        case .shop:
-            return String(localized: "obtain.source.shop")
-        case .market:
-            return String(localized: "obtain.source.market")
-        }
+        L10n.Obtain.sourceTitleText(self)
     }
 
     var systemImage: String {
