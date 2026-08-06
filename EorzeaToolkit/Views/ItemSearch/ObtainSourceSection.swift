@@ -25,7 +25,7 @@ struct ObtainSourceSection: View {
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
-                    .accessibilityHint(Text(L10n.Obtain.jumpHint(sourceTitle: source.title)))
+                    .accessibilityHint(L10n.Obtain.jumpHint(sourceTitle: source.title))
                 }
             }
         }
