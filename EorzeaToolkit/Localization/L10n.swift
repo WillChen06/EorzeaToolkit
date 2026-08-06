@@ -24,7 +24,7 @@ enum L10n {
         }
 
         static func featureTitleText(_ feature: HomeFeature) -> String {
-            String(localized: String.LocalizationValue(stringLiteral: featureTitleKey(feature)))
+            NSLocalizedString(featureTitleKey(feature), comment: "")
         }
 
         static func featureSubtitle(_ feature: HomeFeature) -> LocalizedStringKey {
@@ -32,7 +32,7 @@ enum L10n {
         }
 
         static func featureSubtitleText(_ feature: HomeFeature) -> String {
-            String(localized: String.LocalizationValue(stringLiteral: featureSubtitleKey(feature)))
+            NSLocalizedString(featureSubtitleKey(feature), comment: "")
         }
 
         static func featureAccessibilityLabel(title: String, subtitle: String) -> LocalizedStringKey {
