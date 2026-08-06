@@ -66,18 +66,21 @@ struct ItemFilter: Equatable, Sendable {
         var parts: [String] = []
 
         if ilvlRange != Self.defaultIlvlRange {
-            parts.append("品級 \(ilvlRange.lowerBound)-\(ilvlRange.upperBound)")
+            parts.append(L10n.ItemSearch.Filter.summaryItemLevel(
+                lowerBound: ilvlRange.lowerBound,
+                upperBound: ilvlRange.upperBound
+            ))
         }
 
         if selectedRarities != Self.defaultRarities {
             if selectedRarities.isEmpty {
-                parts.append("無稀有度")
+                parts.append(L10n.ItemSearch.Filter.noRaritySummaryText)
             } else {
                 let names = selectedRarities
                     .sorted()
                     .compactMap { Self.rarityName(for: $0) }
-                    .joined(separator: "、")
-                parts.append("稀有度 \(names)")
+                    .joined(separator: L10n.ItemSearch.Filter.summaryListSeparator)
+                parts.append(L10n.ItemSearch.Filter.raritySummary(names))
             }
         }
 
@@ -85,18 +88,18 @@ struct ItemFilter: Equatable, Sendable {
         case .any:
             break
         case .only:
-            parts.append("可HQ")
+            parts.append(L10n.ItemSearch.Filter.hqOnlySummaryText)
         case .exclude:
-            parts.append("不可HQ")
+            parts.append(L10n.ItemSearch.Filter.hqExcludeSummaryText)
         }
 
         switch tradableState {
         case .any:
             break
         case .only:
-            parts.append("可交易")
+            parts.append(L10n.ItemSearch.Filter.tradableOnlySummaryText)
         case .exclude:
-            parts.append("不可交易")
+            parts.append(L10n.ItemSearch.Filter.tradableExcludeSummaryText)
         }
 
         return parts
@@ -112,50 +115,41 @@ struct ItemFilter: Equatable, Sendable {
         appendSelectionSummary(
             from: selectedUICategoryIds,
             lookup: uiCategoryNamesById,
-            fallbackPrefix: "分類",
+            fallbackName: { L10n.ItemSearch.Filter.categoryFallbackName(id: $0) },
+            countSummary: L10n.ItemSearch.Filter.categorySelectionCount(_:),
             to: &parts
         )
         appendSelectionSummary(
             from: selectedEquipSlots,
             lookup: equipSlotNamesById,
-            fallbackPrefix: "部位",
+            fallbackName: { L10n.ItemSearch.Filter.equipSlotFallbackName(id: $0) },
+            countSummary: L10n.ItemSearch.Filter.equipSlotSelectionCount(_:),
             to: &parts
         )
         appendSelectionSummary(
             from: selectedJobAbbrs,
             lookup: jobNamesByAbbr,
-            fallbackPrefix: "職業",
+            fallbackName: L10n.ItemSearch.Filter.jobFallbackName(abbreviation:),
+            countSummary: L10n.ItemSearch.Filter.jobSelectionCount(_:),
             to: &parts
         )
 
         if parts.count > 3 {
-            return ["\(activeFilterCount) 個篩選條件套用中"]
+            return [L10n.ItemSearch.Filter.activeFilterSummary(count: activeFilterCount)]
         }
 
         return parts
     }
 
     static func rarityName(for rarity: Int) -> String? {
-        switch rarity {
-        case 1:
-            return "一般"
-        case 2:
-            return "稀有"
-        case 3:
-            return "貴重"
-        case 4:
-            return "武勳"
-        case 7:
-            return "紅蓮"
-        default:
-            return nil
-        }
+        L10n.ItemSearch.Filter.rarityName(rarity)
     }
 
     private func appendSelectionSummary<T: Comparable>(
         from selection: Set<T>,
         lookup: [T: String],
-        fallbackPrefix: String,
+        fallbackName: (T) -> String,
+        countSummary: (Int) -> String,
         to parts: inout [String]
     ) {
         guard !selection.isEmpty else {
@@ -164,12 +158,12 @@ struct ItemFilter: Equatable, Sendable {
 
         let names = selection
             .sorted()
-            .map { lookup[$0] ?? "\(fallbackPrefix) \($0)" }
+            .map { lookup[$0] ?? fallbackName($0) }
 
         if names.count <= 2 {
             parts.append(contentsOf: names)
         } else {
-            parts.append("\(names.count) 個\(fallbackPrefix)")
+            parts.append(countSummary(names.count))
         }
     }
 }
@@ -223,7 +217,7 @@ final class ItemSearchViewModel {
         return grouped.keys.sorted().map { orderMajor in
             UICategoryGroup(
                 orderMajor: orderMajor,
-                title: Self.uiCategoryGroupTitle(for: orderMajor),
+                title: L10n.ItemSearch.Filter.categoryGroupTitle(orderMajor: orderMajor),
                 categories: grouped[orderMajor, default: []].sorted {
                     if $0.orderMinor != $1.orderMinor {
                         return $0.orderMinor < $1.orderMinor
@@ -582,26 +576,6 @@ final class ItemSearchViewModel {
         value.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
     }
 
-    private static func uiCategoryGroupTitle(for orderMajor: Int) -> String {
-        switch orderMajor {
-        case 1:
-            return "武器"
-        case 2:
-            return "生產職工具"
-        case 3:
-            return "防具"
-        case 4:
-            return "飾品"
-        case 5:
-            return "消耗品"
-        case 6:
-            return "素材"
-        case 7:
-            return "雜項"
-        default:
-            return "其他"
-        }
-    }
 }
 
 struct UICategoryGroup: Identifiable, Sendable {
@@ -614,48 +588,51 @@ struct UICategoryGroup: Identifiable, Sendable {
 
 struct ItemJobFilterOption: Identifiable, Hashable, Sendable {
     let abbreviation: String
-    let displayName: String
     let iconPath: String
 
     var id: String { abbreviation }
+
+    var displayName: String {
+        L10n.ItemSearch.Filter.jobName(abbreviation)
+    }
 
     var iconURL: URL? {
         XIVIconURL.make(from: iconPath)
     }
 
     static let displayOptions: [ItemJobFilterOption] = [
-        ItemJobFilterOption(abbreviation: "PLD", displayName: "騎士", iconPath: "062000/062119_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "WAR", displayName: "戰士", iconPath: "062000/062121_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "DRK", displayName: "暗黑騎士", iconPath: "062000/062132_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "GNB", displayName: "絕槍戰士", iconPath: "062000/062137_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "WHM", displayName: "白魔法師", iconPath: "062000/062124_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "SCH", displayName: "學者", iconPath: "062000/062128_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "AST", displayName: "占星術士", iconPath: "062000/062133_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "SGE", displayName: "賢者", iconPath: "062000/062140_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "MNK", displayName: "武僧", iconPath: "062000/062120_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "DRG", displayName: "龍騎士", iconPath: "062000/062122_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "NIN", displayName: "忍者", iconPath: "062000/062130_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "SAM", displayName: "武士", iconPath: "062000/062134_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "RPR", displayName: "鐮刀師", iconPath: "062000/062139_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "VPR", displayName: "蝰蛇劍士", iconPath: "062000/062141_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "BRD", displayName: "吟遊詩人", iconPath: "062000/062123_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "MCH", displayName: "機工士", iconPath: "062000/062131_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "DNC", displayName: "舞者", iconPath: "062000/062138_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "BLM", displayName: "黑魔法師", iconPath: "062000/062125_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "SMN", displayName: "召喚師", iconPath: "062000/062127_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "RDM", displayName: "赤魔法師", iconPath: "062000/062135_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "PCT", displayName: "繪靈法師", iconPath: "062000/062142_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "CRP", displayName: "刻木匠", iconPath: "062000/062108_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "BSM", displayName: "鍛鐵匠", iconPath: "062000/062109_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "ARM", displayName: "鑄甲匠", iconPath: "062000/062110_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "GSM", displayName: "雕金匠", iconPath: "062000/062111_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "LTW", displayName: "製革匠", iconPath: "062000/062112_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "WVR", displayName: "裁衣匠", iconPath: "062000/062113_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "ALC", displayName: "鍊金術士", iconPath: "062000/062114_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "CUL", displayName: "烹調師", iconPath: "062000/062115_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "MIN", displayName: "採礦工", iconPath: "062000/062116_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "BTN", displayName: "園藝工", iconPath: "062000/062117_hr1.tex"),
-        ItemJobFilterOption(abbreviation: "FSH", displayName: "捕魚人", iconPath: "062000/062118_hr1.tex")
+        ItemJobFilterOption(abbreviation: "PLD", iconPath: "062000/062119_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "WAR", iconPath: "062000/062121_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "DRK", iconPath: "062000/062132_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "GNB", iconPath: "062000/062137_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "WHM", iconPath: "062000/062124_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "SCH", iconPath: "062000/062128_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "AST", iconPath: "062000/062133_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "SGE", iconPath: "062000/062140_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "MNK", iconPath: "062000/062120_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "DRG", iconPath: "062000/062122_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "NIN", iconPath: "062000/062130_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "SAM", iconPath: "062000/062134_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "RPR", iconPath: "062000/062139_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "VPR", iconPath: "062000/062141_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "BRD", iconPath: "062000/062123_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "MCH", iconPath: "062000/062131_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "DNC", iconPath: "062000/062138_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "BLM", iconPath: "062000/062125_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "SMN", iconPath: "062000/062127_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "RDM", iconPath: "062000/062135_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "PCT", iconPath: "062000/062142_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "CRP", iconPath: "062000/062108_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "BSM", iconPath: "062000/062109_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "ARM", iconPath: "062000/062110_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "GSM", iconPath: "062000/062111_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "LTW", iconPath: "062000/062112_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "WVR", iconPath: "062000/062113_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "ALC", iconPath: "062000/062114_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "CUL", iconPath: "062000/062115_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "MIN", iconPath: "062000/062116_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "BTN", iconPath: "062000/062117_hr1.tex"),
+        ItemJobFilterOption(abbreviation: "FSH", iconPath: "062000/062118_hr1.tex")
     ]
 }
 

@@ -125,6 +125,176 @@ enum L10n {
             static func rarityAccessibility(_ name: String) -> LocalizedStringKey {
                 "itemSearch.filter.rarity.accessibility \(name)"
             }
+
+            static func summaryItemLevel(lowerBound: Int, upperBound: Int) -> String {
+                String(localized: "itemSearch.filter.summary.itemLevel \(lowerBound) \(upperBound)")
+            }
+
+            static var noRaritySummaryText: String {
+                String(localized: "itemSearch.filter.summary.rarity.none")
+            }
+
+            static func raritySummary(_ names: String) -> String {
+                String(localized: "itemSearch.filter.summary.rarity \(names)")
+            }
+
+            static var summaryListSeparator: String {
+                String(localized: "itemSearch.filter.summary.listSeparator")
+            }
+
+            static var hqOnlySummaryText: String {
+                String(localized: "itemSearch.filter.summary.hqOnly")
+            }
+
+            static var hqExcludeSummaryText: String {
+                String(localized: "itemSearch.filter.summary.hqExclude")
+            }
+
+            static var tradableOnlySummaryText: String {
+                String(localized: "itemSearch.filter.summary.tradableOnly")
+            }
+
+            static var tradableExcludeSummaryText: String {
+                String(localized: "itemSearch.filter.summary.tradableExclude")
+            }
+
+            static func activeFilterSummary(count: Int) -> String {
+                String(localized: "itemSearch.filter.summary.activeCount \(count)")
+            }
+
+            static func categoryFallbackName(id: Int) -> String {
+                String(localized: "itemSearch.filter.summary.categoryFallback \(id)")
+            }
+
+            static func equipSlotFallbackName(id: Int) -> String {
+                String(localized: "itemSearch.filter.summary.equipSlotFallback \(id)")
+            }
+
+            static func jobFallbackName(abbreviation: String) -> String {
+                String(localized: "itemSearch.filter.summary.jobFallback \(abbreviation)")
+            }
+
+            static func categorySelectionCount(_ count: Int) -> String {
+                String(localized: "itemSearch.filter.summary.categoryCount \(count)")
+            }
+
+            static func equipSlotSelectionCount(_ count: Int) -> String {
+                String(localized: "itemSearch.filter.summary.equipSlotCount \(count)")
+            }
+
+            static func jobSelectionCount(_ count: Int) -> String {
+                String(localized: "itemSearch.filter.summary.jobCount \(count)")
+            }
+
+            static func rarityName(_ rarity: Int) -> String? {
+                switch rarity {
+                case 1:
+                    return String(localized: "itemSearch.filter.rarity.name.common")
+                case 2:
+                    return String(localized: "itemSearch.filter.rarity.name.uncommon")
+                case 3:
+                    return String(localized: "itemSearch.filter.rarity.name.rare")
+                case 4:
+                    return String(localized: "itemSearch.filter.rarity.name.relic")
+                case 7:
+                    return String(localized: "itemSearch.filter.rarity.name.aetherial")
+                default:
+                    return nil
+                }
+            }
+
+            static func categoryGroupTitle(orderMajor: Int) -> String {
+                switch orderMajor {
+                case 1:
+                    return String(localized: "itemSearch.filter.categoryGroup.weapons")
+                case 2:
+                    return String(localized: "itemSearch.filter.categoryGroup.craftingTools")
+                case 3:
+                    return String(localized: "itemSearch.filter.categoryGroup.armor")
+                case 4:
+                    return String(localized: "itemSearch.filter.categoryGroup.accessories")
+                case 5:
+                    return String(localized: "itemSearch.filter.categoryGroup.consumables")
+                case 6:
+                    return String(localized: "itemSearch.filter.categoryGroup.materials")
+                case 7:
+                    return String(localized: "itemSearch.filter.categoryGroup.miscellany")
+                default:
+                    return String(localized: "itemSearch.filter.categoryGroup.other")
+                }
+            }
+
+            static func jobName(_ abbreviation: String) -> String {
+                switch abbreviation {
+                case "PLD":
+                    return String(localized: "itemSearch.filter.job.pld")
+                case "WAR":
+                    return String(localized: "itemSearch.filter.job.war")
+                case "DRK":
+                    return String(localized: "itemSearch.filter.job.drk")
+                case "GNB":
+                    return String(localized: "itemSearch.filter.job.gnb")
+                case "WHM":
+                    return String(localized: "itemSearch.filter.job.whm")
+                case "SCH":
+                    return String(localized: "itemSearch.filter.job.sch")
+                case "AST":
+                    return String(localized: "itemSearch.filter.job.ast")
+                case "SGE":
+                    return String(localized: "itemSearch.filter.job.sge")
+                case "MNK":
+                    return String(localized: "itemSearch.filter.job.mnk")
+                case "DRG":
+                    return String(localized: "itemSearch.filter.job.drg")
+                case "NIN":
+                    return String(localized: "itemSearch.filter.job.nin")
+                case "SAM":
+                    return String(localized: "itemSearch.filter.job.sam")
+                case "RPR":
+                    return String(localized: "itemSearch.filter.job.rpr")
+                case "VPR":
+                    return String(localized: "itemSearch.filter.job.vpr")
+                case "BRD":
+                    return String(localized: "itemSearch.filter.job.brd")
+                case "MCH":
+                    return String(localized: "itemSearch.filter.job.mch")
+                case "DNC":
+                    return String(localized: "itemSearch.filter.job.dnc")
+                case "BLM":
+                    return String(localized: "itemSearch.filter.job.blm")
+                case "SMN":
+                    return String(localized: "itemSearch.filter.job.smn")
+                case "RDM":
+                    return String(localized: "itemSearch.filter.job.rdm")
+                case "PCT":
+                    return String(localized: "itemSearch.filter.job.pct")
+                case "CRP":
+                    return String(localized: "itemSearch.filter.job.crp")
+                case "BSM":
+                    return String(localized: "itemSearch.filter.job.bsm")
+                case "ARM":
+                    return String(localized: "itemSearch.filter.job.arm")
+                case "GSM":
+                    return String(localized: "itemSearch.filter.job.gsm")
+                case "LTW":
+                    return String(localized: "itemSearch.filter.job.ltw")
+                case "WVR":
+                    return String(localized: "itemSearch.filter.job.wvr")
+                case "ALC":
+                    return String(localized: "itemSearch.filter.job.alc")
+                case "CUL":
+                    return String(localized: "itemSearch.filter.job.cul")
+                case "MIN":
+                    return String(localized: "itemSearch.filter.job.min")
+                case "BTN":
+                    return String(localized: "itemSearch.filter.job.btn")
+                case "FSH":
+                    return String(localized: "itemSearch.filter.job.fsh")
+                default:
+                    assertionFailure("Unhandled item search job abbreviation: \(abbreviation)")
+                    return abbreviation
+                }
+            }
         }
 
         enum Market {
