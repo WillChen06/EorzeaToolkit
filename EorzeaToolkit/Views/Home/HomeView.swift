@@ -33,7 +33,7 @@ struct HomeView: View {
     }
 
     private var header: some View {
-        Text("Eorzea Toolkit")
+        Text(L10n.Home.appTitle)
             .font(.system(.largeTitle, design: .serif, weight: .semibold))
             .foregroundStyle(HomeStyle.ink)
             .lineLimit(1)

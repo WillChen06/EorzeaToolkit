@@ -14,7 +14,7 @@ struct HomeHeroBanner: View {
                     .padding(6)
             }
         }
-        .accessibilityLabel("Eorzea Toolkit 主視覺")
+        .accessibilityLabel(Text(L10n.Home.heroAccessibilityLabel))
     }
 
     private var heroArtwork: some View {
