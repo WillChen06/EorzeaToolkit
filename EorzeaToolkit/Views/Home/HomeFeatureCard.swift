@@ -26,7 +26,9 @@ struct HomeFeatureCard: View {
         .shadow(color: HomeStyle.shadow.opacity(0.55), radius: 10, y: 5)
         .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(feature.title)，\(feature.subtitle)")
+        .accessibilityLabel(
+            Text(L10n.Home.featureAccessibilityLabel(title: feature.titleText, subtitle: feature.subtitleText))
+        )
     }
 
     private var cardLayout: some View {

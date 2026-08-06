@@ -15,6 +15,61 @@ enum L10n {
         }
     }
 
+    enum Home {
+        static let appTitle: LocalizedStringKey = "home.appTitle"
+        static let heroAccessibilityLabel: LocalizedStringKey = "home.hero.accessibilityLabel"
+
+        static func featureTitle(_ feature: HomeFeature) -> LocalizedStringKey {
+            LocalizedStringKey(featureTitleKey(feature))
+        }
+
+        static func featureTitleText(_ feature: HomeFeature) -> String {
+            NSLocalizedString(featureTitleKey(feature), comment: "")
+        }
+
+        static func featureSubtitle(_ feature: HomeFeature) -> LocalizedStringKey {
+            LocalizedStringKey(featureSubtitleKey(feature))
+        }
+
+        static func featureSubtitleText(_ feature: HomeFeature) -> String {
+            NSLocalizedString(featureSubtitleKey(feature), comment: "")
+        }
+
+        static func featureAccessibilityLabel(title: String, subtitle: String) -> LocalizedStringKey {
+            "home.feature.accessibilityLabel \(title) \(subtitle)"
+        }
+
+        private static func featureTitleKey(_ feature: HomeFeature) -> String {
+            switch feature {
+            case .itemSearch:
+                "home.feature.itemSearch.title"
+            case .treasureMap:
+                "home.feature.treasureMap.title"
+            case .relicWeapon:
+                "home.feature.relicWeapon.title"
+            case .miniCactpot:
+                "home.feature.miniCactpot.title"
+            case .skillRotation:
+                "home.feature.skillRotation.title"
+            }
+        }
+
+        private static func featureSubtitleKey(_ feature: HomeFeature) -> String {
+            switch feature {
+            case .itemSearch:
+                "home.feature.itemSearch.subtitle"
+            case .treasureMap:
+                "home.feature.treasureMap.subtitle"
+            case .relicWeapon:
+                "home.feature.relicWeapon.subtitle"
+            case .miniCactpot:
+                "home.feature.miniCactpot.subtitle"
+            case .skillRotation:
+                "home.feature.skillRotation.subtitle"
+            }
+        }
+    }
+
     enum ItemSearch {
         static let title: LocalizedStringKey = "itemSearch.title"
         static let loadingItems: LocalizedStringKey = "itemSearch.loadingItems"
