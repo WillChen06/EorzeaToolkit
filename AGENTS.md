@@ -15,6 +15,9 @@ This is a personal project using a lightweight Git Flow:
 ## Project Commands
 
 - Build: `xcodebuild build -project EorzeaToolkit.xcodeproj -scheme EorzeaToolkit -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO`
+- Test: `./scripts/run_tests.sh` — CI runs this too, so a change that breaks it fails the build.
+- `EorzeaToolkit.xcodeproj` is generated from `project.yml` by XcodeGen. Add targets, sources,
+  and packages there and run `xcodegen generate`; never hand-edit the project file.
 
 ## Project Context
 
