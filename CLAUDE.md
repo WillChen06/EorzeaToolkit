@@ -26,9 +26,6 @@ xcodebuild build -project EorzeaToolkit.xcodeproj -scheme EorzeaToolkit -configu
 
 ## Review Rules
 
-- Review for correctness, regressions, maintainability, SwiftUI best practices, localization issues, and security concerns.
-- Prefer concise Traditional Chinese feedback.
-- Leave inline comments for concrete changed-line issues when useful.
-- Always leave a final PR comment, even if no changes are needed.
-- If no changes are needed, state that clearly and mention any remaining build/test risk.
-- Do not modify files, commit, push, approve, or merge during review.
+See [.github/claude-review-guidelines.md](.github/claude-review-guidelines.md). It is the
+single source of truth for review standards and applies to local reviews and the CI review
+workflow alike; do not restate its rules here.

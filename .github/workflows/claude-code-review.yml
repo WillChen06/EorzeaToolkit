@@ -185,9 +185,16 @@ jobs:
             REVIEW BASE: ${{ steps.review-base.outputs.base }}
             CI RESULT: ${{ steps.ci.outputs.ci }}
 
-            Review this pull request for correctness, maintainability, SwiftUI best practices, data handling, localization regressions, and security issues.
+            Review this pull request.
 
-            Scope (read this first):
+            Standards (read this first):
+            - Read `.github/claude-review-guidelines.md`. It defines the project constraints,
+              which skill to consult for which kind of change, what counts as a finding, and
+              the output format. Follow it; this prompt only adds the per-run mechanics below.
+            - The guidelines override the skills. In particular this project targets iOS 17.0
+              and Swift 5.9, while the skills are written for iOS 26 and Swift 6.2.
+
+            Scope:
             - REVIEW MODE `full`: review the whole PR diff via `gh pr diff <PR NUMBER>`.
             - REVIEW MODE `incremental`: review ONLY what changed after REVIEW BASE.
               - Changed files: `git diff --name-only <REVIEW BASE> <HEAD SHA>`
@@ -204,11 +211,7 @@ jobs:
               lines changed in this increment; otherwise leave it alone.
 
             Rules:
-            - Do not modify files, create commits, push branches, approve, or merge.
-            - Prefer concise, actionable feedback in Traditional Chinese.
-            - If you find a concrete issue, leave an inline comment on the most relevant changed line when possible.
-            - Always leave a final PR comment with `gh pr comment`, even when no fix is needed.
-            - If no fix is needed, say that explicitly and mention any residual test/build risk.
+            - Always leave the final PR comment with `gh pr comment`, even when no fix is needed.
             - CI RESULT above is the build outcome for this exact commit; the workflow already
               waited for it. State it in one line and do not guess or re-check it. `success`
               means the build passed; anything else means CI was inconclusive, not failing —
@@ -222,5 +225,5 @@ jobs:
             - This marker is how the next run finds its incremental base. It is mandatory in every
               summary comment, including when there is nothing to fix.
           claude_args: |
-            --max-turns 16
+            --max-turns 24
             --allowedTools "Read,Grep,Glob,Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr comment:*),Bash(gh pr checks:*),Bash(gh run view:*),Bash(gh run list:*),Bash(git diff:*),Bash(git show:*),Bash(git log:*),Bash(git merge-base:*),mcp__github_inline_comment__create_inline_comment"
