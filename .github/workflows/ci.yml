@@ -31,6 +31,12 @@ jobs:
       - name: List project schemes
         run: xcodebuild -list -project EorzeaToolkit.xcodeproj
 
+      # Cross-file invariants only. Whether each file still decodes into its model is asserted
+      # against the real types in BundledDataTests, not restated as a schema here. Runs before
+      # the build because it costs a fraction of a second and fails on data the build cannot.
+      - name: Validate bundled data
+        run: python3 scripts/validate_data.py
+
       - name: Build
         run: |
           xcodebuild build \
