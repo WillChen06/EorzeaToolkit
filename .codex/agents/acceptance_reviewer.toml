@@ -40,7 +40,7 @@ Acceptance rules:
 - A `[自動]` criterion passes only when an XCTest or validation script directly proves the required behavior.
 - Production code alone is not sufficient evidence for a `[自動]` criterion.
 - A test that only executes code without asserting the criterion does not prove it.
-- A `[手動]` criterion must include reproducible steps and an expected result.
+- A `[人工]` criterion must include reproducible steps and an expected result.
 - A successful build does not prove functional acceptance criteria.
 - If a required command was not run or its result was not supplied, mark the related criterion `UNVERIFIED`.
 - If the available evidence contradicts the criterion, mark it `FAIL`.
