@@ -86,6 +86,21 @@ jobs:
         run: |
           set -euo pipefail
 
+          # The CI workflow is referenced by file name below. If it is ever renamed, the polling
+          # would quietly report `not_found` and the CI gate would stop protecting anything, so
+          # fail loudly on a definitive 404 instead. A transient API error is only a warning.
+          if ! probe="$(gh api "repos/${REPO}/actions/workflows/ci.yml" --jq '.path' 2>&1)"; then
+            case "$probe" in
+              *"Not Found"*|*"HTTP 404"*)
+                echo "::error::.github/workflows/ci.yml not found. Update the workflow name in the 'Wait for CI' step." >&2
+                exit 1
+                ;;
+              *)
+                echo "::warning::Could not verify the CI workflow (${probe}); continuing."
+                ;;
+            esac
+          fi
+
           deadline=$(( SECONDS + 20 * 60 ))
           seen=0
           status=""
