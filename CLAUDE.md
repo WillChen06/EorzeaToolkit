@@ -21,8 +21,13 @@ xcodebuild build -project EorzeaToolkit.xcodeproj -scheme EorzeaToolkit -configu
 ```
 
 `EorzeaToolkit.xcodeproj` is generated from `project.yml` by XcodeGen. Add targets, sources,
-and packages there and run `xcodegen generate`; never hand-edit the project file. Regenerating
-rewrites every object UUID, so expect a large but semantically empty diff.
+and packages there and run `xcodegen generate`; never hand-edit the project file.
+
+XcodeGen derives object UUIDs from the objects themselves, so regenerating is byte-stable:
+running it twice with nothing changed produces no diff at all, and adding one source file
+touches only that file's four entries. A small, surgical `project.pbxproj` diff is what a
+correct regeneration looks like — it is not evidence of a hand edit. A diff that rewrites
+the whole file means the previous version came from somewhere other than XcodeGen.
 
 ## Development Workflow
 
