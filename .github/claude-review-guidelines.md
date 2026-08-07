@@ -53,8 +53,35 @@ When the PR body says `none`, names no spec, or names a file that does not exist
 diff on its own merits and say so in one line. Never block on a missing spec.
 
 `prompts/*.md` is requirements documentation, not code — never report style, structure, or
-wording findings on it. A spec edited inside its own PR is a deliberate requirement change:
-report it only if the code and the amended spec disagree.
+wording findings on it. A spec edited inside its own PR is a deliberate requirement change,
+and `prompts/_TEMPLATE.md` asks for it to be explained in the PR body: report it when the
+explanation is missing, or when the code and the amended spec disagree.
+
+### Acceptance criteria
+
+A spec written from `prompts/_TEMPLATE.md` ends in a `## 驗收` section of numbered criteria,
+each tagged with how it can be verified. That section is the contract, so work through it
+criterion by criterion rather than forming an overall impression:
+
+- `[自動]` — a test or `scripts/validate_data.py` proves it. If the criterion names a test,
+  read that test and confirm it actually covers the stated behaviour; a test that passes
+  while asserting something else is a finding. If it names none, the PR should have added one.
+- `[diff]` — decide it from the diff yourself.
+- `[人工]` — needs the app running, which you cannot do. Never state or imply you verified
+  one. Report it as 需人工確認 and check only that the author declared an outcome for it.
+
+The PR body carries the author's own line per criterion. Cross-check it: a criterion the
+author reported as met but the diff does not support, or one the spec lists and the body
+omits, is a finding. A criterion the author reports as **not** met is not a finding on its
+own — it was disclosed — so say it is outstanding and leave the judgement to the human
+reviewer.
+
+Report per-criterion status in the summary comment, keeping it to one line each.
+
+Older specs predate this and carry an untagged `## 驗收` list, or none at all; they are not
+being backfilled. Treat an untagged list as criteria without verification tags, and a spec
+with no such section as gaps-and-overreach only. Never report the absence of the section
+itself as a finding.
 
 ## Skills
 
