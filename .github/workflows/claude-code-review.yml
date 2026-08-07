@@ -19,7 +19,8 @@ jobs:
   review:
     name: Review pull request
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Covers the CI wait (up to 20 min) plus the review itself.
+    timeout-minutes: 45
     if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
 
     steps:
@@ -76,7 +77,85 @@ jobs:
           echo "base=${base}" >> "$GITHUB_OUTPUT"
           echo "Review mode: ${mode} (${reason})" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Wait for CI
+        id: ci
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          # The CI workflow is referenced by file name below. If it is ever renamed, the polling
+          # would quietly report `not_found` and the CI gate would stop protecting anything, so
+          # fail loudly on a definitive 404 instead. A transient API error is only a warning.
+          if ! probe="$(gh api "repos/${REPO}/actions/workflows/ci.yml" --jq '.path' 2>&1)"; then
+            case "$probe" in
+              *"Not Found"*|*"HTTP 404"*)
+                echo "::error::.github/workflows/ci.yml not found. Update the workflow name in the 'Wait for CI' step." >&2
+                exit 1
+                ;;
+              *)
+                echo "::warning::Could not verify the CI workflow (${probe}); continuing."
+                ;;
+            esac
+          fi
+
+          deadline=$(( SECONDS + 20 * 60 ))
+          seen=0
+          status=""
+          url="-"
+
+          while :; do
+            line="$(gh api \
+              "repos/${REPO}/actions/workflows/ci.yml/runs?head_sha=${HEAD_SHA}&event=pull_request&per_page=1" \
+              --jq '.workflow_runs[0] // {} | "\(.status // "none")|\(.conclusion // "none")|\(.html_url // "-")"' \
+              2>/dev/null || echo "error|error|-")"
+
+            run_status="${line%%|*}"
+            rest="${line#*|}"
+            run_conclusion="${rest%%|*}"
+            url="${rest##*|}"
+
+            case "$run_status" in none|error) ;; *) seen=1 ;; esac
+
+            if [ "$run_status" = "completed" ]; then
+              status="$run_conclusion"
+              break
+            fi
+
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              if [ "$seen" -eq 1 ]; then status=timeout; else status=not_found; fi
+              break
+            fi
+
+            sleep 20
+          done
+
+          # Only a green build is worth spending a review on. `cancelled` means a newer push
+          # already superseded this run, and its own review will cover these commits.
+          # Anything inconclusive (timeout / no CI run / API error) must not block the review,
+          # and must never be treated as a failure.
+          case "$status" in
+            success) proceed=true ;;
+            failure|cancelled|timed_out|startup_failure) proceed=false ;;
+            *) proceed=true ;;
+          esac
+
+          echo "ci=${status}" >> "$GITHUB_OUTPUT"
+          echo "url=${url}" >> "$GITHUB_OUTPUT"
+          echo "proceed=${proceed}" >> "$GITHUB_OUTPUT"
+
+          if [ "$proceed" = "true" ]; then
+            echo "CI: ${status} — running review." >> "$GITHUB_STEP_SUMMARY"
+          else
+            # No comment and no marker is written, so these commits stay in the next
+            # incremental review once CI is green again.
+            echo "CI: ${status} — review skipped, no marker written. See ${url}" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       - name: Normalize Claude OAuth token
+        if: steps.ci.outputs.proceed == 'true'
         id: claude-token
         env:
           RAW_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -90,6 +169,7 @@ jobs:
           printf 'token=%s\n' "$token" >> "$GITHUB_OUTPUT"
 
       - name: Claude review
+        if: steps.ci.outputs.proceed == 'true'
         # Pinned from anthropics/claude-code-action@v1 for supply-chain safety.
         uses: anthropics/claude-code-action@dde2242db6af13460b916652159b6ba19a598f30
         env:
@@ -103,6 +183,7 @@ jobs:
             HEAD SHA: ${{ github.event.pull_request.head.sha }}
             REVIEW MODE: ${{ steps.review-base.outputs.mode }}
             REVIEW BASE: ${{ steps.review-base.outputs.base }}
+            CI RESULT: ${{ steps.ci.outputs.ci }}
 
             Review this pull request for correctness, maintainability, SwiftUI best practices, data handling, localization regressions, and security issues.
 
@@ -128,7 +209,10 @@ jobs:
             - If you find a concrete issue, leave an inline comment on the most relevant changed line when possible.
             - Always leave a final PR comment with `gh pr comment`, even when no fix is needed.
             - If no fix is needed, say that explicitly and mention any residual test/build risk.
-            - Include whether the CI build result was visible to you.
+            - CI RESULT above is the build outcome for this exact commit; the workflow already
+              waited for it. State it in one line and do not guess or re-check it. `success`
+              means the build passed; anything else means CI was inconclusive, not failing —
+              a failing build skips the review entirely.
 
             Final comment format:
             - Start with one line stating the scope, e.g. `Review 範圍：增量（<REVIEW BASE 前 7 碼>..<HEAD SHA 前 7 碼>）`
