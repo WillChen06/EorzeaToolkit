@@ -26,6 +26,7 @@
 		32BDDB4766C23267B3CEB5A0 /* HomeFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CE734C1BE5FC346DC1EC97 /* HomeFeature.swift */; };
 		337CF0D65A02D1CC69420318 /* RecipeSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1466240D42A606F52BAFB0 /* RecipeSection.swift */; };
 		360E6A173CAC286E3491F22F /* HomeHeroBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363F28E74C852DC7F10C0D6A /* HomeHeroBanner.swift */; };
+		369E7CA647040F0A0BCDCF1D /* BundledDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576E6C017B6295EEF759EA2 /* BundledDataTests.swift */; };
 		371466908A093BD5642D1DFD /* Fishing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6526217E09D99B75F7B7F3F /* Fishing.swift */; };
 		39D15658F95903B41E9AD8FA /* MiniCactpotPayoutTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99076C6C877461FC078861D2 /* MiniCactpotPayoutTableView.swift */; };
 		3AA0C51D1EB0981B82495E44 /* zh-maps.json in Resources */ = {isa = PBXBuildFile; fileRef = 8ABE1DA3A0D8692FCB447D0D /* zh-maps.json */; };
@@ -122,6 +123,7 @@
 		4CC0CEAF5840793F06FE715D /* ItemIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemIconView.swift; sourceTree = "<group>"; };
 		4E05F74F491A54E16EDF666A /* ObtainSourceSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObtainSourceSection.swift; sourceTree = "<group>"; };
 		5207532D7062D6DDBE8CDC20 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		5576E6C017B6295EEF759EA2 /* BundledDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledDataTests.swift; sourceTree = "<group>"; };
 		591BB419A097E836148E75BD /* MiniCactpotArrowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotArrowView.swift; sourceTree = "<group>"; };
 		59B8CC7C4D716230FF7F92EA /* HomeArtwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeArtwork.swift; sourceTree = "<group>"; };
 		5C4EA20D68F7D66A5223D100 /* MiniCactpotCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotCellView.swift; sourceTree = "<group>"; };
@@ -377,6 +379,7 @@
 		DBB2264B41E18562E9A2B13E /* EorzeaToolkitTests */ = {
 			isa = PBXGroup;
 			children = (
+				5576E6C017B6295EEF759EA2 /* BundledDataTests.swift */,
 				FB4F238E8A77EA94A7647A87 /* ItemShopEntryTests.swift */,
 				27D3C03B3DC1043BCC63A310 /* MiniCactpotCalculatorTests.swift */,
 			);
@@ -508,6 +511,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				369E7CA647040F0A0BCDCF1D /* BundledDataTests.swift in Sources */,
 				FDAABDF09256B9657985F267 /* ItemShopEntryTests.swift in Sources */,
 				55160013F36EB4E6A3021030 /* MiniCactpotCalculatorTests.swift in Sources */,
 			);
