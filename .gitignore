@@ -48,7 +48,5 @@ fastlane/test_output
 *.dSYM.zip
 *.dSYM
 
-# Claude prompt
-prompts/*
-!prompts/phase-b-recipe.md
+# Local settings
 .claude/settings.local.json

@@ -201,6 +201,9 @@ jobs:
               - Diff to review: `git diff <REVIEW BASE> <HEAD SHA>`
               - You may still Read/Grep whole files and run `gh pr diff` for context, but every
                 comment you leave must be about a line that appears in the incremental diff.
+              - Exception: spec conformance is judged against the whole PR, per the `Specs`
+                section of the guidelines. Gaps and overreach go in the summary comment, and
+                are exempt from the incremental-diff rule above.
               - Do not re-summarise or re-review the earlier commits of this PR.
 
             Avoid duplicate feedback:
