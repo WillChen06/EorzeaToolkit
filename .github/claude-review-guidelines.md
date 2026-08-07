@@ -11,7 +11,9 @@ These override anything the skills say.
 - **Deployment target is iOS 17.0, language mode is Swift 5.9.** The bundled skills are
   written for iOS 26 and Swift 6.2. Never suggest APIs, syntax, or concurrency features that
   are unavailable at these versions, and never propose raising the target as part of a review.
-- **No third-party dependencies.** The project has no SPM packages. Do not suggest adding any.
+- **Kingfisher is the only third-party dependency**, used solely by
+  `Views/CachedIconImage.swift` for remote icon loading. Do not suggest adding another SPM
+  package, and do not flag existing Kingfisher usage.
 - **Primary localization is Traditional Chinese (zh-Hant)**, with all strings in
   `EorzeaToolkit/Localization/Localizable.xcstrings`. User-facing text must go through it;
   a hard-coded string in a view is a finding.

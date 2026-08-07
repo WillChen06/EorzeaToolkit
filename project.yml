@@ -11,12 +11,19 @@ settings:
     SWIFT_VERSION: "5.9"
     DEVELOPMENT_LANGUAGE: zh-Hant
 
+packages:
+  Kingfisher:
+    url: https://github.com/onevcat/Kingfisher.git
+    from: 8.9.0
+
 targets:
   EorzeaToolkit:
     type: application
     platform: iOS
     sources:
       - path: EorzeaToolkit
+    dependencies:
+      - package: Kingfisher
     settings:
       base:
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
