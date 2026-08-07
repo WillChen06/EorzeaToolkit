@@ -18,6 +18,10 @@ This is a personal project using a lightweight Git Flow:
 - Test: `./scripts/run_tests.sh` — CI runs this too, so a change that breaks it fails the build.
 - `EorzeaToolkit.xcodeproj` is generated from `project.yml` by XcodeGen. Add targets, sources,
   and packages there and run `xcodegen generate`; never hand-edit the project file.
+- Building rewrites `EorzeaToolkit/Localization/Localizable.xcstrings` in place, and CI fails on
+  any leftover diff. If you added user-facing strings, commit the regenerated catalog. If the
+  diff only *removes* entries, it came from a build that did not compile everything — discard it
+  with `git checkout` and rebuild from clean rather than committing it.
 
 ## Project Context
 
