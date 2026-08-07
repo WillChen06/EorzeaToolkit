@@ -29,6 +29,18 @@ touches only that file's four entries. A small, surgical `project.pbxproj` diff 
 correct regeneration looks like — it is not evidence of a hand edit. A diff that rewrites
 the whole file means the previous version came from somewhere other than XcodeGen.
 
+## Writing Specs
+
+Feature work starts from a spec under `prompts/`, written with the user before any code.
+Follow [prompts/_TEMPLATE.md](prompts/_TEMPLATE.md).
+
+The `## 驗收` section is the part that matters most and the part most easily skipped. Write it
+during the spec session, while the desired behaviour is still the subject — not afterwards.
+Written later it gets shaped around whatever was built, and the verification it is supposed to
+enable collapses back into self-assessment.
+
+Do not backfill the section into specs that shipped without it.
+
 ## Development Workflow
 
 - Branch from `main` for features and fixes.
