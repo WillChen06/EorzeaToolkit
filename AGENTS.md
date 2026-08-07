@@ -7,7 +7,9 @@ This is a personal project using a lightweight Git Flow:
 - Do not use a long-lived `develop` branch.
 - Keep commits atomic: one logical change per commit. Do not combine unrelated features or fixes in one commit.
 - Open a pull request into `main`; do not merge directly to `main`.
-- Wait for CI and Claude Code review. Claude must comment even when no changes are required.
+- Wait for CI. The Claude review only starts once the build is green, and is skipped entirely
+  when it is not; fix the build first. Claude must comment even when no changes are required.
+  Review standards live in `.github/claude-review-guidelines.md`.
 - A human performs the final review and manually merges the PR.
 
 ## Project Commands
