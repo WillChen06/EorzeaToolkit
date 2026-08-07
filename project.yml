@@ -38,3 +38,19 @@ targets:
         SWIFT_EMIT_LOC_STRINGS: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    scheme:
+      testTargets:
+        - EorzeaToolkitTests
+
+  EorzeaToolkitTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: EorzeaToolkitTests
+    dependencies:
+      # Also makes XcodeGen set TEST_HOST/BUNDLE_LOADER, so tests can reach app code.
+      - target: EorzeaToolkit
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.willchen.eorzeaToolkit.tests

@@ -36,6 +36,7 @@
 		4C7AD3C3FCB056B2866568A8 /* TreasureMapListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914E93C547E3805E26F5F9D6 /* TreasureMapListView.swift */; };
 		4F63129541BE2230E1099186 /* treasures.json in Resources */ = {isa = PBXBuildFile; fileRef = E1150D84F8DE9A515EB46A5B /* treasures.json */; };
 		52207A5E78C937303E482B8F /* FishingDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28EA3142F9065187CD5FAB96 /* FishingDataService.swift */; };
+		55160013F36EB4E6A3021030 /* MiniCactpotCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D3C03B3DC1043BCC63A310 /* MiniCactpotCalculatorTests.swift */; };
 		556905B3BB4A526DF3FDD865 /* ItemDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AFDDDF5481AADB5AC7CE28 /* ItemDataService.swift */; };
 		59AE90593412EC4BC0F997A6 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A145D612AE83BC113FFB27B /* Item.swift */; };
 		60CF8D0E7B571BEC7221003C /* MiniCactpotArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591BB419A097E836148E75BD /* MiniCactpotArrowView.swift */; };
@@ -78,9 +79,20 @@
 		F2B363FA69830FCE4616C924 /* recipes.json in Resources */ = {isa = PBXBuildFile; fileRef = 0D4AFAABE32C9030E75F35C8 /* recipes.json */; };
 		F8794B73BFC959D86D115E70 /* ItemIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC0CEAF5840793F06FE715D /* ItemIconView.swift */; };
 		FA066DD46DB2A4CAA69AC3E3 /* RelicWeapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDC8E113EEA7483788B92 /* RelicWeapon.swift */; };
+		FDAABDF09256B9657985F267 /* ItemShopEntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4F238E8A77EA94A7647A87 /* ItemShopEntryTests.swift */; };
 		FEF4C46EBF93AB24A7030012 /* maps.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BE3609C1A36C70D2704F19 /* maps.json */; };
 		FFF024FF24FAD6D839367CC2 /* SkillRotationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B3A9C4147C7FB2EC139CAF /* SkillRotationViewModel.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0317B36778B0C5F70904032F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5923048CE9C047CD2F1B71B4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A24CF7D10E3961865033402C;
+			remoteInfo = EorzeaToolkit;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0CA6E672B7FC82997872CB7E /* SkillRotationEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillRotationEditorView.swift; sourceTree = "<group>"; };
@@ -93,6 +105,8 @@
 		1D15AD467CE469701762C57B /* items.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = items.json; sourceTree = "<group>"; };
 		22CE734C1BE5FC346DC1EC97 /* HomeFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeature.swift; sourceTree = "<group>"; };
 		27A14791E8C11AA209AA0562 /* TreasureMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreasureMapViewModel.swift; sourceTree = "<group>"; };
+		27D3C03B3DC1043BCC63A310 /* MiniCactpotCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniCactpotCalculatorTests.swift; sourceTree = "<group>"; };
+		28009BA7B9F529DA4147A24E /* EorzeaToolkitTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = EorzeaToolkitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2813839643530950F59CFCF8 /* CachedIconImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedIconImage.swift; sourceTree = "<group>"; };
 		28EA3142F9065187CD5FAB96 /* FishingDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FishingDataService.swift; sourceTree = "<group>"; };
 		2AC69B62CFD0B7BAEEB1F2F0 /* EorzeaToolkitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EorzeaToolkitApp.swift; sourceTree = "<group>"; };
@@ -155,6 +169,7 @@
 		EA3BD7D97EF24D028467ADA5 /* HomeStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStyle.swift; sourceTree = "<group>"; };
 		F011F52EA276C6F1A7AD9CF5 /* ObtainSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObtainSource.swift; sourceTree = "<group>"; };
 		F6526217E09D99B75F7B7F3F /* Fishing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fishing.swift; sourceTree = "<group>"; };
+		FB4F238E8A77EA94A7647A87 /* ItemShopEntryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemShopEntryTests.swift; sourceTree = "<group>"; };
 		FD70805A33A59B660CE291B3 /* GatheringDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatheringDataService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -283,6 +298,7 @@
 			isa = PBXGroup;
 			children = (
 				84EEB99FC86E568BF0D2EA0D /* EorzeaToolkit.app */,
+				28009BA7B9F529DA4147A24E /* EorzeaToolkitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -358,10 +374,20 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		DBB2264B41E18562E9A2B13E /* EorzeaToolkitTests */ = {
+			isa = PBXGroup;
+			children = (
+				FB4F238E8A77EA94A7647A87 /* ItemShopEntryTests.swift */,
+				27D3C03B3DC1043BCC63A310 /* MiniCactpotCalculatorTests.swift */,
+			);
+			path = EorzeaToolkitTests;
+			sourceTree = "<group>";
+		};
 		ED9C9F6EFB39522231714773 = {
 			isa = PBXGroup;
 			children = (
 				946C166DF675D455F044CCC8 /* EorzeaToolkit */,
+				DBB2264B41E18562E9A2B13E /* EorzeaToolkitTests */,
 				860D61CF36579136B7EA5281 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -400,6 +426,24 @@
 			productReference = 84EEB99FC86E568BF0D2EA0D /* EorzeaToolkit.app */;
 			productType = "com.apple.product-type.application";
 		};
+		D97136E667AA5006A2D49DEE /* EorzeaToolkitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5078A52DCC103236025531A3 /* Build configuration list for PBXNativeTarget "EorzeaToolkitTests" */;
+			buildPhases = (
+				43ECF0752266E9FAAA08A7C4 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9929A80A46B12336968A0CF9 /* PBXTargetDependency */,
+			);
+			name = EorzeaToolkitTests;
+			packageProductDependencies = (
+			);
+			productName = EorzeaToolkitTests;
+			productReference = 28009BA7B9F529DA4147A24E /* EorzeaToolkitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -430,6 +474,7 @@
 			projectRoot = "";
 			targets = (
 				A24CF7D10E3961865033402C /* EorzeaToolkit */,
+				D97136E667AA5006A2D49DEE /* EorzeaToolkitTests */,
 			);
 		};
 /* End PBXProject section */
@@ -459,6 +504,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		43ECF0752266E9FAAA08A7C4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FDAABDF09256B9657985F267 /* ItemShopEntryTests.swift in Sources */,
+				55160013F36EB4E6A3021030 /* MiniCactpotCalculatorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		472441B38736B955D77BD405 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -526,7 +580,32 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		9929A80A46B12336968A0CF9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A24CF7D10E3961865033402C /* EorzeaToolkit */;
+			targetProxy = 0317B36778B0C5F70904032F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		0A29D7A13786CA3BD2229182 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.willchen.eorzeaToolkit.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EorzeaToolkit.app/EorzeaToolkit";
+			};
+			name = Debug;
+		};
 		23785079FC4C459E2D0D0C78 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -576,6 +655,23 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
+		};
+		B1393220CCC5EDAE64600CA6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.willchen.eorzeaToolkit.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EorzeaToolkit.app/EorzeaToolkit";
+			};
+			name = Release;
 		};
 		EA110318F0F94048EFC78C77 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -701,6 +797,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		5078A52DCC103236025531A3 /* Build configuration list for PBXNativeTarget "EorzeaToolkitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A29D7A13786CA3BD2229182 /* Debug */,
+				B1393220CCC5EDAE64600CA6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		C0848946B33B4CE061F86164 /* Build configuration list for PBXNativeTarget "EorzeaToolkit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
