@@ -10,6 +10,15 @@
 
 - 
 
+## Acceptance Criteria
+
+<!-- One line per criterion from the spec's `## 驗收` section, with what you actually did to
+     check it. Write `none` when the spec has no such section or the PR has no spec. Report a
+     criterion you could not meet rather than dropping it — the review cross-checks this list
+     against the spec, and a silent omission is a finding. -->
+
+- 
+
 ## Verification
 
 - [ ] CI build passes
