@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build iOS app
+    name: Build and test iOS app
     runs-on: macos-15
     timeout-minutes: 30
 
@@ -40,3 +40,8 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath DerivedData \
             CODE_SIGNING_ALLOWED=NO
+
+      # Reuses the DerivedData the build step just produced. Resolving a simulator udid is
+      # left to the script so CI and a developer Mac run the tests exactly the same way.
+      - name: Test
+        run: ./scripts/run_tests.sh

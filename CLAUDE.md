@@ -10,11 +10,19 @@ EorzeaToolkit is an iOS SwiftUI app.
 - Swift version: 5.9
 - Primary localization: Traditional Chinese
 
-## Build Command
+## Build and Test Commands
 
 ```sh
 xcodebuild build -project EorzeaToolkit.xcodeproj -scheme EorzeaToolkit -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO
 ```
+
+```sh
+./scripts/run_tests.sh
+```
+
+`EorzeaToolkit.xcodeproj` is generated from `project.yml` by XcodeGen. Add targets, sources,
+and packages there and run `xcodegen generate`; never hand-edit the project file. Regenerating
+rewrites every object UUID, so expect a large but semantically empty diff.
 
 ## Development Workflow
 
