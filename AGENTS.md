@@ -16,6 +16,9 @@ This is a personal project using a lightweight Git Flow:
 
 - Build: `xcodebuild build -project EorzeaToolkit.xcodeproj -scheme EorzeaToolkit -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO`
 - Test: `./scripts/run_tests.sh` — CI runs this too, so a change that breaks it fails the build.
+- Validate data: `python3 scripts/validate_data.py` — cross-file invariants over
+  `EorzeaToolkit/Resources/Data`. Run it after regenerating any data file. Whether a file still
+  decodes is covered separately by `EorzeaToolkitTests/BundledDataTests.swift`.
 - `EorzeaToolkit.xcodeproj` is generated from `project.yml` by XcodeGen. Add targets, sources,
   and packages there and run `xcodegen generate`; never hand-edit the project file.
 - Building rewrites `EorzeaToolkit/Localization/Localizable.xcstrings` in place, and CI fails on
