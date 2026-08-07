@@ -45,3 +45,27 @@ jobs:
       # left to the script so CI and a developer Mac run the tests exactly the same way.
       - name: Test
         run: ./scripts/run_tests.sh
+
+      # The app target sets SWIFT_EMIT_LOC_STRINGS, so every build extracts localizable strings
+      # and syncs them back into the tracked catalog. Running last means this covers everything
+      # the build and the tests wrote. A clean build must leave the file untouched; a diff here
+      # means the committed catalog disagrees with what the source actually declares.
+      - name: Verify the string catalog is in sync
+        run: |
+          catalog=EorzeaToolkit/Localization/Localizable.xcstrings
+
+          if git diff --quiet -- "$catalog"; then
+            echo "$catalog is unchanged."
+            exit 0
+          fi
+
+          echo "::error::$catalog changed during the build."
+          echo "Entries added: a new user-facing string was committed without its catalog entry."
+          echo "Entries removed: a truncated extraction was committed. A build that does not"
+          echo "compile the whole source set syncs back only the strings it saw, and committing"
+          echo "that result silently drops entries. Restore the file and rebuild from clean:"
+          echo "  git checkout $catalog"
+          echo "Then commit the catalog a clean build produces."
+          git diff --stat -- "$catalog"
+          git diff -- "$catalog"
+          exit 1
