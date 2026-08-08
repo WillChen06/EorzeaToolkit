@@ -16,6 +16,49 @@ This is a personal project using a lightweight Git Flow:
   Review standards live in `.github/claude-review-guidelines.md`.
 - A human performs the final review and manually merges the PR.
 
+## Subagent Workflow
+
+The primary agent owns all implementation decisions, file edits, builds, tests, and final
+responses. Subagents are read-only investigators and reviewers.
+
+### Spec-driven tasks
+
+When the user asks to implement a specification file that contains a `## 驗收` section, the
+primary agent must use the following workflow without requiring the user to request subagents
+explicitly:
+
+1. Before editing files, spawn `project_explorer` and `acceptance_reviewer` in parallel.
+2. Ask `project_explorer` to map the execution path, data flow, affected files, existing
+   implementation patterns, tests, and risks.
+3. Ask `acceptance_reviewer` to work in planning-review mode, preserve every acceptance
+   criterion exactly, and map each criterion to required implementation evidence, automated
+   tests, validation scripts, and manual checks.
+4. Wait for both subagents to finish.
+5. Have the primary agent integrate both results into the implementation plan.
+6. Have only the primary agent modify files and run the documented build, test, and
+   data-validation commands.
+7. After implementation and verification, spawn `acceptance_reviewer` again in
+   implementation-review mode.
+8. Provide the reviewer with the specification path, diff scope, and all available build,
+   test, validation, and manual-verification results.
+9. Resolve all actionable findings or explicitly report any unmet or unverified acceptance
+   criteria before declaring the task complete.
+
+### Non-spec tasks
+
+- Use `project_explorer` for cross-file features, refactors, complex bugs, or tasks whose
+  execution path is unclear.
+- Do not use subagents for small changes with an obvious and localized scope unless the user
+  explicitly requests them.
+
+### Coordination rules
+
+- Keep `project_explorer` and `acceptance_reviewer` read-only.
+- Subagents must not edit files or run commands that generate workspace artifacts.
+- Run only one Xcode build or test workflow at a time.
+- Treat subagent findings as evidence and recommendations. Architecture, product, and scope
+  decisions remain with the primary agent.
+
 ## Project Commands
 
 - Build: `xcodebuild build -project EorzeaToolkit.xcodeproj -scheme EorzeaToolkit -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO`
