@@ -21,7 +21,8 @@ struct TreasureSpotListView: View {
         }
         .navigationTitle(zoneName)
         .navigationBarTitleDisplayMode(.inline)
-        .background(Color(.systemGroupedBackground))
+        .appThemedBackground()
+        .appThemedScreen(tint: HomeFeature.treasureMap.accent)
     }
 }
 

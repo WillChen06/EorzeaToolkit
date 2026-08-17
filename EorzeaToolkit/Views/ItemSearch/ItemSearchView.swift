@@ -40,6 +40,8 @@ struct ItemSearchView: View {
         .task {
             viewModel.loadItems()
         }
+        .appThemedBackground()
+        .appThemedScreen(tint: HomeFeature.itemSearch.accent)
     }
 
     private var filterButton: some View {
@@ -49,11 +51,11 @@ struct ItemSearchView: View {
             ZStack(alignment: .topTrailing) {
                 Image(systemName: "slider.horizontal.3")
                     .font(.title3)
-                    .frame(width: 30, height: 30)
+                    .frame(width: 36, height: 36)
 
                 if viewModel.filter.isActive {
                     Text("\(viewModel.filter.activeFilterCount)")
-                        .font(.caption2.weight(.bold))
+                        .font(.caption.bold())
                         .foregroundStyle(.white)
                         .frame(width: 16, height: 16)
                         .background(.red, in: Circle())
@@ -61,7 +63,7 @@ struct ItemSearchView: View {
                         .padding(.trailing, 1)
                 }
             }
-            .frame(width: 38, height: 38)
+            .frame(width: 44, height: 44)
         }
         .accessibilityLabel(Text(L10n.ItemSearch.filterAccessibility))
     }
@@ -106,14 +108,18 @@ struct ItemSearchView: View {
                     .fontWeight(.semibold)
             }
             .font(.footnote)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(AppTheme.mutedInk)
             .padding(.horizontal)
             .padding(.vertical, 8)
             .frame(maxWidth: .infinity)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .background(.bar)
+        .background(AppTheme.surface)
+        .overlay(alignment: .bottom) {
+            AppTheme.gold.opacity(0.22)
+                .frame(height: 1)
+        }
     }
 
     private var activeFilterBarText: String {
@@ -144,6 +150,7 @@ struct ItemSearchView: View {
                     NavigationLink(destination: ItemDetailView(item: item, itemsByID: viewModel.itemsByID)) {
                         ItemSearchRow(item: item)
                     }
+                    .appThemedListRow()
                 }
 
                 if viewModel.hiddenResultCount > 0 {
@@ -160,14 +167,15 @@ struct ItemSearchView: View {
                                 hiddenCount: viewModel.hiddenResultCount
                             ))
                                 .font(.footnote)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(AppTheme.mutedInk)
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .buttonStyle(.plain)
-                        .listRowBackground(Color.clear)
+                    .appThemedListRow()
                 }
             }
+            .appThemedScrollContent()
             .overlay(alignment: .topTrailing) {
                 if viewModel.isSearching {
                     ProgressView()
@@ -207,6 +215,7 @@ private struct ItemFilterSheet: View {
                         }
                         .pickerStyle(.segmented)
                     }
+                    .appThemedListRow()
                 }
 
                 switch selectedFilterPage {
@@ -216,6 +225,7 @@ private struct ItemFilterSheet: View {
                     advancedFilterSections
                 }
             }
+            .appThemedScrollContent()
             .navigationTitle(L10n.ItemSearch.Filter.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -232,6 +242,7 @@ private struct ItemFilterSheet: View {
                     }
                 }
             }
+            .appThemedScreen(tint: HomeFeature.itemSearch.accent)
         }
     }
 
@@ -263,7 +274,7 @@ private struct ItemFilterSheet: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(L10n.ItemSearch.Filter.itemLevelMinimum)
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.mutedInk)
 
                     Slider(
                         value: minimumItemLevelBinding,
@@ -275,7 +286,7 @@ private struct ItemFilterSheet: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(L10n.ItemSearch.Filter.itemLevelMaximum)
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.mutedInk)
 
                     Slider(
                         value: maximumItemLevelBinding,
@@ -286,6 +297,7 @@ private struct ItemFilterSheet: View {
             }
             .padding(.vertical, 4)
         }
+        .appThemedListRow()
 
         Section(L10n.ItemSearch.Filter.rarity) {
             LazyVGrid(columns: rarityColumns, alignment: .leading, spacing: 8) {
@@ -295,6 +307,7 @@ private struct ItemFilterSheet: View {
             }
             .padding(.vertical, 4)
         }
+        .appThemedListRow()
 
         Section(L10n.ItemSearch.Filter.hq) {
             Picker(L10n.ItemSearch.Filter.hq, selection: hqStateBinding) {
@@ -304,6 +317,7 @@ private struct ItemFilterSheet: View {
             }
             .pickerStyle(.segmented)
         }
+        .appThemedListRow()
 
         Section(L10n.ItemSearch.Filter.tradable) {
             Picker(L10n.ItemSearch.Filter.tradable, selection: tradableStateBinding) {
@@ -313,6 +327,7 @@ private struct ItemFilterSheet: View {
             }
             .pickerStyle(.segmented)
         }
+        .appThemedListRow()
     }
 
     @ViewBuilder
@@ -334,11 +349,12 @@ private struct ItemFilterSheet: View {
 
                             Text("\(group.categories.count)")
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(AppTheme.mutedInk)
                         }
                     }
                 }
             }
+            .appThemedListRow()
         }
 
         if !viewModel.availableJobFilterOptions.isEmpty {
@@ -350,6 +366,7 @@ private struct ItemFilterSheet: View {
                 }
                 .padding(.vertical, 4)
             }
+            .appThemedListRow()
         }
 
         if !viewModel.equipSlots.isEmpty {
@@ -361,6 +378,7 @@ private struct ItemFilterSheet: View {
                 }
                 .padding(.vertical, 4)
             }
+            .appThemedListRow()
         }
     }
 
@@ -424,11 +442,11 @@ private struct ItemFilterSheet: View {
                     .minimumScaleFactor(0.8)
             }
             .font(.subheadline.weight(.semibold))
-            .foregroundStyle(isSelected ? rarityColor(for: rarity) : .secondary)
-            .frame(maxWidth: .infinity, minHeight: 34)
+            .foregroundStyle(isSelected ? rarityColor(for: rarity) : AppTheme.mutedInk)
+            .frame(maxWidth: .infinity, minHeight: 44)
         }
         .buttonStyle(.bordered)
-        .tint(isSelected ? rarityColor(for: rarity) : .secondary)
+        .tint(isSelected ? rarityColor(for: rarity) : AppTheme.mutedInk)
         .accessibilityLabel(Text(L10n.ItemSearch.Filter.rarityAccessibility(name)))
         .accessibilityValue(Text(isSelected ? L10n.Common.selected : L10n.Common.notSelected))
     }
@@ -446,7 +464,7 @@ private struct ItemFilterSheet: View {
         case 7:
             return .pink
         default:
-            return .secondary
+            return AppTheme.mutedInk
         }
     }
 
@@ -461,7 +479,7 @@ private struct ItemFilterSheet: View {
                     .imageScale(.small)
 
                 Text(category.displayName)
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(AppTheme.ink)
 
                 Spacer(minLength: 0)
             }
@@ -486,7 +504,7 @@ private struct ItemFilterSheet: View {
                         .overlay {
                             Text(option.abbreviation.prefix(1))
                                 .font(.caption.weight(.bold))
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(AppTheme.mutedInk)
                         }
                 }
                 .frame(width: 28, height: 28)
@@ -498,11 +516,11 @@ private struct ItemFilterSheet: View {
                     .minimumScaleFactor(0.8)
                     .multilineTextAlignment(.center)
             }
-            .foregroundStyle(isSelected ? .white : .primary)
+            .foregroundStyle(isSelected ? Color.white : AppTheme.ink)
             .frame(maxWidth: .infinity, minHeight: 62)
         }
         .buttonStyle(.borderedProminent)
-        .tint(isSelected ? .accentColor : .secondary.opacity(0.18))
+        .tint(isSelected ? HomeFeature.itemSearch.accent : AppTheme.mutedInk.opacity(0.18))
         .accessibilityLabel(option.displayName)
         .accessibilityValue(Text(isSelected ? L10n.Common.selected : L10n.Common.notSelected))
     }
@@ -522,10 +540,10 @@ private struct ItemFilterSheet: View {
                     .minimumScaleFactor(0.8)
             }
             .font(.subheadline.weight(.semibold))
-            .frame(maxWidth: .infinity, minHeight: 34)
+            .frame(maxWidth: .infinity, minHeight: 44)
         }
         .buttonStyle(.bordered)
-        .tint(isSelected ? .accentColor : .secondary)
+        .tint(isSelected ? HomeFeature.itemSearch.accent : AppTheme.mutedInk)
         .accessibilityLabel(equipSlot.displayName)
         .accessibilityValue(Text(isSelected ? L10n.Common.selected : L10n.Common.notSelected))
     }
@@ -557,11 +575,11 @@ private struct ItemSearchRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.displayName)
                     .font(.headline)
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(AppTheme.ink)
 
                 Text(L10n.ItemSearch.itemLevel(item.ilvl))
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
             }
         }
         .padding(.vertical, 4)

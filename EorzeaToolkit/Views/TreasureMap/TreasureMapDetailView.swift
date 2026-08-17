@@ -21,13 +21,16 @@ struct TreasureMapDetailView: View {
                             Spacer()
                             Text(L10n.TreasureMap.spotCount(zone.spotCount))
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(AppTheme.mutedInk)
                         }
                     }
                 }
             }
+            .appThemedListRow()
         }
+        .appThemedScrollContent()
         .navigationTitle(map.grade)
         .navigationBarTitleDisplayMode(.inline)
+        .appThemedScreen(tint: HomeFeature.treasureMap.accent)
     }
 }

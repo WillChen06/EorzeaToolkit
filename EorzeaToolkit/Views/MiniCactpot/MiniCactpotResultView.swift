@@ -12,10 +12,11 @@ struct MiniCactpotResultView: View {
 
                     Text(L10n.MiniCactpot.Result.expectedValue(expectedValueText(bestResult.expectedValue)))
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.mutedInk)
                 }
                 .padding(.vertical, 4)
             }
+            .appThemedListRow()
 
             Section(L10n.MiniCactpot.Result.allLines) {
                 ForEach(results) { result in
@@ -26,11 +27,12 @@ struct MiniCactpotResultView: View {
 
                         Text(expectedValueText(result.expectedValue))
                             .font(.body.monospacedDigit())
-                            .foregroundStyle(result.id == bestResult.id ? .orange : .secondary)
+                            .foregroundStyle(result.id == bestResult.id ? Color.orange : AppTheme.mutedInk)
                     }
                     .accessibilityElement(children: .combine)
                 }
             }
+            .appThemedListRow()
         }
     }
 

@@ -35,12 +35,13 @@ struct GatheringSection: View {
                                 .monospacedDigit()
                         }
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(HomeFeature.itemSearch.accent)
                     }
                     .buttonStyle(.plain)
                     .accessibilityHint(Text(isExpanded ? L10n.ItemSearch.Gathering.collapseHint : L10n.ItemSearch.Gathering.showAllHint))
                 }
             }
+            .appThemedListRow()
         }
     }
 
@@ -114,13 +115,13 @@ private struct GatheringNodeCard: View {
 
                 Text("Lv.\(node.level)")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
                     .monospacedDigit()
             }
 
             Label(node.locationText, systemImage: "mappin.and.ellipse")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.mutedInk)
 
             if !node.traitLabels.isEmpty {
                 HStack(spacing: 6) {
@@ -133,7 +134,7 @@ private struct GatheringNodeCard: View {
             if let spawnTimeText = node.spawnTimeText {
                 Label(spawnTimeText, systemImage: "clock")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
             }
         }
         .padding(.vertical, 6)
@@ -168,10 +169,10 @@ private struct GatheringTraitBadge: View {
     var body: some View {
         Text(label)
             .font(.caption.weight(.semibold))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(AppTheme.mutedInk)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(.quaternary, in: Capsule())
+            .background(AppTheme.surfaceDepth, in: Capsule())
     }
 }
 
@@ -188,7 +189,7 @@ private struct FishingSpotCard: View {
 
                 Text(spot.levelText)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
                     .monospacedDigit()
             }
 
@@ -206,7 +207,7 @@ private struct FishingSpotCard: View {
 
             Label(spot.locationText, systemImage: "mappin.and.ellipse")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.mutedInk)
 
             if let url = spot.teamcraftLinkURL {
                 Link(destination: url) {

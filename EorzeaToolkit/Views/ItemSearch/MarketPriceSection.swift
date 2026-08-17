@@ -12,6 +12,7 @@ struct MarketPriceSection: View {
                 marketScopePicker
                 marketStatusContent
             }
+            .appThemedListRow()
 
             if case .loaded(let marketPrice) = viewModel.loadState {
                 MarketListingsSection(listings: marketPrice.listings)
@@ -44,23 +45,23 @@ struct MarketPriceSection: View {
 
                 Text(L10n.ItemSearch.Market.loading)
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
             }
         case .untradable:
             Label(L10n.ItemSearch.Market.untradable, systemImage: "cart.badge.minus")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.mutedInk)
         case .empty:
             Label(L10n.ItemSearch.Market.empty, systemImage: "chart.line.downtrend.xyaxis")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.mutedInk)
         case .loaded(let marketPrice):
             MarketPriceSummaryView(item: item, marketPrice: marketPrice)
         case .failed(let message):
             VStack(alignment: .leading, spacing: 10) {
                 Label(message, systemImage: "exclamationmark.triangle")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
 
                 Button {
                     viewModel.load(item: item, scope: marketPriceSettings.selectedScope)
@@ -106,13 +107,13 @@ private struct MarketPriceSummaryView: View {
                     Text("HQ \(marketPriceText(marketPrice.averagePriceHQ))")
                 }
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.mutedInk)
             }
 
             if let lastUploadDate = marketPrice.lastUploadDate {
                 Text(L10n.ItemSearch.Market.lastUpdated(lastUploadDate.formatted(date: .abbreviated, time: .shortened)))
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
             }
 
             Link(destination: MarketPriceService.universalisMarketURL(itemID: item.id)) {
@@ -138,7 +139,7 @@ private struct MarketListingsSection: View {
             if listings.isEmpty {
                 Label(L10n.ItemSearch.Market.emptyListings, systemImage: "cart")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
             } else {
                 ForEach(visibleListings) { listing in
                     MarketListingRow(listing: listing)
@@ -158,6 +159,7 @@ private struct MarketListingsSection: View {
                 }
             }
         }
+        .appThemedListRow()
     }
 }
 
@@ -169,13 +171,14 @@ private struct MarketRecentSalesSection: View {
             if sales.isEmpty {
                 Label(L10n.ItemSearch.Market.emptyRecentSales, systemImage: "clock")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
             } else {
                 ForEach(Array(sales.prefix(5))) { sale in
                     MarketSaleRow(sale: sale)
                 }
             }
         }
+        .appThemedListRow()
     }
 }
 
@@ -225,7 +228,7 @@ private struct MarketTransactionRow: View {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
                 Text(qualityLabel)
                     .font(.caption.weight(.bold))
-                    .foregroundStyle(qualityLabel == "HQ" ? .blue : .secondary)
+                    .foregroundStyle(qualityLabel == "HQ" ? Color.blue : AppTheme.mutedInk)
                     .frame(width: 24, alignment: .leading)
 
                 Text(marketPriceText(pricePerUnit))
@@ -233,19 +236,19 @@ private struct MarketTransactionRow: View {
 
                 Text("x\(quantity.formatted())")
                     .font(.subheadline.monospacedDigit())
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
 
                 Spacer(minLength: 8)
 
                 Text(marketPriceText(total))
                     .font(.subheadline.monospacedDigit())
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
             }
 
             if !detailText.isEmpty {
                 Text(detailText)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
             }
         }
         .padding(.vertical, 2)
@@ -278,7 +281,7 @@ private struct MarketPriceMetricRow: View {
         HStack(alignment: .firstTextBaseline) {
             Text(title)
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.mutedInk)
 
             Spacer(minLength: 12)
 

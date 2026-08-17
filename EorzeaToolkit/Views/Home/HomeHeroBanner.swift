@@ -7,10 +7,10 @@ struct HomeHeroBanner: View {
         .overlay {
             ZStack {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .strokeBorder(HomeStyle.gold.opacity(0.55), lineWidth: 1)
+                    .strokeBorder(AppTheme.gold.opacity(0.55), lineWidth: 1)
 
                 RoundedRectangle(cornerRadius: 4, style: .continuous)
-                    .strokeBorder(HomeStyle.gold.opacity(0.24), lineWidth: 1)
+                    .strokeBorder(AppTheme.gold.opacity(0.24), lineWidth: 1)
                     .padding(6)
             }
         }

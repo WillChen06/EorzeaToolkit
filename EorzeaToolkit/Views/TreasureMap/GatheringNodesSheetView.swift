@@ -28,27 +28,22 @@ struct GatheringNodesSheetView: View {
                 }
                 .padding()
             }
-            .background(Color(.systemGroupedBackground))
+            .appThemedBackground()
             .navigationTitle(L10n.TreasureMap.gatheringSheetTitle(grade: map.grade, name: map.name, level: map.level))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.caption)
-                            .fontWeight(.bold)
-                            .foregroundStyle(.secondary)
-                            .padding(6)
-                            .background(Color(.systemGray4))
-                            .clipShape(Circle())
-                    }
+                    Button(L10n.Common.done, systemImage: "xmark", action: dismiss.callAsFunction)
+                        .labelStyle(.iconOnly)
+                        .foregroundStyle(HomeFeature.treasureMap.accent)
+                        .frame(width: 44, height: 44)
+                        .background(AppTheme.surfaceDepth, in: Circle())
                 }
             }
             .fullScreenCover(item: $selectedNode) { node in
                 GatheringNodeMapView(node: node, viewModel: viewModel)
             }
+            .appThemedScreen(tint: HomeFeature.treasureMap.accent)
         }
     }
 
@@ -58,10 +53,10 @@ struct GatheringNodesSheetView: View {
             Text(L10n.TreasureMap.jobSection(jobLabel: job.label, count: nodes.count))
                 .font(.subheadline)
                 .fontWeight(.semibold)
-                .foregroundStyle(Color(.sRGB, red: 0.82, green: 0.7, blue: 0.42))
+                .foregroundStyle(AppTheme.gold)
 
             Divider()
-                .overlay(Color(.sRGB, red: 0.82, green: 0.7, blue: 0.42).opacity(0.3))
+                .overlay(AppTheme.gold.opacity(0.3))
 
             VStack(spacing: 1) {
                 ForEach(nodes) { node in
@@ -70,6 +65,8 @@ struct GatheringNodesSheetView: View {
             }
             .clipShape(RoundedRectangle(cornerRadius: 10))
         }
+        .padding(12)
+        .appThemedCard()
     }
 
     private func nodeRow(_ node: GatheringNodeDisplay) -> some View {
@@ -85,26 +82,25 @@ struct GatheringNodesSheetView: View {
 
             Text(node.zoneName)
                 .font(.subheadline)
-                .foregroundStyle(.primary)
+                .foregroundStyle(AppTheme.ink)
 
             Spacer()
 
             Text(L10n.TreasureMap.coordinatePair(x: coordinateText(node.x), y: coordinateText(node.y)))
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.mutedInk)
 
-            Button {
+            Button(L10n.TreasureMap.gatheringNodes, systemImage: "map") {
                 selectedNode = node
-            } label: {
-                Image(systemName: "map")
-                    .font(.subheadline)
-                    .foregroundStyle(.blue)
             }
+            .labelStyle(.iconOnly)
+            .foregroundStyle(HomeFeature.treasureMap.accent)
+            .frame(width: 44, height: 44)
             .buttonStyle(.plain)
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .background(Color(.secondarySystemGroupedBackground))
+        .padding(.vertical, 6)
+        .background(AppTheme.surface)
     }
 }
 
@@ -182,21 +178,15 @@ struct GatheringNodeMapView: View {
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color(.systemGray6).opacity(0.3))
+                .background(AppTheme.ink.opacity(0.32))
             }
 
             // 關閉按鈕
-            Button {
-                dismiss()
-            } label: {
-                Image(systemName: "xmark")
-                    .font(.caption)
-                    .fontWeight(.bold)
-                    .foregroundStyle(.white)
-                    .padding(8)
-                    .background(Color(.systemGray3).opacity(0.8))
-                    .clipShape(Circle())
-            }
+            Button(L10n.Common.done, systemImage: "xmark", action: dismiss.callAsFunction)
+                .labelStyle(.iconOnly)
+                .foregroundStyle(.white)
+                .frame(width: 44, height: 44)
+                .background(AppTheme.ink.opacity(0.82), in: Circle())
             .padding()
         }
     }

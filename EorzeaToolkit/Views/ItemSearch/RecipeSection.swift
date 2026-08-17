@@ -11,7 +11,7 @@ struct RecipeSection: View {
                 if recipes.isEmpty {
                     Label(L10n.ItemSearch.Recipe.unavailable, systemImage: "hammer")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.mutedInk)
                 } else {
                     ForEach(recipes, id: \.self) { recipe in
                         RecipeCard(
@@ -29,9 +29,10 @@ struct RecipeSection: View {
                     Text(L10n.ItemSearch.Recipe.loading)
                 }
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
             }
         }
+        .appThemedListRow()
     }
 }
 
@@ -74,17 +75,17 @@ private struct RecipeCard: View {
 
             Text(levelText)
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.mutedInk)
 
             Spacer(minLength: 12)
 
             if recipe.resultAmount > 1 {
                 Text(L10n.ItemSearch.Recipe.resultAmount(recipe.resultAmount))
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(.quaternary, in: Capsule())
+                    .background(AppTheme.surfaceDepth, in: Capsule())
             }
         }
     }
@@ -132,13 +133,13 @@ private struct RecipeIngredientRow: View {
             } else {
                 Image(systemName: "questionmark.square")
                     .font(.title3)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
                     .frame(width: 32, height: 32)
             }
 
             Text(name)
                 .font(.subheadline)
-                .foregroundStyle(item == nil ? .secondary : .primary)
+                .foregroundStyle(item == nil ? AppTheme.mutedInk : AppTheme.ink)
                 .lineLimit(2)
 
             Spacer(minLength: 8)
@@ -146,7 +147,7 @@ private struct RecipeIngredientRow: View {
             Text("×\(ingredient.amount)")
                 .font(.subheadline.weight(.semibold))
                 .monospacedDigit()
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.mutedInk)
         }
         .accessibilityElement(children: .combine)
     }

@@ -42,8 +42,10 @@ struct RelicWeaponListView: View {
                             isLatest: index == viewModel.weaponSeriesList.count - 1
                         )
                     }
+                    .appThemedListRow()
                 }
                 .listStyle(.insetGrouped)
+                .appThemedScrollContent()
             } else if viewModel.hasLoadedWeapons {
                 ContentUnavailableView(
                     L10n.RelicWeapon.emptyTitle,
@@ -59,6 +61,8 @@ struct RelicWeaponListView: View {
         .task {
             viewModel.loadWeapons()
         }
+        .appThemedBackground()
+        .appThemedScreen(tint: HomeFeature.relicWeapon.accent)
     }
 }
 
@@ -92,17 +96,17 @@ private struct RelicWeaponSeriesRow: View {
         VStack(spacing: 2) {
             Text(series.nameTw)
                 .font(.headline.weight(.bold))
-                .foregroundStyle(HomeStyle.aetherBlue)
+                .foregroundStyle(AppTheme.aetherBlue)
 
             Text(L10n.RelicWeapon.level(series.levelCap))
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .font(.caption.bold())
+                .foregroundStyle(AppTheme.mutedInk)
         }
         .frame(width: 56, height: 56)
-        .background(HomeStyle.aetherBlue.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .background(AppTheme.aetherBlue.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .strokeBorder(HomeStyle.aetherBlue.opacity(0.28), lineWidth: 1)
+                .strokeBorder(AppTheme.aetherBlue.opacity(0.28), lineWidth: 1)
         }
     }
 
@@ -110,7 +114,7 @@ private struct RelicWeaponSeriesRow: View {
         HStack(spacing: 8) {
             Text(series.expansion)
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.mutedInk)
 
             metadataText(L10n.RelicWeapon.stageCount(series.stages.count))
             metadataText(L10n.RelicWeapon.jobCount(series.availableJobs.count))
@@ -119,17 +123,17 @@ private struct RelicWeaponSeriesRow: View {
 
     private var latestBadge: some View {
         Text(L10n.RelicWeapon.latest)
-            .font(.caption2.weight(.semibold))
+            .font(.caption.bold())
             .padding(.horizontal, 7)
             .padding(.vertical, 3)
-            .foregroundStyle(HomeStyle.aetherBlue)
-            .background(HomeStyle.aetherBlue.opacity(0.12), in: Capsule())
+            .foregroundStyle(AppTheme.aetherBlue)
+            .background(AppTheme.aetherBlue.opacity(0.12), in: Capsule())
     }
 
     private func metadataText(_ text: LocalizedStringKey) -> some View {
         Text(text)
             .font(.caption)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(AppTheme.mutedInk)
     }
 }
 
@@ -151,6 +155,7 @@ private struct RelicWeaponSeriesView: View {
                 }
                 .pickerStyle(.segmented)
             }
+            .appThemedListRow()
 
             if mode == .tracking {
                 trackingSummarySection
@@ -169,13 +174,16 @@ private struct RelicWeaponSeriesView: View {
                     )
                 }
             }
+            .appThemedListRow()
         }
         .listStyle(.insetGrouped)
+        .appThemedScrollContent()
         .navigationTitle(L10n.RelicWeapon.seriesTitle(shortName: series.nameTw, fullName: series.fullNameTw))
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             updateSelectedJobIfNeeded()
         }
+        .appThemedScreen(tint: HomeFeature.relicWeapon.accent)
     }
 
     private var trackingSummarySection: some View {
@@ -199,7 +207,7 @@ private struct RelicWeaponSeriesView: View {
 
                     Text(L10n.RelicWeapon.progressSummary(completedCount: completedCount, totalCount: totalCount, percentage: percentage))
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.mutedInk)
                 }
 
                 ProgressView(value: Double(completedCount), total: Double(max(totalCount, 1)))
@@ -207,6 +215,7 @@ private struct RelicWeaponSeriesView: View {
             }
             .padding(.vertical, 4)
         }
+        .appThemedListRow()
     }
 
     private func binding(for stage: WeaponStage) -> Binding<Bool> {

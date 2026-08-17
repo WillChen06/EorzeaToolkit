@@ -19,7 +19,7 @@ struct ObtainSourceSection: View {
 
                             Image(systemName: "arrow.down")
                                 .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(AppTheme.mutedInk)
                                 .accessibilityHidden(true)
                         }
                         .contentShape(Rectangle())
@@ -28,6 +28,7 @@ struct ObtainSourceSection: View {
                     .accessibilityHint(L10n.Obtain.jumpHint(sourceTitle: source.title))
                 }
             }
+            .appThemedListRow()
         }
     }
 }

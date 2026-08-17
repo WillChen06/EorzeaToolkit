@@ -9,11 +9,11 @@ struct MiniCactpotPayoutTableView: View {
                 GridRow {
                     Text(L10n.MiniCactpot.Payout.sum)
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.mutedInk)
 
                     Text(L10n.MiniCactpot.Payout.reward)
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.mutedInk)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 }
 
@@ -24,7 +24,7 @@ struct MiniCactpotPayoutTableView: View {
 
                         Text("\(MiniCactpotCalculator.payout[sum] ?? 0)")
                             .font(.body.monospacedDigit())
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(AppTheme.mutedInk)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                     }
                 }
