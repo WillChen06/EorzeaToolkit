@@ -178,7 +178,7 @@ struct GatheringNodeMapView: View {
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(AppTheme.ink.opacity(0.32))
+                .background(.black.opacity(0.6))
             }
 
             // 關閉按鈕
@@ -186,8 +186,8 @@ struct GatheringNodeMapView: View {
                 .labelStyle(.iconOnly)
                 .foregroundStyle(.white)
                 .frame(width: 44, height: 44)
-                .background(AppTheme.ink.opacity(0.82), in: Circle())
-            .padding()
+                .background(.black.opacity(0.8), in: Circle())
+                .padding()
         }
     }
 

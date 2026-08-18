@@ -104,6 +104,7 @@ struct SkillRotationEditorView: View {
                     }
                     .padding(12)
                 }
+                .layoutPriority(1)
             }
         }
         .appThemedBackground()
