@@ -32,12 +32,13 @@ struct ItemDetailView: View {
 
                             Text("iLv \(item.ilvl)")
                                 .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(AppTheme.mutedInk)
                         }
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 20)
                 }
+                .appThemedListRow()
 
                 ObtainSourceSection(sources: obtainSources) { source in
                     withAnimation {
@@ -69,6 +70,7 @@ struct ItemDetailView: View {
                         .id(ObtainSource.market)
                 }
             }
+            .appThemedScrollContent()
             .navigationTitle(item.displayName)
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(item: $selectedRecipeItem) { item in
@@ -93,6 +95,7 @@ struct ItemDetailView: View {
                 fishingSpots = await loadedFishingSpots
                 shopEntry = await loadedShopEntry
             }
+            .appThemedScreen(tint: HomeFeature.itemSearch.accent)
         }
     }
 

@@ -24,7 +24,7 @@ struct BattleJobListView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                             .overlay {
                                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                    .strokeBorder(HomeStyle.crystal.opacity(0.24), lineWidth: 1)
+                                    .strokeBorder(AppTheme.crystal.opacity(0.24), lineWidth: 1)
                             }
 
                             VStack(alignment: .leading, spacing: 4) {
@@ -32,7 +32,7 @@ struct BattleJobListView: View {
                                     .font(.headline)
                                 Text(job.abbreviation)
                                     .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(AppTheme.mutedInk)
                             }
 
                             Spacer()
@@ -45,14 +45,16 @@ struct BattleJobListView: View {
                                     .lineLimit(1)
                                     .padding(.horizontal, 9)
                                     .padding(.vertical, 3)
-                                    .background(HomeStyle.crystal.opacity(0.14), in: Capsule())
-                                    .foregroundStyle(HomeStyle.crystal)
+                                    .background(AppTheme.crystal.opacity(0.14), in: Capsule())
+                                    .foregroundStyle(AppTheme.crystal)
                             }
                         }
                         .padding(.vertical, 6)
                     }
+                    .appThemedListRow()
                 }
                 .listStyle(.insetGrouped)
+                .appThemedScrollContent()
             } else if viewModel.hasLoadedJobs {
                 ContentUnavailableView(
                     L10n.SkillRotation.emptyTitle,
@@ -66,15 +68,17 @@ struct BattleJobListView: View {
         .navigationTitle(L10n.SkillRotation.title)
         .navigationBarTitleDisplayMode(.inline)
         .task { viewModel.load() }
+        .appThemedBackground()
+        .appThemedScreen(tint: HomeFeature.skillRotation.accent)
     }
 
     private var placeholder: some View {
         RoundedRectangle(cornerRadius: 10, style: .continuous)
-            .fill(HomeStyle.crystal.opacity(0.10))
+            .fill(AppTheme.crystal.opacity(0.10))
             .overlay {
                 Image(systemName: "bolt.circle")
                     .font(.title3.weight(.semibold))
-                    .foregroundStyle(HomeStyle.crystal)
+                    .foregroundStyle(AppTheme.crystal)
             }
     }
 }

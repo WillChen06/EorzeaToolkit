@@ -19,7 +19,8 @@ struct RelicWeaponStageDisclosureView: View {
                     } label: {
                         Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle")
                             .font(.title3)
-                            .foregroundStyle(isCompleted ? .green : .secondary)
+                            .foregroundStyle(isCompleted ? Color.green : AppTheme.mutedInk)
+                            .frame(width: 44, height: 44)
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(isCompleted ? L10n.RelicWeapon.markIncomplete : L10n.RelicWeapon.markComplete)
@@ -31,17 +32,17 @@ struct RelicWeaponStageDisclosureView: View {
 
                     Text(L10n.RelicWeapon.stage(stage.stageIndex))
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.mutedInk)
                 }
 
                 Spacer()
 
                 Text(stage.ilvlLabel)
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(Color.secondary.opacity(0.12))
+                    .background(AppTheme.surfaceDepth)
                     .clipShape(Capsule())
             }
             .padding(.vertical, 4)
@@ -62,7 +63,7 @@ private struct RelicWeaponStageDetailView: View {
 
                     Text(stage.taskDescriptionTw)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.mutedInk)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
@@ -74,7 +75,7 @@ private struct RelicWeaponStageDetailView: View {
                 if stage.materials.isEmpty {
                     Text(L10n.RelicWeapon.noExtraMaterials)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.mutedInk)
                 } else {
                     ForEach(stage.materials) { material in
                         RelicWeaponMaterialRow(
@@ -109,11 +110,11 @@ private struct RelicWeaponMaterialRow: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .top, spacing: 6) {
                 Text("•")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
 
                 Text(material.displayText)
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
                     .fixedSize(horizontal: false, vertical: true)
 
                 if material.hasNote {
@@ -124,7 +125,8 @@ private struct RelicWeaponMaterialRow: View {
                             .font(.caption)
                     }
                     .buttonStyle(.plain)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(HomeFeature.relicWeapon.accent)
+                    .frame(minWidth: 44, minHeight: 44)
                     .accessibilityLabel(isNoteExpanded ? L10n.RelicWeapon.hideNote : L10n.RelicWeapon.showNote)
                 }
             }
@@ -132,7 +134,7 @@ private struct RelicWeaponMaterialRow: View {
             if isNoteExpanded, let noteTw = material.normalizedNoteTw {
                 Text(noteTw)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.leading, 18)
             }

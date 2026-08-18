@@ -35,6 +35,7 @@ struct SkillRotationEditorView: View {
     @Bindable var viewModel: SkillRotationViewModel
 
     @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     @State private var selectedLevel: SkillRotationLevel = .defaultLevel
     @State private var selectedCategory: SkillRotationCategory = .all
@@ -82,6 +83,7 @@ struct SkillRotationEditorView: View {
                 rotationBar(availableWidth: availableWidth, maxVisibleRows: maxRotationVisibleRows)
 
                 Divider()
+                    .overlay(AppTheme.gold.opacity(0.25))
 
                 levelFilter
                     .padding(.horizontal)
@@ -93,6 +95,7 @@ struct SkillRotationEditorView: View {
                     .padding(.bottom, 10)
 
                 Divider()
+                    .overlay(AppTheme.gold.opacity(0.25))
 
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 14) {
@@ -104,19 +107,20 @@ struct SkillRotationEditorView: View {
                 .layoutPriority(1)
             }
         }
+        .appThemedBackground()
         .navigationTitle(L10n.SkillRotation.editorTitle(jobName: job.displayName, abbreviation: job.abbreviation))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 if !rotation.isEmpty {
-                    Button(role: .destructive) {
+                    Button(L10n.Common.clear, systemImage: "trash", role: .destructive) {
                         viewModel.clearRotation(for: job.id, level: selectedLevel)
-                    } label: {
-                        Image(systemName: "trash")
                     }
+                    .labelStyle(.iconOnly)
                 }
             }
         }
+        .appThemedScreen(tint: HomeFeature.skillRotation.accent)
     }
 
     @ViewBuilder
@@ -149,7 +153,7 @@ struct SkillRotationEditorView: View {
                 Text(L10n.SkillRotation.itemSection)
                     .font(.caption)
                     .fontWeight(.semibold)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.top, 4)
             }
@@ -212,13 +216,13 @@ struct SkillRotationEditorView: View {
                 .font(.subheadline)
                 .fontWeight(isSelected ? .semibold : .regular)
                 .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(isSelected ? Color.accentColor.opacity(0.2) : Color(.systemGray6))
-                .foregroundStyle(isSelected ? Color.accentColor : .primary)
+                .frame(minHeight: 44)
+                .background(isSelected ? HomeFeature.skillRotation.accent.opacity(0.2) : AppTheme.surfaceDepth)
+                .foregroundStyle(isSelected ? HomeFeature.skillRotation.accent : AppTheme.ink)
                 .clipShape(Capsule())
                 .overlay(
                     Capsule().strokeBorder(
-                        isSelected ? Color.accentColor : Color.clear,
+                        isSelected ? HomeFeature.skillRotation.accent : AppTheme.gold.opacity(0.2),
                         lineWidth: 1
                     )
                 )
@@ -246,18 +250,24 @@ struct SkillRotationEditorView: View {
         let needsScroll = rowCount > maxVisibleRows
 
         return VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Text(L10n.SkillRotation.rotationTitle(level: selectedLevel.label))
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                Text(L10n.SkillRotation.rotationCount(rotation.count))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                if !rotation.isEmpty {
-                    Text(L10n.SkillRotation.reorderHint)
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+            Group {
+                if dynamicTypeSize.isAccessibilitySize {
+                    VStack(alignment: .leading, spacing: 2) {
+                        rotationTitle
+
+                        HStack(alignment: .firstTextBaseline) {
+                            rotationCount
+                            Spacer()
+                            rotationReorderHint
+                        }
+                    }
+                } else {
+                    HStack(alignment: .firstTextBaseline) {
+                        rotationTitle
+                        rotationCount
+                        Spacer()
+                        rotationReorderHint
+                    }
                 }
             }
             .padding(.horizontal)
@@ -265,8 +275,10 @@ struct SkillRotationEditorView: View {
             if rotation.isEmpty {
                 Text(L10n.SkillRotation.emptyRotationHint)
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
                     .frame(maxWidth: .infinity)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
                     .padding(.vertical, 20)
             } else if needsScroll {
                 ScrollViewReader { proxy in
@@ -285,7 +297,34 @@ struct SkillRotationEditorView: View {
                 rotationGrid
             }
         }
-        .background(Color(.secondarySystemGroupedBackground))
+        .background(AppTheme.surface)
+        .overlay(alignment: .bottom) {
+            AppTheme.gold.opacity(0.22)
+                .frame(height: 1)
+        }
+    }
+
+    private var rotationTitle: some View {
+        Text(L10n.SkillRotation.rotationTitle(level: selectedLevel.label))
+            .font(.subheadline)
+            .fontWeight(.semibold)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var rotationCount: some View {
+        Text(L10n.SkillRotation.rotationCount(rotation.count))
+            .font(.caption)
+            .foregroundStyle(AppTheme.mutedInk)
+    }
+
+    @ViewBuilder
+    private var rotationReorderHint: some View {
+        if !rotation.isEmpty {
+            Text(L10n.SkillRotation.reorderHint)
+                .font(.caption)
+                .foregroundStyle(AppTheme.mutedInk)
+                .multilineTextAlignment(.trailing)
+        }
     }
 
     private var rotationGrid: some View {
@@ -297,7 +336,7 @@ struct SkillRotationEditorView: View {
                     }
                     Image(systemName: "chevron.right")
                         .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.mutedInk)
                         .opacity(index == rotation.count - 1 ? 0 : 1)
                 }
                 .id(slot.id)
@@ -330,19 +369,19 @@ struct SkillGridIcon: View {
             placeholder
         }
         .frame(width: 56, height: 56)
-        .background(Color(.systemGray6))
+        .background(AppTheme.surfaceDepth)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .overlay(
             RoundedRectangle(cornerRadius: 8)
-                .strokeBorder(Color(.systemGray4), lineWidth: 0.5)
+                .strokeBorder(AppTheme.gold.opacity(0.25), lineWidth: 1)
         )
     }
 
     private var placeholder: some View {
-        Color(.systemGray5)
+        AppTheme.surfaceDepth
             .overlay {
                 Image(systemName: placeholderImageName)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
             }
     }
 
@@ -364,13 +403,13 @@ struct RotationSlotView: View {
     var body: some View {
         ZStack(alignment: .topTrailing) {
             CachedIconImage(url: slot.item.iconURL) {
-                Color(.systemGray5)
+                AppTheme.surfaceDepth
             }
             .frame(width: iconSize, height: iconSize)
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
-                    .strokeBorder(Color(.systemGray4), lineWidth: 0.5)
+                    .strokeBorder(AppTheme.gold.opacity(0.25), lineWidth: 1)
             )
 
             if let onDelete {
@@ -382,6 +421,7 @@ struct RotationSlotView: View {
                         .shadow(color: .black.opacity(0.2), radius: 1, y: 1)
                 }
                 .buttonStyle(.plain)
+                .frame(width: 44, height: 44)
             }
         }
         .padding(.top, onDelete == nil ? 0 : 6)
@@ -414,7 +454,7 @@ struct SkillDetailCard: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {
                 CachedIconImage(url: action.iconURL) {
-                    Color(.systemGray5)
+                    AppTheme.surfaceDepth
                 }
                 .frame(width: 56, height: 56)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -426,7 +466,7 @@ struct SkillDetailCard: View {
                         if let cat = action.skillCategory {
                             tag(L10n.SkillRotation.skillCategory(cat), color: categoryColor(cat))
                         }
-                        tag(L10n.SkillRotation.level(action.level), color: .secondary)
+                        tag(L10n.SkillRotation.level(action.level), color: AppTheme.mutedInk)
                     }
                 }
                 Spacer()
@@ -447,13 +487,13 @@ struct SkillDetailCard: View {
                 Divider()
                 Text(action.cleanedDescription)
                     .font(.footnote)
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(AppTheme.ink)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
         .padding(16)
         .frame(minWidth: 280, maxWidth: 360, alignment: .leading)
-        .background(Color(.systemBackground))
+        .appThemedCard()
     }
 
     private func tag(_ text: LocalizedStringKey, color: Color) -> some View {
@@ -469,8 +509,8 @@ struct SkillDetailCard: View {
     private func statBlock(title: LocalizedStringKey, value: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(title)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
+                .font(.caption)
+                .foregroundStyle(AppTheme.mutedInk)
             Text(value)
                 .font(.footnote)
                 .fontWeight(.medium)
@@ -496,7 +536,7 @@ struct TinctureDetailCard: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {
                 CachedIconImage(url: tincture.iconURL) {
-                    Color(.systemGray5)
+                    AppTheme.surfaceDepth
                 }
                 .frame(width: 56, height: 56)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -506,7 +546,7 @@ struct TinctureDetailCard: View {
                         .font(.headline)
                     HStack(spacing: 6) {
                         tag(L10n.SkillRotation.itemCategory, color: .purple)
-                        tag(L10n.SkillRotation.itemLevel(tincture.itemLevel), color: .secondary)
+                        tag(L10n.SkillRotation.itemLevel(tincture.itemLevel), color: AppTheme.mutedInk)
                     }
                 }
                 Spacer()
@@ -518,7 +558,7 @@ struct TinctureDetailCard: View {
         }
         .padding(16)
         .frame(minWidth: 280, maxWidth: 360, alignment: .leading)
-        .background(Color(.systemBackground))
+        .appThemedCard()
     }
 
     private func tag(_ text: LocalizedStringKey, color: Color) -> some View {
@@ -534,8 +574,8 @@ struct TinctureDetailCard: View {
     private func statBlock(title: LocalizedStringKey, value: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(title)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
+                .font(.caption)
+                .foregroundStyle(AppTheme.mutedInk)
             Text(value)
                 .font(.footnote)
                 .fontWeight(.medium)

@@ -32,16 +32,19 @@ struct MiniCactpotView: View {
 
                 Text(progressText)
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
                     .frame(maxWidth: .infinity, alignment: .center)
             }
+            .appThemedListRow()
 
             MiniCactpotResultView(results: results)
 
             Section {
                 MiniCactpotPayoutTableView()
             }
+            .appThemedListRow()
         }
+        .appThemedScrollContent()
         .navigationTitle(L10n.MiniCactpot.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -50,6 +53,7 @@ struct MiniCactpotView: View {
                     .disabled(openedCount == 0)
             }
         }
+        .appThemedScreen(tint: HomeFeature.miniCactpot.accent)
         .confirmationDialog(
             L10n.MiniCactpot.selectNumber,
             isPresented: numberPickerBinding,

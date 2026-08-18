@@ -7,6 +7,7 @@ struct MainTabView: View {
         NavigationStack {
             HomeView()
         }
+        .appThemedScreen(tint: AppTheme.crystal)
         .environment(marketPriceSettings)
     }
 }

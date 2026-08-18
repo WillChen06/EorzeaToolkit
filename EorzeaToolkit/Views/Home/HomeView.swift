@@ -19,23 +19,23 @@ struct HomeView: View {
             .padding(.bottom, 32)
             .background {
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(HomeStyle.parchmentLight.opacity(0.42))
+                    .fill(AppTheme.parchmentLight.opacity(0.42))
                     .overlay {
                         RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .strokeBorder(HomeStyle.gold.opacity(0.22), lineWidth: 1)
+                            .strokeBorder(AppTheme.gold.opacity(0.22), lineWidth: 1)
                     }
                     .padding(.horizontal, 8)
                     .padding(.vertical, 10)
             }
         }
-        .background(HomeStyle.background.ignoresSafeArea())
+        .appThemedBackground()
         .navigationBarTitleDisplayMode(.inline)
     }
 
     private var header: some View {
         Text(L10n.Home.appTitle)
             .font(.system(.largeTitle, design: .serif, weight: .semibold))
-            .foregroundStyle(HomeStyle.ink)
+            .foregroundStyle(AppTheme.ink)
             .lineLimit(1)
             .minimumScaleFactor(0.72)
         .frame(maxWidth: .infinity, alignment: .center)
@@ -45,7 +45,7 @@ struct HomeView: View {
         HomeHeroBanner()
             .frame(maxWidth: .infinity)
             .frame(height: 118)
-            .shadow(color: HomeStyle.shadow, radius: 14, y: 8)
+            .shadow(color: AppTheme.shadow, radius: 14, y: 8)
     }
 
     private var featureSection: some View {

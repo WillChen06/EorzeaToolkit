@@ -9,7 +9,7 @@ struct ItemIconView: View {
             placeholder
         }
         .padding(size * 0.08)
-        .background(.thinMaterial)
+        .background(AppTheme.surfaceDepth)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .frame(width: size, height: size)
         .accessibilityHidden(true)
@@ -18,11 +18,11 @@ struct ItemIconView: View {
     private var placeholder: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 8)
-                .fill(.blue.opacity(0.12))
+                .fill(HomeFeature.itemSearch.accent.opacity(0.12))
 
             Image(systemName: "shippingbox.fill")
                 .font(.system(size: size * 0.46, weight: .semibold))
-                .foregroundStyle(.blue)
+                .foregroundStyle(HomeFeature.itemSearch.accent)
         }
     }
 }

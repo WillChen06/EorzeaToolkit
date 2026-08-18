@@ -19,8 +19,10 @@ struct TreasureMapListView: View {
                             selectedMapForGathering = map
                         }
                     }
+                    .appThemedListRow()
                 }
                 .listStyle(.insetGrouped)
+                .appThemedScrollContent()
             } else if viewModel.hasLoadedMaps {
                 ContentUnavailableView(
                     L10n.TreasureMap.emptyTitle,
@@ -44,6 +46,8 @@ struct TreasureMapListView: View {
             )
             .presentationDetents([.medium, .large])
         }
+        .appThemedBackground()
+        .appThemedScreen(tint: HomeFeature.treasureMap.accent)
     }
 }
 
@@ -82,8 +86,8 @@ private struct TreasureMapRow: View {
                 .foregroundStyle(accent)
 
             Text(L10n.TreasureMap.level(map.level))
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .font(.caption.bold())
+                .foregroundStyle(AppTheme.mutedInk)
         }
         .frame(width: 56, height: 56)
         .background(accent.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
@@ -108,8 +112,8 @@ private struct TreasureMapRow: View {
                         .font(.caption.weight(.semibold))
                         .labelStyle(.titleAndIcon)
                         .padding(.horizontal, 7)
-                        .padding(.vertical, 3)
                         .foregroundStyle(.green)
+                        .frame(minHeight: 44)
                         .overlay {
                             Capsule()
                                 .strokeBorder(.green.opacity(0.45), lineWidth: 1)
@@ -132,7 +136,7 @@ private struct TreasureMapRow: View {
     private func metadataText(_ text: LocalizedStringKey) -> some View {
         Text(text)
             .font(.caption)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(AppTheme.mutedInk)
     }
 }
 

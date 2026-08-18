@@ -8,15 +8,15 @@ struct MiniCactpotCellView: View {
         Button(action: action) {
             ZStack {
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(value == nil ? Color(.secondarySystemGroupedBackground) : Color.accentColor.opacity(0.16))
+                    .fill(value == nil ? AppTheme.surfaceDepth : HomeFeature.miniCactpot.accent.opacity(0.16))
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(value == nil ? Color.secondary.opacity(0.25) : Color.accentColor, lineWidth: 1)
+                            .stroke(value == nil ? AppTheme.gold.opacity(0.25) : HomeFeature.miniCactpot.accent, lineWidth: 1)
                     )
 
                 Text(value.map(String.init) ?? "")
                     .font(.title2.monospacedDigit().weight(.semibold))
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(AppTheme.ink)
             }
             .aspectRatio(1, contentMode: .fit)
         }

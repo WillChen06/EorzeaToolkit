@@ -14,10 +14,11 @@ struct ShopPurchaseSection: View {
 
                 Text(L10n.ShopPurchase.sourceNote)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.mutedInk)
             }
             .padding(.vertical, 4)
         }
+        .appThemedListRow()
     }
 
     private var priceText: String {

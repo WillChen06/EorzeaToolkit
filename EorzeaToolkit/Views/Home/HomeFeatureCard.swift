@@ -7,23 +7,23 @@ struct HomeFeatureCard: View {
         cardLayout
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(HomeStyle.cardBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .background(AppTheme.surface, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
         .background {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(HomeStyle.cardDepthBackground)
+                .fill(AppTheme.surfaceDepth)
                 .offset(y: 2)
         }
         .overlay {
             ZStack {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .strokeBorder(HomeStyle.gold.opacity(0.44), lineWidth: 1)
+                    .strokeBorder(AppTheme.gold.opacity(0.44), lineWidth: 1)
 
                 CardCornerOrnaments()
-                    .stroke(HomeStyle.gold.opacity(0.34), lineWidth: 1)
+                    .stroke(AppTheme.gold.opacity(0.34), lineWidth: 1)
                     .padding(6)
             }
         }
-        .shadow(color: HomeStyle.shadow.opacity(0.55), radius: 10, y: 5)
+        .shadow(color: AppTheme.shadow.opacity(0.55), radius: 10, y: 5)
         .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(
@@ -53,7 +53,7 @@ struct HomeFeatureCard: View {
             .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .strokeBorder(HomeStyle.gold.opacity(0.34), lineWidth: 1)
+                    .strokeBorder(AppTheme.gold.opacity(0.34), lineWidth: 1)
             }
             .accessibilityHidden(true)
     }
@@ -61,7 +61,7 @@ struct HomeFeatureCard: View {
     private var featureTitle: some View {
         Text(feature.title)
             .font(.headline)
-            .foregroundStyle(HomeStyle.ink)
+            .foregroundStyle(AppTheme.ink)
             .lineLimit(1)
             .minimumScaleFactor(0.82)
     }
@@ -69,7 +69,7 @@ struct HomeFeatureCard: View {
     private var featureSubtitle: some View {
         Text(feature.subtitle)
             .font(.caption)
-            .foregroundStyle(HomeStyle.mutedInk)
+            .foregroundStyle(AppTheme.mutedInk)
             .lineLimit(2)
             .fixedSize(horizontal: false, vertical: true)
     }

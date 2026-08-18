@@ -58,15 +58,15 @@ enum HomeFeature: CaseIterable, Identifiable {
     var accent: Color {
         switch self {
         case .itemSearch:
-            HomeStyle.crystal
+            AppTheme.crystal
         case .treasureMap:
-            HomeStyle.gold
+            AppTheme.gold
         case .relicWeapon:
-            HomeStyle.aetherBlue
+            AppTheme.aetherBlue
         case .miniCactpot:
-            HomeStyle.crimson
+            AppTheme.crimson
         case .skillRotation:
-            HomeStyle.crystal
+            AppTheme.crystal
         }
     }
 
