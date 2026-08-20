@@ -436,6 +436,27 @@ enum L10n {
         static let emptyDescription: LocalizedStringKey = "treasureMap.emptyDescription"
         static let loading: LocalizedStringKey = "treasureMap.loading"
         static let gatheringNodes: LocalizedStringKey = "treasureMap.gatheringNodes"
+        static let sortAscending: LocalizedStringKey = "treasureMap.sort.ascending"
+        static let sortDescending: LocalizedStringKey = "treasureMap.sort.descending"
+        static let filterAction: LocalizedStringKey = "treasureMap.filter.action"
+        static let filterTitle: LocalizedStringKey = "treasureMap.filter.title"
+        static let filterVersionSection: LocalizedStringKey = "treasureMap.filter.version.section"
+        static let filterLevelSection: LocalizedStringKey = "treasureMap.filter.level.section"
+        static let filteredEmptyTitle: LocalizedStringKey = "treasureMap.filter.emptyTitle"
+        static let clearFilters: LocalizedStringKey = "treasureMap.filter.clear"
+        static let clearAllFilters: LocalizedStringKey = "treasureMap.filter.clearAll"
+
+        static func filterSelectionCount(_ count: Int) -> LocalizedStringKey {
+            "treasureMap.filter.selectionCount \(count)"
+        }
+
+        static func filterVersionOption(_ majorVersion: Int) -> LocalizedStringKey {
+            "treasureMap.filter.version.option \(majorVersion)"
+        }
+
+        static func filterLevelOption(_ level: Int) -> LocalizedStringKey {
+            "treasureMap.filter.level.option \(level)"
+        }
 
         static func level(_ level: Int) -> LocalizedStringKey {
             "treasureMap.level \(level)"

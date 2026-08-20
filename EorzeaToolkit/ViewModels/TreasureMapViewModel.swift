@@ -1,8 +1,11 @@
 import Foundation
 
+@MainActor
 @Observable
 final class TreasureMapViewModel {
     private(set) var maps: [TreasureMap] = []
+    private(set) var sortDirection: TreasureMapSortDirection = .descending
+    private(set) var filter = TreasureMapFilter()
     private(set) var zonesByItemId: [Int: [TreasureZone]] = [:]
     private(set) var zoneNames: [String: ZoneNameEntry] = [:]
     private(set) var hasLoadedMaps = false
@@ -10,6 +13,62 @@ final class TreasureMapViewModel {
     private var spotsByKey: [String: [TreasureSpot]] = [:]  // "itemId-mapId" → spots
     private var mapInfosByKey: [String: MapInfo] = [:]
     private var mapInfosByPlacename: [Int: MapInfo] = [:]
+
+    init(maps: [TreasureMap] = []) {
+        self.maps = maps
+    }
+
+    var displayedMaps: [TreasureMap] {
+        TreasureMapQuery.sorted(
+            TreasureMapQuery.filtered(maps, by: filter),
+            direction: sortDirection
+        )
+    }
+
+    var versionOptions: [Int] {
+        TreasureMapQuery.versionOptions(from: maps)
+    }
+
+    var levelOptions: [Int] {
+        TreasureMapQuery.levelOptions(from: maps)
+    }
+
+    var isFilterActive: Bool {
+        filter.isActive
+    }
+
+    var activeFilterCount: Int {
+        filter.activeFilterCount
+    }
+
+    func toggleSortDirection() {
+        sortDirection.toggle()
+    }
+
+    func toggleMajorVersion(_ majorVersion: Int) {
+        if filter.selectedMajorVersions.contains(majorVersion) {
+            filter.selectedMajorVersions.remove(majorVersion)
+        } else {
+            filter.selectedMajorVersions.insert(majorVersion)
+        }
+    }
+
+    func toggleLevel(_ level: Int) {
+        if filter.selectedLevels.contains(level) {
+            filter.selectedLevels.remove(level)
+        } else {
+            filter.selectedLevels.insert(level)
+        }
+    }
+
+    func clearFilters() {
+        filter = TreasureMapFilter()
+    }
+
+    func resetPresentationState() {
+        sortDirection = .descending
+        clearFilters()
+    }
 
     func loadMaps() {
         do {
