@@ -37,6 +37,9 @@
 - 不變更藏寶圖詳情頁（`TreasureMapDetailView`）、採集點 sheet（`GatheringNodesSheetView`）的既有邏輯。
 - 不新增依 `type`（solo／party）或其他欄位的篩選維度。
 - 不處理搜尋（文字關鍵字查詢）。
+- 不修改 `project.yml`；不新增或變更 target、依賴或 Scheme。
+- 不手動編輯 `project.pbxproj`；`project.pbxproj` 的變更只能是新增 Swift／Test 檔案後執行
+  `xcodegen generate` 產生的結果。
 
 ---
 
@@ -137,7 +140,13 @@
   不要求重用 `ItemFilter` 型別本身。
 - `EorzeaToolkit/Localization/L10n.swift` 及對應語系資源：新增排序控制、篩選入口、篩選徽章、
   「找不到符合篩選條件的藏寶圖」、「清除篩選」等文案的 key。
-- 本 Phase 不修改 `project.yml`、`EorzeaToolkit.xcodeproj`、target、依賴或 Scheme。
+- 為避免把排序／篩選的新型別與測試全部塞進既有檔案而犧牲架構與可維護性，允許依需要新增獨立的
+  App／Test Swift 原始檔（例如排序、篩選選項推導、篩選組合邏輯的純函式與對應 `XCTest` 檔）。
+- 本 Phase 不修改 `project.yml`，不新增或變更 target、依賴或 Scheme。若因新增上述 Swift／Test 檔案
+  而需要更新 `project.pbxproj`，一律透過執行 `xcodegen generate` 產生，不得手動編輯
+  `project.pbxproj`。比照 repo 既有慣例（見 `CLAUDE.md`：XcodeGen 產生的 UUID 具穩定性，重新產生
+  兩次不會有變更，新增一個原始檔只會動到該檔案對應的少數 entries），這類 diff 應該只包含新增檔案的
+  file reference、group、target Sources 對應項目，是小而精準的 diff，不是整檔案重寫。
 
 ---
 
@@ -218,6 +227,10 @@
   不受前一次 session 選擇影響。
 - **AC-24** `[diff]` 本次新增的排序／篩選狀態管理，程式碼中未使用 `AppStorage` 或 `UserDefaults`
   儲存排序方向或篩選條件。
+- **AC-25** `[diff]` 若本次實作新增了 App／Test Swift 檔案，`project.pbxproj` 的變更僅包含 XcodeGen
+  因新增檔案而產生的必要 file reference、group、target Sources 對應項目；`project.yml`、target、
+  依賴與 Scheme 皆未變更；且 `project.pbxproj` 沒有手動編輯痕跡（diff 完全是 `xcodegen generate`
+  的產出，不含 XcodeGen 不會產生的手改內容）。
 
 ---
 
@@ -244,3 +257,9 @@
   方法，確保兩個入口行為一致，也讓 AC-21（清除後保留排序方向）不需要在兩處分別實作。
 - 新增的使用者可見文字（排序控制、篩選入口、篩選摘要、空結果文案、清除篩選按鈕）需依 repo 慣例
   走 `L10n` + 在地化字串資源，不要在 View 內硬編字串（可用 `[diff]` 檢查）。
+- 若新增獨立的 Swift／Test 檔案（AC-25），新增檔案後需在 `project.yml` 既有的目錄式 target sources
+  設定下執行 `xcodegen generate` 更新 `project.pbxproj`，並將產生的 diff 與新增的原始檔一併提交；
+  不要修改 `project.yml` 本身。正常情況下這只會新增該檔案對應的少數 entries，是小而精準的 diff；
+  若 diff 明顯偏離「只新增該檔案的幾筆 entries」（例如整個 `project.pbxproj` 被重寫），應視為異常並
+  回頭排查（例如檢查本機 XcodeGen 版本是否與 repo 慣例一致），而不是手動修改 `project.pbxproj`
+  去對齊，也不要因此改動 `project.yml`、target、依賴或 Scheme。
