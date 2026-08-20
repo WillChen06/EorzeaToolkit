@@ -3,6 +3,8 @@ import SwiftUI
 struct TreasureMapListView: View {
     @State private var viewModel = TreasureMapViewModel()
     @State private var selectedMapForGathering: TreasureMap?
+    @State private var isShowingFilterSheet = false
+    @State private var hasInitializedPresentationState = false
 
     var body: some View {
         Group {
@@ -12,8 +14,22 @@ struct TreasureMapListView: View {
                     systemImage: "exclamationmark.triangle",
                     description: Text(loadError)
                 )
-            } else if !viewModel.maps.isEmpty {
-                List(viewModel.maps) { map in
+            } else if !viewModel.hasLoadedMaps {
+                ProgressView(L10n.TreasureMap.loading)
+            } else if viewModel.maps.isEmpty {
+                ContentUnavailableView(
+                    L10n.TreasureMap.emptyTitle,
+                    systemImage: "map",
+                    description: Text(L10n.TreasureMap.emptyDescription)
+                )
+            } else if viewModel.displayedMaps.isEmpty && viewModel.isFilterActive {
+                ContentUnavailableView {
+                    Label(L10n.TreasureMap.filteredEmptyTitle, systemImage: "line.3.horizontal.decrease.circle")
+                } actions: {
+                    Button(L10n.TreasureMap.clearFilters, action: viewModel.clearFilters)
+                }
+            } else {
+                List(viewModel.displayedMaps) { map in
                     NavigationLink(destination: TreasureMapDetailView(map: map, zones: viewModel.zones(for: map), viewModel: viewModel)) {
                         TreasureMapRow(map: map) {
                             selectedMapForGathering = map
@@ -23,20 +39,32 @@ struct TreasureMapListView: View {
                 }
                 .listStyle(.insetGrouped)
                 .appThemedScrollContent()
-            } else if viewModel.hasLoadedMaps {
-                ContentUnavailableView(
-                    L10n.TreasureMap.emptyTitle,
-                    systemImage: "map",
-                    description: Text(L10n.TreasureMap.emptyDescription)
-                )
-            } else {
-                ProgressView(L10n.TreasureMap.loading)
             }
         }
         .navigationTitle(L10n.TreasureMap.title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                sortButton
+            }
+
+            ToolbarItem(placement: .topBarTrailing) {
+                filterButton
+            }
+        }
+        .onAppear {
+            guard !hasInitializedPresentationState else {
+                return
+            }
+
+            viewModel.resetPresentationState()
+            hasInitializedPresentationState = true
+        }
         .task {
             viewModel.loadMaps()
+        }
+        .sheet(isPresented: $isShowingFilterSheet) {
+            TreasureMapFilterSheet(viewModel: viewModel)
         }
         .sheet(item: $selectedMapForGathering) { map in
             GatheringNodesSheetView(
@@ -48,6 +76,42 @@ struct TreasureMapListView: View {
         }
         .appThemedBackground()
         .appThemedScreen(tint: HomeFeature.treasureMap.accent)
+    }
+
+    private var sortButton: some View {
+        Button(
+            viewModel.sortDirection == .ascending
+                ? L10n.TreasureMap.sortAscending
+                : L10n.TreasureMap.sortDescending,
+            systemImage: viewModel.sortDirection == .ascending ? "arrow.up" : "arrow.down",
+            action: viewModel.toggleSortDirection
+        )
+    }
+
+    private var filterButton: some View {
+        Button {
+            isShowingFilterSheet = true
+        } label: {
+            ZStack(alignment: .topTrailing) {
+                Image(systemName: "line.3.horizontal.decrease.circle")
+                    .font(.title3)
+                    .frame(width: 36, height: 36)
+
+                if viewModel.activeFilterCount > 0 {
+                    Text(viewModel.activeFilterCount, format: .number)
+                        .font(.caption.bold())
+                        .foregroundStyle(.white)
+                        .frame(width: 16, height: 16)
+                        .background(.red, in: Circle())
+                        .padding(.top, 1)
+                        .padding(.trailing, 1)
+                        .accessibilityHidden(true)
+                }
+            }
+            .frame(width: 44, height: 44)
+        }
+        .accessibilityLabel(Text(L10n.TreasureMap.filterAction))
+        .accessibilityValue(Text(L10n.TreasureMap.filterSelectionCount(viewModel.activeFilterCount)))
     }
 }
 
