@@ -12,6 +12,13 @@ EorzeaToolkit is an iOS SwiftUI app.
 
 ## Build and Test Commands
 
+Generate the local Xcode project first. CI and `scripts/run_tests.sh` also run this shared
+generator automatically.
+
+```sh
+./scripts/generate_project.sh
+```
+
 ```sh
 xcodebuild build -project EorzeaToolkit.xcodeproj -scheme EorzeaToolkit -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO
 ```
@@ -20,14 +27,15 @@ xcodebuild build -project EorzeaToolkit.xcodeproj -scheme EorzeaToolkit -configu
 ./scripts/run_tests.sh
 ```
 
-`EorzeaToolkit.xcodeproj` is generated from `project.yml` by XcodeGen. Add targets, sources,
-and packages there and run `xcodegen generate`; never hand-edit the project file.
+`project.yml` is the source of truth for `EorzeaToolkit.xcodeproj`. Add targets, sources, and
+packages there; never hand-edit the generated project. Generated project contents are ignored
+and must not be committed. The only tracked file below the project directory is
+`project.xcworkspace/xcshareddata/swiftpm/Package.resolved`, which locks SwiftPM dependencies.
+Developers can run the shared generator above or double-click
+`Generate EorzeaToolkit Project.command`; CI generates the project after checkout.
 
-XcodeGen derives object UUIDs from the objects themselves, so regenerating is byte-stable:
-running it twice with nothing changed produces no diff at all, and adding one source file
-touches only that file's four entries. A small, surgical `project.pbxproj` diff is what a
-correct regeneration looks like — it is not evidence of a hand edit. A diff that rewrites
-the whole file means the previous version came from somewhere other than XcodeGen.
+Upgrade the pinned XcodeGen version and checksum only in a dedicated PR. Do not combine an
+XcodeGen upgrade with feature work or other changes.
 
 ## Writing Specs
 

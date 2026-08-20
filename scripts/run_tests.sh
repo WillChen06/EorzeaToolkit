@@ -11,6 +11,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
+./scripts/generate_project.sh
+
 udid="$(xcrun simctl list devices available --json | python3 -c '
 import json, sys
 
@@ -41,5 +43,6 @@ exec xcodebuild test \
   -configuration Debug \
   -destination "id=${udid}" \
   -derivedDataPath DerivedData \
+  -disableAutomaticPackageResolution \
   CODE_SIGNING_ALLOWED=NO \
   "$@"

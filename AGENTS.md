@@ -61,13 +61,22 @@ explicitly:
 
 ## Project Commands
 
+- Generate project: `./scripts/generate_project.sh` — run this before invoking `xcodebuild` on
+  a clean clone. CI and `scripts/run_tests.sh` invoke the same generator automatically.
 - Build: `xcodebuild build -project EorzeaToolkit.xcodeproj -scheme EorzeaToolkit -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO`
 - Test: `./scripts/run_tests.sh` — CI runs this too, so a change that breaks it fails the build.
 - Validate data: `python3 scripts/validate_data.py` — cross-file invariants over
   `EorzeaToolkit/Resources/Data`. Run it after regenerating any data file. Whether a file still
   decodes is covered separately by `EorzeaToolkitTests/BundledDataTests.swift`.
-- `EorzeaToolkit.xcodeproj` is generated from `project.yml` by XcodeGen. Add targets, sources,
-  and packages there and run `xcodegen generate`; never hand-edit the project file.
+- `project.yml` is the source of truth for `EorzeaToolkit.xcodeproj`. Add targets, sources, and
+  packages there; never hand-edit the generated project. Generated project contents are ignored
+  and must not be committed; only
+  `EorzeaToolkit.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved` remains
+  tracked to lock SwiftPM dependencies. Run `./scripts/generate_project.sh` or double-click
+  `Generate EorzeaToolkit Project.command` to generate the project locally; CI generates it
+  after checkout.
+- Upgrade the pinned XcodeGen version and checksum only in a dedicated PR, never together with
+  feature work or unrelated changes.
 - Building rewrites `EorzeaToolkit/Localization/Localizable.xcstrings` in place, and CI fails on
   any leftover diff. If you added user-facing strings, commit the regenerated catalog. If the
   diff only *removes* entries, it came from a build that did not compile everything — discard it

@@ -25,6 +25,9 @@ jobs:
         # v6 uses Node 24 and avoids GitHub's Node 20 action deprecation.
         uses: actions/checkout@v6
 
+      - name: Generate Xcode project
+        run: ./scripts/generate_project.sh
+
       - name: Show Xcode version
         run: xcodebuild -version
 
@@ -45,6 +48,7 @@ jobs:
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath DerivedData \
+            -disableAutomaticPackageResolution \
             CODE_SIGNING_ALLOWED=NO
 
       # Reuses the DerivedData the build step just produced. Resolving a simulator udid is
