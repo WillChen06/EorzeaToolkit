@@ -54,6 +54,22 @@ struct TreasureMap: Codable, Identifiable {
             }
         }
     }
+
+    var gradeNumber: Int? {
+        guard grade.first == "G" else {
+            return nil
+        }
+
+        return Int(grade.dropFirst())
+    }
+
+    var expansionMajorVersion: Int? {
+        guard let majorComponent = expansion.split(separator: ".", omittingEmptySubsequences: false).first else {
+            return nil
+        }
+
+        return Int(majorComponent)
+    }
 }
 
 // MARK: - 採集點 JSON 資料
