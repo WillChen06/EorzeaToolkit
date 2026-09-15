@@ -7,6 +7,6 @@ struct EorzeaToolkitApp: App {
         WindowGroup {
             MainTabView()
         }
-        .modelContainer(for: RelicWeaponProgress.self)
+        .modelContainer(for: [RelicWeaponProgress.self, SkillRotationSlotRecord.self])
     }
 }

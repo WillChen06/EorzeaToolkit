@@ -1,6 +1,8 @@
 import SwiftUI
+import SwiftData
 
 struct BattleJobListView: View {
+    @Environment(\.modelContext) private var modelContext
     @State private var viewModel = SkillRotationViewModel()
 
     var body: some View {
@@ -67,7 +69,10 @@ struct BattleJobListView: View {
         }
         .navigationTitle(L10n.SkillRotation.title)
         .navigationBarTitleDisplayMode(.inline)
-        .task { viewModel.load() }
+        .task {
+            viewModel.configure(modelContext: modelContext)
+            viewModel.load()
+        }
         .appThemedBackground()
         .appThemedScreen(tint: HomeFeature.skillRotation.accent)
     }
@@ -87,4 +92,5 @@ struct BattleJobListView: View {
     NavigationStack {
         BattleJobListView()
     }
+    .modelContainer(for: SkillRotationSlotRecord.self, inMemory: true)
 }
