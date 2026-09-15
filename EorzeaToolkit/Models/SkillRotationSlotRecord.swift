@@ -3,7 +3,7 @@ import SwiftData
 
 @Model
 final class SkillRotationSlotRecord {
-    var id: UUID
+    @Attribute(.unique) var id: UUID
     var jobID: Int
     var level: Int
     var position: Int
