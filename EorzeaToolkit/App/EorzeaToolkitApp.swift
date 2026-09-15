@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 @main
 struct EorzeaToolkitApp: App {
@@ -6,5 +7,6 @@ struct EorzeaToolkitApp: App {
         WindowGroup {
             MainTabView()
         }
+        .modelContainer(for: RelicWeaponProgress.self)
     }
 }
