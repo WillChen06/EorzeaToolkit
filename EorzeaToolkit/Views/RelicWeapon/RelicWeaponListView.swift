@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 private enum RelicWeaponMode: CaseIterable, Identifiable {
     case view
@@ -24,6 +25,7 @@ private enum RelicWeaponMode: CaseIterable, Identifiable {
 }
 
 struct RelicWeaponListView: View {
+    @Environment(\.modelContext) private var modelContext
     @State private var viewModel = RelicWeaponViewModel()
 
     var body: some View {
@@ -59,6 +61,7 @@ struct RelicWeaponListView: View {
         .navigationTitle(L10n.RelicWeapon.title)
         .navigationBarTitleDisplayMode(.inline)
         .task {
+            viewModel.configure(modelContext: modelContext)
             viewModel.loadWeapons()
         }
         .appThemedBackground()
@@ -249,4 +252,5 @@ private struct RelicWeaponSeriesView: View {
     NavigationStack {
         RelicWeaponListView()
     }
+    .modelContainer(for: RelicWeaponProgress.self, inMemory: true)
 }
