@@ -17,7 +17,7 @@
 ## 任務 1 的設計與驗證
 
 - 網格使用 SwiftUI adaptive columns，最小卡片寬度隨 Dynamic Type 縮放；Accessibility 字級改為單欄。
-- 卡片先嘗試圖文並排，文字空間不足時改為圖上文下，避免英文單字被圖示擠壓。
+- 所有卡片固定維持圖片在左、文字在右；文字空間不足時允許標題與說明完整換行。
 - 首頁內容最大寬度 720pt 並置中，避免展開畫面卡片過寬或欄數過多。
 - Hero 使用現有 `HomeArtworkAsset.heroAspectRatio`，在最終容器邊界裁切圖片。
 - 保留首頁五個功能的順序與導覽目的地；不變更 orientation、scene 或部署版本。

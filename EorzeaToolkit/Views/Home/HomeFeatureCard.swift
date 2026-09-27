@@ -32,17 +32,10 @@ struct HomeFeatureCard: View {
     }
 
     private var cardLayout: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: 14) {
-                cardImage
-                cardText
-                    .fixedSize(horizontal: true, vertical: false)
-            }
-
-            VStack(alignment: .leading, spacing: 12) {
-                cardImage
-                cardText
-            }
+        HStack(spacing: 14) {
+            cardImage
+            cardText
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .frame(minHeight: 96, alignment: .center)
