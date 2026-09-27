@@ -1,11 +1,16 @@
 import SwiftUI
 
 struct HomeView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @ScaledMetric(relativeTo: .headline) private var minimumCardWidth: CGFloat = 170
+
     private let features = HomeFeature.allCases
-    private let featureColumns = [
-        GridItem(.flexible(), spacing: 12),
-        GridItem(.flexible(), spacing: 12)
-    ]
+    private var featureColumns: [GridItem] {
+        [GridItem(
+            dynamicTypeSize.isAccessibilitySize ? .flexible() : .adaptive(minimum: max(170, minimumCardWidth)),
+            spacing: 12
+        )]
+    }
 
     var body: some View {
         ScrollView {
@@ -27,6 +32,8 @@ struct HomeView: View {
                     .padding(.horizontal, 8)
                     .padding(.vertical, 10)
             }
+            .frame(maxWidth: 720)
+            .frame(maxWidth: .infinity)
         }
         .appThemedBackground()
         .navigationBarTitleDisplayMode(.inline)
@@ -36,15 +43,14 @@ struct HomeView: View {
         Text(L10n.Home.appTitle)
             .font(.system(.largeTitle, design: .serif, weight: .semibold))
             .foregroundStyle(AppTheme.ink)
-            .lineLimit(1)
-            .minimumScaleFactor(0.72)
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
         .frame(maxWidth: .infinity, alignment: .center)
     }
 
     private var heroBanner: some View {
         HomeHeroBanner()
             .frame(maxWidth: .infinity)
-            .frame(height: 118)
             .shadow(color: AppTheme.shadow, radius: 14, y: 8)
     }
 
@@ -60,4 +66,21 @@ struct HomeView: View {
             }
         }
     }
+}
+
+#Preview("Narrow", traits: .fixedLayout(width: 320, height: 678)) {
+    HomeView()
+}
+
+#Preview("Phone", traits: .fixedLayout(width: 393, height: 852)) {
+    HomeView()
+}
+
+#Preview("Expanded", traits: .fixedLayout(width: 951, height: 669)) {
+    HomeView()
+}
+
+#Preview("Accessibility", traits: .fixedLayout(width: 393, height: 852)) {
+    HomeView()
+        .environment(\.dynamicTypeSize, .accessibility3)
 }

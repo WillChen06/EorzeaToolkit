@@ -33,19 +33,25 @@ struct HomeFeatureCard: View {
 
     private var cardLayout: some View {
         HStack(spacing: 14) {
-            featureImage
-                .frame(width: 48, height: 72)
-                .padding(.leading, 6)
-
-            VStack(alignment: .leading, spacing: 5) {
-                featureTitle
-                featureSubtitle
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            Spacer(minLength: 0)
+            cardImage
+            cardText
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .frame(minHeight: 96, alignment: .center)
+    }
+
+    private var cardImage: some View {
+        featureImage
+            .frame(width: 48, height: 72)
+            .padding(.leading, 6)
+    }
+
+    private var cardText: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            featureTitle
+            featureSubtitle
+        }
     }
 
     private var featureImage: some View {
@@ -62,15 +68,13 @@ struct HomeFeatureCard: View {
         Text(feature.title)
             .font(.headline)
             .foregroundStyle(AppTheme.ink)
-            .lineLimit(1)
-            .minimumScaleFactor(0.82)
+            .fixedSize(horizontal: false, vertical: true)
     }
 
     private var featureSubtitle: some View {
         Text(feature.subtitle)
             .font(.caption)
             .foregroundStyle(AppTheme.mutedInk)
-            .lineLimit(2)
             .fixedSize(horizontal: false, vertical: true)
     }
 }

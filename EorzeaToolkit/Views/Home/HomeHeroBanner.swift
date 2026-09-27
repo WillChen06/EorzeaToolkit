@@ -2,7 +2,11 @@ import SwiftUI
 
 struct HomeHeroBanner: View {
     var body: some View {
-        heroArtwork
+        Color.clear
+        .aspectRatio(HomeArtworkAsset.heroAspectRatio, contentMode: .fit)
+        .overlay {
+            heroArtwork
+        }
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .overlay {
             ZStack {
