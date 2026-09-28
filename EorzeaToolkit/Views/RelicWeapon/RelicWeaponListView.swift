@@ -25,10 +25,28 @@ private enum RelicWeaponMode: CaseIterable, Identifiable {
 }
 
 struct RelicWeaponListView: View {
+    var onReturnHome: () -> Void = {}
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = RelicWeaponViewModel()
+    @State private var selectedSeriesID: String?
 
     var body: some View {
+        FeatureNavigationView(feature: .relicWeapon, selectionID: selectedSeriesID, onReturnHome: onReturnHome) {
+            sidebar
+        } detail: {
+            if let series = viewModel.weaponSeriesList.first(where: { $0.id == selectedSeriesID }) {
+                RelicWeaponSeriesView(series: series, viewModel: viewModel)
+            }
+        }
+        .task {
+            if !viewModel.hasLoadedWeapons {
+                viewModel.configure(modelContext: modelContext)
+                viewModel.loadWeapons()
+            }
+        }
+    }
+
+    private var sidebar: some View {
         Group {
             if let loadError = viewModel.loadError {
                 ContentUnavailableView(
@@ -37,8 +55,8 @@ struct RelicWeaponListView: View {
                     description: Text(loadError)
                 )
             } else if !viewModel.weaponSeriesList.isEmpty {
-                List(Array(viewModel.weaponSeriesList.enumerated()), id: \.element.id) { index, series in
-                    NavigationLink(destination: RelicWeaponSeriesView(series: series, viewModel: viewModel)) {
+                List(Array(viewModel.weaponSeriesList.enumerated()), id: \.element.id, selection: $selectedSeriesID) { index, series in
+                    NavigationLink(value: series.id) {
                         RelicWeaponSeriesRow(
                             series: series,
                             isLatest: index == viewModel.weaponSeriesList.count - 1
@@ -60,10 +78,6 @@ struct RelicWeaponListView: View {
         }
         .navigationTitle(L10n.RelicWeapon.title)
         .navigationBarTitleDisplayMode(.inline)
-        .task {
-            viewModel.configure(modelContext: modelContext)
-            viewModel.loadWeapons()
-        }
         .appThemedBackground()
         .appThemedScreen(tint: HomeFeature.relicWeapon.accent)
     }
@@ -249,8 +263,6 @@ private struct RelicWeaponSeriesView: View {
 }
 
 #Preview {
-    NavigationStack {
-        RelicWeaponListView()
-    }
+    RelicWeaponListView()
     .modelContainer(for: RelicWeaponProgress.self, inMemory: true)
 }

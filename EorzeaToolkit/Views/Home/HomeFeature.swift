@@ -71,18 +71,25 @@ enum HomeFeature: CaseIterable, Identifiable {
     }
 
     @ViewBuilder
-    var destination: some View {
+    func destination(onReturnHome: @escaping () -> Void) -> some View {
         switch self {
         case .itemSearch:
-            ItemSearchView()
+            ItemSearchView(onReturnHome: onReturnHome)
         case .treasureMap:
-            TreasureMapListView()
+            TreasureMapListView(onReturnHome: onReturnHome)
         case .relicWeapon:
-            RelicWeaponListView()
+            RelicWeaponListView(onReturnHome: onReturnHome)
         case .miniCactpot:
-            MiniCactpotView()
+            NavigationStack {
+                MiniCactpotView()
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button(L10n.Navigation.home, systemImage: "house", action: onReturnHome)
+                        }
+                    }
+            }
         case .skillRotation:
-            BattleJobListView()
+            BattleJobListView(onReturnHome: onReturnHome)
         }
     }
 }

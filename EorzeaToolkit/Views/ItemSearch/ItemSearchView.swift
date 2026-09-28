@@ -1,10 +1,25 @@
 import SwiftUI
 
 struct ItemSearchView: View {
+    var onReturnHome: () -> Void = {}
     @State private var viewModel = ItemSearchViewModel()
+    @State private var selectedItemID: Int?
     @State private var isShowingFilterSheet = false
 
     var body: some View {
+        FeatureNavigationView(feature: .itemSearch, selectionID: selectedItemID, onReturnHome: onReturnHome) {
+            sidebar
+        } detail: {
+            if let selectedItemID, let item = viewModel.itemsByID[selectedItemID] {
+                ItemDetailView(item: item, itemsByID: viewModel.itemsByID)
+            }
+        }
+        .task {
+            viewModel.loadItems()
+        }
+    }
+
+    private var sidebar: some View {
         Group {
             switch viewModel.loadState {
             case .idle, .loading:
@@ -36,9 +51,6 @@ struct ItemSearchView: View {
         }
         .sheet(isPresented: $isShowingFilterSheet) {
             ItemFilterSheet(viewModel: viewModel)
-        }
-        .task {
-            viewModel.loadItems()
         }
         .appThemedBackground()
         .appThemedScreen(tint: HomeFeature.itemSearch.accent)
@@ -145,9 +157,9 @@ struct ItemSearchView: View {
                 )
             }
         } else {
-            List {
+            List(selection: $selectedItemID) {
                 ForEach(viewModel.results) { item in
-                    NavigationLink(destination: ItemDetailView(item: item, itemsByID: viewModel.itemsByID)) {
+                    NavigationLink(value: item.id) {
                         ItemSearchRow(item: item)
                     }
                     .appThemedListRow()
@@ -587,7 +599,6 @@ private struct ItemSearchRow: View {
 }
 
 #Preview {
-    NavigationStack {
-        ItemSearchView()
-    }
+    ItemSearchView()
+        .environment(MarketPriceSettings())
 }

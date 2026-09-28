@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    var onSelectFeature: (HomeFeature) -> Void = { _ in }
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric(relativeTo: .headline) private var minimumCardWidth: CGFloat = 170
 
@@ -57,8 +58,8 @@ struct HomeView: View {
     private var featureSection: some View {
         LazyVGrid(columns: featureColumns, spacing: 12) {
             ForEach(features) { feature in
-                NavigationLink {
-                    feature.destination
+                Button {
+                    onSelectFeature(feature)
                 } label: {
                     HomeFeatureCard(feature: feature)
                 }
