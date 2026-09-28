@@ -34,18 +34,14 @@ struct SkillRotationEditorView: View {
     let job: BattleJob
     @Bindable var viewModel: SkillRotationViewModel
 
-    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @ScaledMetric(relativeTo: .headline) private var minimumPaneWidth: CGFloat = 300
 
     @State private var selectedLevel: SkillRotationLevel = .defaultLevel
     @State private var selectedCategory: SkillRotationCategory = .all
 
     private let columns = [GridItem(.adaptive(minimum: 56), spacing: 10)]
     private let rotationColumns = [GridItem(.adaptive(minimum: 60), spacing: 8, alignment: .leading)]
-
-    private var maxRotationVisibleRows: Int {
-        verticalSizeClass == .compact ? 7 : 8
-    }
 
     private var filteredActions: [BattleAction] {
         switch selectedCategory {
@@ -77,34 +73,34 @@ struct SkillRotationEditorView: View {
 
     var body: some View {
         GeometryReader { geometry in
-            let availableWidth = geometry.size.width
+            let sizing = SkillRotationEditorLayout(
+                size: geometry.size,
+                minimumPaneWidth: minimumPaneWidth,
+                isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+            )
+            let layout = sizing.isHorizontal
+                ? AnyLayout(HStackLayout(alignment: .top, spacing: 0))
+                : AnyLayout(VStackLayout(alignment: .leading, spacing: 0))
 
-            VStack(spacing: 0) {
-                rotationBar(availableWidth: availableWidth, maxVisibleRows: maxRotationVisibleRows)
+            // Change placement, not the identity of either editing panel.
+            layout {
+                rotationPanel
+                    .frame(width: sizing.rotationSize.width, height: sizing.rotationSize.height)
 
-                Divider()
-                    .overlay(AppTheme.gold.opacity(0.25))
-
-                levelFilter
-                    .padding(.horizontal)
-                    .padding(.top, 10)
-                    .padding(.bottom, 6)
-
-                categoryFilter
-                    .padding(.horizontal)
-                    .padding(.bottom, 10)
-
-                Divider()
-                    .overlay(AppTheme.gold.opacity(0.25))
+                AppTheme.gold.opacity(0.25)
+                    .frame(width: sizing.dividerSize.width, height: sizing.dividerSize.height)
 
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 14) {
+                        levelFilter
+                        categoryFilter
+                        Divider().overlay(AppTheme.gold.opacity(0.25))
                         actionGrid
                         tinctureGrid
                     }
                     .padding(12)
                 }
-                .layoutPriority(1)
+                .frame(width: sizing.selectionSize.width, height: sizing.selectionSize.height)
             }
         }
         .appThemedBackground()
@@ -215,6 +211,7 @@ struct SkillRotationEditorView: View {
             Text(label)
                 .font(.subheadline)
                 .fontWeight(isSelected ? .semibold : .regular)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, 12)
                 .frame(minHeight: 44)
                 .background(isSelected ? HomeFeature.skillRotation.accent.opacity(0.2) : AppTheme.surfaceDepth)
@@ -232,76 +229,44 @@ struct SkillRotationEditorView: View {
 
     // MARK: - Rotation bar
 
-    private func rotationBar(availableWidth: CGFloat, maxVisibleRows: Int) -> some View {
-        let cellWidth: CGFloat = 60
-        let cellHeight: CGFloat = 44
-        let spacing: CGFloat = 8
-        let gridHPadding: CGFloat = 32
-        let gridVPadding: CGFloat = 20
-
-        let gridAvailableWidth = max(0, availableWidth - gridHPadding)
-        let columnsPerRow = max(1, Int((gridAvailableWidth + spacing) / (cellWidth + spacing)))
-        let rowCount = rotation.isEmpty ? 0 : Int(ceil(Double(rotation.count) / Double(columnsPerRow)))
-
-        let visibleRows = min(rowCount, max(1, maxVisibleRows))
-        let alignedGridHeight = CGFloat(visibleRows) * cellHeight
-            + CGFloat(max(0, visibleRows - 1)) * spacing
-            + gridVPadding
-        let needsScroll = rowCount > maxVisibleRows
-
-        return VStack(alignment: .leading, spacing: 6) {
-            Group {
-                if dynamicTypeSize.isAccessibilitySize {
-                    VStack(alignment: .leading, spacing: 2) {
-                        rotationTitle
-
-                        HStack(alignment: .firstTextBaseline) {
-                            rotationCount
-                            Spacer()
-                            rotationReorderHint
-                        }
-                    }
-                } else {
-                    HStack(alignment: .firstTextBaseline) {
+    private var rotationPanel: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 4) {
                         rotationTitle
                         rotationCount
-                        Spacer()
                         rotationReorderHint
                     }
-                }
-            }
-            .padding(.horizontal)
+                    .padding(.horizontal)
 
-            if rotation.isEmpty {
-                Text(L10n.SkillRotation.emptyRotationHint)
-                    .font(.footnote)
-                    .foregroundStyle(AppTheme.mutedInk)
-                    .frame(maxWidth: .infinity)
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.vertical, 20)
-            } else if needsScroll {
-                ScrollViewReader { proxy in
-                    ScrollView {
+                    if rotation.isEmpty {
+                        Text(L10n.SkillRotation.emptyRotationHint)
+                            .font(.footnote)
+                            .foregroundStyle(AppTheme.mutedInk)
+                            .frame(maxWidth: .infinity)
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(20)
+                    } else {
                         rotationGrid
                     }
-                    .frame(height: alignedGridHeight)
-                    .onChange(of: rotation.count) { oldValue, newValue in
-                        guard newValue > oldValue, let lastID = rotation.last?.id else { return }
-                        withAnimation {
-                            proxy.scrollTo(lastID, anchor: .bottom)
-                        }
-                    }
+
+                    // A full-width target prevents scrolling toward an individual grid column.
+                    Color.clear
+                        .frame(height: 1)
+                        .frame(maxWidth: .infinity)
+                        .id("rotationEnd")
                 }
-            } else {
-                rotationGrid
+                .padding(.top, 10)
+            }
+            .onChange(of: rotation.count) { oldValue, newValue in
+                guard newValue > oldValue else { return }
+                // Keep short content in place and reveal only the vertical overflow.
+                proxy.scrollTo("rotationEnd")
             }
         }
         .background(AppTheme.surface)
-        .overlay(alignment: .bottom) {
-            AppTheme.gold.opacity(0.22)
-                .frame(height: 1)
-        }
     }
 
     private var rotationTitle: some View {
@@ -323,7 +288,7 @@ struct SkillRotationEditorView: View {
             Text(L10n.SkillRotation.reorderHint)
                 .font(.caption)
                 .foregroundStyle(AppTheme.mutedInk)
-                .multilineTextAlignment(.trailing)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
