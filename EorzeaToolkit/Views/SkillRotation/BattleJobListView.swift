@@ -2,10 +2,28 @@ import SwiftUI
 import SwiftData
 
 struct BattleJobListView: View {
+    var onReturnHome: () -> Void = {}
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = SkillRotationViewModel()
+    @State private var selectedJobID: Int?
 
     var body: some View {
+        FeatureNavigationView(feature: .skillRotation, selectionID: selectedJobID, onReturnHome: onReturnHome) {
+            sidebar
+        } detail: {
+            if let job = viewModel.jobs.first(where: { $0.id == selectedJobID }) {
+                SkillRotationEditorView(job: job, viewModel: viewModel)
+            }
+        }
+        .task {
+            if !viewModel.hasLoadedJobs {
+                viewModel.configure(modelContext: modelContext)
+                viewModel.load()
+            }
+        }
+    }
+
+    private var sidebar: some View {
         Group {
             if let loadError = viewModel.loadError {
                 ContentUnavailableView(
@@ -14,10 +32,8 @@ struct BattleJobListView: View {
                     description: Text(loadError)
                 )
             } else if !viewModel.jobs.isEmpty {
-                List(viewModel.jobs) { job in
-                    NavigationLink {
-                        SkillRotationEditorView(job: job, viewModel: viewModel)
-                    } label: {
+                List(viewModel.jobs, selection: $selectedJobID) { job in
+                    NavigationLink(value: job.id) {
                         HStack(spacing: 14) {
                             CachedIconImage(url: job.iconURL) {
                                 placeholder
@@ -69,10 +85,6 @@ struct BattleJobListView: View {
         }
         .navigationTitle(L10n.SkillRotation.title)
         .navigationBarTitleDisplayMode(.inline)
-        .task {
-            viewModel.configure(modelContext: modelContext)
-            viewModel.load()
-        }
         .appThemedBackground()
         .appThemedScreen(tint: HomeFeature.skillRotation.accent)
     }
@@ -89,8 +101,6 @@ struct BattleJobListView: View {
 }
 
 #Preview {
-    NavigationStack {
-        BattleJobListView()
-    }
+    BattleJobListView()
     .modelContainer(for: SkillRotationSlotRecord.self, inMemory: true)
 }

@@ -1,6 +1,11 @@
 import SwiftUI
 
 enum L10n {
+    enum Navigation {
+        static let home: LocalizedStringKey = "navigation.home"
+        static let selectItem: LocalizedStringKey = "navigation.selectItem"
+    }
+
     enum Common {
         static let clear: LocalizedStringKey = "common.clear"
         static let collapse: LocalizedStringKey = "common.collapse"

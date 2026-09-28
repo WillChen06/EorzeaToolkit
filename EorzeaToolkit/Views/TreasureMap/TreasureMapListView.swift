@@ -1,12 +1,28 @@
 import SwiftUI
 
 struct TreasureMapListView: View {
+    var onReturnHome: () -> Void = {}
     @State private var viewModel = TreasureMapViewModel()
+    @State private var selectedMapID: String?
     @State private var selectedMapForGathering: TreasureMap?
     @State private var isShowingFilterSheet = false
-    @State private var hasInitializedPresentationState = false
 
     var body: some View {
+        FeatureNavigationView(feature: .treasureMap, selectionID: selectedMapID, onReturnHome: onReturnHome) {
+            sidebar
+        } detail: {
+            if let map = viewModel.maps.first(where: { $0.id == selectedMapID }) {
+                TreasureMapDetailView(map: map, zones: viewModel.zones(for: map), viewModel: viewModel)
+            }
+        }
+        .task {
+            if !viewModel.hasLoadedMaps {
+                viewModel.loadMaps()
+            }
+        }
+    }
+
+    private var sidebar: some View {
         Group {
             if let loadError = viewModel.loadError {
                 ContentUnavailableView(
@@ -29,8 +45,8 @@ struct TreasureMapListView: View {
                     Button(L10n.TreasureMap.clearFilters, action: viewModel.clearFilters)
                 }
             } else {
-                List(viewModel.displayedMaps) { map in
-                    NavigationLink(destination: TreasureMapDetailView(map: map, zones: viewModel.zones(for: map), viewModel: viewModel)) {
+                List(viewModel.displayedMaps, selection: $selectedMapID) { map in
+                    NavigationLink(value: map.id) {
                         TreasureMapRow(map: map) {
                             selectedMapForGathering = map
                         }
@@ -51,17 +67,6 @@ struct TreasureMapListView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 filterButton
             }
-        }
-        .onAppear {
-            guard !hasInitializedPresentationState else {
-                return
-            }
-
-            viewModel.resetPresentationState()
-            hasInitializedPresentationState = true
-        }
-        .task {
-            viewModel.loadMaps()
         }
         .sheet(isPresented: $isShowingFilterSheet) {
             TreasureMapFilterSheet(viewModel: viewModel)
@@ -205,7 +210,5 @@ private struct TreasureMapRow: View {
 }
 
 #Preview {
-    NavigationStack {
-        TreasureMapListView()
-    }
+    TreasureMapListView()
 }
