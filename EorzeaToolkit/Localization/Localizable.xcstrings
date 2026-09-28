@@ -741,13 +741,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap a skill below to add it to the rotation"
+            "value" : "Tap a skill to add it to the rotation"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "點選下方技能加入施放順序"
+            "value" : "點選技能加入施放順序"
           }
         }
       }
