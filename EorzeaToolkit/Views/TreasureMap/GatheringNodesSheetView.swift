@@ -110,90 +110,101 @@ struct GatheringNodeMapView: View {
     let node: GatheringNodeDisplay
     let viewModel: TreasureMapViewModel
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @ScaledMetric(relativeTo: .body) private var minimumMapWidth = 320.0
+    @ScaledMetric(relativeTo: .body) private var minimumInformationWidth = 240.0
 
     private var mapInfo: MapInfo? {
         viewModel.mapInfo(forZoneId: node.zoneId)
     }
 
-    private var normalizedX: Double {
-        let sizeFactor = Double(mapInfo?.sizeFactor ?? 100)
-        return (node.x - 1) * sizeFactor / 100.0 / 41.0
-    }
-
-    private var normalizedY: Double {
-        let sizeFactor = Double(mapInfo?.sizeFactor ?? 100)
-        return (node.y - 1) * sizeFactor / 100.0 / 41.0
-    }
-
     var body: some View {
-        ZStack(alignment: .topTrailing) {
+        ZStack {
             Color.black.ignoresSafeArea()
-
             VStack(spacing: 0) {
-                // 標題
                 HStack {
-                    Text(L10n.TreasureMap.nodeMapTitle(zoneName: node.zoneName, typeName: node.typeName))
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.white)
                     Spacer()
-                }
-                .padding()
-
-                // 地圖
-                GeometryReader { geo in
-                    let mapSize = min(geo.size.width, geo.size.height)
-
-                    ZStack {
-                        if let imageURL = mapInfo.flatMap({ URL(string: $0.image) }) {
-                            AsyncImage(url: imageURL) { phase in
-                                switch phase {
-                                case .success(let image):
-                                    image.resizable().aspectRatio(1, contentMode: .fit)
-                                case .failure:
-                                    mapPlaceholder
-                                default:
-                                    mapPlaceholder
-                                }
-                            }
-                        } else {
-                            mapPlaceholder
-                        }
-
-                        // 範圍圓圈 + 標記
-                        markerOverlay(mapSize: mapSize)
+                    Button(action: dismiss.callAsFunction) {
+                        Label(L10n.Common.done, systemImage: "xmark")
+                            .labelStyle(.iconOnly)
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
                     }
-                    .frame(width: mapSize, height: mapSize)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .foregroundStyle(.white)
+                    .background(.black.opacity(0.8), in: Circle())
                 }
+                .padding(.bottom, 8)
 
-                // 資訊
-                VStack(spacing: 8) {
-                    Text(L10n.TreasureMap.nodeType(node.typeName))
-                        .font(.body)
-                        .foregroundStyle(.white)
-                    Text(L10n.TreasureMap.nodeCoordinates(x: coordinateText(node.x), y: coordinateText(node.y)))
-                        .font(.body)
-                        .foregroundStyle(.white)
+                GeometryReader { geometry in
+                    let policy = GatheringNodeMapLayout(
+                        availableSize: geometry.size,
+                        minimumMapWidth: minimumMapWidth,
+                        minimumInformationWidth: minimumInformationWidth,
+                        isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+                    )
+                    let layout = policy.isHorizontal
+                        ? AnyLayout(HStackLayout(alignment: .top, spacing: policy.spacing))
+                        : AnyLayout(VStackLayout(alignment: .leading, spacing: policy.spacing))
+
+                    layout {
+                        mapViewport
+                            .frame(width: policy.mapSize.width, height: policy.mapSize.height)
+                        informationPanel
+                            .frame(width: policy.informationSize.width, height: policy.informationSize.height)
+                    }
                 }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(.black.opacity(0.6))
             }
-
-            // 關閉按鈕
-            Button(L10n.Common.done, systemImage: "xmark", action: dismiss.callAsFunction)
-                .labelStyle(.iconOnly)
-                .foregroundStyle(.white)
-                .frame(width: 44, height: 44)
-                .background(.black.opacity(0.8), in: Circle())
-                .padding()
+            .padding()
         }
     }
 
+    private var mapViewport: some View {
+        GeometryReader { geometry in
+            let mapSize = GatheringNodeMapLayout.squareSide(in: geometry.size)
+            ZStack {
+                if let imageURL = mapInfo.flatMap({ URL(string: $0.image) }) {
+                    AsyncImage(url: imageURL) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image.resizable().aspectRatio(1, contentMode: .fit)
+                        default:
+                            mapPlaceholder
+                        }
+                    }
+                } else {
+                    mapPlaceholder
+                }
+                markerOverlay(mapSize: mapSize)
+            }
+            .frame(width: mapSize, height: mapSize)
+            .clipped()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+
+    private var informationPanel: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(L10n.TreasureMap.nodeMapTitle(zoneName: node.zoneName, typeName: node.typeName))
+                    .font(.title3)
+                    .fontWeight(.bold)
+                Text(L10n.TreasureMap.nodeType(node.typeName))
+                    .font(.body)
+                Text(L10n.TreasureMap.nodeCoordinates(x: coordinateText(node.x), y: coordinateText(node.y)))
+                    .font(.body)
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding()
+        }
+        .foregroundStyle(.white)
+        .background(.black.opacity(0.6))
+    }
+
     private func markerOverlay(mapSize: CGFloat) -> some View {
-        let markerX = normalizedX * mapSize
-        let markerY = normalizedY * mapSize
+        let marker = GatheringMapProjection.position(x: node.x, y: node.y, sizeFactor: mapInfo?.sizeFactor, mapSize: mapSize)
+        let markerX = marker.x
+        let markerY = marker.y
         let circleRadius: CGFloat = mapSize * 0.08
 
         return ZStack {
