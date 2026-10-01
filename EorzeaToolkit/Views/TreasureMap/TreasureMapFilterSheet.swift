@@ -59,6 +59,7 @@ struct TreasureMapFilterSheet: View {
             HStack {
                 Text(title)
                     .foregroundStyle(AppTheme.ink)
+                    .fixedSize(horizontal: false, vertical: true)
 
                 Spacer()
 

@@ -68,9 +68,6 @@ struct TreasureMapListView: View {
                 filterButton
             }
         }
-        .sheet(isPresented: $isShowingFilterSheet) {
-            TreasureMapFilterSheet(viewModel: viewModel)
-        }
         .sheet(item: $selectedMapForGathering) { map in
             GatheringNodesSheetView(
                 map: map,
@@ -117,6 +114,11 @@ struct TreasureMapListView: View {
         }
         .accessibilityLabel(Text(L10n.TreasureMap.filterAction))
         .accessibilityValue(Text(L10n.TreasureMap.filterSelectionCount(viewModel.activeFilterCount)))
+        .popover(isPresented: $isShowingFilterSheet) {
+            TreasureMapFilterSheet(viewModel: viewModel)
+                .frame(idealWidth: 440, idealHeight: 600)
+                .presentationCompactAdaptation(horizontal: .sheet, vertical: .sheet)
+        }
     }
 }
 

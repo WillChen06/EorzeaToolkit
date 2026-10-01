@@ -49,9 +49,6 @@ struct ItemSearchView: View {
                 filterButton
             }
         }
-        .sheet(isPresented: $isShowingFilterSheet) {
-            ItemFilterSheet(viewModel: viewModel)
-        }
         .appThemedBackground()
         .appThemedScreen(tint: HomeFeature.itemSearch.accent)
     }
@@ -78,6 +75,12 @@ struct ItemSearchView: View {
             .frame(width: 44, height: 44)
         }
         .accessibilityLabel(Text(L10n.ItemSearch.filterAccessibility))
+        // Both entry points use this stable anchor, even when clearing removes the summary bar.
+        .popover(isPresented: $isShowingFilterSheet) {
+            ItemFilterSheet(viewModel: viewModel)
+                .frame(idealWidth: 440, idealHeight: 600)
+                .presentationCompactAdaptation(horizontal: .sheet, vertical: .sheet)
+        }
     }
 
     private var loadedContent: some View {
@@ -202,18 +205,19 @@ struct ItemSearchView: View {
 private struct ItemFilterSheet: View {
     let viewModel: ItemSearchViewModel
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @ScaledMetric(relativeTo: .subheadline) private var minimumOptionWidth: CGFloat = 88
+    @ScaledMetric(relativeTo: .subheadline) private var minimumEquipSlotWidth: CGFloat = 92
     @State private var selectedFilterPage: ItemFilterPage = .general
     @State private var expandedUICategoryGroupIds: Set<Int> = []
 
-    private let rarityColumns = [
-        GridItem(.adaptive(minimum: 88), spacing: 8)
-    ]
-    private let jobColumns = [
-        GridItem(.adaptive(minimum: 88), spacing: 8)
-    ]
-    private let equipSlotColumns = [
-        GridItem(.adaptive(minimum: 92), spacing: 8)
-    ]
+    private var optionColumns: [GridItem] {
+        [GridItem(dynamicTypeSize.isAccessibilitySize ? .flexible() : .adaptive(minimum: minimumOptionWidth), spacing: 8)]
+    }
+
+    private var equipSlotColumns: [GridItem] {
+        [GridItem(dynamicTypeSize.isAccessibilitySize ? .flexible() : .adaptive(minimum: minimumEquipSlotWidth), spacing: 8)]
+    }
 
     var body: some View {
         NavigationStack {
@@ -225,7 +229,7 @@ private struct ItemFilterSheet: View {
                                 Text(page.label).tag(page)
                             }
                         }
-                        .pickerStyle(.segmented)
+                        .modifier(AccessibleFilterPickerStyle())
                     }
                     .appThemedListRow()
                 }
@@ -312,7 +316,7 @@ private struct ItemFilterSheet: View {
         .appThemedListRow()
 
         Section(L10n.ItemSearch.Filter.rarity) {
-            LazyVGrid(columns: rarityColumns, alignment: .leading, spacing: 8) {
+            LazyVGrid(columns: optionColumns, alignment: .leading, spacing: 8) {
                 ForEach(ItemFilter.defaultRarities.sorted(), id: \.self) { rarity in
                     rarityButton(for: rarity)
                 }
@@ -327,7 +331,7 @@ private struct ItemFilterSheet: View {
                 Text(L10n.ItemSearch.Filter.hqOnly).tag(ItemBoolFilterState.only)
                 Text(L10n.ItemSearch.Filter.hqExclude).tag(ItemBoolFilterState.exclude)
             }
-            .pickerStyle(.segmented)
+            .modifier(AccessibleFilterPickerStyle())
         }
         .appThemedListRow()
 
@@ -337,7 +341,7 @@ private struct ItemFilterSheet: View {
                 Text(L10n.ItemSearch.Filter.tradableOnly).tag(ItemBoolFilterState.only)
                 Text(L10n.ItemSearch.Filter.tradableExclude).tag(ItemBoolFilterState.exclude)
             }
-            .pickerStyle(.segmented)
+            .modifier(AccessibleFilterPickerStyle())
         }
         .appThemedListRow()
     }
@@ -371,7 +375,7 @@ private struct ItemFilterSheet: View {
 
         if !viewModel.availableJobFilterOptions.isEmpty {
             Section(L10n.ItemSearch.Filter.jobs) {
-                LazyVGrid(columns: jobColumns, alignment: .leading, spacing: 8) {
+                LazyVGrid(columns: optionColumns, alignment: .leading, spacing: 8) {
                     ForEach(viewModel.availableJobFilterOptions) { option in
                         jobButton(option)
                     }
@@ -450,8 +454,7 @@ private struct ItemFilterSheet: View {
                     .imageScale(.small)
 
                 Text(name)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .font(.subheadline.weight(.semibold))
             .foregroundStyle(isSelected ? rarityColor(for: rarity) : AppTheme.mutedInk)
@@ -492,6 +495,7 @@ private struct ItemFilterSheet: View {
 
                 Text(category.displayName)
                     .foregroundStyle(AppTheme.ink)
+                    .fixedSize(horizontal: false, vertical: true)
 
                 Spacer(minLength: 0)
             }
@@ -524,8 +528,7 @@ private struct ItemFilterSheet: View {
 
                 Text(option.displayName)
                     .font(.caption.weight(.semibold))
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.8)
+                    .fixedSize(horizontal: false, vertical: true)
                     .multilineTextAlignment(.center)
             }
             .foregroundStyle(isSelected ? Color.white : AppTheme.ink)
@@ -548,8 +551,7 @@ private struct ItemFilterSheet: View {
                     .imageScale(.small)
 
                 Text(equipSlot.displayName)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .font(.subheadline.weight(.semibold))
             .frame(maxWidth: .infinity, minHeight: 44)
