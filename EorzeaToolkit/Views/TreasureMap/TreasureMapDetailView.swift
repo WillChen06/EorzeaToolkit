@@ -29,6 +29,7 @@ struct TreasureMapDetailView: View {
             .appThemedListRow()
         }
         .appThemedScrollContent()
+        .accessibilityIdentifier("treasureMap.detail.\(map.id)")
         .navigationTitle(map.grade)
         .navigationBarTitleDisplayMode(.inline)
         .appThemedScreen(tint: HomeFeature.treasureMap.accent)
