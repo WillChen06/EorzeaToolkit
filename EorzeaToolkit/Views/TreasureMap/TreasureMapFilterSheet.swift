@@ -7,6 +7,17 @@ struct TreasureMapFilterSheet: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    Text(L10n.TreasureMap.filterTitle)
+                        .font(.title2.weight(.bold))
+                        .foregroundStyle(AppTheme.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .accessibilityAddTraits(.isHeader)
+                        .accessibilityIdentifier("treasureMap.filter.title")
+                }
+                .appThemedListRow()
+
                 Section(L10n.TreasureMap.filterVersionSection) {
                     ForEach(viewModel.versionOptions, id: \.self) { majorVersion in
                         optionButton(
@@ -15,6 +26,7 @@ struct TreasureMapFilterSheet: View {
                         ) {
                             viewModel.toggleMajorVersion(majorVersion)
                         }
+                        .accessibilityIdentifier("treasureMap.filter.version.\(majorVersion)")
                     }
                 }
                 .appThemedListRow()
@@ -27,16 +39,18 @@ struct TreasureMapFilterSheet: View {
                         ) {
                             viewModel.toggleLevel(level)
                         }
+                        .accessibilityIdentifier("treasureMap.filter.level.\(level)")
                     }
                 }
                 .appThemedListRow()
             }
             .appThemedScrollContent()
-            .navigationTitle(L10n.TreasureMap.filterTitle)
+            .accessibilityIdentifier("treasureMap.filter.form")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(L10n.TreasureMap.clearAllFilters, action: viewModel.clearFilters)
+                        .accessibilityIdentifier("treasureMap.filter.clear")
                         .disabled(!viewModel.isFilterActive)
                 }
 
@@ -44,6 +58,7 @@ struct TreasureMapFilterSheet: View {
                     Button(L10n.Common.done) {
                         dismiss()
                     }
+                    .accessibilityIdentifier("treasureMap.filter.done")
                 }
             }
             .appThemedScreen(tint: HomeFeature.treasureMap.accent)

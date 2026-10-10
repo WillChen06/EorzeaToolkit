@@ -24,3 +24,9 @@
 - 檢查窄手機、一般手機、Duo 展開畫面、大字體與英文文字，並執行專案建置及 `scripts/run_tests.sh`。
 
 參考：Xcode 27.1 內建 `app-resizability` skill；重點是依當下容器空間與 safe area 佈局。僅宣告 iPhone portrait 並不代表 Duo 無法展開，須以實際執行結果判斷。
+
+## 任務 8 的驗證入口
+
+- 驗收契約：`prompts/iphone-duo-layout-coverage.md`
+- 自動結果與人工矩陣：`docs/iphone-duo-layout-coverage.md`
+- 專用 UI suite：`bash scripts/run_ui_tests.sh <SIMULATOR_UDID>`（不改既有 unit CI）
