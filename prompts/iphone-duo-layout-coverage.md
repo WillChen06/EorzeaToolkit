@@ -41,6 +41,16 @@
 
 ## 結果規則
 
+### 使用者授權的 V1 例外（2026-10-10）
+
+使用者要求先提交回歸測試（`a622da1`，不 push），再修正英文 AX5 篩選標題截斷。
+保留上方 AC-7 原文作為原始契約，對其「產品修改限 identifiers」新增單一例外：
+允許調整 `TreasureMapFilterSheet` 標題呈現及必要 identifier，使用既有翻譯文字，
+不改篩選資料流、持久資料、toolbar 動作、iOS 17 或 Swift 5.9。
+AC-8 的「無截斷」不變，不以接受省略號替代驗收；其餘人工項目仍需個別驗證。
+
+### 紀錄要求
+
 在 `docs/iphone-duo-layout-coverage.md` 逐項記錄 PASS／FAIL／UNVERIFIED、實際 destination 與結果檔。
 自動化環境阻礙必須保留失敗或未驗證紀錄，不得 skip 後視為 PASS。
 未實際執行的人工列維持 UNVERIFIED；不沿用前七項的人工確認作本階段結果。

@@ -7,6 +7,17 @@ struct TreasureMapFilterSheet: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    Text(L10n.TreasureMap.filterTitle)
+                        .font(.title2.weight(.bold))
+                        .foregroundStyle(AppTheme.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .accessibilityAddTraits(.isHeader)
+                        .accessibilityIdentifier("treasureMap.filter.title")
+                }
+                .appThemedListRow()
+
                 Section(L10n.TreasureMap.filterVersionSection) {
                     ForEach(viewModel.versionOptions, id: \.self) { majorVersion in
                         optionButton(
@@ -35,7 +46,6 @@ struct TreasureMapFilterSheet: View {
             }
             .appThemedScrollContent()
             .accessibilityIdentifier("treasureMap.filter.form")
-            .navigationTitle(L10n.TreasureMap.filterTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

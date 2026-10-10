@@ -72,6 +72,9 @@ final class DuoLayoutFlowTests: XCTestCase {
         capture(app, "\(context)-map-list")
         openFilter.tap()
 
+        assertFilterTitle(app, language: language)
+        capture(app, "\(context)-filter-title-opened")
+
         let version = app.buttons["treasureMap.filter.version.2"]
         let level = app.buttons["treasureMap.filter.level.40"]
         let form = app.descendants(matching: .any)["treasureMap.filter.form"].firstMatch
@@ -93,6 +96,8 @@ final class DuoLayoutFlowTests: XCTestCase {
         let activeFilterValue = openFilter.value as? String
         XCTAssertNotNil(activeFilterValue)
         openFilter.tap()
+        assertFilterTitle(app, language: language)
+        capture(app, "\(context)-filter-title-reopened")
         reveal(version, scrolling: form)
         XCTAssertEqual(version.value as? String, selected)
         reveal(level, scrolling: form)
@@ -146,6 +151,17 @@ final class DuoLayoutFlowTests: XCTestCase {
         XCTAssertTrue(home.isHittable)
         home.tap()
         XCTAssertTrue(firstCard.waitForExistence(timeout: 5))
+    }
+
+    private func assertFilterTitle(_ app: XCUIApplication, language: String) {
+        let title = app.staticTexts["treasureMap.filter.title"]
+        XCTAssertTrue(title.waitForExistence(timeout: 5))
+        XCTAssertTrue(title.isHittable)
+        XCTAssertEqual(title.label, language == "en" ? "Filter Treasure Maps" : "篩選藏寶圖")
+        XCTAssertTrue(app.buttons["treasureMap.filter.done"].isHittable)
+        XCTAssertTrue(app.buttons["treasureMap.filter.clear"].exists)
+        // Accessibility labels remain complete even when glyphs truncate.
+        // The accompanying screenshots require a separate visual review.
     }
 
     private func launch(_ app: XCUIApplication, language: String, accessibility: Bool) {
