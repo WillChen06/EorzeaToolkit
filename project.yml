@@ -56,3 +56,27 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.willchen.eorzeaToolkit.tests
+
+  EorzeaToolkitUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: EorzeaToolkitUITests
+    dependencies:
+      - target: EorzeaToolkit
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.willchen.eorzeaToolkit.uitests
+
+# Opt-in UI regression suite; the main scheme keeps its existing unit-only contract.
+schemes:
+  EorzeaToolkitUI:
+    build:
+      targets:
+        EorzeaToolkit: all
+    test:
+      config: Debug
+      targets:
+        - name: EorzeaToolkitUITests
+          parallelizable: false

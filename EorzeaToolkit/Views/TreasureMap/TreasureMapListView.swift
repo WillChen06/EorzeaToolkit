@@ -52,6 +52,7 @@ struct TreasureMapListView: View {
                         }
                     }
                     .appThemedListRow()
+                    .accessibilityIdentifier("treasureMap.row.\(map.id)")
                 }
                 .listStyle(.insetGrouped)
                 .appThemedScrollContent()
@@ -113,6 +114,7 @@ struct TreasureMapListView: View {
             .frame(width: 44, height: 44)
         }
         .accessibilityLabel(Text(L10n.TreasureMap.filterAction))
+        .accessibilityIdentifier("treasureMap.filter.open")
         .accessibilityValue(Text(L10n.TreasureMap.filterSelectionCount(viewModel.activeFilterCount)))
         .popover(isPresented: $isShowingFilterSheet) {
             TreasureMapFilterSheet(viewModel: viewModel)
@@ -153,6 +155,7 @@ private struct TreasureMapRow: View {
     private var gradeBadge: some View {
         VStack(spacing: 2) {
             Text(map.grade)
+                .accessibilityIdentifier("treasureMap.grade.\(map.id)")
                 .font(.headline.weight(.bold))
                 .foregroundStyle(accent)
 

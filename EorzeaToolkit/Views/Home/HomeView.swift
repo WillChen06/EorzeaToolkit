@@ -64,6 +64,7 @@ struct HomeView: View {
                     HomeFeatureCard(feature: feature)
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("home.feature.\(feature.id)")
             }
         }
     }

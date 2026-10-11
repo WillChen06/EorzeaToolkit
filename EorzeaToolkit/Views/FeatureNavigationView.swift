@@ -16,6 +16,7 @@ struct FeatureNavigationView<Selection: Hashable, Sidebar: View, Detail: View>: 
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button(L10n.Navigation.home, systemImage: "house", action: onReturnHome)
+                            .accessibilityIdentifier("navigation.home.\(feature.id)")
                     }
                 }
         } detail: {

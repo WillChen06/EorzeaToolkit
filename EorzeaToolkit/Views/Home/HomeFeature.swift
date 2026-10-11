@@ -85,6 +85,7 @@ enum HomeFeature: CaseIterable, Identifiable {
                     .toolbar {
                         ToolbarItem(placement: .topBarLeading) {
                             Button(L10n.Navigation.home, systemImage: "house", action: onReturnHome)
+                                .accessibilityIdentifier("navigation.home.miniCactpot")
                         }
                     }
             }
