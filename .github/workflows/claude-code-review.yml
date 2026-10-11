@@ -170,8 +170,9 @@ jobs:
 
       - name: Claude review
         if: steps.ci.outputs.proceed == 'true'
-        # Pinned from anthropics/claude-code-action@v1 for supply-chain safety.
-        uses: anthropics/claude-code-action@dde2242db6af13460b916652159b6ba19a598f30
+        # Pinned to anthropics/claude-code-action v1.0.248 (Claude Code 2.1.296) for supply-chain
+        # safety. Update the SHA and this comment together.
+        uses: anthropics/claude-code-action@1d6de8cb0c237e7c15e9e1bdf973826ebae490cc
         env:
           GH_TOKEN: ${{ github.token }}
         with:
