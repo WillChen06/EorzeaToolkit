@@ -36,6 +36,9 @@ FILE_UPSTREAMS = {
     'item_shop.json': ('ffxiv-datamining-tc',),
     'gathering.json': ('ffxiv-datamining-tc', 'teamcraft'),
     'fishing.json': ('ffxiv-datamining-tc', 'teamcraft'),
+    'battle_actions.json': ('ffxiv-datamining-tc',),
+    'treasure_maps_final.json': ('ffxiv-datamining-tc', 'teamcraft'),
+    'zh-maps.json': ('ffxiv-datamining-tc',),
 }
 
 failures = []
@@ -227,6 +230,18 @@ def main():
     check_sources('fishing.json', fishing_data['_meta'], sources)
     check_unresolved('fishing.json', fishing_data['_meta'], 'unresolved_item_ids',
                      {int(k) for k in fishing} - item_ids)
+
+    # --- battle_actions.json ---
+    battle_data = load('battle_actions.json')
+    check_sources('battle_actions.json', battle_data['_meta'], sources)
+
+    # --- treasure_maps_final.json ---
+    treasure_data = load('treasure_maps_final.json')
+    check_sources('treasure_maps_final.json', treasure_data['_meta'], sources)
+
+    # --- zh-maps.json ---
+    zh_maps = load('zh-maps.json')
+    check_sources('zh-maps.json', zh_maps['_meta'], sources)
 
     if failures:
         print(f'資料驗證失敗({len(failures)} 項):', file=sys.stderr)
