@@ -54,3 +54,6 @@ fastlane/test_output
 
 # Local settings
 .claude/settings.local.json
+
+# Python bytecode from the data generators (scripts/build_data.py imports them)
+__pycache__/
