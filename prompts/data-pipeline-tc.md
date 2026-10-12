@@ -18,11 +18,12 @@
 - 新增 `scripts/build_data.py` 作為單一入口：抓來源 → 跑全部產生器 → 跑 `validate_data.py`。
 - 每個產出檔的 `_meta` 記錄來源 repo、commit 與遊戲版本。
 - 同一次 build 另外產出遠端用的道具檔與 `manifest.json`，放在 gitignore 的輸出資料夾。遠端道具檔的內容與內建 `items.json` 相同。
-- `items.json` 移除 `name_cn`；App 的道具 model 與搜尋只用 `name_tw`。
+- `items.json` 的道具、物品分類、職業分類都移除 `name_cn`；App 對應的 model 與搜尋只用 `name_tw`。
 - App 載入道具資料時比較版本，舊資料不得蓋過內建資料：
   - 快取版本不比內建新時，使用內建。
-  - 遠端 manifest 版本不比內建新時，不下載。
+  - 遠端 manifest 版本不比目前使用中的資料（內建，或比內建新的快取）新時，不下載。
 - 更新 `AGENTS.md`：Commands 加上 `build_data.py`，刪掉「產生器的輸入不在 repo」的說明。
+  `.github/claude-review-guidelines.md` 的同一段說明一併更新。
 
 ## 不在這個 Phase
 
@@ -44,7 +45,12 @@
 - commit 訊息就是客戶端版本（例：`ver 2026.09.14.0000.0000`），大約每月更新一次。
 - 有些欄位名稱是空白（例：`Recipe` 第 4 欄），無法用名稱定位。產生器不得依賴這類欄位。
 - `ClassJobCategory` 的職業縮寫就是欄位名稱（`ADV`、`GLA`…）。職業清單由值為 `True` 的欄位組成。
-- `EquipSlotCategory` 沒有名稱欄位，部位名稱沿用產生器內的對照表。
+- `EquipSlotCategory` 沒有名稱欄位，部位名稱由各欄位的值推導：
+  - 產生器只維護「欄位 → 部位名稱」的對照（`MainHand` → 主手…，`FingerL`／`FingerR` 都是戒指）。
+  - 值為 `1` 的欄位是裝備的部位，值為 `-1` 的欄位是被占用的部位。
+  - 名稱為「裝備部位（無法裝備被占用部位）」，例：13 → 主手（無法裝備副手）。
+  - `equip_slots` 只收有道具使用的部位。出現對照表沒有的欄位時，產生器失敗。
+- id 0 代表「無」：無物品分類、不限職業、非裝備。對照表不收 id 0。
 - `items.json` 只收 `Name` 不為空的道具。
 
 ### ffxiv-teamcraft
@@ -60,7 +66,9 @@
 ## 版本與遠端資料
 
 - `items.json` 的 `_meta.version` 與 `manifest.json` 的 `version` 相同。
-- version 由遊戲版本和資料修訂號組成，格式固定、可以排序。同一遊戲版本重新產出時，修訂號加一。
+- version 格式為 `<遊戲版本>-r<修訂號>`，例：`2026.09.14.0000.0000-r1`，依遊戲版本、再依修訂號排序。
+- 修訂號記在 `data_sources.json`。遊戲版本不變、但產生器邏輯改變而輸出不同時，手動加一。
+  產出不得依賴既有輸出檔或執行次數，否則同一份來源連跑兩次的結果會不同（AC-13）。
 - 無法解析的版本一律視為比內建舊，例如目前遠端的 `2026-05-17-v2`。
 - `manifest.json` 沿用現行欄位：`version`、`itemsURL`、`items.sha256`、`items.byteSize`。
 
@@ -71,7 +79,7 @@
 - **AC-1** `[diff]` `scripts/data_sources.json` 以 commit SHA 鎖定兩個上游，不使用 branch 名稱。
 - **AC-2** `[自動]` 每個由流程產出的資料檔，`_meta` 記錄的來源 commit 與 `data_sources.json` 一致 —— `validate_data.py`
 - **AC-3** `[自動]` `items.json` 每筆道具都有非空的 `name_tw`，且沒有 `name_cn` —— `validate_data.py`
-- **AC-4** `[自動]` `items.json` 中每個道具引用的分類、職業分類、裝備部位 id，都存在於對應的對照表 —— `validate_data.py`
+- **AC-4** `[自動]` `items.json` 中每個道具引用的非 0 分類、職業分類、裝備部位 id，都存在於對應的對照表 —— `validate_data.py`
 - **AC-5** `[自動]` 既有的 `validate_data.py` 檢查全部通過（計數、unresolved 清單、`resolvable` 旗標）。
 - **AC-6** `[自動]` 新的資料檔都能被 App model 解碼 —— `BundledDataTests`
 - **AC-7** `[diff]` 產生器只用 Python 標準函式庫，不再 import `opencc`。
