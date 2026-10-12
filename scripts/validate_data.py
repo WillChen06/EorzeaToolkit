@@ -20,6 +20,7 @@ EorzeaToolkitTests/BundledDataTests.swift 直接用真正的型別驗證,不在�
 6. 由 build_data.py 產出的檔案,任何一層都沒有 `cn` 或 `*_cn` 欄位(只用繁中資料)。
 7. battle_actions.json 的技能說明已由產生器轉成純文字,不含任何 `<…>` 標記。
 8. 技能說明以技能循環可選的等級為 key:從習得等級起的每個等級各一份,習得等級以下的沒有。
+9. 爆發藥的道具 id 都在 items.json,且名稱與 items.json 相同。
 
 用法:
     python3 scripts/validate_data.py
@@ -194,6 +195,7 @@ def main():
 
     items = load('items.json')
     item_ids = {i['id'] for i in items['items']}
+    item_names = {i['id']: i.get('name_tw') for i in items['items']}
 
     check(len(item_ids) == len(items['items']),
           f"items.json: id 有重複({len(items['items'])} 筆 / {len(item_ids)} 個唯一 id)")
@@ -280,6 +282,13 @@ def main():
     ]
     check(not wrong_levels,
           f'battle_actions.json: {len(wrong_levels)} 個技能的說明等級與習得等級不符: {wrong_levels[:5]}')
+    check(battle_data['tinctures'], 'battle_actions.json: 沒有爆發藥')
+    for tincture in battle_data['tinctures']:
+        check(tincture['id'] in item_ids,
+              f"battle_actions.json: 爆發藥 {tincture['id']} 不在 items.json")
+        check(tincture['id'] not in item_ids or tincture['name_tw'] == item_names[tincture['id']],
+              f"battle_actions.json: 爆發藥 {tincture['id']} 的名稱 {tincture['name_tw']!r} "
+              f"與 items.json 的 {item_names.get(tincture['id'])!r} 不同")
 
     # --- treasure_maps_final.json ---
     treasure_data = load('treasure_maps_final.json')
