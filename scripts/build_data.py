@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-build_data.py — 從 scripts/data_sources.json 鎖定的上游,重新產出全部道具相關資料檔。
+build_data.py — 從 scripts/data_sources.json 鎖定的上游,重新產出全部由流程產生的資料檔。
 
 1. 下載上游檔案(只抓需要的檔案,已下載的不重抓),見 fetch_sources.py
-2. 產出 items / recipes / item_shop / gathering / fishing 到 EorzeaToolkit/Resources/Data
+2. 產出 items / recipes / item_shop / gathering / fishing / battle_actions /
+   treasure_maps_final / zh-maps 到 EorzeaToolkit/Resources/Data
 3. 產出遠端用的道具檔與 manifest.json 到 build/remote-data/,上傳到 Cloudflare Worker 仍是手動
 4. 跑 validate_data.py
 
