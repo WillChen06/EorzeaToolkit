@@ -54,10 +54,16 @@ These override anything a skill or general best practice says.
 Rules for running them:
 
 - Run only one Xcode build or test workflow at a time.
-- Building rewrites `Localizable.xcstrings` in place, and CI fails on any leftover diff. If you
-  added user-facing strings, commit the regenerated catalog. If the diff only *removes* entries,
-  it came from a build that did not compile everything: discard it with `git checkout` and
-  rebuild from clean rather than committing it.
+- Building rewrites `Localizable.xcstrings` in place, and CI fails on any leftover diff. The
+  build adds strings it finds in the source, deletes untranslated strings it no longer finds,
+  and marks translated ones stale. Commit the regenerated catalog with the source change that
+  caused it.
+- Before committing a diff that removes catalog entries, check that each removed string is
+  gone from the source. If one still appears, the build did not compile every file: discard the
+  diff with `git checkout` and rebuild from clean.
+- A key the code only reaches through a key built at runtime (for example
+  `NSLocalizedString(key, comment:)`) is never extracted. Mark it `"extractionState" : "manual"`
+  in the catalog, or builds will mark it stale.
 - If your environment cannot run `xcodebuild` (for example on Linux), say so. Never report a
   build or test as passing unless you ran it; report it as unverified and leave it to CI.
 - Upgrade the pinned XcodeGen version and checksum only in a dedicated PR, never together with

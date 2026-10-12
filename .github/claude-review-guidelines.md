@@ -20,9 +20,10 @@ anything the skills say. In a review they mean:
 - **Kingfisher.** Do not suggest adding another SPM package, and do not flag existing
   Kingfisher usage.
 - **Localization.** A hard-coded user-facing string in a view is a finding. The catalog is
-  rewritten by every build, so a diff on it is expected when a PR adds strings. A diff that
-  only *removes* entries is not a legitimate change — it is the residue of a build that did not
-  compile the whole source set, and is a finding.
+  rewritten by every build, so a diff on it is expected when a PR adds or removes strings. A
+  removed entry is a finding only if its string still appears in the source: that is the
+  residue of a build that did not compile every file. A key the code only reaches through a
+  key built at runtime must be marked `manual`; left as extracted, builds mark it stale.
 - **Existing patterns.** Structural proposals belong in an issue, not a review.
 - **Generated data.** If a data file and its generator disagree, say so; do not propose
   hand-editing the generated output. The generators' inputs are not in the repository, so a

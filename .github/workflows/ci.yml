@@ -70,12 +70,12 @@ jobs:
           fi
 
           echo "::error::$catalog changed during the build."
-          echo "Entries added: a new user-facing string was committed without its catalog entry."
-          echo "Entries removed: a truncated extraction was committed. A build that does not"
-          echo "compile the whole source set syncs back only the strings it saw, and committing"
-          echo "that result silently drops entries. Restore the file and rebuild from clean:"
-          echo "  git checkout $catalog"
-          echo "Then commit the catalog a clean build produces."
+          echo "Entries added: the source declares strings the committed catalog lacks. Either a"
+          echo "new string was committed without its entry, or the committed catalog came from a"
+          echo "build that did not compile every file. Rebuild from clean and commit the result."
+          echo "Entries removed or marked stale: the committed catalog keeps strings the source no"
+          echo "longer declares. Commit the catalog a local build produces. If the code looks a"
+          echo "key up at runtime, mark that key manual instead."
           git diff --stat -- "$catalog"
           git diff -- "$catalog"
           exit 1
