@@ -12,14 +12,12 @@ build_gathering.py — Teamcraft nodes.json + 繁中 datamining 的 PlaceName �
 """
 import json
 
-from datamining import Sheet, load_class_jobs, source_meta, write_json
+from datamining import Sheet, load_class_jobs, names_by_id, source_meta, write_json
 
 NODES_PATH = 'libs/data/src/lib/json/nodes.json'
 
 # nodes.json type -> 採集職縮寫(名稱讀 ClassJob)。type 5 = 釣魚，轉檔時濾除不會進到這裡
 NODE_TYPE_JOBS = {0: 'MIN', 1: 'MIN', 2: 'BTN', 3: 'BTN'}
-# nodes.json type -> 採集方式
-NODE_TYPE_METHODS = {0: "採掘", 1: "碎屑採集", 2: "伐木", 3: "採伐"}
 FISHING_TYPE = 5  # 濾除
 
 
@@ -30,6 +28,15 @@ def load_gatherer_names(sheet):
     if missing:
         raise SystemExit(f'{sheet.name}: 找不到採集職 {missing}')
     return names
+
+
+def load_gathering_methods(sheet):
+    """nodes.json type → 採集方式。Teamcraft 的 node type 就是 GatheringType 的 id(0 採掘…3 割草)。"""
+    names = names_by_id(sheet)
+    missing = sorted(t for t in NODE_TYPE_JOBS if not names.get(t))
+    if missing:
+        raise SystemExit(f'{sheet.name}: 找不到採集方式 {missing}')
+    return {t: names[t] for t in NODE_TYPE_JOBS}
 
 
 def load_place_names(sheet):
@@ -44,6 +51,7 @@ def build(tc_files, teamcraft_files, item_ids, sources, out_path):
         nodes = json.load(f)
     place_names = load_place_names(Sheet(tc_files['PlaceName.csv']))
     gatherer_names = load_gatherer_names(Sheet(tc_files['ClassJob.csv']))
+    gathering_methods = load_gathering_methods(Sheet(tc_files['GatheringType.csv']))
 
     # item_id -> list[採集點]
     index = {}
@@ -57,7 +65,7 @@ def build(tc_files, teamcraft_files, item_ids, sources, out_path):
         zid = str(node.get('zoneid', ''))
         spot = {
             'job': gatherer_names[NODE_TYPE_JOBS[t]],
-            'method': NODE_TYPE_METHODS[t],
+            'method': gathering_methods[t],
             'level': node.get('level', 0),
             'zone_id': node.get('zoneid', 0),
             'zone_name': place_names.get(zid, ''),
