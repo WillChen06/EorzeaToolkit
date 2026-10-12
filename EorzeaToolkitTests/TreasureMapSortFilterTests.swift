@@ -222,8 +222,6 @@ private enum TreasureMapFixture {
             itemId: grade.hashValue,
             grade: grade,
             name: grade,
-            nameEn: grade,
-            nameJa: grade,
             level: level,
             expansion: expansion,
             type: .solo,

@@ -23,8 +23,6 @@ struct TreasureMap: Codable, Identifiable {
     let itemId: Int
     let grade: String
     let name: String
-    let nameEn: String
-    let nameJa: String
     let level: Int
     let expansion: String
     let type: MapType
@@ -36,8 +34,6 @@ struct TreasureMap: Codable, Identifiable {
         case id, grade, level, expansion, type
         case itemId = "item_id"
         case name = "name_tw"
-        case nameEn = "name_en"
-        case nameJa = "name_ja"
         case gatheringTypes = "gathering_types"
         case gatheringZoneIds = "gathering_zone_ids"
         case gatheringNodes = "gathering_nodes"
