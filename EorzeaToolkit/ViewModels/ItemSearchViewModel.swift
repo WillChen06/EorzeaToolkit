@@ -479,17 +479,16 @@ final class ItemSearchViewModel {
                 continue
             }
 
-            let normalizedNameTw = normalize(item.nameTw)
-            let normalizedNameCn = normalize(item.nameCn)
+            let normalizedName = normalize(item.nameTw)
 
-            guard normalizedNameTw.contains(normalizedQuery) || normalizedNameCn.contains(normalizedQuery) else {
+            guard normalizedName.contains(normalizedQuery) else {
                 continue
             }
 
             let rank: Int
-            if normalizedNameTw == normalizedQuery || normalizedNameCn == normalizedQuery {
+            if normalizedName == normalizedQuery {
                 rank = 0
-            } else if normalizedNameTw.hasPrefix(normalizedQuery) || normalizedNameCn.hasPrefix(normalizedQuery) {
+            } else if normalizedName.hasPrefix(normalizedQuery) {
                 rank = 1
             } else {
                 rank = 2

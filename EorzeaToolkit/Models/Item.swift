@@ -37,7 +37,6 @@ struct ItemDataResponse: Codable, Sendable {
 
 struct Item: Codable, Identifiable, Hashable, Sendable {
     let id: Int
-    let nameCn: String
     let nameTw: String
     let iconId: Int
     let iconPath: String
@@ -51,7 +50,6 @@ struct Item: Codable, Identifiable, Hashable, Sendable {
 
     enum CodingKeys: String, CodingKey {
         case id, ilvl, rarity
-        case nameCn = "name_cn"
         case nameTw = "name_tw"
         case iconId = "icon_id"
         case iconPath = "icon_path"
@@ -64,7 +62,6 @@ struct Item: Codable, Identifiable, Hashable, Sendable {
 
     init(
         id: Int,
-        nameCn: String,
         nameTw: String,
         iconId: Int,
         iconPath: String,
@@ -77,7 +74,6 @@ struct Item: Codable, Identifiable, Hashable, Sendable {
         equipSlot: Int = 0
     ) {
         self.id = id
-        self.nameCn = nameCn
         self.nameTw = nameTw
         self.iconId = iconId
         self.iconPath = iconPath
@@ -94,7 +90,6 @@ struct Item: Codable, Identifiable, Hashable, Sendable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         id = try container.decode(Int.self, forKey: .id)
-        nameCn = try container.decode(String.self, forKey: .nameCn)
         nameTw = try container.decode(String.self, forKey: .nameTw)
         iconId = try container.decode(Int.self, forKey: .iconId)
         iconPath = try container.decode(String.self, forKey: .iconPath)
@@ -108,7 +103,7 @@ struct Item: Codable, Identifiable, Hashable, Sendable {
     }
 
     var displayName: String {
-        nameTw.isEmpty ? nameCn : nameTw
+        nameTw
     }
 
     var iconURL: URL? {
@@ -118,38 +113,34 @@ struct Item: Codable, Identifiable, Hashable, Sendable {
 
 struct UICategory: Codable, Identifiable, Hashable, Sendable {
     let id: Int
-    let nameCn: String
     let nameTw: String
     let orderMinor: Int
     let orderMajor: Int
 
     enum CodingKeys: String, CodingKey {
         case id
-        case nameCn = "name_cn"
         case nameTw = "name_tw"
         case orderMinor = "order_minor"
         case orderMajor = "order_major"
     }
 
     var displayName: String {
-        nameTw.isEmpty ? nameCn : nameTw
+        nameTw
     }
 }
 
 struct ClassJobCategory: Codable, Identifiable, Hashable, Sendable {
     let id: Int
-    let nameCn: String
     let nameTw: String
     let jobs: [String]
 
     enum CodingKeys: String, CodingKey {
         case id, jobs
-        case nameCn = "name_cn"
         case nameTw = "name_tw"
     }
 
     var displayName: String {
-        nameTw.isEmpty ? nameCn : nameTw
+        nameTw
     }
 }
 
