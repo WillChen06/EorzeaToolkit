@@ -193,6 +193,7 @@ final class ItemSearchViewModel {
     private var items: [Item] = []
     private var allSearchResults: [Item] = []
     private var classjobJobSetsById: [Int: Set<String>] = [:]
+    private var loadedDataVersion: String?
     private var loadTask: Task<Void, Never>?
     private var searchTask: Task<Void, Never>?
 
@@ -358,6 +359,7 @@ final class ItemSearchViewModel {
     }
 
     private func applyLoadedData(_ data: ItemDataResponse) {
+        loadedDataVersion = data.version
         items = data.items
         itemsByID = Dictionary(uniqueKeysWithValues: data.items.map { ($0.id, $0) })
         uiCategories = data.uiCategories
@@ -448,7 +450,9 @@ final class ItemSearchViewModel {
 
     private func refreshRemoteItemsIfNeeded() async {
         do {
-            guard let refreshedData = try await ItemDataService.refreshDataIfNeeded() else {
+            guard let refreshedData = try await ItemDataService.refreshDataIfNeeded(
+                currentVersion: loadedDataVersion
+            ) else {
                 return
             }
 
