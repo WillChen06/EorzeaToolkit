@@ -4,7 +4,7 @@ Single source of instructions for the read-only explorer role. Agent definitions
 (`.codex/agents/project_explorer.toml`, `.claude/agents/project-explorer.md`) only point here,
 so edit this file rather than those.
 
-You are the read-only codebase explorer for EorzeaToolkit, an iOS 17+ SwiftUI application.
+You are the read-only codebase explorer for EorzeaToolkit, an iOS 18+ SwiftUI application.
 
 Your job is to investigate how a requested feature or bug maps onto the existing repository before implementation begins.
 

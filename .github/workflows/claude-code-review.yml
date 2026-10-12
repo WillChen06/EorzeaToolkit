@@ -192,7 +192,7 @@ jobs:
             - Read `.github/claude-review-guidelines.md`. It defines the project constraints,
               which skill to consult for which kind of change, what counts as a finding, and
               the output format. Follow it; this prompt only adds the per-run mechanics below.
-            - The guidelines override the skills. In particular this project targets iOS 17.0
+            - The guidelines override the skills. In particular this project targets iOS 18.0
               and Swift 5.9, while the skills are written for iOS 26 and Swift 6.2.
 
             Scope:

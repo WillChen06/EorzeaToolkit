@@ -13,9 +13,17 @@ project `EorzeaToolkit.xcodeproj` is generated. Primary localization is Traditio
 
 These override anything a skill or general best practice says.
 
-- **iOS 17.0 deployment target, Swift 5.9 language mode.** The bundled skills are written for
-  iOS 26 and Swift 6.2. Do not use APIs, syntax, or concurrency features unavailable at these
-  versions, and do not raise the target as part of other work.
+- **iOS 18.0 deployment target, Swift 5.9 language mode.** The bundled skills are written for
+  iOS 26 and Swift 6.2. Do not use syntax or concurrency features unavailable in Swift 5.9
+  language mode, and do not raise the target or the language mode as part of other work.
+- **APIs newer than iOS 18 are a judgement call, not a ban.** Every use sits behind
+  `@available` / `#available`.
+  - When a feature cannot exist without the newer OS (for example Foundation Models, which
+    needs iOS 26), use the API. On older versions the feature is unavailable and nothing else
+    changes.
+  - When the change needs separate code paths for newer and older OS versions (for example a
+    new UI style or component on iOS 26 alongside the existing one), ask the user before
+    implementing it. Do not build both paths on your own.
 - **Kingfisher is the only third-party dependency**, used solely by
   `Views/CachedIconImage.swift` for remote icon loading. Do not add another SPM package without
   the user's approval.
@@ -46,10 +54,16 @@ These override anything a skill or general best practice says.
 Rules for running them:
 
 - Run only one Xcode build or test workflow at a time.
-- Building rewrites `Localizable.xcstrings` in place, and CI fails on any leftover diff. If you
-  added user-facing strings, commit the regenerated catalog. If the diff only *removes* entries,
-  it came from a build that did not compile everything: discard it with `git checkout` and
-  rebuild from clean rather than committing it.
+- Building rewrites `Localizable.xcstrings` in place, and CI fails on any leftover diff. The
+  build adds strings it finds in the source, deletes untranslated strings it no longer finds,
+  and marks translated ones stale. Commit the regenerated catalog with the source change that
+  caused it.
+- Before committing a diff that removes catalog entries, check that each removed string is
+  gone from the source. If one still appears, the build did not compile every file: discard the
+  diff with `git checkout` and rebuild from clean.
+- A key the code only reaches through a key built at runtime (for example
+  `NSLocalizedString(key, comment:)`) is never extracted. Mark it `"extractionState" : "manual"`
+  in the catalog, or builds will mark it stale.
 - If your environment cannot run `xcodebuild` (for example on Linux), say so. Never report a
   build or test as passing unless you ran it; report it as unverified and leave it to CI.
 - Upgrade the pinned XcodeGen version and checksum only in a dedicated PR, never together with

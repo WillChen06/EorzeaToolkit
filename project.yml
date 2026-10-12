@@ -2,7 +2,7 @@ name: EorzeaToolkit
 options:
   bundleIdPrefix: com.willchen.eorzeaToolkit
   deploymentTarget:
-    iOS: "17.0"
+    iOS: "18.0"
   xcodeVersion: "16.0"
   defaultConfig: Debug
 
