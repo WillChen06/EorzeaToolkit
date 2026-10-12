@@ -19,7 +19,8 @@ EorzeaToolkitTests/BundledDataTests.swift 直接用真正的型別驗證,不在�
    不含代表「無」的 id 0,且道具引用的非 0 id 都查得到。
 6. 由 build_data.py 產出的檔案,任何一層都沒有 `cn` 或 `*_cn` 欄位(只用繁中資料)。
 7. battle_actions.json 的技能說明已由產生器轉成純文字,不含任何 `<…>` 標記。
-8. 技能說明以技能循環可選的等級為 key:從習得等級起的每個等級各一份,習得等級以下的沒有。
+8. 技能說明以技能循環可選的等級為 key:從習得等級起的每個等級各一份且不是空字串,
+   習得等級以下的沒有。
 9. 爆發藥的道具 id 都在 items.json,且名稱與 items.json 相同;每個爆發藥的屬性都有名稱。
 10. 藏寶圖的道具 id 都在 items.json,且名稱相同;採集區域與採集點引用的地區都有名稱。
 11. 職業 id 不重複,同一職業內技能 id 也不重複:App 以 id 建索引還原技能循環,
@@ -299,6 +300,10 @@ def main():
     ]
     check(not wrong_levels,
           f'battle_actions.json: {len(wrong_levels)} 個技能的說明等級與習得等級不符: {wrong_levels[:5]}')
+    empty = [f'{label} Lv{level}'
+             for label, action in battle_actions(battle_data)
+             for level, text in action['descriptions'].items() if not text.strip()]
+    check(not empty, f'battle_actions.json: {len(empty)} 份技能說明是空的: {empty[:5]}')
     check(battle_data['tinctures'], 'battle_actions.json: 沒有爆發藥')
     for tincture in battle_data['tinctures']:
         check(tincture['id'] in item_ids,
