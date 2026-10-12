@@ -66,7 +66,7 @@ def load(name):
 
 
 def check_counters(filename, data, index_key, expected):
-    """`_meta` 的計數欄位 vs 實際內容。"""
+    """`_meta` 的計數欄位 vs 實際內容。index_key 為 None 時不檢查索引的 key。"""
     meta = data.get('_meta', {})
 
     for meta_key, actual in expected.items():
@@ -76,6 +76,8 @@ def check_counters(filename, data, index_key, expected):
         check(meta[meta_key] == actual,
               f'{filename}: _meta.{meta_key} = {meta[meta_key]},實際為 {actual}')
 
+    if index_key is None:
+        return
     non_digit = [k for k in data[index_key] if not k.isdigit()]
     check(not non_digit,
           f'{filename}: {index_key} 有非數字 key(app 用 String(itemID) 查詢): {non_digit[:5]}')
@@ -267,6 +269,11 @@ def main():
 
     # --- battle_actions.json ---
     battle_data = load('battle_actions.json')
+    check_counters('battle_actions.json', battle_data, None, {
+        'job_count': len(battle_data['jobs']),
+        'action_count': sum(len(job['actions']) for job in battle_data['jobs']),
+        'role_action_count': len(battle_data['role_actions']),
+    })
     check_sources('battle_actions.json', battle_data['_meta'], sources)
     with_markup = [f'{label} Lv{level}'
                    for label, action in battle_actions(battle_data)
@@ -293,6 +300,9 @@ def main():
 
     # --- treasure_maps_final.json ---
     treasure_data = load('treasure_maps_final.json')
+    check_counters('treasure_maps_final.json', treasure_data, None, {
+        'map_count': len(treasure_data['maps']),
+    })
     check_sources('treasure_maps_final.json', treasure_data['_meta'], sources)
     check(treasure_data['maps'], 'treasure_maps_final.json: 沒有地圖')
     zone_names = treasure_data['zone_names']
@@ -309,6 +319,9 @@ def main():
 
     # --- zh-maps.json ---
     zh_maps = load('zh-maps.json')
+    check_counters('zh-maps.json', zh_maps, None, {
+        'map_count': len(zh_maps) - 1,
+    })
     check_sources('zh-maps.json', zh_maps['_meta'], sources)
 
     # --- 只用繁中資料 ---
