@@ -17,6 +17,7 @@ EorzeaToolkitTests/BundledDataTests.swift 直接用真正的型別驗證,不在�
    與 scripts/data_sources.json 一致;items.json 的 `_meta.version` 與之對應。
 5. items.json 只用繁中資料:每筆道具都有 name_tw、沒有 name_cn;對照表非空、
    不含代表「無」的 id 0,且道具引用的非 0 id 都查得到。
+6. 由 build_data.py 產出的檔案,任何一層都沒有 `cn` 或 `*_cn` 欄位(只用繁中資料)。
 
 用法:
     python3 scripts/validate_data.py
@@ -114,6 +115,19 @@ def check_sources(filename, meta, sources):
     check(meta.get('game_version') == game_version,
           f'{filename}: _meta.game_version = {meta.get("game_version")!r},'
           f'data_sources.json 是 {game_version!r}')
+
+
+def cn_key_paths(value, path='$'):
+    """value 中所有 `cn` 或 `*_cn` 欄位的路徑。"""
+    if isinstance(value, dict):
+        for key, child in value.items():
+            child_path = f'{path}.{key}'
+            if key == 'cn' or key.endswith('_cn'):
+                yield child_path
+            yield from cn_key_paths(child, child_path)
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            yield from cn_key_paths(child, f'{path}[{index}]')
 
 
 def check_items(items, sources):
@@ -242,6 +256,11 @@ def main():
     # --- zh-maps.json ---
     zh_maps = load('zh-maps.json')
     check_sources('zh-maps.json', zh_maps['_meta'], sources)
+
+    # --- 只用繁中資料 ---
+    for filename in FILE_UPSTREAMS:
+        paths = list(cn_key_paths(load(filename)))
+        check(not paths, f'{filename}: {len(paths)} 個簡中欄位: {paths[:5]}')
 
     if failures:
         print(f'資料驗證失敗({len(failures)} 項):', file=sys.stderr)
