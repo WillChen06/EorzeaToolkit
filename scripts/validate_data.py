@@ -24,6 +24,7 @@ EorzeaToolkitTests/BundledDataTests.swift 直接用真正的型別驗證,不在�
 10. 藏寶圖的道具 id 都在 items.json,且名稱相同;採集區域與採集點引用的地區都有名稱。
 11. 職業 id 不重複,同一職業內技能 id 也不重複:App 以 id 建索引還原技能循環,
     重複的 id 會讓 App 當掉。
+12. treasures.json 的每個寶藏點所在地圖,在 zh-maps.json 都有名稱;否則藏寶圖頁只能顯示「未知地區」。
 
 用法:
     python3 scripts/validate_data.py
@@ -331,6 +332,9 @@ def main():
         'map_count': len(zh_maps) - 1,
     })
     check_sources('zh-maps.json', zh_maps['_meta'], sources)
+    spot_maps = {spot['map'] for spot in load('treasures.json')}
+    unnamed_maps = sorted(m for m in spot_maps if not (zh_maps.get(str(m)) or {}).get('zh', '').strip())
+    check(not unnamed_maps, f'zh-maps.json: 寶藏點所在的地圖沒有名稱: {unnamed_maps}')
 
     # --- 只用繁中資料 ---
     for filename in FILE_UPSTREAMS:
