@@ -1,0 +1,29 @@
+{
+  "data_revision": 1,
+  "upstreams": {
+    "ffxiv-datamining-tc": {
+      "repo": "thewakingsands/ffxiv-datamining-tc",
+      "commit": "1cf1f9fb735bad0748848dbd3f4de05721fe619a",
+      "game_version": "2026.09.14.0000.0000",
+      "files": [
+        "Item.csv",
+        "ItemUICategory.csv",
+        "ClassJobCategory.csv",
+        "EquipSlotCategory.csv",
+        "Recipe.csv",
+        "RecipeLevelTable.csv",
+        "GilShopItem.csv",
+        "PlaceName.csv"
+      ]
+    },
+    "teamcraft": {
+      "repo": "ffxiv-teamcraft/ffxiv-teamcraft",
+      "commit": "53405826790e1405831003a75935d9eb66c2dd0a",
+      "files": [
+        "libs/data/src/lib/json/nodes.json",
+        "libs/data/src/lib/json/fishing-spots.json",
+        "libs/data/src/lib/json/fish-parameter.json"
+      ]
+    }
+  }
+}
