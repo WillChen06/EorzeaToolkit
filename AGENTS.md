@@ -31,9 +31,11 @@ These override anything a skill or general best practice says.
   hard-coded strings in views.
 - **Follow the existing patterns** in `Views/`, `ViewModels/`, `Services/`, and `Models/`
   rather than introducing new architecture. Keep UI and localization changes scoped.
-- **`EorzeaToolkit/Resources/Data/*.json` is generated** by `scripts/build_*.py`. Change the
-  generator, never the output by hand. The generators' inputs (datamining CSV, Teamcraft dumps)
-  are not in the repository.
+- **`EorzeaToolkit/Resources/Data/*.json` is generated data; never edit it by hand.**
+  `items`, `recipes`, `item_shop`, `gathering` and `fishing` come from `scripts/build_data.py`,
+  which reads the upstream commits pinned in `scripts/data_sources.json` (the Traditional
+  Chinese datamining and Teamcraft). Change a generator or the pins, then regenerate. The other
+  data files have no generator in the repository.
 - **`project.yml` is the source of truth** for the Xcode project. Add targets, sources, and
   packages there; never hand-edit or commit the generated project. The only tracked file under
   it is `EorzeaToolkit.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`.
@@ -47,6 +49,11 @@ These override anything a skill or general best practice says.
 - Unit tests: `./scripts/run_tests.sh`. CI runs it too, so breaking it fails the build.
 - UI tests (opt-in, not run by CI): `./scripts/run_ui_tests.sh <SIMULATOR_UDID>`; list UDIDs
   with `xcrun simctl list devices available`.
+- Regenerate data: `python3 scripts/build_data.py` downloads the pinned upstream files, rewrites
+  the five generated data files and the remote copy in `build/remote-data/` (upload to the
+  Cloudflare Worker is manual), then runs `validate_data.py`. The same pins produce the same
+  bytes. It needs Python 3.9+ and network access to `raw.githubusercontent.com`, nothing else.
+  When generator output changes for the same game version, bump `data_revision`.
 - Validate data: `python3 scripts/validate_data.py` checks cross-file invariants over
   `EorzeaToolkit/Resources/Data`. Run it after regenerating any data file. Decodability is
   covered separately by `EorzeaToolkitTests/BundledDataTests.swift`.

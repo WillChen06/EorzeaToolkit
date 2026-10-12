@@ -26,9 +26,10 @@ anything the skills say. In a review they mean:
   key built at runtime must be marked `manual`; left as extracted, builds mark it stale.
 - **Existing patterns.** Structural proposals belong in an issue, not a review.
 - **Generated data.** If a data file and its generator disagree, say so; do not propose
-  hand-editing the generated output. The generators' inputs are not in the repository, so a
-  regenerated data file cannot be reproduced or diffed in review or in CI. What is checked
-  instead is `scripts/validate_data.py` for cross-file invariants and
+  hand-editing the generated output. The five generated files are reproducible from the
+  upstream commits pinned in `scripts/data_sources.json` with `python3 scripts/build_data.py`,
+  but CI does not run it, since it needs the network. What CI checks is
+  `scripts/validate_data.py` for cross-file invariants and source pins, and
   `EorzeaToolkitTests/BundledDataTests.swift` for decodability — a data change that needs a
   new invariant belongs in one of those, not in a review comment.
 
