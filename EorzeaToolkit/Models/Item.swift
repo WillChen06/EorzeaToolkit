@@ -1,12 +1,14 @@
 import Foundation
 
 struct ItemDataResponse: Codable, Sendable {
+    let meta: ItemDataMeta?
     let items: [Item]
     let uiCategories: [UICategory]
     let classjobCategories: [ClassJobCategory]
     let equipSlots: [EquipSlot]
 
     enum CodingKeys: String, CodingKey {
+        case meta = "_meta"
         case items
         case uiCategories = "ui_categories"
         case classjobCategories = "classjob_categories"
@@ -14,11 +16,13 @@ struct ItemDataResponse: Codable, Sendable {
     }
 
     init(
+        meta: ItemDataMeta? = nil,
         items: [Item],
         uiCategories: [UICategory] = [],
         classjobCategories: [ClassJobCategory] = [],
         equipSlots: [EquipSlot] = []
     ) {
+        self.meta = meta
         self.items = items
         self.uiCategories = uiCategories
         self.classjobCategories = classjobCategories
@@ -28,11 +32,25 @@ struct ItemDataResponse: Codable, Sendable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
+        // `_meta` only documents the file; a shape this model does not expect must not make
+        // the items themselves unreadable.
+        meta = try? container.decodeIfPresent(ItemDataMeta.self, forKey: .meta)
         items = try container.decode([Item].self, forKey: .items)
         uiCategories = try container.decodeIfPresent([UICategory].self, forKey: .uiCategories) ?? []
         classjobCategories = try container.decodeIfPresent([ClassJobCategory].self, forKey: .classjobCategories) ?? []
         equipSlots = try container.decodeIfPresent([EquipSlot].self, forKey: .equipSlots) ?? []
     }
+
+    /// `_meta.version`, see `ItemDataVersion`. Files from before the Traditional Chinese data
+    /// have none.
+    var version: String? {
+        meta?.version
+    }
+}
+
+/// The part of `items.json`'s `_meta` the app reads. The other fields document the file.
+struct ItemDataMeta: Codable, Sendable {
+    let version: String?
 }
 
 struct Item: Codable, Identifiable, Hashable, Sendable {
