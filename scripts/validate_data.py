@@ -18,11 +18,13 @@ EorzeaToolkitTests/BundledDataTests.swift 直接用真正的型別驗證,不在�
 5. items.json 只用繁中資料:每筆道具都有 name_tw、沒有 name_cn;對照表非空、
    不含代表「無」的 id 0,且道具引用的非 0 id 都查得到。
 6. 由 build_data.py 產出的檔案,任何一層都沒有 `cn` 或 `*_cn` 欄位(只用繁中資料)。
+7. battle_actions.json 的技能說明已由產生器轉成純文字,不含任何 `<…>` 標記。
 
 用法:
     python3 scripts/validate_data.py
 """
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -41,6 +43,8 @@ FILE_UPSTREAMS = {
     'treasure_maps_final.json': ('ffxiv-datamining-tc', 'teamcraft'),
     'zh-maps.json': ('ffxiv-datamining-tc',),
 }
+
+MARKUP = re.compile(r'<[^>]*>')
 
 failures = []
 
@@ -128,6 +132,15 @@ def cn_key_paths(value, path='$'):
     elif isinstance(value, list):
         for index, child in enumerate(value):
             yield from cn_key_paths(child, f'{path}[{index}]')
+
+
+def battle_actions(data):
+    """battle_actions.json 的每個技能:(標籤, 技能),職業技能與共通技能都包含。"""
+    for job in data['jobs']:
+        for action in job['actions']:
+            yield f"{job['abbreviation']} {action['id']}", action
+    for action in data['role_actions']:
+        yield f"共通技能 {action['id']}", action
 
 
 def check_items(items, sources):
@@ -248,6 +261,11 @@ def main():
     # --- battle_actions.json ---
     battle_data = load('battle_actions.json')
     check_sources('battle_actions.json', battle_data['_meta'], sources)
+    with_markup = [f'{label} Lv{level}'
+                   for label, action in battle_actions(battle_data)
+                   for level, text in action['descriptions'].items() if MARKUP.search(text)]
+    check(not with_markup,
+          f'battle_actions.json: {len(with_markup)} 份技能說明仍有標記: {with_markup[:5]}')
 
     # --- treasure_maps_final.json ---
     treasure_data = load('treasure_maps_final.json')
