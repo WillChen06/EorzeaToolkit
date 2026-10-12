@@ -52,10 +52,9 @@ struct BattleAction: Codable, Identifiable, Hashable {
     let cast100ms: Int
     let recast100ms: Int
     let maxCharges: Int
-    let descriptionTw: String?
     /// Plain-text descriptions keyed by the rotation editor's levels (50, 60 … 100), from the
-    /// level the action is learned at. Files from before the Traditional Chinese data have none.
-    let descriptions: [Int: String]?
+    /// level the action is learned at.
+    let descriptions: [Int: String]
 
     enum CodingKeys: String, CodingKey {
         case id, category, level, range
@@ -66,7 +65,6 @@ struct BattleAction: Codable, Identifiable, Hashable {
         case cast100ms = "cast_100ms"
         case recast100ms = "recast_100ms"
         case maxCharges = "max_charges"
-        case descriptionTw = "description_tw"
         case descriptions
     }
 
@@ -101,29 +99,9 @@ struct BattleAction: Codable, Identifiable, Hashable {
     }
 
     /// The description a player of this job sees at `level`, or nil when the action is not
-    /// learned yet at that level.
-    ///
-    /// Without per-level descriptions (older data) it falls back to `cleanedDescription`, the
-    /// single text shown before descriptions depended on the level.
+    /// learned yet at that level. The generator has already resolved the in-game markup.
     func description(at level: Int) -> String? {
-        guard let descriptions else {
-            return level >= self.level ? cleanedDescription : nil
-        }
-        return descriptions[level]
-    }
-
-    /// 移除遊戲內條件判斷模板（如 `<If(...)>`），讓說明文字較易閱讀。
-    var cleanedDescription: String {
-        let raw = descriptionTw ?? ""
-        let pattern = #"<[^>]+>"#
-        guard let regex = try? NSRegularExpression(pattern: pattern) else { return raw }
-        let range = NSRange(raw.startIndex..., in: raw)
-        let stripped = regex.stringByReplacingMatches(in: raw, range: range, withTemplate: "")
-        return stripped
-            .components(separatedBy: .newlines)
-            .map { $0.trimmingCharacters(in: .whitespaces) }
-            .filter { !$0.isEmpty }
-            .joined(separator: "\n")
+        descriptions[level]
     }
 
     private static func secondsValueText(_ value: Int) -> String {

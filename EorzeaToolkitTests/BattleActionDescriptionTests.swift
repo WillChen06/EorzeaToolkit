@@ -25,12 +25,4 @@ final class BattleActionDescriptionTests: XCTestCase {
 
         XCTAssertNil(action.description(at: 60))
     }
-
-    /// Data from before per-level descriptions keeps showing its single description.
-    func testFallsBackToTheSingleDescriptionWithoutPerLevelOnes() throws {
-        let action = try action(from: #"{\#(fields),"description_tw":"對目標發動物理攻擊"}"#)
-
-        XCTAssertEqual(action.description(at: 70), "對目標發動物理攻擊")
-        XCTAssertNil(action.description(at: 1), "below the learned level")
-    }
 }
