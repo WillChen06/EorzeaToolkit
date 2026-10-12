@@ -43,6 +43,30 @@ class Sheet:
             yield tuple(row[index] if index < len(row) else '' for index in indices)
 
 
+def names_by_id(sheet, column='Name'):
+    """id → 名稱(去掉頭尾空白),略過名稱為空的列。用於 GatheringType、PlaceName、BaseParam 等。"""
+    return {to_int(row_id): name.strip() for row_id, name in sheet.records('#', column)
+            if row_id.strip().isdigit() and name.strip()}
+
+
+def load_class_jobs(sheet):
+    """ClassJob → { id: {'abbreviation', 'name', 'job_index'} }。
+
+    繁中 ClassJob.csv 第 29 欄之後的欄位名稱與資料錯一格(例:ClassJob{Parent} 整欄是 0,
+    真正的值在下一欄),所以只讀表頭在錯位之前的 `#`、`Name`、`Abbreviation`、`JobIndex`。
+    """
+    jobs = {}
+    for row_id, name, abbreviation, job_index in sheet.records('#', 'Name', 'Abbreviation', 'JobIndex'):
+        if not row_id.strip().isdigit() or not abbreviation.strip():
+            continue
+        jobs[to_int(row_id)] = {
+            'abbreviation': abbreviation.strip(),
+            'name': name.strip(),
+            'job_index': to_int(job_index),
+        }
+    return jobs
+
+
 def to_int(value, default=0):
     """CSV 字串 → int。空字串或非數字(例:GilShopItem 的 `262144.0`)回傳 default。"""
     text = value.strip()
