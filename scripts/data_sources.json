@@ -13,7 +13,13 @@
         "Recipe.csv",
         "RecipeLevelTable.csv",
         "GilShopItem.csv",
-        "PlaceName.csv"
+        "PlaceName.csv",
+        "Action.csv",
+        "ActionTransient.csv",
+        "ClassJob.csv",
+        "BaseParam.csv",
+        "Map.csv",
+        "GatheringType.csv"
       ]
     },
     "teamcraft": {
