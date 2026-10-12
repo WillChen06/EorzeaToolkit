@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-build_gathering.py — 將 nodes.json + PlaceName.csv 轉成 gathering.json
+build_gathering.py — Teamcraft nodes.json + 繁中 datamining 的 PlaceName → gathering.json
+
+由 build_data.py 呼叫,不單獨執行。
 
 反向索引：item_id -> 採集點清單。
 - 濾除 type 5（釣魚）—— Phase C 不做釣魚
-- zoneid 經 PlaceName.csv + OpenCC s2t 轉繁中地名
+- zoneid 經 PlaceName 對到繁中服官方地名
 - hiddenItems 一併納入，以 is_hidden 旗標區分
-
-用法:
-    python3 build_gathering.py nodes.json PlaceName.csv items-xxxx.json gathering.json
 """
-import csv, json, sys
-import opencc
+import json
+
+from datamining import Sheet, source_meta, write_json
+
+NODES_PATH = 'libs/data/src/lib/json/nodes.json'
 
 # nodes.json type -> 採集職業（繁中）。type 5 = 釣魚，轉檔時濾除不會進到這裡
 NODE_TYPE = {
@@ -23,34 +25,18 @@ NODE_TYPE = {
 }
 FISHING_TYPE = 5  # 濾除
 
-cc = opencc.OpenCC('s2t')
+
+def load_place_names(sheet):
+    """PlaceName -> { zoneid(str): 繁中地名 }"""
+    return {place_id: name.strip() for place_id, name in sheet.records('#', 'Name')
+            if place_id.strip()}
 
 
-def load_place_names(path):
-    """PlaceName.csv -> { zoneid(str): 繁中地名 }，經 OpenCC s2t"""
-    with open(path, encoding='utf-8-sig') as f:
-        rows = list(csv.reader(f))
-    names = {}
-    for r in rows[3:]:
-        if not r or not r[0].strip():
-            continue
-        zid = r[0]
-        cn = r[1] if len(r) > 1 else ''
-        names[zid] = cc.convert(cn) if cn.strip() else ''
-    return names
-
-
-def load_item_ids(path):
-    with open(path, encoding='utf-8') as f:
-        d = json.load(f)
-    return set(it['id'] for it in d['items'])
-
-
-def build(nodes_path, place_path, items_path, out_path):
-    with open(nodes_path, encoding='utf-8') as f:
+def build(tc_files, teamcraft_files, item_ids, sources, out_path):
+    """tc_files / teamcraft_files: data_sources.json 中各上游的檔案 → 本機路徑。"""
+    with open(teamcraft_files[NODES_PATH], encoding='utf-8') as f:
         nodes = json.load(f)
-    place_names = load_place_names(place_path)
-    item_ids = load_item_ids(items_path)
+    place_names = load_place_names(Sheet(tc_files['PlaceName.csv']))
 
     # item_id -> list[採集點]
     index = {}
@@ -100,31 +86,24 @@ def build(nodes_path, place_path, items_path, out_path):
     for iid in index:
         index[iid].sort(key=lambda s: (s['level'], s['zone_id']))
 
-    # 標記哪些採集到的 item_id 對不到 items.json（少數水晶 / 新道具）
+    # 標記哪些採集到的 item_id 對不到 items.json（Teamcraft 以國際服為準，會有繁中服尚未開放的道具）
     unresolved = sorted(i for i in index if i not in item_ids)
 
     output = {
         '_meta': {
-            'source': 'ffxiv-teamcraft nodes.json + ffxiv-datamining-cn PlaceName.csv',
             'gatherable_item_count': len(index),
             'fishing_nodes_excluded': skipped_fishing,
             'unresolved_item_ids': unresolved,
+            'game_version': sources['upstreams']['ffxiv-datamining-tc']['game_version'],
+            'sources': source_meta(sources, 'ffxiv-datamining-tc', 'teamcraft'),
             'note': 'key 為可採集道具 id（字串）；值為採集點陣列。釣魚(type 5)已排除。',
         },
-        'gathering': {str(k): v for k, v in index.items()},
+        'gathering': {str(k): index[k] for k in sorted(index)},
     }
-    with open(out_path, 'w', encoding='utf-8') as f:
-        json.dump(output, f, ensure_ascii=False, separators=(',', ':'))
+    write_json(out_path, output)
 
     print('完成:', out_path)
     print('  可採集道具數:', output['_meta']['gatherable_item_count'])
     print('  濾除釣魚 node:', skipped_fishing)
     print('  未知 type node(略過):', skipped_no_type)
     print('  採集 item 對不到 items.json:', len(unresolved))
-
-
-if __name__ == '__main__':
-    if len(sys.argv) != 5:
-        print(__doc__)
-        sys.exit(1)
-    build(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
