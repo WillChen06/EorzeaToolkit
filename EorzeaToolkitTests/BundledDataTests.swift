@@ -16,6 +16,25 @@ final class BundledDataTests: XCTestCase {
         XCTAssertEqual(Set(data.items.map(\.id)).count, data.items.count, "duplicate item ids")
     }
 
+    /// The lookup tables decode as empty when their key is missing or renamed, which hides the
+    /// category, job and equip slot filters instead of failing. Assert they are really there.
+    func testItemFilterTablesDecode() throws {
+        let data: ItemDataResponse = try LocalDataService.load("items")
+
+        XCTAssertFalse(data.uiCategories.isEmpty, "ui_categories")
+        XCTAssertFalse(data.classjobCategories.isEmpty, "classjob_categories")
+        XCTAssertFalse(data.equipSlots.isEmpty, "equip_slots")
+    }
+
+    /// The loader compares this version with the cache and the remote manifest. If it did not
+    /// parse, any downloaded or cached copy would count as newer than the bundled data.
+    func testItemsVersionParses() throws {
+        let data: ItemDataResponse = try LocalDataService.load("items")
+        let version = try XCTUnwrap(data.version, "items.json has no _meta.version")
+
+        XCTAssertNotNil(ItemDataVersion(version), version)
+    }
+
     func testRecipesDecode() throws {
         let data: RecipeDataResponse = try LocalDataService.load("recipes")
 
