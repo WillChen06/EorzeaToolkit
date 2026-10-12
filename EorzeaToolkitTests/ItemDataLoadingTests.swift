@@ -1,3 +1,4 @@
+import CryptoKit
 import XCTest
 @testable import EorzeaToolkit
 
@@ -120,6 +121,36 @@ final class ItemDataLoadingTests: XCTestCase {
         XCTAssertEqual(log.urls.map(\.lastPathComponent), ["manifest.json", "items-test.json"])
     }
 
+    /// A file that passes the size and checksum checks but declares an older version than its
+    /// manifest must not be cached under the manifest's version. The guard runs before the
+    /// cache is written, so this test leaves no file behind.
+    func testDownloadWhoseVersionDiffersFromTheManifestIsRejected() async throws {
+        let manifestVersion = "2026.09.14.0000.0000-r2"
+        let fileVersion = "2026.09.14.0000.0000-r1"
+        let items = Data(
+            #"{"_meta":{"version":"\#(fileVersion)"},"items":[{"id":1,"name_tw":"測試","icon_id":0,"icon_path":"","ilvl":1,"rarity":1}]}"#.utf8
+        )
+        let checksum = SHA256.hash(data: items).map { String(format: "%02x", $0) }.joined()
+
+        do {
+            _ = try await ItemDataService.refreshDataIfNeeded(
+                currentVersion: bundledVersion,
+                fetch: { url in
+                    if url.lastPathComponent == "manifest.json" {
+                        return manifestData(version: manifestVersion, sha256: checksum, byteSize: items.count)
+                    }
+                    return items
+                }
+            )
+            XCTFail("a file declaring another version than its manifest must be rejected")
+        } catch ItemDataService.ItemDataError.versionMismatch(let manifest, let file) {
+            XCTAssertEqual(manifest, manifestVersion)
+            XCTAssertEqual(file, fileVersion)
+        } catch {
+            XCTFail("unexpected error: \(error)")
+        }
+    }
+
     // MARK: - Helpers
 
     private let bundledName = "內建資料"
@@ -190,6 +221,6 @@ private func itemData(named name: String, version: String?) -> ItemDataResponse 
     )
 }
 
-private func manifestData(version: String) -> Data {
-    Data(#"{"version":"\#(version)","itemsURL":"/items-test.json","items":{"sha256":"00","byteSize":1}}"#.utf8)
+private func manifestData(version: String, sha256: String = "00", byteSize: Int = 1) -> Data {
+    Data(#"{"version":"\#(version)","itemsURL":"/items-test.json","items":{"sha256":"\#(sha256)","byteSize":\#(byteSize)}}"#.utf8)
 }
