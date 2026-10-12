@@ -69,6 +69,22 @@ final class BundledDataTests: XCTestCase {
         XCTAssertFalse(data.tinctures.isEmpty)
     }
 
+    /// The rotation editor shows the description for the selected level, and every action is
+    /// learned by the level cap, so each one needs a description there. The keys are levels
+    /// written as strings, which decode into `[Int: String]` only when every one is a number.
+    func testBattleActionsHaveADescriptionAtTheLevelCap() throws {
+        let data: BattleActionsData = try LocalDataService.load("battle_actions")
+        let level = SkillRotationLevel.level100.rawValue
+
+        let missing = data.jobs.flatMap { job in
+            job.actions
+                .filter { ($0.description(at: level) ?? "").isEmpty }
+                .map { "\(job.abbreviation) \($0.id)" }
+        }
+
+        XCTAssertTrue(missing.isEmpty, "actions without a Lv\(level) description: \(missing.prefix(5))")
+    }
+
     func testRelicWeaponsDecode() throws {
         let data: RelicWeaponData = try LocalDataService.load("relic_weapons")
 
