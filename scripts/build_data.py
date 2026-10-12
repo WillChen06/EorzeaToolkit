@@ -26,6 +26,7 @@ import build_gathering
 import build_item_shop
 import build_items
 import build_recipes
+import build_treasure_maps
 import fetch_sources
 from datamining import data_version
 
@@ -74,6 +75,7 @@ def main():
     build_gathering.build(tc_files, teamcraft_files, item_ids, sources, DATA_DIR / 'gathering.json')
     build_fishing.build(tc_files, teamcraft_files, item_ids, sources, DATA_DIR / 'fishing.json')
     build_battle_actions.build(tc_files, sources, DATA_DIR / 'battle_actions.json')
+    build_treasure_maps.build(tc_files, teamcraft_files, sources, DATA_DIR / 'treasure_maps_final.json')
     write_remote(items_data, data_version(sources))
 
     return subprocess.call([sys.executable, str(SCRIPTS_DIR / 'validate_data.py')])
