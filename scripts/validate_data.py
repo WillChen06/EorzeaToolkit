@@ -19,6 +19,7 @@ EorzeaToolkitTests/BundledDataTests.swift 直接用真正的型別驗證,不在�
    不含代表「無」的 id 0,且道具引用的非 0 id 都查得到。
 6. 由 build_data.py 產出的檔案,任何一層都沒有 `cn` 或 `*_cn` 欄位(只用繁中資料)。
 7. battle_actions.json 的技能說明已由產生器轉成純文字,不含任何 `<…>` 標記。
+8. 技能說明以技能循環可選的等級為 key:從習得等級起的每個等級各一份,習得等級以下的沒有。
 
 用法:
     python3 scripts/validate_data.py
@@ -45,6 +46,9 @@ FILE_UPSTREAMS = {
 }
 
 MARKUP = re.compile(r'<[^>]*>')
+
+# 技能循環編輯頁可選的等級(App 的 SkillRotationLevel)
+SKILL_ROTATION_LEVELS = (50, 60, 70, 80, 90, 100)
 
 failures = []
 
@@ -266,6 +270,16 @@ def main():
                    for level, text in action['descriptions'].items() if MARKUP.search(text)]
     check(not with_markup,
           f'battle_actions.json: {len(with_markup)} 份技能說明仍有標記: {with_markup[:5]}')
+    check(battle_data['_meta'].get('description_levels') == list(SKILL_ROTATION_LEVELS),
+          f"battle_actions.json: _meta.description_levels = "
+          f"{battle_data['_meta'].get('description_levels')},應為 {list(SKILL_ROTATION_LEVELS)}")
+    wrong_levels = [
+        label for label, action in battle_actions(battle_data)
+        if set(action['descriptions'])
+        != {str(level) for level in SKILL_ROTATION_LEVELS if level >= action['level']}
+    ]
+    check(not wrong_levels,
+          f'battle_actions.json: {len(wrong_levels)} 個技能的說明等級與習得等級不符: {wrong_levels[:5]}')
 
     # --- treasure_maps_final.json ---
     treasure_data = load('treasure_maps_final.json')
