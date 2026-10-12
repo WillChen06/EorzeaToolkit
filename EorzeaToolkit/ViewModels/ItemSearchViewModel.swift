@@ -193,6 +193,7 @@ final class ItemSearchViewModel {
     private var items: [Item] = []
     private var allSearchResults: [Item] = []
     private var classjobJobSetsById: [Int: Set<String>] = [:]
+    private var loadedDataVersion: String?
     private var loadTask: Task<Void, Never>?
     private var searchTask: Task<Void, Never>?
 
@@ -358,6 +359,7 @@ final class ItemSearchViewModel {
     }
 
     private func applyLoadedData(_ data: ItemDataResponse) {
+        loadedDataVersion = data.version
         items = data.items
         itemsByID = Dictionary(uniqueKeysWithValues: data.items.map { ($0.id, $0) })
         uiCategories = data.uiCategories
@@ -448,7 +450,9 @@ final class ItemSearchViewModel {
 
     private func refreshRemoteItemsIfNeeded() async {
         do {
-            guard let refreshedData = try await ItemDataService.refreshDataIfNeeded() else {
+            guard let refreshedData = try await ItemDataService.refreshDataIfNeeded(
+                currentVersion: loadedDataVersion
+            ) else {
                 return
             }
 
@@ -479,17 +483,16 @@ final class ItemSearchViewModel {
                 continue
             }
 
-            let normalizedNameTw = normalize(item.nameTw)
-            let normalizedNameCn = normalize(item.nameCn)
+            let normalizedName = normalize(item.nameTw)
 
-            guard normalizedNameTw.contains(normalizedQuery) || normalizedNameCn.contains(normalizedQuery) else {
+            guard normalizedName.contains(normalizedQuery) else {
                 continue
             }
 
             let rank: Int
-            if normalizedNameTw == normalizedQuery || normalizedNameCn == normalizedQuery {
+            if normalizedName == normalizedQuery {
                 rank = 0
-            } else if normalizedNameTw.hasPrefix(normalizedQuery) || normalizedNameCn.hasPrefix(normalizedQuery) {
+            } else if normalizedName.hasPrefix(normalizedQuery) {
                 rank = 1
             } else {
                 rank = 2

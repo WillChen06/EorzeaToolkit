@@ -10,6 +10,7 @@ enum ItemDataService {
         case invalidItemsURL
         case unexpectedByteSize(expected: Int, actual: Int)
         case checksumMismatch
+        case versionMismatch(manifest: String, file: String?)
         case noAvailableData(Error)
 
         var errorDescription: String? {
@@ -20,6 +21,8 @@ enum ItemDataService {
                 return "遠端道具資料大小不符：預期 \(expected) bytes，實際 \(actual) bytes"
             case .checksumMismatch:
                 return "遠端道具資料校驗失敗"
+            case .versionMismatch(let manifest, let file):
+                return "遠端道具資料版本不符：manifest 為 \(manifest)，檔案為 \(file ?? "未標示")"
             case .noAvailableData(let error):
                 return "無法載入本地或內建道具資料：\(error.localizedDescription)"
             }
@@ -27,25 +30,62 @@ enum ItemDataService {
     }
 
     static func loadCachedOrBundledData() async throws -> ItemDataResponse {
-        if let cachedData = try? await loadCachedData() {
+        try await loadPreferredData(
+            cachedVersion: cachedVersion,
+            loadCached: loadCachedData,
+            loadBundled: loadBundledData,
+            discardCache: discardCachedItems
+        )
+    }
+
+    /// Loads the bundled data unless the cache holds a newer version (see `ItemDataVersion`).
+    ///
+    /// The bundled data is regenerated with every app build, so an older cache — or one in a
+    /// version format that does not parse — is discarded rather than allowed to replace it.
+    /// The cache is still used when the bundled data cannot be loaded at all.
+    static func loadPreferredData(
+        cachedVersion: String?,
+        loadCached: () async throws -> ItemDataResponse?,
+        loadBundled: () async throws -> ItemDataResponse,
+        discardCache: () -> Void
+    ) async throws -> ItemDataResponse {
+        let bundledData: ItemDataResponse
+        do {
+            bundledData = try await loadBundled()
+        } catch {
+            if let cachedData = try? await loadCached() {
+                return cachedData
+            }
+            discardCache()
+            throw ItemDataError.noAvailableData(error)
+        }
+
+        if ItemDataVersion.isNewer(cachedVersion, than: bundledData.version),
+           let cachedData = try? await loadCached() {
             return cachedData
         }
 
-        discardCachedItems()
+        discardCache()
+        return bundledData
+    }
 
-        do {
-            return try await loadBundledData()
-        } catch {
-            throw ItemDataError.noAvailableData(error)
+    static func refreshDataIfNeeded(currentVersion: String?) async throws -> ItemDataResponse? {
+        try await refreshDataIfNeeded(currentVersion: currentVersion) { url in
+            try await URLSession.shared.data(from: url).0
         }
     }
 
-    static func refreshDataIfNeeded() async throws -> ItemDataResponse? {
-        let (manifestData, _) = try await URLSession.shared.data(from: manifestURL)
+    /// Downloads the remote items only when the manifest version is newer than `currentVersion`,
+    /// the version of the data in use: the bundled data, or a newer cache. A manifest in a
+    /// version format that does not parse is never downloaded.
+    static func refreshDataIfNeeded(
+        currentVersion: String?,
+        fetch: (URL) async throws -> Data
+    ) async throws -> ItemDataResponse? {
+        let manifestData = try await fetch(manifestURL)
         let manifest = try JSONDecoder().decode(ItemDataManifest.self, from: manifestData)
-        let cachedItemsURL = try cachedItemsURL
 
-        if cachedVersion == manifest.version, FileManager.default.fileExists(atPath: cachedItemsURL.path) {
+        guard ItemDataVersion.isNewer(manifest.version, than: currentVersion) else {
             return nil
         }
 
@@ -53,10 +93,17 @@ enum ItemDataService {
             throw ItemDataError.invalidItemsURL
         }
 
-        let (itemData, _) = try await URLSession.shared.data(from: itemsURL)
+        let itemData = try await fetch(itemsURL)
         try validate(itemData, with: manifest)
 
         let response = try JSONDecoder().decode(ItemDataResponse.self, from: itemData)
+
+        // The manifest and the items file are uploaded by hand. Cache a file only under the
+        // version it declares itself, or a mismatched pair could pass older data off as newer.
+        guard response.version == manifest.version else {
+            throw ItemDataError.versionMismatch(manifest: manifest.version, file: response.version)
+        }
+
         try writeCachedItems(itemData)
         cachedVersion = manifest.version
 
