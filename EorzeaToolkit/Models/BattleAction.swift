@@ -4,21 +4,18 @@ import Foundation
 
 struct BattleActionsData: Codable {
     let jobs: [BattleJob]
-    let categoryNames: [String: [String: String]]?
     let tinctures: [Tincture]
     let tinctureStatJobs: [String: TinctureStatJob]
 
     enum CodingKeys: String, CodingKey {
         case jobs, tinctures
-        case categoryNames = "category_names"
         case tinctureStatJobs = "tincture_stat_jobs"
     }
 }
 
 struct BattleJob: Codable, Identifiable, Hashable {
     let id: Int
-    let nameCn: String
-    let nameTw: String?
+    let nameTw: String
     let abbreviation: String
     let iconId: Int
     let iconPath: String
@@ -26,13 +23,12 @@ struct BattleJob: Codable, Identifiable, Hashable {
 
     enum CodingKeys: String, CodingKey {
         case id, abbreviation, actions
-        case nameCn = "name_cn"
         case nameTw = "name_tw"
         case iconId = "icon_id"
         case iconPath = "icon_path"
     }
 
-    var displayName: String { nameTw ?? nameCn }
+    var displayName: String { nameTw }
 
     var iconURL: URL? {
         XIVIconURL.make(from: iconPath)
@@ -46,8 +42,7 @@ struct BattleJob: Codable, Identifiable, Hashable {
 
 struct BattleAction: Codable, Identifiable, Hashable {
     let id: Int
-    let nameCn: String
-    let nameTw: String?
+    let nameTw: String
     let iconId: Int
     let iconPath: String
     let category: String
@@ -57,12 +52,10 @@ struct BattleAction: Codable, Identifiable, Hashable {
     let cast100ms: Int
     let recast100ms: Int
     let maxCharges: Int
-    let descriptionCn: String?
     let descriptionTw: String?
 
     enum CodingKeys: String, CodingKey {
         case id, category, level, range
-        case nameCn = "name_cn"
         case nameTw = "name_tw"
         case iconId = "icon_id"
         case iconPath = "icon_path"
@@ -70,11 +63,10 @@ struct BattleAction: Codable, Identifiable, Hashable {
         case cast100ms = "cast_100ms"
         case recast100ms = "recast_100ms"
         case maxCharges = "max_charges"
-        case descriptionCn = "description_cn"
         case descriptionTw = "description_tw"
     }
 
-    var displayName: String { nameTw ?? nameCn }
+    var displayName: String { nameTw }
 
     var iconURL: URL? {
         XIVIconURL.make(from: iconPath)
@@ -106,7 +98,7 @@ struct BattleAction: Codable, Identifiable, Hashable {
 
     /// 移除遊戲內條件判斷模板（如 `<If(...)>`），讓說明文字較易閱讀。
     var cleanedDescription: String {
-        let raw = descriptionTw ?? descriptionCn ?? ""
+        let raw = descriptionTw ?? ""
         let pattern = #"<[^>]+>"#
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return raw }
         let range = NSRange(raw.startIndex..., in: raw)
@@ -125,7 +117,6 @@ struct BattleAction: Codable, Identifiable, Hashable {
 
 struct Tincture: Codable, Identifiable, Hashable {
     let id: Int
-    let nameCn: String
     let nameTw: String
     let iconId: Int
     let iconPath: String
@@ -134,7 +125,6 @@ struct Tincture: Codable, Identifiable, Hashable {
 
     enum CodingKeys: String, CodingKey {
         case id, stat
-        case nameCn = "name_cn"
         case nameTw = "name_tw"
         case iconId = "icon_id"
         case iconPath = "icon_path"
@@ -149,13 +139,11 @@ struct Tincture: Codable, Identifiable, Hashable {
 }
 
 struct TinctureStatJob: Codable, Hashable {
-    let nameCn: String
     let nameTw: String
     let jobs: [String]
 
     enum CodingKeys: String, CodingKey {
         case jobs
-        case nameCn = "name_cn"
         case nameTw = "name_tw"
     }
 }
