@@ -1,5 +1,5 @@
 {
-  "data_revision": 1,
+  "data_revision": 2,
   "upstreams": {
     "ffxiv-datamining-tc": {
       "repo": "thewakingsands/ffxiv-datamining-tc",
