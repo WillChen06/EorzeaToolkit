@@ -135,7 +135,7 @@ struct SkillRotationEditorView: View {
                                 Label(L10n.SkillRotation.addToRotation, systemImage: "plus.circle")
                             }
                         } preview: {
-                            RotationItemDetailCard(item: .action(action), statName: nil)
+                            RotationItemDetailCard(item: .action(action), statName: nil, level: selectedLevel)
                         }
                 }
             }
@@ -169,7 +169,8 @@ struct SkillRotationEditorView: View {
                         } preview: {
                             RotationItemDetailCard(
                                 item: .tincture(tincture),
-                                statName: viewModel.statName(for: tincture)
+                                statName: viewModel.statName(for: tincture),
+                                level: selectedLevel
                             )
                         }
                 }
@@ -399,11 +400,13 @@ struct RotationSlotView: View {
 struct RotationItemDetailCard: View {
     let item: RotationItem
     let statName: String?
+    /// The level selected in the editor; a skill's description depends on it.
+    let level: SkillRotationLevel
 
     var body: some View {
         switch item {
         case .action(let action):
-            SkillDetailCard(action: action)
+            SkillDetailCard(action: action, level: level)
         case .tincture(let tincture):
             TinctureDetailCard(tincture: tincture, statName: statName ?? tincture.stat)
         }
@@ -414,6 +417,7 @@ struct RotationItemDetailCard: View {
 
 struct SkillDetailCard: View {
     let action: BattleAction
+    let level: SkillRotationLevel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -448,9 +452,9 @@ struct SkillDetailCard: View {
                 }
             }
 
-            if !action.cleanedDescription.isEmpty {
+            if let description = action.description(at: level.rawValue), !description.isEmpty {
                 Divider()
-                Text(action.cleanedDescription)
+                Text(description)
                     .font(.footnote)
                     .foregroundStyle(AppTheme.ink)
                     .fixedSize(horizontal: false, vertical: true)
