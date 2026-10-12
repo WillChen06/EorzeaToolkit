@@ -13,7 +13,7 @@ project `EorzeaToolkit.xcodeproj` is generated. Primary localization is Traditio
 
 These override anything a skill or general best practice says.
 
-- **iOS 17.0 deployment target, Swift 5.9 language mode.** The bundled skills are written for
+- **iOS 18.0 deployment target, Swift 5.9 language mode.** The bundled skills are written for
   iOS 26 and Swift 6.2. Do not use APIs, syntax, or concurrency features unavailable at these
   versions, and do not raise the target as part of other work.
 - **Kingfisher is the only third-party dependency**, used solely by

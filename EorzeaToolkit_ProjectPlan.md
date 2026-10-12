@@ -9,7 +9,7 @@
 | 項目 | 選擇 |
 |------|------|
 | Language | Swift / SwiftUI |
-| 最低支援版本 | iOS 17+ |
+| 最低支援版本 | iOS 18+ |
 | IDE | VSCode + Claude Code CLI |
 | Source Control | GitHub |
 | 資料策略 | 本地 JSON 為主，API 為輔 |

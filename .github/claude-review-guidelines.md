@@ -10,7 +10,7 @@ The **Project constraints** section of `AGENTS.md` defines them for every agent;
 through `CLAUDE.md`, so read it directly if it is not already in your context. They override
 anything the skills say. In a review they mean:
 
-- **iOS 17.0 / Swift 5.9.** Never suggest APIs, syntax, or concurrency features unavailable at
+- **iOS 18.0 / Swift 5.9.** Never suggest APIs, syntax, or concurrency features unavailable at
   these versions, and never propose raising the target as part of a review.
 - **Kingfisher.** Do not suggest adding another SPM package, and do not flag existing
   Kingfisher usage.
