@@ -105,6 +105,18 @@ final class BundledDataTests: XCTestCase {
         XCTAssertFalse(mapInfos.isEmpty)
     }
 
+    /// Map names come from the item sheet and zone names from PlaceName. An empty name decodes
+    /// fine and shows up as a blank row, so assert the names are really there.
+    func testTreasureMapsHaveNamesAndNodes() throws {
+        let data: TreasureMapFinalData = try LocalDataService.load("treasure_maps_final")
+
+        XCTAssertFalse(data.maps.isEmpty)
+        XCTAssertTrue(data.maps.allSatisfy { !$0.name.isEmpty }, "map with an empty name")
+        XCTAssertTrue(data.maps.allSatisfy { !$0.gatheringNodes.isEmpty }, "map with no gathering nodes")
+        XCTAssertFalse(data.zoneNames.isEmpty)
+        XCTAssertTrue(data.zoneNames.values.allSatisfy { !$0.tw.isEmpty }, "zone with an empty name")
+    }
+
     /// `TreasureMapViewModel` joins the four treasure files on map id, so a spot pointing at a
     /// map that no longer exists would drop out of the UI without any decode error.
     func testEveryTreasureSpotResolvesToAMap() throws {
