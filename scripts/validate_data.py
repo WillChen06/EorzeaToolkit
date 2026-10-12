@@ -21,6 +21,7 @@ EorzeaToolkitTests/BundledDataTests.swift 直接用真正的型別驗證,不在�
 7. battle_actions.json 的技能說明已由產生器轉成純文字,不含任何 `<…>` 標記。
 8. 技能說明以技能循環可選的等級為 key:從習得等級起的每個等級各一份,習得等級以下的沒有。
 9. 爆發藥的道具 id 都在 items.json,且名稱與 items.json 相同。
+10. 藏寶圖的道具 id 都在 items.json,且名稱相同;採集區域與採集點引用的地區都有名稱。
 
 用法:
     python3 scripts/validate_data.py
@@ -293,6 +294,18 @@ def main():
     # --- treasure_maps_final.json ---
     treasure_data = load('treasure_maps_final.json')
     check_sources('treasure_maps_final.json', treasure_data['_meta'], sources)
+    check(treasure_data['maps'], 'treasure_maps_final.json: 沒有地圖')
+    zone_names = treasure_data['zone_names']
+    for treasure_map in treasure_data['maps']:
+        grade, item_id = treasure_map['grade'], treasure_map['item_id']
+        check(item_id in item_ids, f'treasure_maps_final.json: {grade} 的道具 {item_id} 不在 items.json')
+        check(item_id not in item_ids or treasure_map['name_tw'] == item_names[item_id],
+              f"treasure_maps_final.json: {grade} 的名稱 {treasure_map['name_tw']!r} "
+              f'與 items.json 的 {item_names.get(item_id)!r} 不同')
+        zone_ids = set(treasure_map['gathering_zone_ids'])
+        zone_ids |= {node['zone_id'] for node in treasure_map['gathering_nodes']}
+        unnamed = sorted(z for z in zone_ids if not (zone_names.get(str(z)) or {}).get('tw', '').strip())
+        check(not unnamed, f'treasure_maps_final.json: {grade} 引用的地區沒有名稱: {unnamed}')
 
     # --- zh-maps.json ---
     zh_maps = load('zh-maps.json')
