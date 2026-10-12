@@ -5,12 +5,13 @@ build_recipes.py — 繁中 datamining 的 Recipe + RecipeLevelTable → recipes
 
 由 build_data.py 呼叫,不單獨執行。輸出 recipes.json 結構見檔尾說明。
 """
-from datamining import Sheet, source_meta, to_int, write_json
+from datamining import Sheet, load_class_jobs, source_meta, to_int, write_json
 
-# CraftType 數字 → 職業名（繁中）。8 個工藝職；特殊值(200+/其他)查不到則為 None
-CRAFT_TYPE = {
-    0: "木工", 1: "鍛冶", 2: "鎧甲", 3: "雕金",
-    4: "製革", 5: "裁縫", 6: "鍊金", 7: "烹調",
+# CraftType 數字 → 生產職縮寫。8 個工藝職；特殊值(200+/其他)沒有對應職業,craft_job 為 None。
+# 職業名稱讀 ClassJob,不寫在這裡。
+CRAFT_TYPE_JOBS = {
+    0: 'CRP', 1: 'BSM', 2: 'ARM', 3: 'GSM',
+    4: 'LTW', 5: 'WVR', 6: 'ALC', 7: 'CUL',
 }
 
 INGREDIENT_SLOTS = 8  # Item{Ingredient}[0..7] / Amount{Ingredient}[0..7]
@@ -26,9 +27,19 @@ def load_recipe_levels(sheet):
     return table
 
 
+def load_craft_job_names(sheet):
+    """CraftType → 繁中服官方的生產職名稱。ClassJob 缺少任何一個生產職時結束程式。"""
+    names_by_abbreviation = {job['abbreviation']: job['name'] for job in load_class_jobs(sheet).values()}
+    missing = sorted(abbr for abbr in CRAFT_TYPE_JOBS.values() if not names_by_abbreviation.get(abbr))
+    if missing:
+        raise SystemExit(f'{sheet.name}: 找不到生產職 {missing}')
+    return {craft_type: names_by_abbreviation[abbr] for craft_type, abbr in CRAFT_TYPE_JOBS.items()}
+
+
 def build(files, item_ids, sources, out_path):
     """files: data_sources.json 中 ffxiv-datamining-tc 的檔案 → 本機路徑;item_ids: items.json 的 id。"""
     levels = load_recipe_levels(Sheet(files['RecipeLevelTable.csv']))
+    craft_job_names = load_craft_job_names(Sheet(files['ClassJob.csv']))
 
     columns = ['Number', 'CraftType', 'RecipeLevelTable', 'Item{Result}', 'Amount{Result}']
     for slot in range(INGREDIENT_SLOTS):
@@ -56,7 +67,7 @@ def build(files, item_ids, sources, out_path):
 
         # CraftType → 職業名
         ct = int(craft_type) if craft_type.isdigit() else -1
-        craft_job = CRAFT_TYPE.get(ct)  # 查不到為 None（特殊配方）
+        craft_job = craft_job_names.get(ct)  # 查不到為 None（特殊配方）
 
         # 製作等級 / 星數
         lvl_key = int(recipe_level) if recipe_level.isdigit() else -1

@@ -17,11 +17,21 @@ EorzeaToolkitTests/BundledDataTests.swift 直接用真正的型別驗證,不在�
    與 scripts/data_sources.json 一致;items.json 的 `_meta.version` 與之對應。
 5. items.json 只用繁中資料:每筆道具都有 name_tw、沒有 name_cn;對照表非空、
    不含代表「無」的 id 0,且道具引用的非 0 id 都查得到。
+6. 由 build_data.py 產出的檔案,任何一層都沒有 `cn` 或 `*_cn` 欄位(只用繁中資料)。
+7. battle_actions.json 的技能說明已由產生器轉成純文字,不含任何 `<…>` 標記。
+8. 技能說明以技能循環可選的等級為 key:從習得等級起的每個等級各一份且不是空字串,
+   習得等級以下的沒有。
+9. 爆發藥的道具 id 都在 items.json,且名稱與 items.json 相同;每個爆發藥的屬性都有名稱。
+10. 藏寶圖的道具 id 都在 items.json,且名稱相同;採集區域與採集點引用的地區都有名稱。
+11. 職業 id 不重複,同一職業內技能 id 也不重複:App 以 id 建索引還原技能循環,
+    重複的 id 會讓 App 當掉。
+12. treasures.json 的每個寶藏點所在地圖,在 zh-maps.json 都有名稱;否則藏寶圖頁只能顯示「未知地區」。
 
 用法:
     python3 scripts/validate_data.py
 """
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -36,7 +46,15 @@ FILE_UPSTREAMS = {
     'item_shop.json': ('ffxiv-datamining-tc',),
     'gathering.json': ('ffxiv-datamining-tc', 'teamcraft'),
     'fishing.json': ('ffxiv-datamining-tc', 'teamcraft'),
+    'battle_actions.json': ('ffxiv-datamining-tc',),
+    'treasure_maps_final.json': ('ffxiv-datamining-tc', 'teamcraft'),
+    'zh-maps.json': ('ffxiv-datamining-tc',),
 }
+
+MARKUP = re.compile(r'<[^>]*>')
+
+# 技能循環編輯頁可選的等級(App 的 SkillRotationLevel)
+SKILL_ROTATION_LEVELS = (50, 60, 70, 80, 90, 100)
 
 failures = []
 
@@ -52,7 +70,7 @@ def load(name):
 
 
 def check_counters(filename, data, index_key, expected):
-    """`_meta` 的計數欄位 vs 實際內容。"""
+    """`_meta` 的計數欄位 vs 實際內容。index_key 為 None 時不檢查索引的 key。"""
     meta = data.get('_meta', {})
 
     for meta_key, actual in expected.items():
@@ -62,6 +80,8 @@ def check_counters(filename, data, index_key, expected):
         check(meta[meta_key] == actual,
               f'{filename}: _meta.{meta_key} = {meta[meta_key]},實際為 {actual}')
 
+    if index_key is None:
+        return
     non_digit = [k for k in data[index_key] if not k.isdigit()]
     check(not non_digit,
           f'{filename}: {index_key} 有非數字 key(app 用 String(itemID) 查詢): {non_digit[:5]}')
@@ -113,6 +133,28 @@ def check_sources(filename, meta, sources):
           f'data_sources.json 是 {game_version!r}')
 
 
+def cn_key_paths(value, path='$'):
+    """value 中所有 `cn` 或 `*_cn` 欄位的路徑。"""
+    if isinstance(value, dict):
+        for key, child in value.items():
+            child_path = f'{path}.{key}'
+            if key == 'cn' or key.endswith('_cn'):
+                yield child_path
+            yield from cn_key_paths(child, child_path)
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            yield from cn_key_paths(child, f'{path}[{index}]')
+
+
+def battle_actions(data):
+    """battle_actions.json 的每個技能:(標籤, 技能),職業技能與共通技能都包含。"""
+    for job in data['jobs']:
+        for action in job['actions']:
+            yield f"{job['abbreviation']} {action['id']}", action
+    for action in data['role_actions']:
+        yield f"共通技能 {action['id']}", action
+
+
 def check_items(items, sources):
     """items.json 的名稱、版本與對照表。"""
     meta = items['_meta']
@@ -160,6 +202,7 @@ def main():
 
     items = load('items.json')
     item_ids = {i['id'] for i in items['items']}
+    item_names = {i['id']: i.get('name_tw') for i in items['items']}
 
     check(len(item_ids) == len(items['items']),
           f"items.json: id 有重複({len(items['items'])} 筆 / {len(item_ids)} 個唯一 id)")
@@ -227,6 +270,84 @@ def main():
     check_sources('fishing.json', fishing_data['_meta'], sources)
     check_unresolved('fishing.json', fishing_data['_meta'], 'unresolved_item_ids',
                      {int(k) for k in fishing} - item_ids)
+
+    # --- battle_actions.json ---
+    battle_data = load('battle_actions.json')
+    check_counters('battle_actions.json', battle_data, None, {
+        'job_count': len(battle_data['jobs']),
+        'action_count': sum(len(job['actions']) for job in battle_data['jobs']),
+        'role_action_count': len(battle_data['role_actions']),
+    })
+    check_sources('battle_actions.json', battle_data['_meta'], sources)
+    job_ids = [job['id'] for job in battle_data['jobs']]
+    check(len(set(job_ids)) == len(job_ids), f'battle_actions.json: 職業 id 重複: {job_ids}')
+    for job in battle_data['jobs']:
+        ids = [action['id'] for action in job['actions']]
+        duplicated = sorted({i for i in ids if ids.count(i) > 1})
+        check(not duplicated, f"battle_actions.json: {job['abbreviation']} 的技能 id 重複: {duplicated}")
+    with_markup = [f'{label} Lv{level}'
+                   for label, action in battle_actions(battle_data)
+                   for level, text in action['descriptions'].items() if MARKUP.search(text)]
+    check(not with_markup,
+          f'battle_actions.json: {len(with_markup)} 份技能說明仍有標記: {with_markup[:5]}')
+    check(battle_data['_meta'].get('description_levels') == list(SKILL_ROTATION_LEVELS),
+          f"battle_actions.json: _meta.description_levels = "
+          f"{battle_data['_meta'].get('description_levels')},應為 {list(SKILL_ROTATION_LEVELS)}")
+    wrong_levels = [
+        label for label, action in battle_actions(battle_data)
+        if set(action['descriptions'])
+        != {str(level) for level in SKILL_ROTATION_LEVELS if level >= action['level']}
+    ]
+    check(not wrong_levels,
+          f'battle_actions.json: {len(wrong_levels)} 個技能的說明等級與習得等級不符: {wrong_levels[:5]}')
+    empty = [f'{label} Lv{level}'
+             for label, action in battle_actions(battle_data)
+             for level, text in action['descriptions'].items() if not text.strip()]
+    check(not empty, f'battle_actions.json: {len(empty)} 份技能說明是空的: {empty[:5]}')
+    check(battle_data['tinctures'], 'battle_actions.json: 沒有爆發藥')
+    for tincture in battle_data['tinctures']:
+        check(tincture['id'] in item_ids,
+              f"battle_actions.json: 爆發藥 {tincture['id']} 不在 items.json")
+        check(tincture['id'] not in item_ids or tincture['name_tw'] == item_names[tincture['id']],
+              f"battle_actions.json: 爆發藥 {tincture['id']} 的名稱 {tincture['name_tw']!r} "
+              f"與 items.json 的 {item_names.get(tincture['id'])!r} 不同")
+        stat = battle_data['tincture_stat_jobs'].get(tincture['stat']) or {}
+        check(stat.get('name_tw', '').strip(),
+              f"battle_actions.json: 爆發藥 {tincture['id']} 的屬性 {tincture['stat']} 在 tincture_stat_jobs 沒有名稱")
+
+    # --- treasure_maps_final.json ---
+    treasure_data = load('treasure_maps_final.json')
+    check_counters('treasure_maps_final.json', treasure_data, None, {
+        'map_count': len(treasure_data['maps']),
+    })
+    check_sources('treasure_maps_final.json', treasure_data['_meta'], sources)
+    check(treasure_data['maps'], 'treasure_maps_final.json: 沒有地圖')
+    zone_names = treasure_data['zone_names']
+    for treasure_map in treasure_data['maps']:
+        grade, item_id = treasure_map['grade'], treasure_map['item_id']
+        check(item_id in item_ids, f'treasure_maps_final.json: {grade} 的道具 {item_id} 不在 items.json')
+        check(item_id not in item_ids or treasure_map['name_tw'] == item_names[item_id],
+              f"treasure_maps_final.json: {grade} 的名稱 {treasure_map['name_tw']!r} "
+              f'與 items.json 的 {item_names.get(item_id)!r} 不同')
+        zone_ids = set(treasure_map['gathering_zone_ids'])
+        zone_ids |= {node['zone_id'] for node in treasure_map['gathering_nodes']}
+        unnamed = sorted(z for z in zone_ids if not (zone_names.get(str(z)) or {}).get('tw', '').strip())
+        check(not unnamed, f'treasure_maps_final.json: {grade} 引用的地區沒有名稱: {unnamed}')
+
+    # --- zh-maps.json ---
+    zh_maps = load('zh-maps.json')
+    check_counters('zh-maps.json', zh_maps, None, {
+        'map_count': len(zh_maps) - 1,
+    })
+    check_sources('zh-maps.json', zh_maps['_meta'], sources)
+    spot_maps = {spot['map'] for spot in load('treasures.json')}
+    unnamed_maps = sorted(m for m in spot_maps if not (zh_maps.get(str(m)) or {}).get('zh', '').strip())
+    check(not unnamed_maps, f'zh-maps.json: 寶藏點所在的地圖沒有名稱: {unnamed_maps}')
+
+    # --- 只用繁中資料 ---
+    for filename in FILE_UPSTREAMS:
+        paths = list(cn_key_paths(load(filename)))
+        check(not paths, f'{filename}: {len(paths)} 個簡中欄位: {paths[:5]}')
 
     if failures:
         print(f'資料驗證失敗({len(failures)} 項):', file=sys.stderr)

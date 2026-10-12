@@ -12,18 +12,31 @@ build_gathering.py — Teamcraft nodes.json + 繁中 datamining 的 PlaceName �
 """
 import json
 
-from datamining import Sheet, source_meta, write_json
+from datamining import Sheet, load_class_jobs, names_by_id, source_meta, write_json
 
 NODES_PATH = 'libs/data/src/lib/json/nodes.json'
 
-# nodes.json type -> 採集職業（繁中）。type 5 = 釣魚，轉檔時濾除不會進到這裡
-NODE_TYPE = {
-    0: {"job": "礦工", "method": "採掘"},
-    1: {"job": "礦工", "method": "碎屑採集"},
-    2: {"job": "園藝工", "method": "伐木"},
-    3: {"job": "園藝工", "method": "採伐"},
-}
+# nodes.json type -> 採集職縮寫(名稱讀 ClassJob)。type 5 = 釣魚，轉檔時濾除不會進到這裡
+NODE_TYPE_JOBS = {0: 'MIN', 1: 'MIN', 2: 'BTN', 3: 'BTN'}
 FISHING_TYPE = 5  # 濾除
+
+
+def load_gatherer_names(sheet):
+    """採集職縮寫 → 繁中服官方名稱。ClassJob 缺少採集職時結束程式。"""
+    names = {job['abbreviation']: job['name'] for job in load_class_jobs(sheet).values()}
+    missing = sorted({abbr for abbr in NODE_TYPE_JOBS.values() if not names.get(abbr)})
+    if missing:
+        raise SystemExit(f'{sheet.name}: 找不到採集職 {missing}')
+    return names
+
+
+def load_gathering_methods(sheet):
+    """nodes.json type → 採集方式。Teamcraft 的 node type 就是 GatheringType 的 id(0 採掘…3 割草)。"""
+    names = names_by_id(sheet)
+    missing = sorted(t for t in NODE_TYPE_JOBS if not names.get(t))
+    if missing:
+        raise SystemExit(f'{sheet.name}: 找不到採集方式 {missing}')
+    return {t: names[t] for t in NODE_TYPE_JOBS}
 
 
 def load_place_names(sheet):
@@ -37,6 +50,8 @@ def build(tc_files, teamcraft_files, item_ids, sources, out_path):
     with open(teamcraft_files[NODES_PATH], encoding='utf-8') as f:
         nodes = json.load(f)
     place_names = load_place_names(Sheet(tc_files['PlaceName.csv']))
+    gatherer_names = load_gatherer_names(Sheet(tc_files['ClassJob.csv']))
+    gathering_methods = load_gathering_methods(Sheet(tc_files['GatheringType.csv']))
 
     # item_id -> list[採集點]
     index = {}
@@ -45,13 +60,12 @@ def build(tc_files, teamcraft_files, item_ids, sources, out_path):
 
     def add(item_id, node, is_hidden):
         t = node.get('type')
-        type_info = NODE_TYPE.get(t)
-        if type_info is None:
+        if t not in NODE_TYPE_JOBS:
             return  # 理論上 type 5 已先濾除，其餘未知 type 跳過
         zid = str(node.get('zoneid', ''))
         spot = {
-            'job': type_info['job'],
-            'method': type_info['method'],
+            'job': gatherer_names[NODE_TYPE_JOBS[t]],
+            'method': gathering_methods[t],
             'level': node.get('level', 0),
             'zone_id': node.get('zoneid', 0),
             'zone_name': place_names.get(zid, ''),
@@ -74,7 +88,7 @@ def build(tc_files, teamcraft_files, item_ids, sources, out_path):
         if t == FISHING_TYPE:
             skipped_fishing += 1
             continue
-        if t not in NODE_TYPE:
+        if t not in NODE_TYPE_JOBS:
             skipped_no_type += 1
             continue
         for iid in node.get('items', []):

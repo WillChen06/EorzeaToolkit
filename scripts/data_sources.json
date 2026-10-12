@@ -1,5 +1,5 @@
 {
-  "data_revision": 1,
+  "data_revision": 2,
   "upstreams": {
     "ffxiv-datamining-tc": {
       "repo": "thewakingsands/ffxiv-datamining-tc",
@@ -13,7 +13,13 @@
         "Recipe.csv",
         "RecipeLevelTable.csv",
         "GilShopItem.csv",
-        "PlaceName.csv"
+        "PlaceName.csv",
+        "Action.csv",
+        "ActionTransient.csv",
+        "ClassJob.csv",
+        "BaseParam.csv",
+        "Map.csv",
+        "GatheringType.csv"
       ]
     },
     "teamcraft": {

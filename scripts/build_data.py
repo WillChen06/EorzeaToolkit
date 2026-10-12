@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-build_data.py — 從 scripts/data_sources.json 鎖定的上游,重新產出全部道具相關資料檔。
+build_data.py — 從 scripts/data_sources.json 鎖定的上游,重新產出全部由流程產生的資料檔。
 
 1. 下載上游檔案(只抓需要的檔案,已下載的不重抓),見 fetch_sources.py
-2. 產出 items / recipes / item_shop / gathering / fishing 到 EorzeaToolkit/Resources/Data
+2. 產出 items / recipes / item_shop / gathering / fishing / battle_actions /
+   treasure_maps_final / zh-maps 到 EorzeaToolkit/Resources/Data
 3. 產出遠端用的道具檔與 manifest.json 到 build/remote-data/,上傳到 Cloudflare Worker 仍是手動
 4. 跑 validate_data.py
 
@@ -20,11 +21,14 @@ import subprocess
 import sys
 from pathlib import Path
 
+import build_battle_actions
 import build_fishing
 import build_gathering
 import build_item_shop
 import build_items
 import build_recipes
+import build_treasure_maps
+import build_zh_maps
 import fetch_sources
 from datamining import data_version
 
@@ -72,6 +76,9 @@ def main():
     build_item_shop.build(tc_files, sources, DATA_DIR / 'item_shop.json')
     build_gathering.build(tc_files, teamcraft_files, item_ids, sources, DATA_DIR / 'gathering.json')
     build_fishing.build(tc_files, teamcraft_files, item_ids, sources, DATA_DIR / 'fishing.json')
+    build_battle_actions.build(tc_files, sources, DATA_DIR / 'battle_actions.json')
+    build_treasure_maps.build(tc_files, teamcraft_files, sources, DATA_DIR / 'treasure_maps_final.json')
+    build_zh_maps.build(tc_files, sources, DATA_DIR / 'zh-maps.json')
     write_remote(items_data, data_version(sources))
 
     return subprocess.call([sys.executable, str(SCRIPTS_DIR / 'validate_data.py')])

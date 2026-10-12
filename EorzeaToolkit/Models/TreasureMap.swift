@@ -14,7 +14,6 @@ struct TreasureMapFinalData: Codable {
 }
 
 struct ZoneNameEntry: Codable {
-    let cn: String
     let tw: String
 }
 
@@ -23,8 +22,6 @@ struct TreasureMap: Codable, Identifiable {
     let itemId: Int
     let grade: String
     let name: String
-    let nameEn: String
-    let nameJa: String
     let level: Int
     let expansion: String
     let type: MapType
@@ -36,8 +33,6 @@ struct TreasureMap: Codable, Identifiable {
         case id, grade, level, expansion, type
         case itemId = "item_id"
         case name = "name_tw"
-        case nameEn = "name_en"
-        case nameJa = "name_ja"
         case gatheringTypes = "gathering_types"
         case gatheringZoneIds = "gathering_zone_ids"
         case gatheringNodes = "gathering_nodes"
@@ -184,6 +179,36 @@ struct MapInfo: Codable {
 
 struct ZhMapName: Codable {
     let zh: String
+}
+
+/// zh-maps.json: map id → name. The file also carries a `_meta` block describing where it came
+/// from, which is not a map and is skipped.
+struct ZhMapNames: Decodable {
+    let names: [String: ZhMapName]
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: AnyCodingKey.self)
+        var names: [String: ZhMapName] = [:]
+        for key in container.allKeys where key.stringValue != "_meta" {
+            names[key.stringValue] = try container.decode(ZhMapName.self, forKey: key)
+        }
+        self.names = names
+    }
+
+    private struct AnyCodingKey: CodingKey {
+        let stringValue: String
+        let intValue: Int?
+
+        init?(stringValue: String) {
+            self.stringValue = stringValue
+            self.intValue = nil
+        }
+
+        init?(intValue: Int) {
+            self.stringValue = String(intValue)
+            self.intValue = intValue
+        }
+    }
 }
 
 // MARK: - 組合後的地區資訊

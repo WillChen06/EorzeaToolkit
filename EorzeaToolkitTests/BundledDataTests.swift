@@ -69,6 +69,22 @@ final class BundledDataTests: XCTestCase {
         XCTAssertFalse(data.tinctures.isEmpty)
     }
 
+    /// The rotation editor shows the description for the selected level, and every action is
+    /// learned by the level cap, so each one needs a description there. The keys are levels
+    /// written as strings, which decode into `[Int: String]` only when every one is a number.
+    func testBattleActionsHaveADescriptionAtTheLevelCap() throws {
+        let data: BattleActionsData = try LocalDataService.load("battle_actions")
+        let level = SkillRotationLevel.level100.rawValue
+
+        let missing = data.jobs.flatMap { job in
+            job.actions
+                .filter { ($0.description(at: level) ?? "").isEmpty }
+                .map { "\(job.abbreviation) \($0.id)" }
+        }
+
+        XCTAssertTrue(missing.isEmpty, "actions without a Lv\(level) description: \(missing.prefix(5))")
+    }
+
     func testRelicWeaponsDecode() throws {
         let data: RelicWeaponData = try LocalDataService.load("relic_weapons")
 
@@ -79,7 +95,7 @@ final class BundledDataTests: XCTestCase {
     func testTreasureMapDataDecodes() throws {
         let finalData: TreasureMapFinalData = try LocalDataService.load("treasure_maps_final")
         let spots: [TreasureSpot] = try LocalDataService.load("treasures")
-        let zhNames: [String: ZhMapName] = try LocalDataService.load("zh-maps")
+        let zhNames = (try LocalDataService.load("zh-maps") as ZhMapNames).names
         let mapInfos: [String: MapInfo] = try LocalDataService.load("maps")
 
         XCTAssertFalse(finalData.maps.isEmpty)
@@ -87,6 +103,31 @@ final class BundledDataTests: XCTestCase {
         XCTAssertFalse(spots.isEmpty)
         XCTAssertFalse(zhNames.isEmpty)
         XCTAssertFalse(mapInfos.isEmpty)
+    }
+
+    /// Map names come from the item sheet and zone names from PlaceName. An empty name decodes
+    /// fine and shows up as a blank row, so assert the names are really there.
+    func testTreasureMapsHaveNamesAndNodes() throws {
+        let data: TreasureMapFinalData = try LocalDataService.load("treasure_maps_final")
+
+        XCTAssertFalse(data.maps.isEmpty)
+        XCTAssertTrue(data.maps.allSatisfy { !$0.name.isEmpty }, "map with an empty name")
+        XCTAssertTrue(data.maps.allSatisfy { !$0.gatheringNodes.isEmpty }, "map with no gathering nodes")
+        XCTAssertFalse(data.zoneNames.isEmpty)
+        XCTAssertTrue(data.zoneNames.values.allSatisfy { !$0.tw.isEmpty }, "zone with an empty name")
+    }
+
+    /// zh-maps.json carries a `_meta` block next to the map ids. It has to be skipped rather
+    /// than decoded as a map, and every other key has to be a map id the view model can look up
+    /// with `String(mapId)`.
+    func testZhMapsDecodeWithoutMeta() throws {
+        let names = (try LocalDataService.load("zh-maps") as ZhMapNames).names
+
+        let malformed = names.keys.filter { Int($0).map(String.init) != $0 }
+
+        XCTAssertFalse(names.isEmpty)
+        XCTAssertTrue(malformed.isEmpty, "keys that are not map ids: \(malformed.prefix(5))")
+        XCTAssertTrue(names.values.allSatisfy { !$0.zh.isEmpty }, "map with an empty name")
     }
 
     /// `TreasureMapViewModel` joins the four treasure files on map id, so a spot pointing at a
