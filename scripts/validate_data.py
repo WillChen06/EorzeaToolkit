@@ -22,6 +22,8 @@ EorzeaToolkitTests/BundledDataTests.swift 直接用真正的型別驗證,不在�
 8. 技能說明以技能循環可選的等級為 key:從習得等級起的每個等級各一份,習得等級以下的沒有。
 9. 爆發藥的道具 id 都在 items.json,且名稱與 items.json 相同。
 10. 藏寶圖的道具 id 都在 items.json,且名稱相同;採集區域與採集點引用的地區都有名稱。
+11. 職業 id 不重複,同一職業內技能 id 也不重複:App 以 id 建索引還原技能循環,
+    重複的 id 會讓 App 當掉。
 
 用法:
     python3 scripts/validate_data.py
@@ -275,6 +277,12 @@ def main():
         'role_action_count': len(battle_data['role_actions']),
     })
     check_sources('battle_actions.json', battle_data['_meta'], sources)
+    job_ids = [job['id'] for job in battle_data['jobs']]
+    check(len(set(job_ids)) == len(job_ids), f'battle_actions.json: 職業 id 重複: {job_ids}')
+    for job in battle_data['jobs']:
+        ids = [action['id'] for action in job['actions']]
+        duplicated = sorted({i for i in ids if ids.count(i) > 1})
+        check(not duplicated, f"battle_actions.json: {job['abbreviation']} 的技能 id 重複: {duplicated}")
     with_markup = [f'{label} Lv{level}'
                    for label, action in battle_actions(battle_data)
                    for level, text in action['descriptions'].items() if MARKUP.search(text)]
