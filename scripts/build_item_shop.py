@@ -1,49 +1,33 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-build_item_shop.py — 將 Item.csv (PriceMid) + GilShopItem.csv 轉成 item_shop.json
+build_item_shop.py — 繁中 datamining 的 Item (Price{Mid}) + GilShopItem → item_shop.json
 
-獨立檔案,不修改既有 items.json。僅收錄「有售價」或「商店有賣」的道具。
-
-用法:
-    python3 build_item_shop.py Item.csv GilShopItem.csv item_shop.json
+由 build_data.py 呼叫,不單獨執行。
+獨立檔案,不修改 items.json。僅收錄「有售價」或「商店有賣」的道具。
 """
-import csv, json, sys
-
-ITEM_PRICE_MID_HEADER = 'Price{Mid}'
+from datamining import Sheet, source_meta, write_json
 
 
-def build(item_csv, shop_item_csv, out_path):
-    # 1) Item.csv 建 id -> price_mid
-    with open(item_csv, encoding='utf-8-sig') as f:
-        rows = list(csv.reader(f))
-
-    header = rows[1]
-    if ITEM_PRICE_MID_HEADER not in header:
-        raise ValueError(f'找不到欄位 {ITEM_PRICE_MID_HEADER!r},請確認 CSV 版本')
-
-    price_mid_col = header.index(ITEM_PRICE_MID_HEADER)
+def build(files, sources, out_path):
+    """files: data_sources.json 中 ffxiv-datamining-tc 的檔案 → 本機路徑。"""
+    # 1) Item 建 id -> price_mid
     prices = {}
-    for r in rows[3:]:
-        if not r or not r[0].isdigit():
+    for item_id, price_mid in Sheet(files['Item.csv']).records('#', 'Price{Mid}'):
+        if not item_id.isdigit():
             continue
-        pm = r[price_mid_col]
-        if pm.isdigit() and int(pm) > 0:
-            prices[int(r[0])] = int(pm)
+        if price_mid.isdigit() and int(price_mid) > 0:
+            prices[int(item_id)] = int(price_mid)
 
-    # 2) GilShopItem.csv 建 set(item_id) —— 出現過就算「商店有賣」
-    with open(shop_item_csv, encoding='utf-8-sig') as f:
-        shop_rows = list(csv.reader(f))[3:]
-
+    # 2) GilShopItem 建 set(item_id) —— 出現過就算「商店有賣」
     in_shop = set()
-    for r in shop_rows:
-        if len(r) > 1 and r[1].isdigit():
-            in_shop.add(int(r[1]))
+    for (item_id,) in Sheet(files['GilShopItem.csv']).records('Item'):
+        if item_id.isdigit():
+            in_shop.add(int(item_id))
 
     # 3) 合併:只收錄「有售價」或「在商店」的 item,其他不寫入(隱含「無資料」)
-    ids = set(prices) | in_shop
     table = {}
-    for iid in ids:
+    for iid in sorted(set(prices) | in_shop):
         entry = {}
         if iid in prices:
             entry['price_mid'] = prices[iid]
@@ -55,10 +39,11 @@ def build(item_csv, shop_item_csv, out_path):
 
     output = {
         '_meta': {
-            'source': 'ffxiv-datamining-cn Item.csv (Price{Mid}) + GilShopItem.csv',
             'item_count': len(table),
             'priced_items': len(prices),
             'in_gil_shop_items': len(in_shop),
+            'game_version': sources['upstreams']['ffxiv-datamining-tc']['game_version'],
+            'sources': source_meta(sources, 'ffxiv-datamining-tc'),
             'note': ('key 為道具 id(字串)。price_mid 為 NPC 商店售價(Gil),'
                      'in_gil_shop 表示該道具確實出現在某間 GilShop。'
                      '兩者皆 optional,UI 應同時檢查:'
@@ -66,17 +51,9 @@ def build(item_csv, shop_item_csv, out_path):
         },
         'shop': table,
     }
-    with open(out_path, 'w', encoding='utf-8') as f:
-        json.dump(output, f, ensure_ascii=False, separators=(',', ':'))
+    write_json(out_path, output)
 
     print('完成:', out_path)
     print('  收錄道具數:', len(table))
     print('  有 PriceMid 的:', len(prices))
     print('  在 GilShop 有賣的:', len(in_shop))
-
-
-if __name__ == '__main__':
-    if len(sys.argv) != 4:
-        print(__doc__)
-        sys.exit(1)
-    build(sys.argv[1], sys.argv[2], sys.argv[3])
