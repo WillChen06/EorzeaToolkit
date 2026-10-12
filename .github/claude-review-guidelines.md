@@ -10,8 +10,13 @@ The **Project constraints** section of `AGENTS.md` defines them for every agent;
 through `CLAUDE.md`, so read it directly if it is not already in your context. They override
 anything the skills say. In a review they mean:
 
-- **iOS 18.0 / Swift 5.9.** Never suggest APIs, syntax, or concurrency features unavailable at
-  these versions, and never propose raising the target as part of a review.
+- **iOS 18.0 / Swift 5.9.** Never suggest syntax or concurrency features unavailable in Swift
+  5.9 language mode, and never propose raising the target as part of a review.
+- **APIs newer than iOS 18.** Using one without an availability check is a finding. Using one
+  is fine when the feature cannot exist without it. A change that adds separate code paths for
+  newer and older OS versions needs the user's approval first: unless the spec calls for it,
+  flag it as a decision for the user. Never suggest adopting a newer API that would need such
+  a second path.
 - **Kingfisher.** Do not suggest adding another SPM package, and do not flag existing
   Kingfisher usage.
 - **Localization.** A hard-coded user-facing string in a view is a finding. The catalog is

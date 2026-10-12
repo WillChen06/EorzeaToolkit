@@ -14,8 +14,16 @@ project `EorzeaToolkit.xcodeproj` is generated. Primary localization is Traditio
 These override anything a skill or general best practice says.
 
 - **iOS 18.0 deployment target, Swift 5.9 language mode.** The bundled skills are written for
-  iOS 26 and Swift 6.2. Do not use APIs, syntax, or concurrency features unavailable at these
-  versions, and do not raise the target as part of other work.
+  iOS 26 and Swift 6.2. Do not use syntax or concurrency features unavailable in Swift 5.9
+  language mode, and do not raise the target or the language mode as part of other work.
+- **APIs newer than iOS 18 are a judgement call, not a ban.** Every use sits behind
+  `@available` / `#available`.
+  - When a feature cannot exist without the newer OS (for example Foundation Models, which
+    needs iOS 26), use the API. On older versions the feature is unavailable and nothing else
+    changes.
+  - When the change needs separate code paths for newer and older OS versions (for example a
+    new UI style or component on iOS 26 alongside the existing one), ask the user before
+    implementing it. Do not build both paths on your own.
 - **Kingfisher is the only third-party dependency**, used solely by
   `Views/CachedIconImage.swift` for remote icon loading. Do not add another SPM package without
   the user's approval.
