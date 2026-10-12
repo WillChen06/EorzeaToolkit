@@ -11,7 +11,10 @@ build_fishing.py — Teamcraft fishing-spots.json + fish-parameter.json
 """
 import json
 
-from datamining import Sheet, source_meta, write_json
+from datamining import Sheet, load_class_jobs, source_meta, write_json
+
+# 釣魚(用釣竿)在 GatheringType 沒有對應的列(4、5 是刺魚),採集方式維持寫死。
+FISHING_METHOD = '釣魚'
 
 SPOTS_PATH = 'libs/data/src/lib/json/fishing-spots.json'
 PARAMS_PATH = 'libs/data/src/lib/json/fish-parameter.json'
@@ -23,6 +26,14 @@ def load_place_names(sheet):
             if place_id.strip()}
 
 
+def load_fisher_name(sheet):
+    """漁師的繁中服官方名稱。ClassJob 沒有 FSH 時結束程式。"""
+    for job in load_class_jobs(sheet).values():
+        if job['abbreviation'] == 'FSH' and job['name']:
+            return job['name']
+    raise SystemExit(f'{sheet.name}: 找不到漁師(FSH)')
+
+
 def build(tc_files, teamcraft_files, item_ids, sources, out_path):
     """tc_files / teamcraft_files: data_sources.json 中各上游的檔案 → 本機路徑。"""
     with open(teamcraft_files[SPOTS_PATH], encoding='utf-8') as f:
@@ -30,6 +41,7 @@ def build(tc_files, teamcraft_files, item_ids, sources, out_path):
     with open(teamcraft_files[PARAMS_PATH], encoding='utf-8') as f:
         params = json.load(f)
     place_names = load_place_names(Sheet(tc_files['PlaceName.csv']))
+    fisher_name = load_fisher_name(Sheet(tc_files['ClassJob.csv']))
 
     # 建 itemId -> fish-parameter 紀錄
     # fish-parameter key 是 fish 自身 id(非 item_id),value.itemId 才是 item_id
@@ -51,8 +63,8 @@ def build(tc_files, teamcraft_files, item_ids, sources, out_path):
             fp = fp_by_item.get(fish_item_id, {})
 
             point = {
-                'job': '漁師',
-                'method': '釣魚',
+                'job': fisher_name,
+                'method': FISHING_METHOD,
                 # 魚自身的 fp.level 比釣場 level 更準(同釣場可有不同等級的魚)
                 'level': fp.get('level') or spot_level,
                 'stars': fp.get('stars', 0),
