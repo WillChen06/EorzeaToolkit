@@ -10,6 +10,7 @@ enum ItemDataService {
         case invalidItemsURL
         case unexpectedByteSize(expected: Int, actual: Int)
         case checksumMismatch
+        case versionMismatch(manifest: String, file: String?)
         case noAvailableData(Error)
 
         var errorDescription: String? {
@@ -20,6 +21,8 @@ enum ItemDataService {
                 return "遠端道具資料大小不符：預期 \(expected) bytes，實際 \(actual) bytes"
             case .checksumMismatch:
                 return "遠端道具資料校驗失敗"
+            case .versionMismatch(let manifest, let file):
+                return "遠端道具資料版本不符：manifest 為 \(manifest)，檔案為 \(file ?? "未標示")"
             case .noAvailableData(let error):
                 return "無法載入本地或內建道具資料：\(error.localizedDescription)"
             }
@@ -94,6 +97,13 @@ enum ItemDataService {
         try validate(itemData, with: manifest)
 
         let response = try JSONDecoder().decode(ItemDataResponse.self, from: itemData)
+
+        // The manifest and the items file are uploaded by hand. Cache a file only under the
+        // version it declares itself, or a mismatched pair could pass older data off as newer.
+        guard response.version == manifest.version else {
+            throw ItemDataError.versionMismatch(manifest: manifest.version, file: response.version)
+        }
+
         try writeCachedItems(itemData)
         cachedVersion = manifest.version
 
