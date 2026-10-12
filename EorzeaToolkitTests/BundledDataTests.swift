@@ -79,7 +79,7 @@ final class BundledDataTests: XCTestCase {
     func testTreasureMapDataDecodes() throws {
         let finalData: TreasureMapFinalData = try LocalDataService.load("treasure_maps_final")
         let spots: [TreasureSpot] = try LocalDataService.load("treasures")
-        let zhNames: [String: ZhMapName] = try LocalDataService.load("zh-maps")
+        let zhNames = (try LocalDataService.load("zh-maps") as ZhMapNames).names
         let mapInfos: [String: MapInfo] = try LocalDataService.load("maps")
 
         XCTAssertFalse(finalData.maps.isEmpty)

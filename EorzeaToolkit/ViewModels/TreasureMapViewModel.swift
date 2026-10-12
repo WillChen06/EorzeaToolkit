@@ -77,7 +77,7 @@ final class TreasureMapViewModel {
             zoneNames = finalData.zoneNames
 
             let spots: [TreasureSpot] = try LocalDataService.load("treasures")
-            let zhNames: [String: ZhMapName] = try LocalDataService.load("zh-maps")
+            let zhNames = (try LocalDataService.load("zh-maps") as ZhMapNames).names
             let mapInfos: [String: MapInfo] = try LocalDataService.load("maps")
             mapInfosByKey = mapInfos
             for info in mapInfos.values where !info.dungeon {
