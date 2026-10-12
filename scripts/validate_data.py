@@ -20,7 +20,7 @@ EorzeaToolkitTests/BundledDataTests.swift 直接用真正的型別驗證,不在�
 6. 由 build_data.py 產出的檔案,任何一層都沒有 `cn` 或 `*_cn` 欄位(只用繁中資料)。
 7. battle_actions.json 的技能說明已由產生器轉成純文字,不含任何 `<…>` 標記。
 8. 技能說明以技能循環可選的等級為 key:從習得等級起的每個等級各一份,習得等級以下的沒有。
-9. 爆發藥的道具 id 都在 items.json,且名稱與 items.json 相同。
+9. 爆發藥的道具 id 都在 items.json,且名稱與 items.json 相同;每個爆發藥的屬性都有名稱。
 10. 藏寶圖的道具 id 都在 items.json,且名稱相同;採集區域與採集點引用的地區都有名稱。
 11. 職業 id 不重複,同一職業內技能 id 也不重複:App 以 id 建索引還原技能循環,
     重複的 id 會讓 App 當掉。
@@ -306,6 +306,9 @@ def main():
         check(tincture['id'] not in item_ids or tincture['name_tw'] == item_names[tincture['id']],
               f"battle_actions.json: 爆發藥 {tincture['id']} 的名稱 {tincture['name_tw']!r} "
               f"與 items.json 的 {item_names.get(tincture['id'])!r} 不同")
+        stat = battle_data['tincture_stat_jobs'].get(tincture['stat']) or {}
+        check(stat.get('name_tw', '').strip(),
+              f"battle_actions.json: 爆發藥 {tincture['id']} 的屬性 {tincture['stat']} 在 tincture_stat_jobs 沒有名稱")
 
     # --- treasure_maps_final.json ---
     treasure_data = load('treasure_maps_final.json')
