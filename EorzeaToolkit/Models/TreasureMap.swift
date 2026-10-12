@@ -14,7 +14,6 @@ struct TreasureMapFinalData: Codable {
 }
 
 struct ZoneNameEntry: Codable {
-    let cn: String
     let tw: String
 }
 
