@@ -1,0 +1,441 @@
+{
+  "_comment": [
+    "藏寶圖定義:社群整理的資料,由 scripts/build_treasure_maps.py 讀取。",
+    "名稱讀繁中 Item;採集點由 Teamcraft nodes.json 依 gathering_types、gathering_zone_ids 與等級產出。",
+    "gathering_zone_ids:G1–G10、G15 原本由 nodes.json + Map.csv 推得;G11–G14、G16–G18 是社群驗證的資料(伺服器端限制,客戶端資料推不出來)。",
+    "繁中資料沒有名稱的地圖(繁中服尚未開放)不會出現在產出檔。"
+  ],
+  "maps": [
+    {
+      "id": "timeworn_leather_map",
+      "item_id": 6688,
+      "grade": "G1",
+      "level": 40,
+      "expansion": "2.1",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ]
+    },
+    {
+      "id": "timeworn_goatskin_map",
+      "item_id": 6689,
+      "grade": "G2",
+      "level": 45,
+      "expansion": "2.1",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ]
+    },
+    {
+      "id": "timeworn_toadskin_map",
+      "item_id": 6690,
+      "grade": "G3",
+      "level": 50,
+      "expansion": "2.1",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ]
+    },
+    {
+      "id": "timeworn_boarskin_map",
+      "item_id": 6691,
+      "grade": "G4",
+      "level": 50,
+      "expansion": "2.1",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ]
+    },
+    {
+      "id": "timeworn_peisteskin_map",
+      "item_id": 6692,
+      "grade": "G5",
+      "level": 50,
+      "expansion": "2.1",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        42,
+        43,
+        44,
+        45,
+        46,
+        54,
+        55,
+        56,
+        57,
+        63,
+        67
+      ]
+    },
+    {
+      "id": "timeworn_archaeoskin_map",
+      "item_id": 12241,
+      "grade": "G6",
+      "level": 55,
+      "expansion": "3.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2000,
+        2001,
+        2002,
+        2100,
+        2200
+      ]
+    },
+    {
+      "id": "timeworn_wyvernskin_map",
+      "item_id": 12242,
+      "grade": "G7",
+      "level": 60,
+      "expansion": "3.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2000,
+        2001,
+        2002,
+        2100,
+        2200
+      ]
+    },
+    {
+      "id": "timeworn_dragonskin_map",
+      "item_id": 12243,
+      "grade": "G8",
+      "level": 60,
+      "expansion": "3.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2000,
+        2001,
+        2002,
+        2100,
+        2200
+      ]
+    },
+    {
+      "id": "timeworn_gaganaskin_map",
+      "item_id": 17835,
+      "grade": "G9",
+      "level": 70,
+      "expansion": "4.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2406,
+        2407,
+        2408,
+        2409,
+        2410,
+        2411
+      ]
+    },
+    {
+      "id": "timeworn_gazelleskin_map",
+      "item_id": 17836,
+      "grade": "G10",
+      "level": 70,
+      "expansion": "4.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2406,
+        2407,
+        2408,
+        2409,
+        2410,
+        2411
+      ]
+    },
+    {
+      "id": "timeworn_gliderskin_map",
+      "item_id": 26744,
+      "grade": "G11",
+      "level": 80,
+      "expansion": "5.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2953,
+        2954,
+        2955,
+        2957
+      ]
+    },
+    {
+      "id": "timeworn_zonureskin_map",
+      "item_id": 26745,
+      "grade": "G12",
+      "level": 80,
+      "expansion": "5.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        2953,
+        2954,
+        2955,
+        2957
+      ]
+    },
+    {
+      "id": "timeworn_saigaskin_map",
+      "item_id": 36611,
+      "grade": "G13",
+      "level": 90,
+      "expansion": "6.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        3712
+      ]
+    },
+    {
+      "id": "timeworn_kumbhiraskin_map",
+      "item_id": 36612,
+      "grade": "G14",
+      "level": 90,
+      "expansion": "6.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        3712
+      ]
+    },
+    {
+      "id": "timeworn_ophiotauroskin_map",
+      "item_id": 39591,
+      "grade": "G15",
+      "level": 90,
+      "expansion": "6.3",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        3713
+      ]
+    },
+    {
+      "id": "timeworn_loboskin_map",
+      "item_id": 43556,
+      "grade": "G16",
+      "level": 100,
+      "expansion": "7.0",
+      "type": "solo",
+      "max_party_size": 1,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        4507,
+        4508,
+        4509
+      ]
+    },
+    {
+      "id": "timeworn_braaxskin_map",
+      "item_id": 43557,
+      "grade": "G17",
+      "level": 100,
+      "expansion": "7.0",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        4507,
+        4508,
+        4509
+      ]
+    },
+    {
+      "id": "timeworn_gargantuaskin_map",
+      "item_id": 46185,
+      "grade": "G18",
+      "level": 100,
+      "expansion": "7.3",
+      "type": "party",
+      "max_party_size": 8,
+      "gathering_types": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gathering_zone_ids": [
+        4510
+      ]
+    }
+  ]
+}
