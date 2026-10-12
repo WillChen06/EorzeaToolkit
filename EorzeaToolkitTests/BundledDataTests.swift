@@ -117,6 +117,19 @@ final class BundledDataTests: XCTestCase {
         XCTAssertTrue(data.zoneNames.values.allSatisfy { !$0.tw.isEmpty }, "zone with an empty name")
     }
 
+    /// zh-maps.json carries a `_meta` block next to the map ids. It has to be skipped rather
+    /// than decoded as a map, and every other key has to be a map id the view model can look up
+    /// with `String(mapId)`.
+    func testZhMapsDecodeWithoutMeta() throws {
+        let names = (try LocalDataService.load("zh-maps") as ZhMapNames).names
+
+        let malformed = names.keys.filter { Int($0).map(String.init) != $0 }
+
+        XCTAssertFalse(names.isEmpty)
+        XCTAssertTrue(malformed.isEmpty, "keys that are not map ids: \(malformed.prefix(5))")
+        XCTAssertTrue(names.values.allSatisfy { !$0.zh.isEmpty }, "map with an empty name")
+    }
+
     /// `TreasureMapViewModel` joins the four treasure files on map id, so a spot pointing at a
     /// map that no longer exists would drop out of the UI without any decode error.
     func testEveryTreasureSpotResolvesToAMap() throws {
