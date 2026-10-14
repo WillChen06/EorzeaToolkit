@@ -4,7 +4,7 @@ import Foundation
 ///
 /// Asking for the fragment lets the parser check each condition against the sentence, which
 /// `ItemQueryEvidence` does before the conditions become `ItemQueryFields`.
-struct ItemQueryModelOutput: Decodable, Equatable, Sendable {
+struct ItemQueryModelOutput: Codable, Equatable, Sendable {
     enum CodingKeys: String, CodingKey, CaseIterable {
         case usage
         case keyword
@@ -19,18 +19,18 @@ struct ItemQueryModelOutput: Decodable, Equatable, Sendable {
     }
 
     /// A name picked from one of the vocabulary's lists.
-    struct Choice: Decodable, Equatable, Sendable {
+    struct Choice: Codable, Equatable, Sendable {
         var quote: String?
         var name: String?
     }
 
-    struct Levels: Decodable, Equatable, Sendable {
+    struct Levels: Codable, Equatable, Sendable {
         var quote: String?
         var min: Int?
         var max: Int?
     }
 
-    struct Flag: Decodable, Equatable, Sendable {
+    struct Flag: Codable, Equatable, Sendable {
         var quote: String?
         var value: String?
     }
