@@ -180,6 +180,64 @@ final class ItemQueryVocabularyTests: XCTestCase {
         XCTAssertEqual(vocabulary.categories.count, Set(data.uiCategories.map(\.nameTw)).count)
     }
 
+    // MARK: - Armour and accessory categories (AC-17)
+
+    /// 頭部防具 and 頭部 filter the same items, so a model that picks the category must not be
+    /// told it is wrong.
+    func testArmourAndAccessoryCategoriesBecomeTheirBodyPart() throws {
+        let vocabulary = try bundledVocabulary()
+
+        let query = vocabulary.resolve(ItemQueryFields(usage: "搜尋", categories: ["頭部防具", "耳飾", "項鍊"]))
+
+        XCTAssertTrue(query.categoryIds.isEmpty)
+        XCTAssertEqual(query.equipSlotIds, vocabulary.equipSlotIds(named: ["頭部", "耳部", "頸部"]))
+    }
+
+    func testShieldWeaponToolAndSoulCrystalCategoriesStayCategories() throws {
+        let data: ItemDataResponse = try LocalDataService.load("items")
+        let vocabulary = ItemQueryVocabulary(data: data)
+        let names = ["盾", "雙手劍", "鍊金工具（副工具）", "靈魂水晶"]
+
+        let query = vocabulary.resolve(ItemQueryFields(usage: "搜尋", categories: names))
+
+        XCTAssertEqual(query.categoryIds, vocabulary.categoryIds(named: names))
+        XCTAssertTrue(query.equipSlotIds.isEmpty)
+    }
+
+    /// Which categories count as a body part comes from where their items are equipped, not
+    /// from a list.
+    func testBodyPartCategoriesComeFromTheItems() {
+        func item(_ id: Int, category: Int, slot: Int) -> Item {
+            Item(id: id, nameTw: "道具\(id)", iconId: 0, iconPath: "", ilvl: 1, rarity: 1, canBeHq: false,
+                 isUntradable: false, uiCategoryId: category, equipSlot: slot)
+        }
+        let data = ItemDataResponse(
+            items: [
+                item(1, category: 500, slot: 30),
+                item(2, category: 500, slot: 31),
+                item(3, category: 501, slot: 3),
+                item(4, category: 501, slot: 30)
+            ],
+            uiCategories: [
+                UICategory(id: 500, nameTw: "背部防具", orderMinor: 0, orderMajor: 1),
+                UICategory(id: 501, nameTw: "混合防具", orderMinor: 0, orderMajor: 1)
+            ],
+            equipSlots: [
+                EquipSlot(id: 3, nameTw: "頭部"),
+                EquipSlot(id: 30, nameTw: "背部"),
+                EquipSlot(id: 31, nameTw: "背部（無法裝備頭部）")
+            ]
+        )
+        let vocabulary = ItemQueryVocabulary(data: data)
+
+        let backQuery = vocabulary.resolve(ItemQueryFields(usage: "搜尋", categories: ["背部防具"]))
+        let mixedQuery = vocabulary.resolve(ItemQueryFields(usage: "搜尋", categories: ["混合防具"]))
+
+        XCTAssertEqual(backQuery.equipSlotIds, [30, 31])
+        XCTAssertTrue(backQuery.categoryIds.isEmpty)
+        XCTAssertEqual(mixedQuery.categoryIds, [501], "items on two body parts keep the category")
+    }
+
     // MARK: - Levels and flags
 
     func testLevelRangesFillTheMissingBound() {
