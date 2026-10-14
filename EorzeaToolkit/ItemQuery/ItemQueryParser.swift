@@ -33,62 +33,52 @@ enum ItemQueryModelStatus: Equatable, Sendable {
     }
 }
 
-/// The schema the model fills in: the fields of `ItemQueryModelOutput`. The usage is one of
-/// its three labels and the keyword is free text, checked against the sentence afterwards.
-@available(iOS 26.0, macOS 26.0, *)
-enum ItemQuerySchema {
-    static func make() throws -> GenerationSchema {
-        typealias Key = ItemQueryModelOutput.CodingKeys
-
-        let usage = DynamicGenerationSchema(name: "Usage", description: nil, anyOf: ItemQuery.Usage.allCases.map(\.label))
-        let keyword = DynamicGenerationSchema(type: String.self, guides: [])
-        let root = DynamicGenerationSchema(
-            name: "ItemQuery",
-            description: nil,
-            properties: [
-                DynamicGenerationSchema.Property(name: Key.usage.rawValue, description: nil, schema: usage, isOptional: false),
-                DynamicGenerationSchema.Property(name: Key.keyword.rawValue, description: nil, schema: keyword, isOptional: true)
-            ]
-        )
-        return try GenerationSchema(root: root, dependencies: [])
-    }
-}
-
 /// Turns one sentence into item query fields: the usage and keyword from the on-device model,
 /// every other condition from the sentence.
 @available(iOS 26.0, macOS 26.0, *)
 struct ItemQueryParser: Sendable {
+    /// The model's answer had no usage it could be read for, which is also what a refusal
+    /// message looks like.
+    struct UnreadableAnswer: Error, CustomStringConvertible {
+        let text: String
+
+        var description: String {
+            "模型沒有照格式回答：\(text)"
+        }
+    }
+
     let vocabulary: ItemQueryVocabulary
     private let matcher: ItemQueryMatcher
-    private let schema: GenerationSchema
+    /// Permissive guardrails, so that ordinary sentences such as 「品級690以上的頭部裝備」 are not
+    /// blocked. They apply only to plain text answers, which is why the model answers in text.
+    private let model = SystemLanguageModel(guardrails: .permissiveContentTransformations)
 
-    init(vocabulary: ItemQueryVocabulary) throws {
+    init(vocabulary: ItemQueryVocabulary) {
         self.vocabulary = vocabulary
         self.matcher = ItemQueryMatcher(vocabulary: vocabulary)
-        self.schema = try ItemQuerySchema.make()
     }
 
-    /// Asks the model in a new session with greedy sampling, so the same sentence on the same
-    /// model always yields the same answer and no earlier sentence influences it.
-    func answer(for sentence: String) async throws -> ItemQueryModelOutput {
-        let session = LanguageModelSession(model: .default, tools: [], instructions: ItemQueryInstructions.text)
-        let response = try await session.respond(
-            to: sentence,
-            schema: schema,
-            includeSchemaInPrompt: true,
-            options: GenerationOptions(samplingMode: .greedy)
-        )
-        return try JSONDecoder().decode(ItemQueryModelOutput.self, from: Data(response.content.jsonString.utf8))
+    /// The model's plain text answer, asked in a new session with greedy sampling, so the same
+    /// sentence on the same model always yields the same answer and no earlier sentence
+    /// influences it.
+    func answer(for sentence: String) async throws -> String {
+        let session = LanguageModelSession(model: model, tools: [], instructions: ItemQueryInstructions.text)
+        let response = try await session.respond(to: sentence, options: GenerationOptions(samplingMode: .greedy))
+        return response.content
     }
 
-    /// The model's usage and keyword, with the conditions the sentence states.
-    func fields(for sentence: String, answer: ItemQueryModelOutput) -> ItemQueryFields {
-        matcher.fields(for: sentence, usage: answer.usage, keyword: answer.keyword)
+    /// The usage and keyword read from the model's answer, with the conditions the sentence
+    /// states.
+    func fields(for sentence: String, answer: String) throws -> ItemQueryFields {
+        guard let output = ItemQueryModelOutput(text: answer) else {
+            throw UnreadableAnswer(text: answer)
+        }
+        return matcher.fields(for: sentence, usage: output.usage, keyword: output.keyword)
     }
 
     func fields(for sentence: String) async throws -> ItemQueryFields {
         let answer = try await self.answer(for: sentence)
-        return fields(for: sentence, answer: answer)
+        return try fields(for: sentence, answer: answer)
     }
 
     func query(for sentence: String) async throws -> ItemQuery {

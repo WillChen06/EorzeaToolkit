@@ -65,29 +65,27 @@ guard status == .available else {
     exit(1)
 }
 
-let parser: ItemQueryParser
-do {
-    parser = try ItemQueryParser(vocabulary: vocabulary)
-} catch {
-    printError("無法建立解析用的 schema：\(error)")
-    exit(1)
+/// The model's answer on one line, so it fits the report.
+func oneLine(_ text: String) -> String {
+    text.split(whereSeparator: \.isNewline).joined(separator: " / ")
 }
 
+let parser = ItemQueryParser(vocabulary: vocabulary)
 var outcomes: [EvalOutcome] = []
 let clock = ContinuousClock()
-let answerEncoder = JSONEncoder()
-answerEncoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
 for (index, evalCase) in loaded.cases.enumerated() {
     printError("[\(index + 1)/\(loaded.cases.count)] \(evalCase.id)")
 
     let start = clock.now
     let result: EvalOutcome.Result
-    var answerJSON: String?
+    var answerText: String?
     do {
         let answer = try await parser.answer(for: evalCase.query)
-        answerJSON = (try? answerEncoder.encode(answer)).map { String(decoding: $0, as: UTF8.self) }
-        let fields = parser.fields(for: evalCase.query, answer: answer)
+        answerText = oneLine(answer)
+        let fields = try parser.fields(for: evalCase.query, answer: answer)
         result = .parsed(vocabulary.resolve(fields))
+    } catch let error as ItemQueryParser.UnreadableAnswer {
+        result = .failed(oneLine(error.description))
     } catch {
         // The type and domain tell a safety block that is not a guardrailViolation apart from a
         // real failure, which the description alone does not.
@@ -103,7 +101,7 @@ for (index, evalCase) in loaded.cases.enumerated() {
         evalCase: evalCase,
         expected: vocabulary.resolve(evalCase.expected),
         result: result,
-        answer: answerJSON,
+        answer: answerText,
         seconds: start.duration(to: clock.now).seconds
     ))
 }

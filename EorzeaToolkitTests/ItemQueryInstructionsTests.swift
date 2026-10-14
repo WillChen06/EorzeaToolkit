@@ -7,38 +7,33 @@ final class ItemQueryInstructionsTests: XCTestCase {
     func testInstructionsNameEveryFieldAndUsage() {
         let text = ItemQueryInstructions.text
 
-        for key in ItemQueryModelOutput.CodingKeys.allCases {
-            XCTAssertTrue(text.contains(key.rawValue), "\(key.rawValue) is not explained")
+        for label in [ItemQueryModelOutput.usageLabel, ItemQueryModelOutput.keywordLabel] {
+            XCTAssertTrue(text.contains(label), "\(label) is not explained")
         }
         for usage in ItemQuery.Usage.allCases {
             XCTAssertTrue(text.contains(usage.label), "\(usage.label) is not explained")
         }
     }
 
-    func testExamplesShowEveryUsage() throws {
-        let usages = try ItemQueryInstructions.examples.map { example -> String? in
-            try JSONDecoder().decode(ItemQueryModelOutput.self, from: Data(example.answer.utf8)).usage
-        }
+    func testExamplesShowEveryUsage() {
+        let usages = ItemQueryInstructions.examples.compactMap(\.answer.usage)
 
-        XCTAssertEqual(Set(usages.compactMap { $0 }), Set(ItemQuery.Usage.allCases.map(\.label)))
+        XCTAssertEqual(Set(usages), Set(ItemQuery.Usage.allCases.map(\.label)))
     }
 
-    /// Each example may hold only the schema's keys, and its keyword must survive the checks
-    /// against its sentence; an example the parser would change teaches the wrong answer.
+    /// An example the parser would read differently, or whose keyword the matcher would drop,
+    /// teaches the wrong answer.
     func testExamplesAreAnswersTheParserKeepsWhole() throws {
         let data: ItemDataResponse = try LocalDataService.load("items")
         let matcher = ItemQueryMatcher(vocabulary: ItemQueryVocabulary(data: data))
-        let keys = Set(ItemQueryModelOutput.CodingKeys.allCases.map(\.rawValue))
+        let text = ItemQueryInstructions.text
 
         for example in ItemQueryInstructions.examples {
-            let json = Data(example.answer.utf8)
-            let object = try XCTUnwrap(try JSONSerialization.jsonObject(with: json) as? [String: Any])
-            XCTAssertTrue(Set(object.keys).isSubset(of: keys), example.sentence)
+            XCTAssertTrue(text.contains(example.answer.text), example.sentence)
+            XCTAssertEqual(ItemQueryModelOutput(text: example.answer.text), example.answer, example.sentence)
 
-            let answer = try JSONDecoder().decode(ItemQueryModelOutput.self, from: json)
-            let fields = matcher.fields(for: example.sentence, usage: answer.usage, keyword: answer.keyword)
-            XCTAssertNotNil(answer.usage.flatMap { ItemQuery.Usage(label: $0) }, example.sentence)
-            XCTAssertEqual(fields.keyword, answer.keyword, example.sentence)
+            let fields = matcher.fields(for: example.sentence, usage: example.answer.usage, keyword: example.answer.keyword)
+            XCTAssertEqual(fields.keyword, example.answer.keyword, example.sentence)
         }
     }
 }

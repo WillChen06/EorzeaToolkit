@@ -3,20 +3,17 @@ import Foundation
 /// The model's answer: whether the sentence searches, asks for a recipe or cannot be handled,
 /// and the part of it that names an item. Every other condition comes from the sentence itself
 /// (`ItemQueryMatcher`).
-struct ItemQueryModelOutput: Codable, Equatable, Sendable {
-    enum CodingKeys: String, CodingKey, CaseIterable {
-        case usage
-        case keyword
-    }
-
+///
+/// The model answers in plain text, one 「標籤：值」 line per field, rather than through a
+/// generation schema: the permissive guardrails, which stop ordinary sentences from being
+/// blocked, only apply to plain text answers.
+struct ItemQueryModelOutput: Equatable, Sendable {
     var usage: String?
     var keyword: String?
 }
 
 // MARK: - Plain text
 
-/// The model answers in plain text, one 「標籤：值」 line per field, because the permissive
-/// guardrails only apply to plain text answers.
 extension ItemQueryModelOutput {
     static let usageLabel = "用法"
     static let keywordLabel = "關鍵字"
