@@ -158,7 +158,7 @@ struct ItemQueryMatcher: Sendable {
             return nil
         }
 
-        matches.removeAll { $0.range.overlaps(range) }
+        matches.removeAll { range.lowerBound <= $0.range.lowerBound && $0.range.upperBound <= range.upperBound }
         return keyword
     }
 

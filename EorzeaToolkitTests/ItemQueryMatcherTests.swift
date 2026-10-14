@@ -282,6 +282,15 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(fields.equipLevelMin, 90)
     }
 
+    /// Only conditions wholly inside the keyword are part of the name; one the keyword cuts into
+    /// still counts.
+    func testAConditionPartlyInsideTheKeywordStillCounts() {
+        let fields = search("白魔道士長袍", keyword: "道士長袍")
+
+        XCTAssertEqual(fields.keyword, "道士長袍")
+        XCTAssertEqual(fields.jobs, ["WHM"])
+    }
+
     func testAnItemNameKeywordKeepsTheOtherConditions() {
         let fields = search("白魔穿的身體裝備，名字裡有長袍", keyword: "長袍")
 
