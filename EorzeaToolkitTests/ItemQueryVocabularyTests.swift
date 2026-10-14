@@ -238,6 +238,25 @@ final class ItemQueryVocabularyTests: XCTestCase {
         XCTAssertEqual(mixedQuery.categoryIds, [501], "items on two body parts keep the category")
     }
 
+    // MARK: - Keywords (AC-18)
+
+    /// The first run put 「頭部」 and 「暗騎」 in the keyword; as a name filter they would hide
+    /// almost every result.
+    func testKeywordsNamingACategoryBodyPartOrJobAreDropped() throws {
+        let vocabulary = try bundledVocabulary()
+
+        for keyword in ["頭部", "頭部防具", "暗騎", "龍騎士", "WHM", " 戒指 "] {
+            XCTAssertNil(vocabulary.resolve(ItemQueryFields(usage: "搜尋", keyword: keyword)).keyword, keyword)
+        }
+    }
+
+    func testItemNameKeywordsAreKept() throws {
+        let vocabulary = try bundledVocabulary()
+
+        XCTAssertEqual(vocabulary.resolve(ItemQueryFields(usage: "搜尋", keyword: "長袍")).keyword, "長袍")
+        XCTAssertEqual(vocabulary.resolve(ItemQueryFields(usage: "查配方", keyword: "白鋼錠")).keyword, "白鋼錠")
+    }
+
     // MARK: - Levels and flags
 
     func testLevelRangesFillTheMissingBound() {
