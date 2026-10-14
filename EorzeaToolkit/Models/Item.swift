@@ -65,6 +65,8 @@ struct Item: Codable, Identifiable, Hashable, Sendable {
     let uiCategoryId: Int
     let classjobCategoryId: Int
     let equipSlot: Int
+    /// The level needed to equip or use the item, not its item level. 0 when the data has none.
+    let equipLevel: Int
 
     enum CodingKeys: String, CodingKey {
         case id, ilvl, rarity
@@ -76,6 +78,7 @@ struct Item: Codable, Identifiable, Hashable, Sendable {
         case uiCategoryId = "ui_category_id"
         case classjobCategoryId = "classjob_category_id"
         case equipSlot = "equip_slot"
+        case equipLevel = "equip_level"
     }
 
     init(
@@ -89,7 +92,8 @@ struct Item: Codable, Identifiable, Hashable, Sendable {
         isUntradable: Bool,
         uiCategoryId: Int = 0,
         classjobCategoryId: Int = 0,
-        equipSlot: Int = 0
+        equipSlot: Int = 0,
+        equipLevel: Int = 0
     ) {
         self.id = id
         self.nameTw = nameTw
@@ -102,6 +106,7 @@ struct Item: Codable, Identifiable, Hashable, Sendable {
         self.uiCategoryId = uiCategoryId
         self.classjobCategoryId = classjobCategoryId
         self.equipSlot = equipSlot
+        self.equipLevel = equipLevel
     }
 
     init(from decoder: Decoder) throws {
@@ -118,6 +123,7 @@ struct Item: Codable, Identifiable, Hashable, Sendable {
         uiCategoryId = try container.decodeIfPresent(Int.self, forKey: .uiCategoryId) ?? 0
         classjobCategoryId = try container.decodeIfPresent(Int.self, forKey: .classjobCategoryId) ?? 0
         equipSlot = try container.decodeIfPresent(Int.self, forKey: .equipSlot) ?? 0
+        equipLevel = try container.decodeIfPresent(Int.self, forKey: .equipLevel) ?? 0
     }
 
     var displayName: String {

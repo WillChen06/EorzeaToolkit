@@ -26,6 +26,15 @@ final class BundledDataTests: XCTestCase {
         XCTAssertFalse(data.equipSlots.isEmpty, "equip_slots")
     }
 
+    /// An item's equip level decodes as 0 when `equip_level` is missing or renamed, which would
+    /// leave the equip level filter with no results instead of failing. Every item has one.
+    func testItemEquipLevelsDecode() throws {
+        let data: ItemDataResponse = try LocalDataService.load("items")
+        let withoutLevel = data.items.filter { $0.equipLevel < 1 }.map(\.id)
+
+        XCTAssertTrue(withoutLevel.isEmpty, "items without an equip level: \(withoutLevel.prefix(5))")
+    }
+
     /// The loader compares this version with the cache and the remote manifest. If it did not
     /// parse, any downloaded or cached copy would count as newer than the bundled data.
     func testItemsVersionParses() throws {
