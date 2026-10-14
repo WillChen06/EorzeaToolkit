@@ -10,6 +10,7 @@ EquipSlotCategory → items.json
 - 物品分類、職業分類、裝備部位的 id 0 代表「無」,不放進對照表。
 - 裝備部位沒有名稱欄位,名稱由 EquipSlotCategory 各欄位的值推導:
   值 1 是裝備的部位,值 -1 是被占用的部位,例:13 → 主手（無法裝備副手）。
+- equip_level 是 Level{Equip}:裝備或使用道具需要的等級,不是品級 Level{Item}。
 """
 from datamining import Sheet, data_version, source_meta, to_bool, to_int, write_json
 
@@ -48,9 +49,9 @@ def icon_path(icon_id):
 def load_items(sheet):
     items = []
     columns = ('#', 'Name', 'Icon', 'Level{Item}', 'Rarity', 'CanBeHq', 'IsUntradable',
-               'ItemUICategory', 'ClassJobCategory', 'EquipSlotCategory')
+               'ItemUICategory', 'ClassJobCategory', 'EquipSlotCategory', 'Level{Equip}')
     for (item_id, name, icon, ilvl, rarity, can_be_hq, is_untradable,
-         ui_category, classjob_category, equip_slot) in sheet.records(*columns):
+         ui_category, classjob_category, equip_slot, equip_level) in sheet.records(*columns):
         if not name.strip():
             continue
         icon_id = to_int(icon)
@@ -66,6 +67,7 @@ def load_items(sheet):
             'ui_category_id': to_int(ui_category),
             'classjob_category_id': to_int(classjob_category),
             'equip_slot': to_int(equip_slot),
+            'equip_level': to_int(equip_level),
         })
     items.sort(key=lambda item: item['id'])
     return items
