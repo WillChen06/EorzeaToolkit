@@ -135,6 +135,10 @@ enum L10n {
                 String(localized: "itemSearch.filter.summary.itemLevel \(lowerBound) \(upperBound)")
             }
 
+            static func summaryEquipLevel(lowerBound: Int, upperBound: Int) -> String {
+                String(localized: "itemSearch.filter.summary.equipLevel \(lowerBound) \(upperBound)")
+            }
+
             static var noRaritySummaryText: String {
                 String(localized: "itemSearch.filter.summary.rarity.none")
             }

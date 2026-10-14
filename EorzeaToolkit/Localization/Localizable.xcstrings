@@ -1563,6 +1563,23 @@
         }
       }
     },
+    "itemSearch.filter.summary.equipLevel %lld %lld" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Equip level %1$lld-%2$lld"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "裝備等級 %1$lld-%2$lld"
+          }
+        }
+      }
+    },
     "itemSearch.filter.summary.equipSlotCount %lld" : {
       "extractionState" : "manual",
       "localizations" : {

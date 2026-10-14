@@ -8,9 +8,14 @@ enum ItemBoolFilterState: String, CaseIterable, Sendable {
 
 struct ItemFilter: Equatable, Sendable {
     static let defaultIlvlRange = 1...795
+    /// Equip levels run from 1 to the level cap. Raise the upper bound with the cap:
+    /// `scripts/validate_data.py` fails when an item's equip level is above it.
+    static let defaultEquipLevelRange = 1...100
     static let defaultRarities: Set<Int> = [1, 2, 3, 4, 7]
 
     var ilvlRange: ClosedRange<Int> = Self.defaultIlvlRange
+    /// Narrowing it keeps only equippable items whose equip level is in the range.
+    var equipLevelRange: ClosedRange<Int> = Self.defaultEquipLevelRange
     var selectedRarities: Set<Int> = Self.defaultRarities
     var hqState: ItemBoolFilterState = .any
     var tradableState: ItemBoolFilterState = .any
@@ -20,6 +25,7 @@ struct ItemFilter: Equatable, Sendable {
 
     var isActive: Bool {
         ilvlRange != Self.defaultIlvlRange ||
+            equipLevelRange != Self.defaultEquipLevelRange ||
             selectedRarities != Self.defaultRarities ||
             hqState != .any ||
             tradableState != .any ||
@@ -32,6 +38,10 @@ struct ItemFilter: Equatable, Sendable {
         var count = 0
 
         if ilvlRange != Self.defaultIlvlRange {
+            count += 1
+        }
+
+        if equipLevelRange != Self.defaultEquipLevelRange {
             count += 1
         }
 
@@ -69,6 +79,13 @@ struct ItemFilter: Equatable, Sendable {
             parts.append(L10n.ItemSearch.Filter.summaryItemLevel(
                 lowerBound: ilvlRange.lowerBound,
                 upperBound: ilvlRange.upperBound
+            ))
+        }
+
+        if equipLevelRange != Self.defaultEquipLevelRange {
+            parts.append(L10n.ItemSearch.Filter.summaryEquipLevel(
+                lowerBound: equipLevelRange.lowerBound,
+                upperBound: equipLevelRange.upperBound
             ))
         }
 
@@ -306,6 +323,26 @@ final class ItemSearchViewModel {
         }
     }
 
+    func updateMinimumEquipLevel(_ value: Int) {
+        let clampedValue = min(
+            max(value, ItemFilter.defaultEquipLevelRange.lowerBound),
+            filter.equipLevelRange.upperBound
+        )
+        updateFilter {
+            $0.equipLevelRange = clampedValue...$0.equipLevelRange.upperBound
+        }
+    }
+
+    func updateMaximumEquipLevel(_ value: Int) {
+        let clampedValue = max(
+            min(value, ItemFilter.defaultEquipLevelRange.upperBound),
+            filter.equipLevelRange.lowerBound
+        )
+        updateFilter {
+            $0.equipLevelRange = $0.equipLevelRange.lowerBound...clampedValue
+        }
+    }
+
     func toggleRarity(_ rarity: Int) {
         updateFilter {
             if $0.selectedRarities.contains(rarity) {
@@ -528,6 +565,14 @@ final class ItemSearchViewModel {
             }
         } else if !filter.ilvlRange.contains(item.ilvl) {
             return false
+        }
+
+        // Only equipment is compared. Every other item has an equip level too (bait has the
+        // level needed to use it), but once the range is narrowed those items drop out.
+        if filter.equipLevelRange != ItemFilter.defaultEquipLevelRange {
+            guard item.equipSlot != 0, filter.equipLevelRange.contains(item.equipLevel) else {
+                return false
+            }
         }
 
         guard filter.selectedRarities.contains(item.rarity) else {
