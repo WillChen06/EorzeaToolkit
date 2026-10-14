@@ -10,7 +10,7 @@ import Foundation
 /// lower-cased and without whitespace.
 struct ItemQueryMatcher: Sendable {
     enum Condition: Equatable, Sendable {
-        /// Category names.
+        /// Category names. A partial name such as 採掘工具 or 副工具 stands for several.
         case categories([String])
         case slot(String)
         /// A job abbreviation.
@@ -65,6 +65,26 @@ struct ItemQueryMatcher: Sendable {
             add(rarity.name, .rarity(rarity.name))
             add(rarity.colour + "色", .rarity(rarity.name))
             add(rarity.colour + "裝", .rarity(rarity.name))
+        }
+
+        // 採掘工具（主工具） also matches without its brackets, and either of its parts alone
+        // (採掘工具, 主工具) stands for every category that has that part.
+        var partialNames: [String] = []
+        var categoriesByPartialName: [String: [String]] = [:]
+        for category in vocabulary.categories {
+            guard let parts = Self.bracketedParts(of: category.name) else {
+                continue
+            }
+            add(parts.outer + parts.inner, .categories([category.name]))
+            for part in [parts.outer, parts.inner] {
+                if categoriesByPartialName[part] == nil {
+                    partialNames.append(part)
+                }
+                categoriesByPartialName[part, default: []].append(category.name)
+            }
+        }
+        for part in partialNames {
+            add(part, .categories(categoriesByPartialName[part] ?? []))
         }
 
         self.names = names
@@ -303,5 +323,18 @@ struct ItemQueryMatcher: Sendable {
 
     private static func isLatinOrDigit(_ character: Character) -> Bool {
         character.isASCII && (character.isLetter || character.isNumber)
+    }
+
+    /// 「採掘工具（主工具）」 → (採掘工具, 主工具). Nil for a name without a bracketed part.
+    private static func bracketedParts(of name: String) -> (outer: String, inner: String)? {
+        guard name.hasSuffix("）"), let open = name.firstIndex(of: "（") else {
+            return nil
+        }
+        let outer = String(name[..<open])
+        let inner = String(name[name.index(after: open)..<name.index(before: name.endIndex)])
+        guard !outer.isEmpty, !inner.isEmpty else {
+            return nil
+        }
+        return (outer, inner)
     }
 }

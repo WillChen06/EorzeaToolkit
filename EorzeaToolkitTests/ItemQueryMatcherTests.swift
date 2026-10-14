@@ -52,6 +52,23 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(conditions("whm2"), [])
     }
 
+    func testBracketedCategoriesMatchWithoutTheirBrackets() {
+        XCTAssertEqual(conditions("採掘工具主工具"), [.categories(["採掘工具（主工具）"])])
+        XCTAssertEqual(conditions("魔導書學者專用"), [.categories(["魔導書（學者專用）"])])
+    }
+
+    func testAPartOfABracketedNameStandsForEveryCategoryWithIt() {
+        XCTAssertEqual(conditions("採掘工具"), [.categories(["採掘工具（主工具）", "採掘工具（副工具）"])])
+
+        guard case .categories(let subTools)? = conditions("副工具").first else {
+            return XCTFail("副工具 is not a category")
+        }
+        XCTAssertEqual(subTools.count, 11)
+        XCTAssertTrue(subTools.allSatisfy { $0.hasSuffix("（副工具）") }, "\(subTools)")
+
+        XCTAssertEqual(conditions("魔導書"), [.categories(["魔導書"])], "a category's own name is not a partial name")
+    }
+
     // MARK: - Names come from the data (AC-15)
 
     func testNamesComeFromTheItemData() {
