@@ -1,7 +1,7 @@
 import Foundation
 
-/// Finds the conditions a sentence states by matching names: categories, body parts, jobs and
-/// rarities. Only the usage and the keyword are left to the model.
+/// Finds the conditions a sentence states by matching names and number patterns: categories,
+/// body parts, jobs, rarities and levels. Only the usage and the keyword are left to the model.
 ///
 /// In the first two evaluation runs the model picked the wrong names even when a sentence
 /// spelled them out. Matching gives the same answer every time and can be unit tested. The
@@ -16,6 +16,8 @@ struct ItemQueryMatcher: Sendable {
         case job(String)
         /// A rarity name.
         case rarity(String)
+        case equipLevel(min: Int?, max: Int?)
+        case itemLevel(min: Int?, max: Int?)
     }
 
     /// A condition and where it was found, in characters of the normalised sentence.
@@ -74,7 +76,7 @@ struct ItemQueryMatcher: Sendable {
     }
 
     private func matches(in text: [Character]) -> [Match] {
-        let candidates = nameMatches(in: text)
+        let candidates = nameMatches(in: text) + Self.levelMatches(in: text)
         let longestFirst = candidates.enumerated().sorted { lhs, rhs in
             let (left, right) = (lhs.element.range, rhs.element.range)
             if left.count != right.count {
@@ -105,6 +107,123 @@ struct ItemQueryMatcher: Sendable {
         }
     }
 
+    // MARK: - Levels
+
+    private enum LevelKind {
+        case equip
+        case item
+    }
+
+    private struct LevelMarker {
+        let text: [Character]
+        let kind: LevelKind
+
+        init(_ text: String, _ kind: LevelKind) {
+            self.text = Array(text)
+            self.kind = kind
+        }
+    }
+
+    /// Words before a number that make it a level. Longer ones come first, so iLv is not read as
+    /// Lv; 品級 also ends in 級 but is a word before the number, not after it.
+    private static let levelMarkers = [
+        LevelMarker("品級", .item),
+        LevelMarker("裝等", .item),
+        LevelMarker("ilvl", .item),
+        LevelMarker("ilv", .item),
+        LevelMarker("等級", .equip),
+        LevelMarker("lvl", .equip),
+        LevelMarker("lv", .equip)
+    ]
+    /// May sit between a marker and its number, as in Lv.80.
+    private static let levelSeparators: Set<Character> = [".", ":"]
+    private static let rangeConnectors: Set<Character> = ["到", "至", "~", "〜", "-", "–", "—"]
+
+    /// 「80級」「等級80」「Lv.80」, optionally followed by 以上, 以下 or 以內, and ranges such as
+    /// 「70到80級」. A number counts only with a marker before it or 級 after it, and is always
+    /// read whole, so 700 is never 70.
+    private static func levelMatches(in text: [Character]) -> [Match] {
+        var matches: [Match] = []
+        var index = 0
+        while index < text.count {
+            guard let first = number(at: index, in: text) else {
+                index += 1
+                continue
+            }
+
+            let marker = levelMarker(before: index, in: text)
+            var end = first.end
+            var saysLevel = false
+            if end < text.count, text[end] == "級" {
+                end += 1
+                saysLevel = true
+            }
+
+            var second: Int?
+            if end < text.count, rangeConnectors.contains(text[end]), let next = number(at: end + 1, in: text) {
+                second = next.value
+                end = next.end
+                if end < text.count, text[end] == "級" {
+                    end += 1
+                    saysLevel = true
+                }
+            }
+
+            guard marker != nil || saysLevel else {
+                index = first.end
+                continue
+            }
+
+            var lower: Int? = first.value
+            var upper: Int? = second ?? first.value
+            if second == nil {
+                if hasWord("以上", at: end, in: text) {
+                    upper = nil
+                    end += 2
+                } else if hasWord("以下", at: end, in: text) || hasWord("以內", at: end, in: text) {
+                    lower = nil
+                    end += 2
+                }
+            }
+
+            let condition: Condition = marker?.kind == .item
+                ? .itemLevel(min: lower, max: upper)
+                : .equipLevel(min: lower, max: upper)
+            matches.append(Match(range: (marker?.start ?? index)..<end, condition: condition))
+            index = end
+        }
+        return matches
+    }
+
+    private static func number(at index: Int, in text: [Character]) -> (value: Int, end: Int)? {
+        var end = index
+        while end < text.count, text[end].isASCII, text[end].isNumber {
+            end += 1
+        }
+        guard end > index, let value = Int(String(text[index..<end])) else {
+            return nil
+        }
+        return (value, end)
+    }
+
+    private static func levelMarker(before index: Int, in text: [Character]) -> (kind: LevelKind, start: Int)? {
+        var end = index
+        if end > 0, levelSeparators.contains(text[end - 1]) {
+            end -= 1
+        }
+        for marker in levelMarkers {
+            let start = end - marker.text.count
+            guard start >= 0, text[start..<end].elementsEqual(marker.text) else {
+                continue
+            }
+            if isLatinOrDigit(marker.text[0]), start > 0, isLatinOrDigit(text[start - 1]) {
+                continue
+            }
+            return (marker.kind, start)
+        }
+        return nil
+    }
+
     // MARK: - Text
 
     /// Half-width, lower-cased and without whitespace, so 「MCH」 matches 「mch」, 「iLv 600」
@@ -112,6 +231,11 @@ struct ItemQueryMatcher: Sendable {
     static func normalized(_ text: String) -> String {
         let halfWidth = text.applyingTransform(.fullwidthToHalfwidth, reverse: false) ?? text
         return String(halfWidth.lowercased().filter { !$0.isWhitespace })
+    }
+
+    private static func hasWord(_ word: String, at index: Int, in text: [Character]) -> Bool {
+        let word = Array(word)
+        return index + word.count <= text.count && text[index..<(index + word.count)].elementsEqual(word)
     }
 
     private static func occurrences(of word: [Character], in text: [Character]) -> [Range<Int>] {

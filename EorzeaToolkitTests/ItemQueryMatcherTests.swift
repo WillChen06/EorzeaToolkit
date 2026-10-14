@@ -65,6 +65,55 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(matcher.matches(in: "背部的測試分類").map(\.condition), [.slot("背部"), .categories(["測試分類"])])
     }
 
+    // MARK: - Levels (AC-19)
+
+    func testEquipLevelsInEveryForm() {
+        let cases: [(String, Condition)] = [
+            ("90級的頭部裝備", .equipLevel(min: 90, max: 90)),
+            ("80級以上", .equipLevel(min: 80, max: nil)),
+            ("50級以下", .equipLevel(min: nil, max: 50)),
+            ("60級以內", .equipLevel(min: nil, max: 60)),
+            ("等級90到100", .equipLevel(min: 90, max: 100)),
+            ("70到80級", .equipLevel(min: 70, max: 80)),
+            ("70級~80級", .equipLevel(min: 70, max: 80)),
+            ("等級 90-100", .equipLevel(min: 90, max: 100)),
+            ("Lv.80的刺劍", .equipLevel(min: 80, max: 80)),
+            ("lv80", .equipLevel(min: 80, max: 80)),
+            ("８０級", .equipLevel(min: 80, max: 80))
+        ]
+
+        for (sentence, expected) in cases {
+            XCTAssertEqual(conditions(sentence).first, expected, sentence)
+        }
+    }
+
+    func testItemLevelsNeedAnItemLevelWord() {
+        let cases: [(String, Condition)] = [
+            ("品級700以上", .itemLevel(min: 700, max: nil)),
+            ("iLv 600到650", .itemLevel(min: 600, max: 650)),
+            ("ILVL600", .itemLevel(min: 600, max: 600)),
+            ("裝等700的雙手劍", .itemLevel(min: 700, max: 700)),
+            ("品級690以下", .itemLevel(min: nil, max: 690))
+        ]
+
+        for (sentence, expected) in cases {
+            XCTAssertEqual(conditions(sentence).first, expected, sentence)
+        }
+    }
+
+    /// The second run kept 70 from 「700」 because 70 is part of the text; numbers are read whole.
+    func testNumbersAreReadWhole() {
+        XCTAssertEqual(conditions("品級700"), [.itemLevel(min: 700, max: 700)])
+        XCTAssertEqual(conditions("100級"), [.equipLevel(min: 100, max: 100)])
+    }
+
+    func testNumbersWithoutALevelWordAreNoLevel() {
+        XCTAssertEqual(conditions("700的雙手劍"), [.categories(["雙手劍"])])
+        XCTAssertEqual(conditions("給我3個藥品"), [.categories(["藥品"])])
+        XCTAssertEqual(conditions("90-100"), [])
+        XCTAssertEqual(conditions("xlv80"), [])
+    }
+
     // MARK: - Rarities (AC-20)
 
     func testRaritiesByNameOrColour() {
