@@ -276,23 +276,15 @@ final class ItemQueryVocabularyTests: XCTestCase {
         XCTAssertFalse(vocabulary.isCategory(named: "測試武器", usableByAnyOf: ["CNJ"]))
     }
 
-    // MARK: - Keywords (AC-18)
+    // MARK: - Keywords
 
-    /// The first run put 「頭部」 and 「暗騎」 in the keyword; as a name filter they would hide
-    /// almost every result.
-    func testKeywordsNamingACategoryBodyPartOrJobAreDropped() throws {
+    /// Which keywords to keep is the matcher's call (AC-18); resolution only trims them.
+    func testKeywordsAreTrimmed() throws {
         let vocabulary = try bundledVocabulary()
 
-        for keyword in ["頭部", "頭部防具", "暗騎", "龍騎士", "WHM", " 戒指 "] {
-            XCTAssertNil(vocabulary.resolve(ItemQueryFields(usage: "搜尋", keyword: keyword)).keyword, keyword)
-        }
-    }
-
-    func testItemNameKeywordsAreKept() throws {
-        let vocabulary = try bundledVocabulary()
-
-        XCTAssertEqual(vocabulary.resolve(ItemQueryFields(usage: "搜尋", keyword: "長袍")).keyword, "長袍")
+        XCTAssertEqual(vocabulary.resolve(ItemQueryFields(usage: "搜尋", keyword: " 長袍 ")).keyword, "長袍")
         XCTAssertEqual(vocabulary.resolve(ItemQueryFields(usage: "查配方", keyword: "白鋼錠")).keyword, "白鋼錠")
+        XCTAssertNil(vocabulary.resolve(ItemQueryFields(usage: "搜尋", keyword: "  ")).keyword)
     }
 
     // MARK: - Levels and flags
