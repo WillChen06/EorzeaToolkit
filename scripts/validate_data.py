@@ -26,6 +26,8 @@ EorzeaToolkitTests/BundledDataTests.swift 直接用真正的型別驗證,不在�
 11. 職業 id 不重複,同一職業內技能 id 也不重複:App 以 id 建索引還原技能循環,
     重複的 id 會讓 App 當掉。
 12. treasures.json 的每個寶藏點所在地圖,在 zh-maps.json 都有名稱;否則藏寶圖頁只能顯示「未知地區」。
+13. items.json 每筆道具的 equip_level 都是 1–100 的整數。道具搜尋的裝備等級 filter 只到 100,
+    等級上限提高時,filter 要跟著改。
 
 用法:
     python3 scripts/validate_data.py
@@ -55,6 +57,9 @@ MARKUP = re.compile(r'<[^>]*>')
 
 # 技能循環編輯頁可選的等級(App 的 SkillRotationLevel)
 SKILL_ROTATION_LEVELS = (50, 60, 70, 80, 90, 100)
+
+# 道具搜尋裝備等級 filter 的範圍(App 的 ItemFilter.defaultEquipLevelRange)
+EQUIP_LEVEL_RANGE = (1, 100)
 
 failures = []
 
@@ -169,6 +174,23 @@ def check_items(items, sources):
     check(not unnamed, f'items.json: {len(unnamed)} 筆道具沒有 name_tw: {unnamed[:5]}')
     with_cn = [i['id'] for i in items['items'] if 'name_cn' in i]
     check(not with_cn, f'items.json: {len(with_cn)} 筆道具仍有 name_cn: {with_cn[:5]}')
+
+    # 裝備等級:整數(bool 不算),在裝備等級 filter 的範圍內
+    lowest, highest = EQUIP_LEVEL_RANGE
+    levels = {i['id']: i.get('equip_level') for i in items['items']}
+    not_int = [item_id for item_id, level in levels.items() if type(level) is not int]
+    check(not not_int,
+          f'items.json: {len(not_int)} 筆道具的 equip_level 不存在或不是整數: {not_int[:5]}')
+    too_low = [item_id for item_id, level in levels.items()
+               if type(level) is int and level < lowest]
+    check(not too_low,
+          f'items.json: {len(too_low)} 筆道具的 equip_level 小於 {lowest}: {too_low[:5]}')
+    too_high = [item_id for item_id, level in levels.items()
+                if type(level) is int and level > highest]
+    check(not too_high,
+          f'items.json: {len(too_high)} 筆道具的 equip_level 大於 {highest}: {too_high[:5]};'
+          f'等級上限提高了的話,把 App 的 ItemFilter.defaultEquipLevelRange 和這裡的 '
+          f'EQUIP_LEVEL_RANGE 一起改成新的上限')
 
     # 對照表:非空、id 唯一、不含代表「無」的 0,且不再有 name_cn
     references = {
