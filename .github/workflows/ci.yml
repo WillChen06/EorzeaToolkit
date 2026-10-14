@@ -17,13 +17,39 @@ concurrency:
 jobs:
   build:
     name: Build and test iOS app
-    runs-on: macos-15
+    # Xcode 27 ships on its own image (one major Xcode version per image), which GitHub still
+    # labels a public preview. The label may be renamed when the image becomes generally
+    # available; update it here then.
+    runs-on: xcode-27
     timeout-minutes: 30
+    env:
+      # The Xcode release developers build with locally, so the compiler, the SDK and the string
+      # catalog extraction match. The image carries several 27.x releases; see Select Xcode.
+      XCODE_VERSION: "27.1"
 
     steps:
       - name: Checkout
         # v6 uses Node 24 and avoids GitHub's Node 20 action deprecation.
         uses: actions/checkout@v6
+
+      # Picks the installed Xcode by its version rather than by path: the image's app paths
+      # change between updates (an RC or beta folder becomes the release one), the version does
+      # not. DEVELOPER_DIR applies to every later step.
+      - name: Select Xcode
+        run: |
+          for app in /Applications/Xcode*.app; do
+            [[ -L "$app" ]] && continue
+            version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist" 2>/dev/null || true)"
+            if [[ "$version" == "$XCODE_VERSION" ]]; then
+              echo "Using $app"
+              echo "DEVELOPER_DIR=$app/Contents/Developer" >> "$GITHUB_ENV"
+              exit 0
+            fi
+          done
+
+          echo "::error::Xcode $XCODE_VERSION is not installed on this image. Installed:"
+          ls -d /Applications/Xcode*.app
+          exit 1
 
       - name: Generate Xcode project
         run: ./scripts/generate_project.sh
