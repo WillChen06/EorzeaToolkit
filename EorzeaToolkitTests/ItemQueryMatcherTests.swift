@@ -217,6 +217,8 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(conditions("不能HQ但可以交易"), [.hq(false), .tradable(true)])
         XCTAssertEqual(conditions("不要藍色的，可以交易"), [.rarity("貴重"), .tradable(true)])
         XCTAssertEqual(conditions("不是說好的可以交易"), [.tradable(true)])
+        XCTAssertEqual(conditions("不：可以交易"), [.tradable(true)], "any punctuation ends a clause")
+        XCTAssertEqual(conditions("不/可以HQ"), [.hq(true)], "any punctuation ends a clause")
     }
 
     func testFlagsBecomeTheirLabels() {

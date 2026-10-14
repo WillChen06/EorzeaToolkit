@@ -394,9 +394,9 @@ struct ItemQueryMatcher: Sendable {
     private static let hqWord = Array("hq")
     private static let tradableWords = ["交易", "買賣", "市場板"].map { Array($0) }
     private static let negations: Set<Character> = ["不", "無", "沒", "非", "禁"]
-    /// Punctuation (after normalisation) and conjunctions that end a clause, so 「不要藍色的，
-    /// 可以交易」 is not read as 「不…交易」.
-    private static let clauseBreaks: Set<Character> = [",", "、", "､", "。", "｡", ";", "!", "?", "又", "但"]
+    /// Conjunctions that end a clause as punctuation does, so the 不 in 「不能HQ但可以交易」 stays
+    /// with HQ.
+    private static let clauseConjunctions: Set<Character> = ["又", "但"]
     /// How far back a negation still applies, in characters: 「不可以HQ」 reaches four.
     private static let negationReach = 4
 
@@ -416,10 +416,15 @@ struct ItemQueryMatcher: Sendable {
         return matches
     }
 
+    /// Punctuation and 又 or 但, so 「不要藍色的，可以交易」 is not read as 「不…交易」.
+    private static func endsClause(_ character: Character) -> Bool {
+        character.isPunctuation || clauseConjunctions.contains(character)
+    }
+
     private static func isNegated(before index: Int, in text: [Character]) -> Bool {
         var position = index - 1
         var reach = 0
-        while position >= 0, reach < negationReach, !clauseBreaks.contains(text[position]) {
+        while position >= 0, reach < negationReach, !endsClause(text[position]) {
             if negations.contains(text[position]) {
                 return true
             }
