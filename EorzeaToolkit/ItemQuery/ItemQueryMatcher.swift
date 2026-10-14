@@ -34,6 +34,7 @@ struct ItemQueryMatcher: Sendable {
         let condition: Condition
     }
 
+    private let vocabulary: ItemQueryVocabulary
     /// Every name the matcher looks for. No two share a text.
     private let names: [Name]
 
@@ -87,7 +88,138 @@ struct ItemQueryMatcher: Sendable {
             add(part, .categories(categoriesByPartialName[part] ?? []))
         }
 
+        self.vocabulary = vocabulary
         self.names = names
+    }
+
+    // MARK: - Parse result
+
+    /// Words that only join conditions into a sentence, longest first. A keyword with nothing
+    /// else left once its conditions are taken out names no item.
+    static let connectingWords = [
+        "裝備", "道具", "東西", "那種", "搜尋", "可以", "無法", "沒有",
+        "的", "能", "可", "用", "穿", "戴", "都", "跟", "和", "或", "與", "要", "給", "找", "查",
+        "在", "又", "但", "賣", "買", "不", ",", "、", "､", "。", "｡"
+    ]
+
+    /// The parse result: the usage and keyword the model gave, and the conditions in the
+    /// sentence. A sentence that cannot be handled keeps only its usage, and a recipe lookup only
+    /// its keyword.
+    func fields(for sentence: String, usage: String?, keyword: String?) -> ItemQueryFields {
+        let usageLabel = usage?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let usage = usageLabel.flatMap { ItemQuery.Usage(label: $0) } ?? .search
+        if usage == .unsupported {
+            return ItemQueryFields(usage: usageLabel)
+        }
+
+        let text = Array(Self.normalized(sentence))
+        var matches = self.matches(in: text)
+        let keyword = self.keyword(keyword, in: text, dropping: &matches)
+        if usage == .recipe {
+            return ItemQueryFields(usage: usageLabel, keyword: keyword)
+        }
+        return fields(usage: usageLabel, keyword: keyword, matches: matches)
+    }
+
+    /// The model's keyword if the sentence has it and it names an item. A keyword made of
+    /// conditions (頭部裝備, 繪靈法師的筆) is dropped; otherwise the conditions inside it are part
+    /// of an item's name (the 盾 in 守護者之盾) and are dropped instead.
+    private func keyword(_ keyword: String?, in text: [Character], dropping matches: inout [Match]) -> String? {
+        guard let keyword = keyword?.trimmingCharacters(in: .whitespacesAndNewlines),
+              let range = Self.occurrences(of: Array(Self.normalized(keyword)), in: text).first else {
+            return nil
+        }
+
+        var covered = Array(repeating: false, count: text.count)
+        for match in matches {
+            for index in match.range {
+                covered[index] = true
+            }
+        }
+        var segments: [String] = [""]
+        for index in range {
+            if covered[index] {
+                segments.append("")
+            } else {
+                segments[segments.count - 1].append(text[index])
+            }
+        }
+        let namesAnItem = segments.contains { segment in
+            !Self.connectingWords.reduce(segment) { $0.replacingOccurrences(of: $1, with: "") }.isEmpty
+        }
+        guard namesAnItem else {
+            return nil
+        }
+
+        matches.removeAll { $0.range.overlaps(range) }
+        return keyword
+    }
+
+    private func fields(usage: String?, keyword: String?, matches: [Match]) -> ItemQueryFields {
+        var categories: [String] = []
+        var partialCategories: [[String]] = []
+        var slots: [String] = []
+        var jobs: [String] = []
+        var rarities: [String] = []
+        var equipLevel: (min: Int?, max: Int?)?
+        var itemLevel: (min: Int?, max: Int?)?
+        var hq: Bool?
+        var tradable: Bool?
+
+        // The first level of each kind and the first HQ and tradability conditions count.
+        for match in matches {
+            switch match.condition {
+            case .categories(let names) where names.count == 1:
+                categories += names
+            case .categories(let names):
+                partialCategories.append(names)
+            case .slot(let name):
+                slots.append(name)
+            case .job(let abbreviation):
+                jobs.append(abbreviation)
+            case .rarity(let name):
+                rarities.append(name)
+            case .equipLevel(let lower, let upper):
+                equipLevel = equipLevel ?? (lower, upper)
+            case .itemLevel(let lower, let upper):
+                itemLevel = itemLevel ?? (lower, upper)
+            case .hq(let value):
+                hq = hq ?? value
+            case .tradable(let value):
+                tradable = tradable ?? value
+            }
+        }
+
+        // 副工具 alone is every sub-tool; with 鍊金術師 in the sentence it is the alchemist's.
+        let sentenceJobs = Set(jobs)
+        for names in partialCategories {
+            let usable = names.filter { vocabulary.isCategory(named: $0, usableByAnyOf: sentenceJobs) }
+            categories += usable.isEmpty ? names : usable
+        }
+
+        func list(_ values: [String]) -> [String]? {
+            var seen: Set<String> = []
+            let unique = values.filter { seen.insert($0).inserted }
+            return unique.isEmpty ? nil : unique
+        }
+        func label(_ value: Bool?, _ labels: ItemQueryVocabulary.FlagLabels) -> String? {
+            value.map { $0 ? labels.yes : labels.no }
+        }
+
+        return ItemQueryFields(
+            usage: usage,
+            keyword: keyword,
+            categories: list(categories),
+            slots: list(slots),
+            jobs: list(jobs),
+            equipLevelMin: equipLevel?.min,
+            equipLevelMax: equipLevel?.max,
+            itemLevelMin: itemLevel?.min,
+            itemLevelMax: itemLevel?.max,
+            rarities: list(rarities),
+            hq: label(hq, ItemQueryVocabulary.hqLabels),
+            tradable: label(tradable, ItemQueryVocabulary.tradableLabels)
+        )
     }
 
     // MARK: - Matching
