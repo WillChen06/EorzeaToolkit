@@ -212,7 +212,8 @@ struct ItemQueryVocabulary: Sendable {
     }
 
     /// Whether some item is called exactly this. 紅蓮盾 is an item even though both its parts
-    /// are conditions.
+    /// are conditions. Names are compared as written: normalising every item name would cost more
+    /// than the rare full-width name is worth.
     func isItemName(_ name: String) -> Bool {
         itemNames.contains(Self.trimmed(name))
     }

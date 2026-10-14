@@ -279,6 +279,15 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(search("找騎士盾", keyword: "騎士盾"), ItemQueryFields(usage: "搜尋", keyword: "騎士盾"))
     }
 
+    /// 毒蛇 is an item, but also the viper's nickname; a single condition stays a condition.
+    func testAnItemNamedLikeOneConditionIsTheCondition() {
+        let fields = search("毒蛇能穿的頭部裝備", keyword: "毒蛇")
+
+        XCTAssertNil(fields.keyword)
+        XCTAssertEqual(fields.jobs, ["VPR"])
+        XCTAssertNil(search("天球儀", keyword: "天球儀").keyword)
+    }
+
     func testConditionsInsideAnItemNameAreNotConditions() {
         let fields = search("找守護者之盾，90級以上", keyword: "守護者之盾")
 
