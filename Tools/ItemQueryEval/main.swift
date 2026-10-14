@@ -89,7 +89,13 @@ for (index, evalCase) in loaded.cases.enumerated() {
         let fields = parser.fields(for: evalCase.query, answer: answer)
         result = .parsed(vocabulary.resolve(fields))
     } catch {
-        let message = String(describing: error)
+        // The type and domain tell a safety block that is not a guardrailViolation apart from a
+        // real failure, which the description alone does not.
+        let nsError = error as NSError
+        var message = "\(String(reflecting: type(of: error)))（\(nsError.domain) \(nsError.code)）：\(error)"
+        if let underlying = nsError.userInfo[NSUnderlyingErrorKey] as? NSError {
+            message += "（底層錯誤：\(underlying.domain) \(underlying.code)）"
+        }
         result = ItemQueryParser.isGuardrailViolation(error) ? .blocked(message) : .failed(message)
     }
 
