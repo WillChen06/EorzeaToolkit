@@ -18,7 +18,7 @@ xcodebuild build \
   -project EorzeaToolkit.xcodeproj \
   -scheme ItemQueryEval \
   -configuration Debug \
-  -destination 'platform=macOS' \
+  -destination 'platform=macOS,arch=arm64' \
   -derivedDataPath DerivedData \
   -disableAutomaticPackageResolution \
   -quiet \
