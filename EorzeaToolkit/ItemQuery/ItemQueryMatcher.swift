@@ -49,13 +49,32 @@ struct ItemQueryMatcher: Sendable {
             names.append(Name(text: Array(text), condition: condition))
         }
 
+        // 採掘工具（主工具） also matches without its brackets, and either part alone (採掘工具,
+        // 主工具) stands for every category that has it, along with a category of that very
+        // name: 魔導書 is also 魔導書（學者專用）.
+        var unbracketedNames: [(text: String, category: String)] = []
+        var partialNames: [String] = []
+        var categoriesByPartialName: [String: [String]] = [:]
+        for category in vocabulary.categories {
+            guard let parts = Self.bracketedParts(of: category.name) else {
+                continue
+            }
+            unbracketedNames.append((parts.outer + parts.inner, category.name))
+            for part in [parts.outer, parts.inner] {
+                if categoriesByPartialName[part] == nil {
+                    partialNames.append(part)
+                }
+                categoriesByPartialName[part, default: []].append(category.name)
+            }
+        }
+
         // When two lists share a name, the earlier list wins: 戒指 is a body part before it is a
         // category.
         for slot in vocabulary.slots {
             add(slot.name, .slot(slot.name))
         }
         for category in vocabulary.categories {
-            add(category.name, .categories([category.name]))
+            add(category.name, .categories([category.name] + (categoriesByPartialName[category.name] ?? [])))
         }
         for job in vocabulary.jobs {
             for name in [job.abbreviation] + [job.officialName].compactMap({ $0 }) + job.nicknames {
@@ -68,21 +87,8 @@ struct ItemQueryMatcher: Sendable {
             add(rarity.colour + "裝", .rarity(rarity.name))
         }
 
-        // 採掘工具（主工具） also matches without its brackets, and either of its parts alone
-        // (採掘工具, 主工具) stands for every category that has that part.
-        var partialNames: [String] = []
-        var categoriesByPartialName: [String: [String]] = [:]
-        for category in vocabulary.categories {
-            guard let parts = Self.bracketedParts(of: category.name) else {
-                continue
-            }
-            add(parts.outer + parts.inner, .categories([category.name]))
-            for part in [parts.outer, parts.inner] {
-                if categoriesByPartialName[part] == nil {
-                    partialNames.append(part)
-                }
-                categoriesByPartialName[part, default: []].append(category.name)
-            }
+        for name in unbracketedNames {
+            add(name.text, .categories([name.category]))
         }
         for part in partialNames {
             add(part, .categories(categoriesByPartialName[part] ?? []))

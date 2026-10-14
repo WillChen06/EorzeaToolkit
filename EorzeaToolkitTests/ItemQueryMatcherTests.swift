@@ -81,7 +81,8 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(subTools.count, 11)
         XCTAssertTrue(subTools.allSatisfy { $0.hasSuffix("（副工具）") }, "\(subTools)")
 
-        XCTAssertEqual(conditions("魔導書"), [.categories(["魔導書"])], "a category's own name is not a partial name")
+        XCTAssertEqual(conditions("魔導書"), [.categories(["魔導書", "魔導書（學者專用）"])])
+        XCTAssertEqual(conditions("雜貨"), [.categories(["雜貨", "雜貨（季節活動）"])])
     }
 
     func testAPartialCategoryNameNarrowsToTheSentencesJobs() {
@@ -90,6 +91,8 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(alchemist.jobs, ["ALC"])
 
         XCTAssertEqual(search("採掘師的採掘工具").categories, ["採掘工具（主工具）", "採掘工具（副工具）"])
+        XCTAssertEqual(search("學者的魔導書").categories, ["魔導書", "魔導書（學者專用）"])
+        XCTAssertEqual(search("召喚的魔導書").categories, ["魔導書"])
         XCTAssertEqual(search("副工具").categories?.count, 11, "no job, no narrowing")
         XCTAssertEqual(search("白魔的副工具").categories?.count, 11, "a job that uses none keeps them all")
     }
