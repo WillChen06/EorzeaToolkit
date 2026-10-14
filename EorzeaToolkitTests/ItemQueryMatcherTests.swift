@@ -114,7 +114,7 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(conditions("xlv80"), [])
     }
 
-    // MARK: - Rarities (AC-20)
+    // MARK: - Rarities, HQ and tradability (AC-20)
 
     func testRaritiesByNameOrColour() {
         XCTAssertEqual(conditions("紫色"), [.rarity("武勳")])
@@ -124,5 +124,31 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(conditions("白色"), [.rarity("一般")])
         XCTAssertEqual(conditions("貴重"), [.rarity("貴重")])
         XCTAssertEqual(conditions("白魔"), [.job("WHM")], "a colour alone is no rarity")
+    }
+
+    func testHQIsPositiveUnlessNegated() {
+        XCTAssertEqual(conditions("要可以HQ的"), [.hq(true)])
+        XCTAssertEqual(conditions("可HQ"), [.hq(true)])
+        XCTAssertEqual(conditions("不能HQ"), [.hq(false)])
+        XCTAssertEqual(conditions("不可以 hq"), [.hq(false)])
+        XCTAssertEqual(conditions("無法HQ"), [.hq(false)])
+        XCTAssertEqual(conditions("HQs"), [], "HQ must stand alone")
+    }
+
+    func testTradabilityIsPositiveUnlessNegated() {
+        XCTAssertEqual(conditions("可以交易"), [.tradable(true)])
+        XCTAssertEqual(conditions("能在市場板賣"), [.tradable(true)])
+        XCTAssertEqual(conditions("不能交易的那種"), [.tradable(false)])
+        XCTAssertEqual(conditions("不能在市場板賣"), [.tradable(false)])
+        XCTAssertEqual(conditions("不能買賣"), [.tradable(false)])
+        XCTAssertEqual(conditions("禁止交易"), [.tradable(false)])
+    }
+
+    /// A negation belongs to its own clause and reaches four characters back.
+    func testNegationsStayInTheirClause() {
+        XCTAssertEqual(conditions("可以HQ又不能交易"), [.hq(true), .tradable(false)])
+        XCTAssertEqual(conditions("不能HQ但可以交易"), [.hq(false), .tradable(true)])
+        XCTAssertEqual(conditions("不要藍色的，可以交易"), [.rarity("貴重"), .tradable(true)])
+        XCTAssertEqual(conditions("不是說好的可以交易"), [.tradable(true)])
     }
 }

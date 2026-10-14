@@ -1,7 +1,8 @@
 import Foundation
 
 /// Finds the conditions a sentence states by matching names and number patterns: categories,
-/// body parts, jobs, rarities and levels. Only the usage and the keyword are left to the model.
+/// body parts, jobs, rarities, levels, HQ and tradability. Only the usage and the keyword are
+/// left to the model.
 ///
 /// In the first two evaluation runs the model picked the wrong names even when a sentence
 /// spelled them out. Matching gives the same answer every time and can be unit tested. The
@@ -18,6 +19,8 @@ struct ItemQueryMatcher: Sendable {
         case rarity(String)
         case equipLevel(min: Int?, max: Int?)
         case itemLevel(min: Int?, max: Int?)
+        case hq(Bool)
+        case tradable(Bool)
     }
 
     /// A condition and where it was found, in characters of the normalised sentence.
@@ -76,7 +79,7 @@ struct ItemQueryMatcher: Sendable {
     }
 
     private func matches(in text: [Character]) -> [Match] {
-        let candidates = nameMatches(in: text) + Self.levelMatches(in: text)
+        let candidates = nameMatches(in: text) + Self.levelMatches(in: text) + Self.flagMatches(in: text)
         let longestFirst = candidates.enumerated().sorted { lhs, rhs in
             let (left, right) = (lhs.element.range, rhs.element.range)
             if left.count != right.count {
@@ -222,6 +225,45 @@ struct ItemQueryMatcher: Sendable {
             return (marker.kind, start)
         }
         return nil
+    }
+
+    // MARK: - HQ and tradability
+
+    private static let hqWord = Array("hq")
+    private static let tradableWords = ["交易", "買賣", "市場板"].map { Array($0) }
+    private static let negations: Set<Character> = ["不", "無", "沒", "非", "禁"]
+    /// Punctuation (after normalisation) and conjunctions that end a clause, so 「不要藍色的，
+    /// 可以交易」 is not read as 「不…交易」.
+    private static let clauseBreaks: Set<Character> = [",", "、", "､", "。", "｡", ";", "!", "?", "又", "但"]
+    /// How far back a negation still applies, in characters: 「不可以HQ」 reaches four.
+    private static let negationReach = 4
+
+    /// 「HQ」 is a condition on HQ and 「交易」「買賣」「市場板」 one on tradability, negative when
+    /// a negation comes shortly before it in the same clause.
+    private static func flagMatches(in text: [Character]) -> [Match] {
+        var matches: [Match] = []
+        for range in occurrences(of: hqWord, in: text) where standsAlone(range, in: text) {
+            matches.append(Match(range: range, condition: .hq(!isNegated(before: range.lowerBound, in: text))))
+        }
+        for word in tradableWords {
+            for range in occurrences(of: word, in: text) {
+                matches.append(Match(range: range, condition: .tradable(!isNegated(before: range.lowerBound, in: text))))
+            }
+        }
+        return matches
+    }
+
+    private static func isNegated(before index: Int, in text: [Character]) -> Bool {
+        var position = index - 1
+        var reach = 0
+        while position >= 0, reach < negationReach, !clauseBreaks.contains(text[position]) {
+            if negations.contains(text[position]) {
+                return true
+            }
+            position -= 1
+            reach += 1
+        }
+        return false
     }
 
     // MARK: - Text
