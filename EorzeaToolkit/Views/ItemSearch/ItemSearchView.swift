@@ -339,9 +339,10 @@ private struct ItemFilterSheet: View {
 
                     Slider(
                         value: minimumEquipLevelBinding,
-                        in: Double(ItemFilter.defaultEquipLevelRange.lowerBound)...Double(viewModel.filter.equipLevelRange.upperBound),
+                        in: Double(equipLevelSliders.minimumRange.lowerBound)...Double(equipLevelSliders.minimumRange.upperBound),
                         step: 1
                     )
+                    .disabled(equipLevelSliders.isMinimumDisabled)
                 }
 
                 VStack(alignment: .leading, spacing: 6) {
@@ -351,9 +352,10 @@ private struct ItemFilterSheet: View {
 
                     Slider(
                         value: maximumEquipLevelBinding,
-                        in: Double(viewModel.filter.equipLevelRange.lowerBound)...Double(ItemFilter.defaultEquipLevelRange.upperBound),
+                        in: Double(equipLevelSliders.maximumRange.lowerBound)...Double(equipLevelSliders.maximumRange.upperBound),
                         step: 1
                     )
+                    .disabled(equipLevelSliders.isMaximumDisabled)
                 }
             }
             .padding(.vertical, 4)
@@ -457,6 +459,10 @@ private struct ItemFilterSheet: View {
         } set: { newValue in
             viewModel.updateMaximumItemLevel(Int(newValue.rounded()))
         }
+    }
+
+    private var equipLevelSliders: LevelRangeSliders {
+        LevelRangeSliders(range: viewModel.filter.equipLevelRange, bounds: ItemFilter.defaultEquipLevelRange)
     }
 
     private var minimumEquipLevelBinding: Binding<Double> {
