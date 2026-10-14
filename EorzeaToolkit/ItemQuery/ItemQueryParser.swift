@@ -106,7 +106,7 @@ struct ItemQueryParser: Sendable {
             to: sentence,
             schema: schema,
             includeSchemaInPrompt: true,
-            options: GenerationOptions(sampling: .greedy)
+            options: GenerationOptions(samplingMode: .greedy)
         )
         return try JSONDecoder().decode(ItemQueryFields.self, from: Data(response.content.jsonString.utf8))
     }
