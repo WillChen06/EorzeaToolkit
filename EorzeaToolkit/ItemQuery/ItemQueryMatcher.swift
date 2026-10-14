@@ -173,7 +173,8 @@ struct ItemQueryMatcher: Sendable {
         var hq: Bool?
         var tradable: Bool?
 
-        // The first level of each kind and the first HQ and tradability conditions count.
+        // The first level of each kind counts. HQ and tradability are negative when any
+        // mention is: 「市場板上不能買賣」 is untradable.
         for match in matches {
             switch match.condition {
             case .categories(let names) where names.count == 1:
@@ -191,9 +192,9 @@ struct ItemQueryMatcher: Sendable {
             case .itemLevel(let lower, let upper):
                 itemLevel = itemLevel ?? (lower, upper)
             case .hq(let value):
-                hq = hq ?? value
+                hq = (hq ?? true) && value
             case .tradable(let value):
-                tradable = tradable ?? value
+                tradable = (tradable ?? true) && value
             }
         }
 

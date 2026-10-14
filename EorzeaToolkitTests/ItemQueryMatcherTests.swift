@@ -228,6 +228,13 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(search("不能HQ，不能交易").tradable, "不可交易")
     }
 
+    func testANegatedMentionDecides() {
+        XCTAssertEqual(conditions("市場板上不能買賣"), [.tradable(true), .tradable(false)])
+        XCTAssertEqual(search("市場板上不能買賣").tradable, "不可交易")
+        XCTAssertEqual(search("HQ的，不能HQ").hq, "不可HQ")
+        XCTAssertEqual(search("可以在市場板買賣").tradable, "可交易")
+    }
+
     // MARK: - Keywords (AC-18)
 
     func testAKeywordNotInTheSentenceIsDropped() {
