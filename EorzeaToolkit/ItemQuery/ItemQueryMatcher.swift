@@ -132,8 +132,11 @@ struct ItemQueryMatcher: Sendable {
     /// more than one condition (紅蓮盾, but not 毒蛇); otherwise the conditions inside it are part
     /// of an item's name (the 盾 in 守護者之盾) and are dropped instead.
     private func keyword(_ keyword: String?, in text: [Character], dropping matches: inout [Match]) -> String? {
-        guard let keyword = keyword?.trimmingCharacters(in: .whitespacesAndNewlines),
-              let range = Self.occurrences(of: Array(Self.normalized(keyword)), in: text).first else {
+        guard let keyword = keyword?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+            return nil
+        }
+        let normalizedKeyword = Array(Self.normalized(keyword))
+        guard let range = Self.occurrences(of: normalizedKeyword, in: text).first else {
             return nil
         }
 
@@ -154,8 +157,10 @@ struct ItemQueryMatcher: Sendable {
         let namesAnItem = segments.contains { segment in
             !Self.connectingWords.reduce(segment) { $0.replacingOccurrences(of: $1, with: "") }.isEmpty
         }
-        let isOneCondition = matches.contains { $0.range == range }
-        guard namesAnItem || (!isOneCondition && vocabulary.isItemName(keyword)) else {
+        // Compared with the names, not the matches: in 「毒蛇劍士」 the keyword 毒蛇 is no match of
+        // its own, yet it is still the viper's nickname.
+        let isOneConditionName = names.contains { $0.text == normalizedKeyword }
+        guard namesAnItem || (!isOneConditionName && vocabulary.isItemName(keyword)) else {
             return nil
         }
 

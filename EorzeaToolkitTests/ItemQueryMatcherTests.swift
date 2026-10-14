@@ -288,6 +288,10 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertNil(fields.keyword)
         XCTAssertEqual(fields.jobs, ["VPR"])
         XCTAssertNil(search("天球儀", keyword: "天球儀").keyword)
+
+        let insideALongerName = search("毒蛇劍士的頭部裝備", keyword: "毒蛇")
+        XCTAssertNil(insideALongerName.keyword)
+        XCTAssertEqual(insideALongerName.jobs, ["VPR"])
     }
 
     func testConditionsInsideAnItemNameAreNotConditions() {
