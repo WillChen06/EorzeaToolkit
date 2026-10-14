@@ -75,14 +75,19 @@ do {
 
 var outcomes: [EvalOutcome] = []
 let clock = ContinuousClock()
+let answerEncoder = JSONEncoder()
+answerEncoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
 for (index, evalCase) in loaded.cases.enumerated() {
     printError("[\(index + 1)/\(loaded.cases.count)] \(evalCase.id)")
 
     let start = clock.now
     let result: EvalOutcome.Result
+    var answerJSON: String?
     do {
-        let query = try await parser.query(for: evalCase.query)
-        result = .parsed(query)
+        let answer = try await parser.answer(for: evalCase.query)
+        answerJSON = (try? answerEncoder.encode(answer)).map { String(decoding: $0, as: UTF8.self) }
+        let fields = ItemQueryEvidence.fields(from: answer, sentence: evalCase.query)
+        result = .parsed(vocabulary.resolve(fields))
     } catch {
         let message = String(describing: error)
         result = ItemQueryParser.isGuardrailViolation(error) ? .blocked(message) : .failed(message)
@@ -92,6 +97,7 @@ for (index, evalCase) in loaded.cases.enumerated() {
         evalCase: evalCase,
         expected: vocabulary.resolve(evalCase.expected),
         result: result,
+        answer: answerJSON,
         seconds: start.duration(to: clock.now).seconds
     ))
 }

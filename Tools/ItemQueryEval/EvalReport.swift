@@ -85,6 +85,9 @@ enum EvalReport {
                 let actualText = field.text(actual, vocabulary: vocabulary)
                 lines.append("  \(field.title)：預期 \(expectedText)｜實際 \(actualText)")
             }
+            if let answer = outcome.answer {
+                lines.append("  模型回答：\(answer)")
+            }
         }
 
         return lines.joined(separator: "\n")
