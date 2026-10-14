@@ -56,6 +56,10 @@ struct ItemQueryVocabulary: Sendable {
     /// Base equip slots that are not body parts. Soul crystals are searched by category.
     static let excludedSlotNames: Set<String> = ["靈魂水晶"]
 
+    /// Body parts that hold weapons, tools and shields. Their categories stay categories, since
+    /// a category such as 雙手劍 says more than 主手 does.
+    static let handSlotNames: Set<String> = ["主手", "副手"]
+
     /// In id order.
     let categories: [Category]
     /// In the base slot's id order.
@@ -65,6 +69,8 @@ struct ItemQueryVocabulary: Sendable {
 
     private let categoryIdsByName: [String: [Int]]
     private let slotIdsByName: [String: [Int]]
+    /// Armour and accessory categories (頭部防具, 耳飾 …) and the body part their items go on.
+    private let bodyPartByCategoryId: [Int: String]
     private let jobAbbreviationsByName: [String: String]
     private let rarityIdsByName: [String: Int]
 
@@ -104,6 +110,33 @@ struct ItemQueryVocabulary: Sendable {
             return Slot(name: baseName, ids: ids)
         }
 
+        // A category stands for a body part when every equippable item in it goes on that one
+        // part, and the part is not a hand.
+        var bodyPartNameBySlotId: [Int: String] = [:]
+        for slot in slots {
+            for id in slot.ids where bodyPartNameBySlotId[id] == nil {
+                bodyPartNameBySlotId[id] = slot.name
+            }
+        }
+        var bodyPartsByCategoryId: [Int: Set<String>] = [:]
+        var categoriesOffBodyParts: Set<Int> = []
+        for item in data.items where item.equipSlot > 0 {
+            if let part = bodyPartNameBySlotId[item.equipSlot] {
+                bodyPartsByCategoryId[item.uiCategoryId, default: []].insert(part)
+            } else {
+                categoriesOffBodyParts.insert(item.uiCategoryId)
+            }
+        }
+        var bodyPartByCategoryId: [Int: String] = [:]
+        for (categoryId, parts) in bodyPartsByCategoryId where parts.count == 1 {
+            guard let part = parts.first,
+                  !Self.handSlotNames.contains(part),
+                  !categoriesOffBodyParts.contains(categoryId) else {
+                continue
+            }
+            bodyPartByCategoryId[categoryId] = part
+        }
+
         var officialNames: [String: String] = [:]
         for category in data.classjobCategories.sorted(by: { $0.id < $1.id }) where category.jobs.count == 1 {
             let name = Self.trimmed(category.nameTw)
@@ -140,6 +173,7 @@ struct ItemQueryVocabulary: Sendable {
         self.jobs = jobs
         self.categoryIdsByName = categoryIdsByName
         self.slotIdsByName = Dictionary(slots.map { ($0.name, $0.ids) }, uniquingKeysWith: { first, _ in first })
+        self.bodyPartByCategoryId = bodyPartByCategoryId
         self.jobAbbreviationsByName = jobAbbreviationsByName
         self.rarityIdsByName = rarityIdsByName
     }
@@ -170,14 +204,19 @@ struct ItemQueryVocabulary: Sendable {
 
     // MARK: - Resolution
 
-    /// Resolves names to ids. Unknown names are dropped, a missing level bound takes the bound
-    /// of the range, and a range covering every level is no condition at all.
+    /// Resolves names to ids. Unknown names are dropped, armour and accessory categories become
+    /// their body part, a missing level bound takes the bound of the range, and a range covering
+    /// every level is no condition at all.
     func resolve(_ fields: ItemQueryFields) -> ItemQuery {
-        ItemQuery(
+        let namedCategoryIds = categoryIds(named: fields.categories ?? [])
+        let bodyPartCategoryIds = namedCategoryIds.filter { bodyPartByCategoryId[$0] != nil }
+        let bodyPartNames = bodyPartCategoryIds.sorted().compactMap { bodyPartByCategoryId[$0] }
+
+        return ItemQuery(
             usage: fields.usage.flatMap { ItemQuery.Usage(label: Self.trimmed($0)) } ?? .search,
             keyword: Self.keyword(fields.keyword),
-            categoryIds: categoryIds(named: fields.categories ?? []),
-            equipSlotIds: equipSlotIds(named: fields.slots ?? []),
+            categoryIds: namedCategoryIds.subtracting(bodyPartCategoryIds),
+            equipSlotIds: equipSlotIds(named: (fields.slots ?? []) + bodyPartNames),
             jobs: jobAbbreviations(named: fields.jobs ?? []),
             equipLevelRange: Self.range(
                 lower: fields.equipLevelMin,
