@@ -294,9 +294,10 @@ private struct ItemFilterSheet: View {
 
                     Slider(
                         value: minimumItemLevelBinding,
-                        in: Double(ItemFilter.defaultIlvlRange.lowerBound)...Double(viewModel.filter.ilvlRange.upperBound),
+                        in: Double(itemLevelSliders.minimumRange.lowerBound)...Double(itemLevelSliders.minimumRange.upperBound),
                         step: 1
                     )
+                    .disabled(itemLevelSliders.isMinimumDisabled)
                 }
 
                 VStack(alignment: .leading, spacing: 6) {
@@ -306,9 +307,10 @@ private struct ItemFilterSheet: View {
 
                     Slider(
                         value: maximumItemLevelBinding,
-                        in: Double(viewModel.filter.ilvlRange.lowerBound)...Double(ItemFilter.defaultIlvlRange.upperBound),
+                        in: Double(itemLevelSliders.maximumRange.lowerBound)...Double(itemLevelSliders.maximumRange.upperBound),
                         step: 1
                     )
+                    .disabled(itemLevelSliders.isMaximumDisabled)
                 }
             }
             .padding(.vertical, 4)
@@ -443,6 +445,10 @@ private struct ItemFilterSheet: View {
             }
             .appThemedListRow()
         }
+    }
+
+    private var itemLevelSliders: LevelRangeSliders {
+        LevelRangeSliders(range: viewModel.filter.ilvlRange, bounds: ItemFilter.defaultIlvlRange)
     }
 
     private var minimumItemLevelBinding: Binding<Double> {

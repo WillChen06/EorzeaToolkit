@@ -8,6 +8,10 @@ final class LevelRangeSlidersTests: XCTestCase {
         assertEverySliderRangeHasWidth(bounds: ItemFilter.defaultEquipLevelRange)
     }
 
+    func testNoItemLevelSliderRangeIsEmpty() {
+        assertEverySliderRangeHasWidth(bounds: ItemFilter.defaultIlvlRange)
+    }
+
     func testEachSliderStopsAtTheOtherEnd() {
         let sliders = LevelRangeSliders(range: 80...90, bounds: 1...100)
 
