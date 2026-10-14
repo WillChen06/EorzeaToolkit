@@ -469,7 +469,8 @@ final class ItemSearchViewModel {
         }
     }
 
-    nonisolated private static func searchItems(
+    /// Internal rather than private so tests can search without loading the bundled data.
+    nonisolated static func searchItems(
         _ items: [Item],
         query: String,
         filter: ItemFilter,
@@ -600,7 +601,7 @@ private struct ItemSearchMatch: Sendable {
     let rank: Int
 }
 
-private struct ItemSearchResult: Sendable {
+struct ItemSearchResult: Sendable {
     let items: [Item]
     let totalCount: Int
 }
