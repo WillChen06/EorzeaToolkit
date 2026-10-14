@@ -238,6 +238,44 @@ final class ItemQueryVocabularyTests: XCTestCase {
         XCTAssertEqual(mixedQuery.categoryIds, [501], "items on two body parts keep the category")
     }
 
+    // MARK: - Jobs that use a category
+
+    func testToolCategoriesBelongToTheirJob() throws {
+        let vocabulary = try bundledVocabulary()
+
+        XCTAssertTrue(vocabulary.isCategory(named: "鍊金工具（副工具）", usableByAnyOf: ["ALC"]))
+        XCTAssertTrue(vocabulary.isCategory(named: "鍊金工具（副工具）", usableByAnyOf: ["CRP", "ALC"]))
+        XCTAssertFalse(vocabulary.isCategory(named: "鍊金工具（副工具）", usableByAnyOf: ["CRP", "WHM"]))
+        XCTAssertTrue(vocabulary.isCategory(named: "盾", usableByAnyOf: ["PLD"]))
+        XCTAssertFalse(vocabulary.isCategory(named: "不存在的分類", usableByAnyOf: ["PLD"]))
+    }
+
+    /// Only the filter's jobs count: a category whose items only base classes use belongs to no
+    /// job the sentence can name.
+    func testCategoryJobsComeFromTheItems() {
+        let data = ItemDataResponse(
+            items: [
+                Item(id: 1, nameTw: "道具1", iconId: 0, iconPath: "", ilvl: 1, rarity: 1, canBeHq: false,
+                     isUntradable: false, uiCategoryId: 500, classjobCategoryId: 10),
+                Item(id: 2, nameTw: "道具2", iconId: 0, iconPath: "", ilvl: 1, rarity: 1, canBeHq: false,
+                     isUntradable: false, uiCategoryId: 501, classjobCategoryId: 11)
+            ],
+            uiCategories: [
+                UICategory(id: 500, nameTw: "測試工具", orderMinor: 0, orderMajor: 1),
+                UICategory(id: 501, nameTw: "測試武器", orderMinor: 0, orderMajor: 1)
+            ],
+            classjobCategories: [
+                ClassJobCategory(id: 10, nameTw: "鍊金術師", jobs: ["ALC"]),
+                ClassJobCategory(id: 11, nameTw: "幻術士", jobs: ["CNJ"])
+            ]
+        )
+        let vocabulary = ItemQueryVocabulary(data: data)
+
+        XCTAssertTrue(vocabulary.isCategory(named: "測試工具", usableByAnyOf: ["ALC"]))
+        XCTAssertFalse(vocabulary.isCategory(named: "測試工具", usableByAnyOf: ["CUL"]))
+        XCTAssertFalse(vocabulary.isCategory(named: "測試武器", usableByAnyOf: ["CNJ"]))
+    }
+
     // MARK: - Keywords (AC-18)
 
     /// The first run put 「頭部」 and 「暗騎」 in the keyword; as a name filter they would hide

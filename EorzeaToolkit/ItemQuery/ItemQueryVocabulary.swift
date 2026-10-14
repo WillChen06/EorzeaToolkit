@@ -71,6 +71,8 @@ struct ItemQueryVocabulary: Sendable {
     private let slotIdsByName: [String: [Int]]
     /// Armour and accessory categories (頭部防具, 耳飾 …) and the body part their items go on.
     private let bodyPartByCategoryId: [Int: String]
+    /// The filter jobs that can use at least one item in each category.
+    private let jobsByCategoryId: [Int: Set<String>]
     private let jobAbbreviationsByName: [String: String]
     private let rarityIdsByName: [String: Int]
 
@@ -137,6 +139,19 @@ struct ItemQueryVocabulary: Sendable {
             bodyPartByCategoryId[categoryId] = part
         }
 
+        let filterJobs = Set(jobOptions.map(\.abbreviation))
+        var filterJobsByClassJobCategoryId: [Int: Set<String>] = [:]
+        for category in data.classjobCategories {
+            filterJobsByClassJobCategoryId[category.id] = filterJobs.intersection(category.jobs)
+        }
+        var jobsByCategoryId: [Int: Set<String>] = [:]
+        for item in data.items {
+            guard let jobs = filterJobsByClassJobCategoryId[item.classjobCategoryId], !jobs.isEmpty else {
+                continue
+            }
+            jobsByCategoryId[item.uiCategoryId, default: []].formUnion(jobs)
+        }
+
         var officialNames: [String: String] = [:]
         for category in data.classjobCategories.sorted(by: { $0.id < $1.id }) where category.jobs.count == 1 {
             let name = Self.trimmed(category.nameTw)
@@ -174,6 +189,7 @@ struct ItemQueryVocabulary: Sendable {
         self.categoryIdsByName = categoryIdsByName
         self.slotIdsByName = Dictionary(slots.map { ($0.name, $0.ids) }, uniquingKeysWith: { first, _ in first })
         self.bodyPartByCategoryId = bodyPartByCategoryId
+        self.jobsByCategoryId = jobsByCategoryId
         self.jobAbbreviationsByName = jobAbbreviationsByName
         self.rarityIdsByName = rarityIdsByName
     }
@@ -200,6 +216,14 @@ struct ItemQueryVocabulary: Sendable {
 
     func rarityIds(named names: [String]) -> Set<Int> {
         Set(names.compactMap { rarityIdsByName[Self.trimmed($0)] })
+    }
+
+    /// Whether one of the jobs can use an item in the named category, judged from the items'
+    /// job categories. 鍊金工具（副工具） is usable by ALC and no other job.
+    func isCategory(named name: String, usableByAnyOf jobs: Set<String>) -> Bool {
+        (categoryIdsByName[Self.trimmed(name)] ?? []).contains { id in
+            !(jobsByCategoryId[id] ?? []).isDisjoint(with: jobs)
+        }
     }
 
     // MARK: - Resolution
