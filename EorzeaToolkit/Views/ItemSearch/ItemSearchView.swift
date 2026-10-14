@@ -315,6 +315,51 @@ private struct ItemFilterSheet: View {
         }
         .appThemedListRow()
 
+        Section(L10n.ItemSearch.Filter.equipLevel) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("\(viewModel.filter.equipLevelRange.lowerBound)")
+                        .font(.headline.monospacedDigit())
+
+                    Spacer()
+
+                    Text("\(viewModel.filter.equipLevelRange.upperBound)")
+                        .font(.headline.monospacedDigit())
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(Text(L10n.ItemSearch.Filter.equipLevelRange(
+                    lowerBound: viewModel.filter.equipLevelRange.lowerBound,
+                    upperBound: viewModel.filter.equipLevelRange.upperBound
+                )))
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(L10n.ItemSearch.Filter.equipLevelMinimum)
+                        .font(.caption)
+                        .foregroundStyle(AppTheme.mutedInk)
+
+                    Slider(
+                        value: minimumEquipLevelBinding,
+                        in: Double(ItemFilter.defaultEquipLevelRange.lowerBound)...Double(viewModel.filter.equipLevelRange.upperBound),
+                        step: 1
+                    )
+                }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(L10n.ItemSearch.Filter.equipLevelMaximum)
+                        .font(.caption)
+                        .foregroundStyle(AppTheme.mutedInk)
+
+                    Slider(
+                        value: maximumEquipLevelBinding,
+                        in: Double(viewModel.filter.equipLevelRange.lowerBound)...Double(ItemFilter.defaultEquipLevelRange.upperBound),
+                        step: 1
+                    )
+                }
+            }
+            .padding(.vertical, 4)
+        }
+        .appThemedListRow()
+
         Section(L10n.ItemSearch.Filter.rarity) {
             LazyVGrid(columns: optionColumns, alignment: .leading, spacing: 8) {
                 ForEach(ItemFilter.defaultRarities.sorted(), id: \.self) { rarity in
@@ -411,6 +456,22 @@ private struct ItemFilterSheet: View {
             Double(viewModel.filter.ilvlRange.upperBound)
         } set: { newValue in
             viewModel.updateMaximumItemLevel(Int(newValue.rounded()))
+        }
+    }
+
+    private var minimumEquipLevelBinding: Binding<Double> {
+        Binding {
+            Double(viewModel.filter.equipLevelRange.lowerBound)
+        } set: { newValue in
+            viewModel.updateMinimumEquipLevel(Int(newValue.rounded()))
+        }
+    }
+
+    private var maximumEquipLevelBinding: Binding<Double> {
+        Binding {
+            Double(viewModel.filter.equipLevelRange.upperBound)
+        } set: { newValue in
+            viewModel.updateMaximumEquipLevel(Int(newValue.rounded()))
         }
     }
 

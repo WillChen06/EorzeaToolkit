@@ -110,6 +110,9 @@ enum L10n {
             static let itemLevel: LocalizedStringKey = "itemSearch.filter.itemLevel.section"
             static let itemLevelMinimum: LocalizedStringKey = "itemSearch.filter.itemLevel.minimum"
             static let itemLevelMaximum: LocalizedStringKey = "itemSearch.filter.itemLevel.maximum"
+            static let equipLevel: LocalizedStringKey = "itemSearch.filter.equipLevel.section"
+            static let equipLevelMinimum: LocalizedStringKey = "itemSearch.filter.equipLevel.minimum"
+            static let equipLevelMaximum: LocalizedStringKey = "itemSearch.filter.equipLevel.maximum"
             static let rarity: LocalizedStringKey = "itemSearch.filter.rarity.section"
             static let hq: LocalizedStringKey = "itemSearch.filter.hq.section"
             static let hqAny: LocalizedStringKey = "itemSearch.filter.hq.any"
@@ -125,6 +128,10 @@ enum L10n {
 
             static func itemLevelRange(lowerBound: Int, upperBound: Int) -> LocalizedStringKey {
                 "itemSearch.filter.itemLevel.range \(lowerBound) \(upperBound)"
+            }
+
+            static func equipLevelRange(lowerBound: Int, upperBound: Int) -> LocalizedStringKey {
+                "itemSearch.filter.equipLevel.range \(lowerBound) \(upperBound)"
             }
 
             static func rarityAccessibility(_ name: String) -> LocalizedStringKey {
