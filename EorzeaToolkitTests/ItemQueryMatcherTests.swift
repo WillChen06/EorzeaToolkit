@@ -256,6 +256,15 @@ final class ItemQueryMatcherTests: XCTestCase {
         }
     }
 
+    /// Both parts of 紅蓮盾 and 騎士盾 are conditions, yet each is an item's full name.
+    func testAKeywordThatIsAnItemsNameIsKept() {
+        XCTAssertEqual(
+            matcher.fields(for: "紅蓮盾怎麼做", usage: "查配方", keyword: "紅蓮盾"),
+            ItemQueryFields(usage: "查配方", keyword: "紅蓮盾")
+        )
+        XCTAssertEqual(search("找騎士盾", keyword: "騎士盾"), ItemQueryFields(usage: "搜尋", keyword: "騎士盾"))
+    }
+
     func testConditionsInsideAnItemNameAreNotConditions() {
         let fields = search("找守護者之盾，90級以上", keyword: "守護者之盾")
 

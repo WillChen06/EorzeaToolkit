@@ -70,6 +70,7 @@ struct ItemQueryVocabulary: Sendable {
     private let jobsByCategoryId: [Int: Set<String>]
     private let jobAbbreviationsByName: [String: String]
     private let rarityIdsByName: [String: Int]
+    private let itemNames: Set<String>
 
     init(
         data: ItemDataResponse,
@@ -187,6 +188,7 @@ struct ItemQueryVocabulary: Sendable {
         self.jobsByCategoryId = jobsByCategoryId
         self.jobAbbreviationsByName = jobAbbreviationsByName
         self.rarityIdsByName = rarityIdsByName
+        self.itemNames = Set(data.items.map { Self.trimmed($0.nameTw) })
     }
 
     // MARK: - Lookup
@@ -207,6 +209,12 @@ struct ItemQueryVocabulary: Sendable {
 
     func jobAbbreviations(named names: [String]) -> Set<String> {
         Set(names.compactMap { jobAbbreviation(named: $0) })
+    }
+
+    /// Whether some item is called exactly this. 紅蓮盾 is an item even though both its parts
+    /// are conditions.
+    func isItemName(_ name: String) -> Bool {
+        itemNames.contains(Self.trimmed(name))
     }
 
     func rarityIds(named names: [String]) -> Set<Int> {

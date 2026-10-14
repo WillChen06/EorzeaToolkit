@@ -128,8 +128,9 @@ struct ItemQueryMatcher: Sendable {
     }
 
     /// The model's keyword if the sentence has it and it names an item. A keyword made of
-    /// conditions (頭部裝備, 繪靈法師的筆) is dropped; otherwise the conditions inside it are part
-    /// of an item's name (the 盾 in 守護者之盾) and are dropped instead.
+    /// conditions (頭部裝備, 繪靈法師的筆) is dropped unless an item has exactly that name
+    /// (紅蓮盾); otherwise the conditions inside it are part of an item's name (the 盾 in
+    /// 守護者之盾) and are dropped instead.
     private func keyword(_ keyword: String?, in text: [Character], dropping matches: inout [Match]) -> String? {
         guard let keyword = keyword?.trimmingCharacters(in: .whitespacesAndNewlines),
               let range = Self.occurrences(of: Array(Self.normalized(keyword)), in: text).first else {
@@ -153,7 +154,7 @@ struct ItemQueryMatcher: Sendable {
         let namesAnItem = segments.contains { segment in
             !Self.connectingWords.reduce(segment) { $0.replacingOccurrences(of: $1, with: "") }.isEmpty
         }
-        guard namesAnItem else {
+        guard namesAnItem || vocabulary.isItemName(keyword) else {
             return nil
         }
 

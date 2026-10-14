@@ -278,6 +278,15 @@ final class ItemQueryVocabularyTests: XCTestCase {
 
     // MARK: - Keywords
 
+    func testItemNamesAreMatchedWhole() throws {
+        let vocabulary = try bundledVocabulary()
+
+        XCTAssertTrue(vocabulary.isItemName("紅蓮盾"))
+        XCTAssertTrue(vocabulary.isItemName(" 騎士盾 "))
+        XCTAssertFalse(vocabulary.isItemName("紅蓮"))
+        XCTAssertFalse(vocabulary.isItemName("騎士"))
+    }
+
     /// Which keywords to keep is the matcher's call (AC-18); resolution only trims them.
     func testKeywordsAreTrimmed() throws {
         let vocabulary = try bundledVocabulary()
