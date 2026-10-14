@@ -52,6 +52,21 @@ final class ItemEquipLevelFilterTests: XCTestCase {
         XCTAssertEqual(Set(search(items, filter: ItemFilter()).map(\.id)), Set(items.map(\.id)))
     }
 
+    /// With another filter on, the full range still leaves the result to that filter alone.
+    func testTheFullRangeLeavesOtherFiltersAlone() {
+        let items = [
+            equipment(id: 1, level: 50, canBeHq: true),
+            notEquipment(id: 2, level: 1, canBeHq: true),
+            equipment(id: 3, level: 0, canBeHq: true),
+            equipment(id: 4, level: 50),
+            notEquipment(id: 5, level: 1)
+        ]
+        var filter = ItemFilter()
+        filter.hqState = .only
+
+        XCTAssertEqual(Set(search(items, filter: filter).map(\.id)), [1, 2, 3])
+    }
+
     // MARK: - Filter state
 
     func testANarrowedRangeCountsAsOneActiveFilter() {
@@ -165,15 +180,15 @@ final class ItemSearchViewModelEquipLevelTests: XCTestCase {
 }
 
 /// Equip slot 1 is the main hand; any slot other than 0 counts as equipment.
-private func equipment(id: Int? = nil, level: Int) -> Item {
-    item(id: id ?? level, equipSlot: 1, equipLevel: level)
+private func equipment(id: Int? = nil, level: Int, canBeHq: Bool = false) -> Item {
+    item(id: id ?? level, equipSlot: 1, equipLevel: level, canBeHq: canBeHq)
 }
 
-private func notEquipment(id: Int, level: Int) -> Item {
-    item(id: id, equipSlot: 0, equipLevel: level)
+private func notEquipment(id: Int, level: Int, canBeHq: Bool = false) -> Item {
+    item(id: id, equipSlot: 0, equipLevel: level, canBeHq: canBeHq)
 }
 
-private func item(id: Int, equipSlot: Int, equipLevel: Int) -> Item {
+private func item(id: Int, equipSlot: Int, equipLevel: Int, canBeHq: Bool) -> Item {
     Item(
         id: id,
         nameTw: "測試道具\(id)",
@@ -181,7 +196,7 @@ private func item(id: Int, equipSlot: Int, equipLevel: Int) -> Item {
         iconPath: "",
         ilvl: 1,
         rarity: 1,
-        canBeHq: false,
+        canBeHq: canBeHq,
         isUntradable: false,
         equipSlot: equipSlot,
         equipLevel: equipLevel
