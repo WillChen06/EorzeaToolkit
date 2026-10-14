@@ -1,4 +1,5 @@
 import Foundation
+import FoundationModels
 
 // Evaluates how well the on-device model turns a Traditional Chinese sentence into item search
 // conditions, using the same parsing code as the app. See prompts/item-query-eval.md.
@@ -55,6 +56,12 @@ if options.checkOnly {
 let status = ItemQueryModelStatus.current()
 guard status == .available else {
     printError(EvalReport.unavailableMessage(status))
+    if status == .traditionalChineseNotSupported {
+        // The check reads the model's language list; show it in case it reports Chinese in a
+        // form the check does not recognise.
+        let languages = SystemLanguageModel.default.supportedLanguages.map(\.maximalIdentifier).sorted()
+        printError("模型支援的語言：\(languages.joined(separator: ", "))")
+    }
     exit(1)
 }
 
