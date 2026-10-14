@@ -98,8 +98,12 @@ enum L10n {
             "itemSearch.results.status \(visibleCount) \(totalCount) \(hiddenCount)"
         }
 
-        static func itemLevel(_ itemLevel: Int) -> LocalizedStringKey {
-            "itemSearch.row.itemLevel \(itemLevel)"
+        /// 「Lv.100 · iLv 700」 for equipment, 「iLv 430」 for any other item.
+        static func levelText(for item: Item) -> String {
+            guard let equipLevel = item.equipmentLevel else {
+                return String(localized: "itemSearch.row.itemLevel \(item.ilvl)")
+            }
+            return String(localized: "itemSearch.row.equipAndItemLevel \(equipLevel) \(item.ilvl)")
         }
 
         enum Filter {

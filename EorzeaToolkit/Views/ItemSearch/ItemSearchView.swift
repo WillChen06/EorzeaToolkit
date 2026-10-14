@@ -664,7 +664,7 @@ private struct ItemSearchRow: View {
                     .font(.headline)
                     .foregroundStyle(AppTheme.ink)
 
-                Text(L10n.ItemSearch.itemLevel(item.ilvl))
+                Text(L10n.ItemSearch.levelText(for: item))
                     .font(.caption)
                     .foregroundStyle(AppTheme.mutedInk)
             }

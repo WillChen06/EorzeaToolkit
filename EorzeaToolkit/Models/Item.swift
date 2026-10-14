@@ -130,6 +130,12 @@ struct Item: Codable, Identifiable, Hashable, Sendable {
         nameTw
     }
 
+    /// The equip level of an item that can be equipped, or nil. Other items have a value in the
+    /// data too, but it is not an equip level: bait stores the level needed to use it.
+    var equipmentLevel: Int? {
+        equipSlot != 0 && equipLevel > 0 ? equipLevel : nil
+    }
+
     var iconURL: URL? {
         XIVIconURL.make(from: iconPath)
     }

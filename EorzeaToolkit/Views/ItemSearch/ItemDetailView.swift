@@ -30,7 +30,7 @@ struct ItemDetailView: View {
                                 .font(.title2.weight(.semibold))
                                 .multilineTextAlignment(.center)
 
-                            Text("iLv \(item.ilvl)")
+                            Text(L10n.ItemSearch.levelText(for: item))
                                 .font(.subheadline)
                                 .foregroundStyle(AppTheme.mutedInk)
                         }
