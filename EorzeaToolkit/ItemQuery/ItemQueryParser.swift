@@ -96,13 +96,15 @@ struct ItemQueryParser: Sendable {
         return vocabulary.resolve(fields)
     }
 
-    /// Whether the model declined the sentence because of its safety guardrails, as opposed to
-    /// failing for another reason.
+    /// Whether the model's safety guardrails declined the sentence or its answer, as opposed to
+    /// failing for another reason. iOS and macOS 27 report this as `LanguageModelError`, earlier
+    /// versions as `LanguageModelSession.GenerationError`.
     static func isGuardrailViolation(_ error: Error) -> Bool {
-        guard let error = error as? LanguageModelSession.GenerationError else {
-            return false
+        if #available(iOS 27.0, macOS 27.0, *), let error = error as? LanguageModelError,
+           case .guardrailViolation = error {
+            return true
         }
-        if case .guardrailViolation = error {
+        if let error = error as? LanguageModelSession.GenerationError, case .guardrailViolation = error {
             return true
         }
         return false
