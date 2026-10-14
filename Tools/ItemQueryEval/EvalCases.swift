@@ -42,6 +42,9 @@ struct EvalCase: Decodable {
 }
 
 enum EvalCaseLoader {
+    private static let caseKeys: Set<String> = ["id", "group", "query", "expected"]
+    private static let expectedKeys = Set(ItemQueryFields.CodingKeys.allCases.map(\.rawValue))
+
     /// The sum of the groups' minimums.
     static var minimumTotal: Int {
         EvalGroup.allCases.reduce(0) { $0 + $1.minimumCount }
@@ -77,6 +80,17 @@ enum EvalCaseLoader {
             guard let fields = entry as? [String: Any], JSONSerialization.isValidJSONObject(fields) else {
                 problems.append("\(label)：每一句要是一個物件")
                 continue
+            }
+
+            // The decoder ignores keys it does not know, so a misspelled field would silently
+            // drop a condition from the expected result.
+            for key in Set(fields.keys).subtracting(caseKeys).sorted() {
+                problems.append("\(label)：不認得的欄位 \(key)")
+            }
+            if let expected = fields["expected"] as? [String: Any] {
+                for key in Set(expected.keys).subtracting(expectedKeys).sorted() {
+                    problems.append("\(label)：expected 裡不認得的欄位 \(key)")
+                }
             }
 
             let evalCase: EvalCase
