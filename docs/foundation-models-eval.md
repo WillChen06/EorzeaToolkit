@@ -5,6 +5,240 @@
 
 ---
 
+## 2026-10-14：第二輪，套用調整 A～D 後（未達門檻）
+
+- **環境**：與第一輪相同（macOS 27.2 beta，Build 26B5101f；Xcode 27.1）。
+- **程式碼**：`feature/item-query-eval` 的 `ee87caa`；評估集不變（42 句）。
+- **改了什麼**：A 指示改用完整範例；B 每個條件附原文依據，依據不在句子裡就丟掉；C 防具、飾品分類換成部位；D 跟清單名稱相同的關鍵字丟掉。
+- **門檻**：**未達到**。用法達標，其他欄位都未達。
+- **guardrail**：0 句被擋下，0 句其他錯誤。
+- **耗時**：每句平均約 5.2 秒（第一輪 3.3 秒；回答多了依據，變長）。
+- **重現性**：連跑兩次，除了日期與耗時，輸出完全相同。
+
+| 欄位 | 第一輪 | 第二輪 |
+| --- | --- | --- |
+| 用法 | 37/42 88.1% | 40/42 **95.2%** |
+| 關鍵字 | 10/42 23.8% | 11/22 50.0% |
+| 分類 | 3/42 7.1% | 3/12 25.0% |
+| 部位 | 12/37 32.4% | 13/25 52.0% |
+| 職業 | 20/42 47.6% | 9/20 45.0% |
+| 裝備等級 | 1/42 2.4% | 9/16 56.2% |
+| 品級 | 2/42 4.8% | 4/18 22.2% |
+| 稀有度 | 4/42 9.5% | 0/5 0.0% |
+| HQ | 5/42 11.9% | 0/7 0.0% |
+| 可交易 | 6/42 14.3% | 0/8 0.0% |
+| 整句完全正確 | 0/42 0.0% | 10/42 23.8% |
+
+正確率只算預期或實際有值的句子，兩輪的分母不同。第二輪丟掉了大部分沒提到卻被填上的條件，分母因此變小。
+
+### 改善了什麼
+
+- 用法達到門檻，整句完全正確從 0 句變成 10 句。
+- 「80–80」「藥品、食材」這類照抄的值不再出現在每一句。
+
+### 仍然失敗的原因
+
+1. **依據擋不住亂填**：模型仍然每個欄位都填，而且依據常引用句子裡跟該條件無關的片段。例如 HQ 的依據寫「腳部裝備」，品級沿用裝備等級的「80級以上」。這些片段確實在句子裡，所以檢查會放行。
+2. **依據被改寫成正式名稱**：「白魔」寫成「白魔道士」、「可以HQ」寫成「可HQ」、「藍色」寫成「貴重」。改寫後的依據不在句子裡，條件就被丟掉。職業、HQ、可交易、稀有度大多因此答錯。
+3. **從清單選錯名稱**：就算句子裡的詞本身就是清單上的名稱，模型也常選錯。「槍刃」「火槍」「雙手劍」都選成清單第一個的「格鬥武器」，「刺劍」選成「單手劍」，「賢具」選成「二刀流武器」，「項鍊」選成「戒指」。
+4. **等級的上下限**：「X級以下」填成下限；只說「90級」時只填下限。另外，工具檢查數字時用的是字串包含，「700以上」會讓 70 通過，這是工具的缺陷。
+5. **關鍵字**：常填「頭部裝備」「身體裝備」這類描述，不是道具名稱。
+
+### 結論與下一步
+
+裝置上的模型能可靠分辨用法（95%）。但「從大清單裡挑對名稱」和「判斷一個欄位句子有沒有提到」這兩件事，它做得不可靠，光靠調整指示看不出能達到門檻。
+
+待使用者決定：
+
+- **混合做法**：分類、部位、職業、等級、HQ、可交易、稀有度改由程式比對句子（名稱與簡稱表、數字規則），模型只負責用法與關鍵字。要改 spec。
+- **繼續只調模型**：名稱不再限定選項，改由程式從依據比對名稱，並修正數字檢查。效果不確定。
+- **停止**這個功能。
+
+<details>
+<summary>完整報告（第二輪輸出，含模型原始回答）</summary>
+
+```
+道具搜尋解析評估
+環境：Version 27.2 (Build 26B5101f)
+日期：2026-10-14T16:13:59+08:00
+評估集：42 句（組合條件 21、裝備等級 5、品級 3、查配方 5、可能被 guardrail 擋下的名稱 5、無法處理 3）
+
+各欄位正確率（只算預期或實際有值的句子；被擋下或出錯的句子，在預期有值的欄位算錯）
+  用法　　　　  40/42  95.2%  門檻 90% 達到
+  關鍵字　　　  11/22  50.0%  門檻 90% 未達到
+  分類　　　　  3/12  25.0%  門檻 85% 未達到
+  部位　　　　  13/25  52.0%  門檻 85% 未達到
+  職業　　　　  9/20  45.0%  門檻 85% 未達到
+  裝備等級　　  9/16  56.2%  門檻 85% 未達到
+  品級　　　　  4/18  22.2%  門檻 85% 未達到
+  稀有度　　　  0/5  0.0%  門檻 85% 未達到
+  HQ　　　　  0/7  0.0%  門檻 85% 未達到
+  可交易　　　  0/8  0.0%  門檻 85% 未達到
+  整句完全正確  10/42  23.8%
+
+門檻（用法、關鍵字 ≥ 90%，其他欄位 ≥ 85%）：未達到（關鍵字、分類、部位、職業、裝備等級、品級、稀有度、HQ、可交易）
+
+被 guardrail 擋下：0 句
+其他錯誤：0 句
+平均耗時：5.23 秒（只供參考，Mac 的速度不代表手機）
+
+解析錯誤的句子：32 句
+[combination-01] 80級以上白魔能穿的頭部裝備，要可以HQ的
+  職業：預期 WHM｜實際 —
+  品級：預期 —｜實際 80–795
+  HQ：預期 可HQ｜實際 —
+  模型回答：{"categories":[{"name":"頭部防具","quote":"頭部防具"}],"equipLevel":{"min":80,"quote":"80級以上"},"hq":{"quote":"可HQ","value":"可HQ"},"itemLevel":{"min":80,"quote":"80級以上"},"jobs":[{"name":"白魔道士","quote":"白魔道士"}],"keyword":"白魔","rarities":[{"name":"貴重","quote":"貴重"}],"slots":[{"name":"頭部","quote":"頭部"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[combination-02] 給騎士用的盾，90級以上
+  品級：預期 —｜實際 90–795
+  模型回答：{"categories":[{"name":"盾","quote":"盾"}],"equipLevel":{"min":90,"quote":"90級以上"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":90,"quote":"90級以上"},"jobs":[{"name":"騎士","quote":"騎士"}],"keyword":"盾","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"手部","quote":"手部"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[combination-03] 暗騎可以穿的100級身體裝備
+  職業：預期 DRK｜實際 —
+  品級：預期 —｜實際 100–100
+  模型回答：{"categories":[{"name":"身體防具","quote":"身體防具"}],"equipLevel":{"min":100,"quote":"100級"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"max":100,"min":100,"quote":"100級"},"jobs":[{"name":"暗黑騎士","quote":"暗黑騎士"}],"keyword":"暗騎","rarities":[{"name":"貴重","quote":"貴重"}],"slots":[{"name":"身體","quote":"身體"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[combination-04] 詩人能戴的耳飾，要可以交易的
+  部位：預期 耳部｜實際 頸部
+  職業：預期 BRD｜實際 DNC
+  可交易：預期 可交易｜實際 —
+  模型回答：{"categories":[{"name":"項鍊","quote":"耳飾"}],"equipLevel":{"min":1,"quote":"不可交易"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":1,"quote":"不可交易"},"jobs":[{"name":"舞者","quote":"詩人"}],"keyword":"耳飾","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"耳部","quote":"耳部"}],"tradable":{"quote":"不可交易","value":"不可交易"},"usage":"搜尋"}
+[combination-05] SGE用的賢具，品級700以上
+  分類：預期 賢具｜實際 二刀流武器
+  部位：預期 —｜實際 主手
+  職業：預期 SGE｜實際 SCH
+  裝備等級：預期 —｜實際 70–100
+  模型回答：{"categories":[{"name":"二刀流武器","quote":"賢具"}],"equipLevel":{"min":70,"quote":"700以上"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":700,"quote":"700以上"},"jobs":[{"name":"學者","quote":"賢具"}],"keyword":"賢具","rarities":[{"name":"貴重","quote":"貴重"}],"slots":[{"name":"主手","quote":"賢具"}],"tradable":{"quote":"不可交易","value":"不可交易"},"usage":"搜尋"}
+[combination-06] 70級的採掘工具主工具，可以HQ
+  分類：預期 採掘工具（主工具）｜實際 —
+  部位：預期 —｜實際 主手
+  職業：預期 MIN｜實際 —
+  裝備等級：預期 70–70｜實際 70–100
+  品級：預期 —｜實際 70–795
+  HQ：預期 可HQ｜實際 —
+  模型回答：{"categories":[{"name":"採掘工具（主工具）","quote":"採掘工具（主工具）"}],"equipLevel":{"min":70,"quote":"70級"},"hq":{"quote":"可HQ","value":"可HQ"},"itemLevel":{"min":70,"quote":"70級"},"jobs":[{"name":"採掘師","quote":"採掘師"}],"keyword":"採掘工具（主工具）","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"主手","quote":"主工具"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[combination-07] 繪靈法師的筆，不能交易的那種
+  關鍵字：預期 —｜實際 繪靈法師的筆
+  分類：預期 筆｜實際 單手咒杖
+  可交易：預期 不可交易｜實際 —
+  模型回答：{"categories":[{"name":"單手咒杖","quote":"筆"}],"equipLevel":{"min":1,"quote":"不可交易"},"hq":{"quote":"不可交易","value":"不可HQ"},"itemLevel":{"min":1,"quote":"不可交易"},"jobs":[{"name":"繪靈法師","quote":"繪靈法師"}],"keyword":"繪靈法師的筆","rarities":[{"name":"一般","quote":"不可交易"}],"slots":[{"name":"手部","quote":"單手"}],"tradable":{"quote":"不可交易","value":"不可交易"},"usage":"搜尋"}
+[combination-08] 黑魔可以戴的戒指，等級90到100
+  職業：預期 BLM｜實際 —
+  品級：預期 —｜實際 90–795
+  模型回答：{"categories":[{"name":"戒指","quote":"戒指"}],"equipLevel":{"min":90,"quote":"90到100"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":90,"quote":"90到100"},"jobs":[{"name":"黑魔道士","quote":"黑魔道士"}],"keyword":"戒指","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"戒指","quote":"戒指"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[combination-09] 龍騎的腿部裝備，紫色的
+  職業：預期 DRG｜實際 —
+  稀有度：預期 武勳｜實際 貴重
+  模型回答：{"categories":[{"name":"身體防具","quote":"腿部防具"}],"equipLevel":{"min":100,"quote":"紫色的"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":100,"quote":"紫色的"},"jobs":[{"name":"龍騎士","quote":"龍騎士"}],"keyword":"龍騎士的腿部裝備","rarities":[{"name":"貴重","quote":"紫色的"}],"slots":[{"name":"腿部","quote":"腿部"}],"tradable":{"quote":"不可交易","value":"不可交易"},"usage":"搜尋"}
+[combination-10] 白魔穿的身體裝備，名字裡有長袍
+  職業：預期 WHM｜實際 —
+  模型回答：{"categories":[{"name":"身體防具","quote":"身體防具"}],"equipLevel":{"min":1,"quote":"身體防具"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":1,"quote":"身體防具"},"jobs":[{"name":"白魔道士","quote":"白魔道士"}],"keyword":"長袍","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"身體","quote":"身體"}],"tradable":{"quote":"不可交易","value":"不可交易"},"usage":"搜尋"}
+[combination-11] 可以HQ又能在市場板賣的藥品
+  部位：預期 —｜實際 身體
+  HQ：預期 可HQ｜實際 —
+  可交易：預期 可交易｜實際 —
+  模型回答：{"categories":[{"name":"藥品","quote":"藥品"}],"equipLevel":{"min":1,"quote":"任何"},"hq":{"quote":"可HQ","value":"可HQ"},"itemLevel":{"min":1,"quote":"一般"},"jobs":[{"name":"騎士","quote":"任何職業"}],"keyword":"藥品","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"身體","quote":"藥品"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[combination-12] 絕槍戰士用的槍刃，100級
+  分類：預期 槍刃｜實際 格鬥武器
+  部位：預期 —｜實際 主手
+  品級：預期 —｜實際 100–100
+  模型回答：{"categories":[{"name":"格鬥武器","quote":"槍刃"}],"equipLevel":{"min":100,"quote":"100級"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"max":100,"min":100,"quote":"100級"},"jobs":[{"name":"絕槍戰士","quote":"絕槍戰士"}],"keyword":"槍刃","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"主手","quote":"槍刃"}],"tradable":{"quote":"不可交易","value":"不可交易"},"usage":"搜尋"}
+[combination-13] 忍者跟武士都能穿的腳部裝備
+  關鍵字：預期 —｜實際 腳部裝備
+  HQ：預期 —｜實際 不可HQ
+  可交易：預期 —｜實際 可交易
+  模型回答：{"categories":[{"name":"腳部防具","quote":"腳部防具"}],"equipLevel":{"min":1,"quote":"腳部裝備"},"hq":{"quote":"腳部裝備","value":"不可HQ"},"itemLevel":{"min":1,"quote":"腳部裝備"},"jobs":[{"name":"忍者","quote":"忍者"},{"name":"武士","quote":"武士"}],"keyword":"腳部裝備","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"腳部","quote":"腳部"}],"tradable":{"quote":"腳部裝備","value":"可交易"},"usage":"搜尋"}
+[combination-14] 木工師的藍色手部裝備
+  關鍵字：預期 —｜實際 藍色手部裝備
+  稀有度：預期 貴重｜實際 —
+  模型回答：{"categories":[{"name":"手部防具","quote":"手部防具"}],"equipLevel":{"min":1,"quote":"藍色"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":1,"quote":"貴重"},"jobs":[{"name":"木工師","quote":"木工師"}],"keyword":"藍色手部裝備","rarities":[{"name":"貴重","quote":"貴重"}],"slots":[{"name":"手部","quote":"手部"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[combination-15] 裁縫能戴的綠色項鍊，可以交易
+  部位：預期 頸部｜實際 戒指
+  稀有度：預期 稀有｜實際 —
+  可交易：預期 可交易｜實際 —
+  模型回答：{"categories":[{"name":"戒指","quote":"項鍊"}],"equipLevel":{"min":1,"quote":"綠色"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":1,"quote":"稀有"},"jobs":[{"name":"裁縫師","quote":"裁縫"}],"keyword":"項鍊","rarities":[{"name":"稀有","quote":"稀有"}],"slots":[{"name":"戒指","quote":"戒指"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[combination-16] 鍊金術師的副工具
+  關鍵字：預期 —｜實際 鍊金術師的副工具
+  分類：預期 鍊金工具（副工具）｜實際 —
+  部位：預期 —｜實際 副手
+  模型回答：{"categories":[{"name":"木工工具（副工具）","quote":"木工工具（副工具）"}],"equipLevel":{"min":1,"quote":"無明確等級"},"hq":{"quote":"無明確HQ狀態","value":"不可HQ"},"itemLevel":{"min":1,"quote":"無明確品級"},"jobs":[{"name":"鍊金術師","quote":"鍊金術師"}],"keyword":"鍊金術師的副工具","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"副手","quote":"副工具"}],"tradable":{"quote":"無明確交易狀態","value":"不可交易"},"usage":"搜尋"}
+[combination-17] 品級600以上、可以HQ的食品
+  分類：預期 食品｜實際 食材
+  HQ：預期 可HQ｜實際 —
+  模型回答：{"categories":[{"name":"食材","quote":"食品"}],"equipLevel":{"min":60,"quote":"600級以上"},"hq":{"quote":"可HQ","value":"可HQ"},"itemLevel":{"min":600,"quote":"600"},"jobs":[{"name":"烹調師","quote":"烹調"}],"keyword":"食品","rarities":[{"name":"貴重","quote":"貴重"}],"slots":[{"name":"身體","quote":"食材"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[combination-18] 白魔或學者都能用的腕部裝備，90級以上
+  關鍵字：預期 —｜實際 腕部裝備
+  部位：預期 腕部｜實際 手部
+  職業：預期 WHM、SCH｜實際 SCH
+  品級：預期 —｜實際 90–795
+  模型回答：{"categories":[{"name":"手部防具","quote":"腕部"}],"equipLevel":{"min":90,"quote":"90級以上"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":90,"quote":"90級以上"},"jobs":[{"name":"白魔道士","quote":"白魔道士"},{"name":"學者","quote":"學者"}],"keyword":"腕部裝備","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"手部","quote":"腕部"}],"tradable":{"quote":"不可交易","value":"不可交易"},"usage":"搜尋"}
+[combination-19] 粉色的身體裝備，不能交易
+  用法：預期 搜尋｜實際 無法處理
+  關鍵字：預期 —｜實際 粉色的身體裝備
+  稀有度：預期 紅蓮｜實際 —
+  可交易：預期 不可交易｜實際 —
+  模型回答：{"categories":[{"name":"身體防具","quote":"身體防具"}],"equipLevel":{"min":1,"quote":"粉色"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":1,"quote":"粉色"},"jobs":[],"keyword":"粉色的身體裝備","rarities":[{"name":"紅蓮","quote":"紅蓮"}],"slots":[{"name":"身體","quote":"身體"}],"tradable":{"quote":"不可交易","value":"不可交易"},"usage":"無法處理"}
+[combination-20] mch的火槍，100級，要可以HQ
+  分類：預期 火槍｜實際 格鬥武器
+  職業：預期 MCH｜實際 —
+  品級：預期 —｜實際 100–100
+  HQ：預期 可HQ｜實際 —
+  模型回答：{"categories":[{"name":"格鬥武器","quote":"火槍"}],"equipLevel":{"min":100,"quote":"100級"},"hq":{"quote":"可HQ","value":"可HQ"},"itemLevel":{"max":100,"min":100,"quote":"100級"},"jobs":[{"name":"機工士","quote":"機工士"}],"keyword":"火槍","rarities":[{"name":"貴重","quote":"貴重"}],"slots":[{"name":"主手","quote":"主手"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[combination-21] 舞者80級以上能用的投擲武器，可以交易
+  部位：預期 —｜實際 主手
+  品級：預期 —｜實際 80–795
+  可交易：預期 可交易｜實際 —
+  模型回答：{"categories":[{"name":"投擲武器","quote":"投擲武器"}],"equipLevel":{"min":80,"quote":"80級以上"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":80,"quote":"80級"},"jobs":[{"name":"舞者","quote":"舞者"}],"keyword":"投擲武器","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"主手","quote":"投擲武器"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[equip-level-01] 90級的頭部裝備
+  關鍵字：預期 —｜實際 頭部裝備
+  裝備等級：預期 90–90｜實際 90–100
+  品級：預期 —｜實際 90–795
+  模型回答：{"categories":[{"name":"頭部防具","quote":"頭部防具"}],"equipLevel":{"min":90,"quote":"90級"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":90,"quote":"90級"},"jobs":[{"name":"騎士","quote":"騎士"},{"name":"戰士","quote":"戰士"}],"keyword":"頭部裝備","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"頭部","quote":"頭部"}],"tradable":{"quote":"不可交易","value":"不可交易"},"usage":"搜尋"}
+[equip-level-02] 占星60級以上能戴的戒指
+  職業：預期 AST｜實際 —
+  品級：預期 —｜實際 60–795
+  模型回答：{"categories":[{"name":"戒指","quote":"戒指"}],"equipLevel":{"min":60,"quote":"60級以上"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":60,"quote":"60級"},"jobs":[{"name":"占星術師","quote":"占星術師"}],"keyword":"戒指","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"戒指","quote":"戒指"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[equip-level-03] 50級以下能穿的身體裝備
+  關鍵字：預期 —｜實際 身體裝備
+  裝備等級：預期 1–50｜實際 50–100
+  品級：預期 —｜實際 50–795
+  模型回答：{"categories":[{"name":"身體防具","quote":"身體防具"}],"equipLevel":{"min":50,"quote":"50級以下"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":50,"quote":"50級以下"},"jobs":[{"name":"騎士","quote":"騎士"},{"name":"戰士","quote":"戰士"},{"name":"暗黑騎士","quote":"暗黑騎士"}],"keyword":"身體裝備","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"身體","quote":"身體"}],"tradable":{"quote":"不可交易","value":"不可交易"},"usage":"搜尋"}
+[equip-level-04] Lv.80的刺劍
+  分類：預期 刺劍｜實際 單手劍
+  部位：預期 —｜實際 主手
+  裝備等級：預期 80–80｜實際 80–100
+  品級：預期 —｜實際 80–795
+  模型回答：{"categories":[{"name":"單手劍","quote":"刺劍"}],"equipLevel":{"min":80,"quote":"Lv.80"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":80,"quote":"Lv.80"},"jobs":[{"name":"戰士","quote":"戰士"}],"keyword":"刺劍","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"主手","quote":"刺劍"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[equip-level-05] 70到80級的耳飾
+  部位：預期 耳部｜實際 頭部
+  裝備等級：預期 70–80｜實際 —
+  模型回答：{"categories":[{"name":"頭部防具","quote":"耳飾"}],"equipLevel":{"max":80,"min":70,"quote":"70至80級"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"max":80,"min":70,"quote":"70至80級"},"jobs":[],"keyword":"耳飾","rarities":[{"name":"一般","quote":"一般"}],"slots":[{"name":"耳部","quote":"耳部"}],"tradable":{"quote":"不可交易","value":"不可交易"},"usage":"搜尋"}
+[item-level-01] 品級690以上的頭部裝備
+  關鍵字：預期 —｜實際 頭部裝備
+  模型回答：{"categories":[{"name":"頭部防具","quote":"頭部防具"}],"equipLevel":{"min":69,"quote":"690級以上"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":690,"quote":"690"},"jobs":[{"name":"騎士","quote":"騎士"},{"name":"戰士","quote":"戰士"}],"keyword":"頭部裝備","rarities":[{"name":"貴重","quote":"貴重"}],"slots":[{"name":"頭部","quote":"頭部"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[item-level-02] 召喚能戴的戒指，iLv 600到650
+  裝備等級：預期 —｜實際 60–100
+  模型回答：{"categories":[{"name":"戒指","quote":"戒指"}],"equipLevel":{"min":60,"quote":"600到650"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"max":650,"min":600,"quote":"iLv 600到650"},"jobs":[{"name":"召喚士","quote":"召喚"}],"keyword":"戒指","rarities":[{"name":"貴重","quote":"貴重"}],"slots":[{"name":"戒指","quote":"戒指"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[item-level-03] 裝等700的雙手劍
+  分類：預期 雙手劍｜實際 格鬥武器
+  部位：預期 —｜實際 手部
+  品級：預期 700–700｜實際 700–795
+  模型回答：{"categories":[{"name":"格鬥武器","quote":"雙手劍"}],"equipLevel":{"min":70,"quote":"700級"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":700,"quote":"700"},"jobs":[{"name":"戰士","quote":"戰士"}],"keyword":"雙手劍","rarities":[{"name":"貴重","quote":"貴重"}],"slots":[{"name":"手部","quote":"雙手"}],"tradable":{"quote":"可交易","value":"可交易"},"usage":"搜尋"}
+[unsupported-01] 可以讓陸行鳥變色的道具
+  用法：預期 無法處理｜實際 搜尋
+  模型回答：{"categories":[{"name":"藥品","quote":"藥品"}],"equipLevel":{"min":1,"quote":"無明確等級"},"hq":{"quote":"無明確HQ狀態","value":"不可HQ"},"itemLevel":{"min":1,"quote":"無明確品級"},"jobs":[],"keyword":"陸行鳥變色道具","rarities":[{"name":"一般","quote":"無明確稀有度"}],"slots":[{"name":"主手","quote":"藥品"}],"tradable":{"quote":"無明確交易狀態","value":"不可交易"},"usage":"搜尋"}
+[unsupported-02] 吃了會增加經驗值的東西
+  關鍵字：預期 —｜實際 吃了會增加經驗值的東西
+  稀有度：預期 —｜實際 一般
+  HQ：預期 —｜實際 不可HQ
+  可交易：預期 —｜實際 不可交易
+  模型回答：{"categories":[{"name":"藥品","quote":"藥品"}],"equipLevel":{"min":1,"quote":"吃了會增加經驗值的東西"},"hq":{"quote":"吃了會增加經驗值的東西","value":"不可HQ"},"itemLevel":{"min":1,"quote":"吃了會增加經驗值的東西"},"jobs":[],"keyword":"吃了會增加經驗值的東西","rarities":[{"name":"一般","quote":"吃了會增加經驗值的東西"}],"slots":[],"tradable":{"quote":"吃了會增加經驗值的東西","value":"不可交易"},"usage":"無法處理"}
+[unsupported-03] 幫我寫一首關於艾歐澤亞的詩
+  關鍵字：預期 —｜實際 艾歐澤亞
+  模型回答：{"categories":[{"name":"其他","quote":"其他"}],"equipLevel":{"min":1,"quote":"X級"},"hq":{"quote":"不可HQ","value":"不可HQ"},"itemLevel":{"min":1,"quote":"X級"},"jobs":[],"keyword":"艾歐澤亞","rarities":[{"name":"一般","quote":"一般"}],"slots":[],"tradable":{"quote":"不可交易","value":"不可交易"},"usage":"無法處理"}
+```
+
+</details>
+
+---
+
 ## 2026-10-14：第一輪（未達門檻）
 
 - **環境**：macOS 27.2 beta（Build 26B5101f），Xcode 27.1，Apple silicon Mac。Apple Intelligence 與 Siri 語言都是繁體中文。
@@ -40,7 +274,7 @@
 
 ### 下一步
 
-待使用者決定：調整後重跑，或停止這個功能。提議的調整：
+使用者決定照下列 A～D 調整後重跑，結果見第二輪：
 
 - A. 拿掉會被照抄的例子，改用 2～3 組完整的「句子 → 結果」範例，包含大多數欄位為空的例子。
 - B. 每個條件附上原文依據，原文找不到依據的條件在解析時丟掉。
