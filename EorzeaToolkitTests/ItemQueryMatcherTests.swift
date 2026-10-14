@@ -165,6 +165,8 @@ final class ItemQueryMatcherTests: XCTestCase {
     func testNumbersAreReadWhole() {
         XCTAssertEqual(conditions("品級700"), [.itemLevel(min: 700, max: 700)])
         XCTAssertEqual(conditions("100級"), [.equipLevel(min: 100, max: 100)])
+        XCTAssertEqual(conditions("等級 90 100"), [.equipLevel(min: 90, max: 90)], "a space ends a number")
+        XCTAssertEqual(conditions("Lv80 2個"), [.equipLevel(min: 80, max: 80)], "a space ends a number")
     }
 
     func testNumbersWithoutALevelWordAreNoLevel() {

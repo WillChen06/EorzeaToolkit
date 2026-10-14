@@ -311,7 +311,7 @@ struct ItemQueryMatcher: Sendable {
         var matches: [Match] = []
         var index = 0
         while index < text.count {
-            guard let first = number(at: index, in: text) else {
+            guard let first = number(at: index, in: normalized) else {
                 index += 1
                 continue
             }
@@ -325,7 +325,7 @@ struct ItemQueryMatcher: Sendable {
             }
 
             var second: Int?
-            if end < text.count, rangeConnectors.contains(text[end]), let next = number(at: end + 1, in: text) {
+            if end < text.count, rangeConnectors.contains(text[end]), let next = number(at: end + 1, in: normalized) {
                 second = next.value
                 end = next.end
                 if end < text.count, text[end] == "級" {
@@ -360,9 +360,11 @@ struct ItemQueryMatcher: Sendable {
         return matches
     }
 
-    private static func number(at index: Int, in text: [Character]) -> (value: Int, end: Int)? {
+    /// The digits from `index` on, up to the first other character or whitespace.
+    private static func number(at index: Int, in normalized: Normalized) -> (value: Int, end: Int)? {
+        let text = normalized.characters
         var end = index
-        while end < text.count, text[end].isASCII, text[end].isNumber {
+        while end < text.count, text[end].isASCII, text[end].isNumber, end == index || !normalized.spaced[end] {
             end += 1
         }
         guard end > index, let value = Int(String(text[index..<end])) else {
