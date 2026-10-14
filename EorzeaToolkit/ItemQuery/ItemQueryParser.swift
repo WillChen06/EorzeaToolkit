@@ -33,96 +33,45 @@ enum ItemQueryModelStatus: Equatable, Sendable {
     }
 }
 
-/// The schema the model fills in: the fields of `ItemQueryModelOutput`. Every condition is an
-/// object whose quote comes first, so the model copies the supporting fragment before it picks
-/// a value. Categories, body parts, jobs and rarities are limited to the vocabulary's names and
-/// levels to their bounds.
+/// The schema the model fills in: the fields of `ItemQueryModelOutput`. The usage is one of
+/// its three labels and the keyword is free text, checked against the sentence afterwards.
 @available(iOS 26.0, macOS 26.0, *)
 enum ItemQuerySchema {
-    static func make(for vocabulary: ItemQueryVocabulary) throws -> GenerationSchema {
+    static func make() throws -> GenerationSchema {
         typealias Key = ItemQueryModelOutput.CodingKeys
-        typealias Nested = ItemQueryModelOutput.NestedKey
-
-        func field(
-            _ name: String,
-            _ schema: DynamicGenerationSchema,
-            isOptional: Bool
-        ) -> DynamicGenerationSchema.Property {
-            DynamicGenerationSchema.Property(name: name, description: nil, schema: schema, isOptional: isOptional)
-        }
-
-        func text() -> DynamicGenerationSchema {
-            DynamicGenerationSchema(type: String.self, guides: [])
-        }
-
-        func quoted(_ name: String, _ valueKey: Nested, _ value: DynamicGenerationSchema) -> DynamicGenerationSchema {
-            DynamicGenerationSchema(name: name, description: nil, properties: [
-                field(Nested.quote.rawValue, text(), isOptional: false),
-                field(valueKey.rawValue, value, isOptional: false)
-            ])
-        }
-
-        func choices(_ name: String, _ values: [String]) -> DynamicGenerationSchema {
-            let value = DynamicGenerationSchema(name: name + "Name", description: nil, anyOf: values)
-            return DynamicGenerationSchema(arrayOf: quoted(name, .name, value), minimumElements: nil, maximumElements: nil)
-        }
-
-        func flag(_ name: String, _ labels: ItemQueryVocabulary.FlagLabels) -> DynamicGenerationSchema {
-            let value = DynamicGenerationSchema(name: name + "Value", description: nil, anyOf: [labels.yes, labels.no])
-            return quoted(name, .value, value)
-        }
-
-        func levels(_ name: String, _ bounds: ClosedRange<Int>) -> DynamicGenerationSchema {
-            let level = DynamicGenerationSchema(type: Int.self, guides: [.range(bounds)])
-            return DynamicGenerationSchema(name: name, description: nil, properties: [
-                field(Nested.quote.rawValue, text(), isOptional: false),
-                field(Nested.min.rawValue, level, isOptional: true),
-                field(Nested.max.rawValue, level, isOptional: true)
-            ])
-        }
-
-        func property(_ key: Key, _ schema: DynamicGenerationSchema, isOptional: Bool = true) -> DynamicGenerationSchema.Property {
-            field(key.rawValue, schema, isOptional: isOptional)
-        }
 
         let usage = DynamicGenerationSchema(name: "Usage", description: nil, anyOf: ItemQuery.Usage.allCases.map(\.label))
+        let keyword = DynamicGenerationSchema(type: String.self, guides: [])
         let root = DynamicGenerationSchema(
             name: "ItemQuery",
             description: nil,
             properties: [
-                property(.usage, usage, isOptional: false),
-                property(.keyword, text()),
-                property(.categories, choices("Category", vocabulary.categories.map(\.name))),
-                property(.slots, choices("Slot", vocabulary.slots.map(\.name))),
-                property(.jobs, choices("Job", vocabulary.jobs.map(\.choice))),
-                property(.equipLevel, levels("EquipLevel", ItemQuery.equipLevelBounds)),
-                property(.itemLevel, levels("ItemLevel", ItemQuery.itemLevelBounds)),
-                property(.rarities, choices("Rarity", ItemQueryVocabulary.rarities.map(\.name))),
-                property(.hq, flag("HQ", ItemQueryVocabulary.hqLabels)),
-                property(.tradable, flag("Tradable", ItemQueryVocabulary.tradableLabels))
+                DynamicGenerationSchema.Property(name: Key.usage.rawValue, description: nil, schema: usage, isOptional: false),
+                DynamicGenerationSchema.Property(name: Key.keyword.rawValue, description: nil, schema: keyword, isOptional: true)
             ]
         )
         return try GenerationSchema(root: root, dependencies: [])
     }
 }
 
-/// Turns one sentence into item query fields with the on-device model.
+/// Turns one sentence into item query fields: the usage and keyword from the on-device model,
+/// every other condition from the sentence.
 @available(iOS 26.0, macOS 26.0, *)
 struct ItemQueryParser: Sendable {
     let vocabulary: ItemQueryVocabulary
+    private let matcher: ItemQueryMatcher
     private let schema: GenerationSchema
-    private let instructions: String
 
     init(vocabulary: ItemQueryVocabulary) throws {
         self.vocabulary = vocabulary
-        self.schema = try ItemQuerySchema.make(for: vocabulary)
-        self.instructions = ItemQueryInstructions.text(for: vocabulary)
+        self.matcher = ItemQueryMatcher(vocabulary: vocabulary)
+        self.schema = try ItemQuerySchema.make()
     }
 
     /// Asks the model in a new session with greedy sampling, so the same sentence on the same
     /// model always yields the same answer and no earlier sentence influences it.
     func answer(for sentence: String) async throws -> ItemQueryModelOutput {
-        let session = LanguageModelSession(model: .default, tools: [], instructions: instructions)
+        let session = LanguageModelSession(model: .default, tools: [], instructions: ItemQueryInstructions.text)
         let response = try await session.respond(
             to: sentence,
             schema: schema,
@@ -132,10 +81,14 @@ struct ItemQueryParser: Sendable {
         return try JSONDecoder().decode(ItemQueryModelOutput.self, from: Data(response.content.jsonString.utf8))
     }
 
-    /// The model's answer, keeping only the conditions the sentence supports.
+    /// The model's usage and keyword, with the conditions the sentence states.
+    func fields(for sentence: String, answer: ItemQueryModelOutput) -> ItemQueryFields {
+        matcher.fields(for: sentence, usage: answer.usage, keyword: answer.keyword)
+    }
+
     func fields(for sentence: String) async throws -> ItemQueryFields {
         let answer = try await self.answer(for: sentence)
-        return ItemQueryEvidence.fields(from: answer, sentence: sentence)
+        return fields(for: sentence, answer: answer)
     }
 
     func query(for sentence: String) async throws -> ItemQuery {

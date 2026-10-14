@@ -86,7 +86,7 @@ for (index, evalCase) in loaded.cases.enumerated() {
     do {
         let answer = try await parser.answer(for: evalCase.query)
         answerJSON = (try? answerEncoder.encode(answer)).map { String(decoding: $0, as: UTF8.self) }
-        let fields = ItemQueryEvidence.fields(from: answer, sentence: evalCase.query)
+        let fields = parser.fields(for: evalCase.query, answer: answer)
         result = .parsed(vocabulary.resolve(fields))
     } catch {
         let message = String(describing: error)

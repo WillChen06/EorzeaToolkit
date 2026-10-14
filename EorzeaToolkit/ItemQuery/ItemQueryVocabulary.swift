@@ -1,7 +1,7 @@
 import Foundation
 
-/// The names the model may choose from, and the lookup that turns them back into the ids and job
-/// abbreviations the item filter uses.
+/// The names the matcher looks for in a sentence, and the lookup that turns them into the ids and
+/// job abbreviations the item filter uses.
 ///
 /// Categories and equip slots come from the item data and jobs from the item search filter's
 /// job list, so a category, slot or job added to the data needs no change here. Names that are
@@ -23,11 +23,6 @@ struct ItemQueryVocabulary: Sendable {
         /// The official Traditional Chinese name from items.json, if the data has one.
         let officialName: String?
         let nicknames: [String]
-
-        /// The value the model picks for this job.
-        var choice: String {
-            officialName ?? abbreviation
-        }
     }
 
     struct Rarity: Equatable, Sendable {

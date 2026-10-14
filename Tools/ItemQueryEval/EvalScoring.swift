@@ -13,7 +13,8 @@ struct EvalOutcome {
     let evalCase: EvalCase
     let expected: ItemQuery
     let result: Result
-    /// The model's answer before the evidence check, as JSON, when it answered.
+    /// The model's usage and keyword as JSON, before they are checked against the sentence,
+    /// when it answered.
     let answer: String?
     let seconds: Double
 

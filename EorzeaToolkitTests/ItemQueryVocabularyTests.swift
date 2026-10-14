@@ -1,9 +1,9 @@
 import XCTest
 @testable import EorzeaToolkit
 
-/// The model answers in names; the vocabulary turns them into the ids and job abbreviations the
-/// item filter uses. These tests pin that resolution down without the model, so they run on any
-/// simulator.
+/// The parse result and the evaluation set hold names; the vocabulary turns them into the ids and
+/// job abbreviations the item filter uses. These tests pin that resolution down without the model,
+/// so they run on any simulator.
 final class ItemQueryVocabularyTests: XCTestCase {
     private func bundledVocabulary() throws -> ItemQueryVocabulary {
         let data: ItemDataResponse = try LocalDataService.load("items")

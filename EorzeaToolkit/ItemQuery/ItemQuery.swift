@@ -42,10 +42,11 @@ struct ItemQuery: Equatable, Sendable {
     var tradable: Bool?
 }
 
-/// The fields as the model fills them in: names rather than ids, and level bounds as written.
+/// The parse result before resolution: the model's usage and keyword, and the conditions
+/// matched in the sentence as names rather than ids, with level bounds as written.
 ///
-/// The evaluation set writes its expected results in the same form, so the model's answer and
-/// the expected answer go through the same resolution before they are compared.
+/// The evaluation set writes its expected results in the same form, so the parse result and the
+/// expected answer go through the same resolution before they are compared.
 struct ItemQueryFields: Codable, Equatable, Sendable {
     enum CodingKeys: String, CodingKey, CaseIterable {
         case usage
