@@ -205,8 +205,9 @@ struct ItemQueryVocabulary: Sendable {
     // MARK: - Resolution
 
     /// Resolves names to ids. Unknown names are dropped, armour and accessory categories become
-    /// their body part, a missing level bound takes the bound of the range, and a range covering
-    /// every level is no condition at all.
+    /// their body part, a keyword that names a category, body part or job is dropped, a missing
+    /// level bound takes the bound of the range, and a range covering every level is no
+    /// condition at all.
     func resolve(_ fields: ItemQueryFields) -> ItemQuery {
         let namedCategoryIds = categoryIds(named: fields.categories ?? [])
         let bodyPartCategoryIds = namedCategoryIds.filter { bodyPartByCategoryId[$0] != nil }
@@ -214,7 +215,7 @@ struct ItemQueryVocabulary: Sendable {
 
         return ItemQuery(
             usage: fields.usage.flatMap { ItemQuery.Usage(label: Self.trimmed($0)) } ?? .search,
-            keyword: Self.keyword(fields.keyword),
+            keyword: keyword(fields.keyword),
             categoryIds: namedCategoryIds.subtracting(bodyPartCategoryIds),
             equipSlotIds: equipSlotIds(named: (fields.slots ?? []) + bodyPartNames),
             jobs: jobAbbreviations(named: fields.jobs ?? []),
@@ -258,11 +259,16 @@ struct ItemQueryVocabulary: Sendable {
         return nil
     }
 
-    private static func keyword(_ value: String?) -> String? {
-        guard let value = value.map(trimmed), !value.isEmpty else {
+    /// A keyword that is itself a category, body part or job name is a condition put in the
+    /// wrong field, not part of an item's name, so it is dropped.
+    private func keyword(_ value: String?) -> String? {
+        guard let value = value.map(Self.trimmed), !value.isEmpty else {
             return nil
         }
-        return value
+        let isListName = categoryIdsByName[value] != nil
+            || slotIdsByName[value] != nil
+            || jobAbbreviation(named: value) != nil
+        return isListName ? nil : value
     }
 
     private static func clamp(_ value: Int, to bounds: ClosedRange<Int>) -> Int {
