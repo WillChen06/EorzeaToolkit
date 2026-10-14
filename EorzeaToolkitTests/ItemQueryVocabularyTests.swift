@@ -182,8 +182,8 @@ final class ItemQueryVocabularyTests: XCTestCase {
 
     // MARK: - Armour and accessory categories (AC-17)
 
-    /// 頭部防具 and 頭部 filter the same items, so a model that picks the category must not be
-    /// told it is wrong.
+    /// 頭部防具 and 頭部 filter the same items, so a sentence that names the category must not
+    /// be scored as wrong.
     func testArmourAndAccessoryCategoriesBecomeTheirBodyPart() throws {
         let vocabulary = try bundledVocabulary()
 

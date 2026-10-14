@@ -32,8 +32,8 @@ enum EvalGroup: String, Decodable, CaseIterable {
     }
 }
 
-/// One sentence of the evaluation set and the fields the model should produce for it, written
-/// with the same names the model chooses from.
+/// One sentence of the evaluation set and the fields its parse should produce, written with the
+/// vocabulary's names, as the parse result is before resolution.
 struct EvalCase: Decodable {
     let id: String
     let group: EvalGroup
