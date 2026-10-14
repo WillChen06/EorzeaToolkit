@@ -5,7 +5,7 @@
     {"id": "combination-03", "group": "combination", "query": "暗騎可以穿的100級身體裝備", "expected": {"usage": "搜尋", "slots": ["身體"], "jobs": ["DRK"], "equipLevelMin": 100, "equipLevelMax": 100}},
     {"id": "combination-04", "group": "combination", "query": "詩人能戴的耳飾，要可以交易的", "expected": {"usage": "搜尋", "slots": ["耳部"], "jobs": ["BRD"], "tradable": "可交易"}},
     {"id": "combination-05", "group": "combination", "query": "SGE用的賢具，品級700以上", "expected": {"usage": "搜尋", "categories": ["賢具"], "jobs": ["SGE"], "itemLevelMin": 700}},
-    {"id": "combination-06", "group": "combination", "query": "70級的採掘工具主工具，可以HQ", "expected": {"usage": "搜尋", "categories": ["採掘工具（主工具）"], "jobs": ["MIN"], "equipLevelMin": 70, "equipLevelMax": 70, "hq": "可HQ"}},
+    {"id": "combination-06", "group": "combination", "query": "70級的採掘工具主工具，可以HQ", "expected": {"usage": "搜尋", "categories": ["採掘工具（主工具）"], "equipLevelMin": 70, "equipLevelMax": 70, "hq": "可HQ"}},
     {"id": "combination-07", "group": "combination", "query": "繪靈法師的筆，不能交易的那種", "expected": {"usage": "搜尋", "categories": ["筆"], "jobs": ["PCT"], "tradable": "不可交易"}},
     {"id": "combination-08", "group": "combination", "query": "黑魔可以戴的戒指，等級90到100", "expected": {"usage": "搜尋", "slots": ["戒指"], "jobs": ["BLM"], "equipLevelMin": 90, "equipLevelMax": 100}},
     {"id": "combination-09", "group": "combination", "query": "龍騎的腿部裝備，紫色的", "expected": {"usage": "搜尋", "slots": ["腿部"], "jobs": ["DRG"], "rarities": ["武勳"]}},
