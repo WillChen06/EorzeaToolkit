@@ -243,15 +243,3 @@ struct RotationSlot: Identifiable, Hashable, Codable {
         self.item = .tincture(tincture)
     }
 }
-
-// MARK: - Icon URL Helper
-
-enum XIVIconURL {
-    static func make(from iconPath: String) -> URL? {
-        let pngPath = iconPath
-            .replacingOccurrences(of: "_hr1.tex", with: ".png")
-            .replacingOccurrences(of: ".tex", with: ".png")
-
-        return URL(string: "https://xivapi.com/i/\(pngPath)")
-    }
-}

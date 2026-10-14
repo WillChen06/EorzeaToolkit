@@ -59,6 +59,12 @@ These override anything a skill or general best practice says.
 - Validate data: `python3 scripts/validate_data.py` checks cross-file invariants over
   `EorzeaToolkit/Resources/Data`. Run it after regenerating any data file. Decodability is
   covered separately by `EorzeaToolkitTests/BundledDataTests.swift`.
+- Evaluate item query parsing: `./scripts/run_item_query_eval.sh` builds the macOS
+  `ItemQueryEval` tool and asks the on-device Foundation Models model about every sentence in
+  `Tools/ItemQueryEval/cases.json`. It needs macOS 26 or later with Apple Intelligence on and
+  its model downloaded; `--check` validates the evaluation set without calling the model. CI
+  does not run it. Record each run in `docs/foundation-models-eval.md`, and run it again when a
+  major OS release changes the model.
 
 Rules for running them:
 

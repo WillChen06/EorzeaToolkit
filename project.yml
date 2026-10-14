@@ -26,6 +26,10 @@ targets:
       - path: EorzeaToolkit
     dependencies:
       - package: Kingfisher
+      # FoundationModels exists from iOS 26 on. Linked weakly so the app still launches on
+      # iOS 18–25, where every use of it sits behind an availability check.
+      - sdk: FoundationModels.framework
+        weak: true
     settings:
       base:
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
@@ -68,6 +72,29 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.willchen.eorzeaToolkit.uitests
+
+  # Evaluates the on-device model's item query parsing on the Mac (prompts/item-query-eval.md).
+  # Run it with scripts/run_item_query_eval.sh; CI neither builds nor runs it.
+  ItemQueryEval:
+    type: tool
+    platform: macOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: Tools/ItemQueryEval
+        excludes:
+          - "*.json"
+      # The parsing code and the models it needs: the app's own files, not copies.
+      - path: EorzeaToolkit/ItemQuery
+      - path: EorzeaToolkit/Models/Item.swift
+      - path: EorzeaToolkit/Models/ItemJobFilterOption.swift
+      - path: EorzeaToolkit/Models/XIVIconURL.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.willchen.eorzeaToolkit.itemQueryEval
+    scheme:
+      # Running from Xcode starts in DerivedData; point the tool at the repository.
+      commandLineArguments:
+        "--root=$(SRCROOT)": true
 
 # Opt-in UI regression suite; the main scheme keeps its existing unit-only contract.
 schemes:
