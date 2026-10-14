@@ -32,8 +32,33 @@ final class ItemQueryInstructionsTests: XCTestCase {
     func testInstructionsNameEveryField() throws {
         let text = ItemQueryInstructions.text(for: try bundledVocabulary())
 
-        for key in ItemQueryFields.CodingKeys.allCases {
+        for key in ItemQueryModelOutput.CodingKeys.allCases {
             XCTAssertTrue(text.contains(key.rawValue), "\(key.rawValue) is not explained")
+        }
+    }
+
+    /// The examples teach the answer's shape, so each must be an answer the parser accepts as
+    /// it stands: only schema keys, names from the lists, and quotes taken from its sentence.
+    func testExamplesAreAnswersTheParserKeepsWhole() throws {
+        let vocabulary = try bundledVocabulary()
+        let topKeys = Set(ItemQueryModelOutput.CodingKeys.allCases.map(\.rawValue))
+
+        for example in ItemQueryInstructions.examples {
+            let data = Data(example.answer.utf8)
+            let object = try XCTUnwrap(try JSONSerialization.jsonObject(with: data) as? [String: Any])
+            XCTAssertTrue(Set(object.keys).isSubset(of: topKeys), example.sentence)
+
+            let answer = try JSONDecoder().decode(ItemQueryModelOutput.self, from: data)
+            let fields = ItemQueryEvidence.fields(from: answer, sentence: example.sentence)
+            let names = (answer.slots ?? []).compactMap(\.name)
+            let jobs = (answer.jobs ?? []).compactMap(\.name)
+
+            XCTAssertEqual(fields.slots ?? [], names, "a slot quote is not in 「\(example.sentence)」")
+            XCTAssertEqual(fields.jobs ?? [], jobs, "a job quote is not in 「\(example.sentence)」")
+            XCTAssertEqual(fields.equipLevelMin, answer.equipLevel?.min, example.sentence)
+            XCTAssertEqual(fields.keyword, answer.keyword, example.sentence)
+            XCTAssertEqual(vocabulary.equipSlotIds(named: names).isEmpty, names.isEmpty, example.sentence)
+            XCTAssertEqual(vocabulary.jobAbbreviations(named: jobs).count, jobs.count, example.sentence)
         }
     }
 }
