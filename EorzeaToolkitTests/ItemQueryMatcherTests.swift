@@ -131,7 +131,9 @@ final class ItemQueryMatcherTests: XCTestCase {
             ("80級以上", .equipLevel(min: 80, max: nil)),
             ("50級以下", .equipLevel(min: nil, max: 50)),
             ("60級以內", .equipLevel(min: nil, max: 60)),
+            ("等級 80", .equipLevel(min: 80, max: 80)),
             ("等級90到100", .equipLevel(min: 90, max: 100)),
+            ("70至80級", .equipLevel(min: 70, max: 80)),
             ("70到80級", .equipLevel(min: 70, max: 80)),
             ("70級~80級", .equipLevel(min: 70, max: 80)),
             ("等級 90-100", .equipLevel(min: 90, max: 100)),
@@ -199,6 +201,8 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(conditions("不能HQ"), [.hq(false)])
         XCTAssertEqual(conditions("不可以 hq"), [.hq(false)])
         XCTAssertEqual(conditions("無法HQ"), [.hq(false)])
+        XCTAssertEqual(conditions("沒有HQ"), [.hq(false)])
+        XCTAssertEqual(conditions("非HQ"), [.hq(false)])
         XCTAssertEqual(conditions("HQs"), [], "HQ must stand alone")
     }
 
@@ -209,6 +213,7 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(conditions("不能在市場板賣"), [.tradable(false)])
         XCTAssertEqual(conditions("不能買賣"), [.tradable(false)])
         XCTAssertEqual(conditions("禁止交易"), [.tradable(false)])
+        XCTAssertEqual(conditions("沒辦法交易"), [.tradable(false)])
     }
 
     /// A negation belongs to its own clause and reaches four characters back.
