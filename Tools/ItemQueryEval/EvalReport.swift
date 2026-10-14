@@ -39,7 +39,7 @@ enum EvalReport {
         lines.append(composition(outcomes.map(\.evalCase)))
         lines.append("")
 
-        lines.append("各欄位正確率（只算預期或實際有值的句子；被擋下或出錯的句子，每個欄位都算錯）")
+        lines.append("各欄位正確率（只算預期或實際有值的句子；被擋下或出錯的句子，在預期有值的欄位算錯）")
         for score in scores {
             lines.append("  \(pad(score.field.title, 6))\(fraction(score.correct, score.total))\(verdict(score))")
         }

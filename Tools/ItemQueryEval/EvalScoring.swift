@@ -131,7 +131,8 @@ enum EvalField: CaseIterable {
 }
 
 /// A field's accuracy, scored as the spec defines it: only over cases where the expected or the
-/// actual value is set, with every blocked or failed case counted as wrong.
+/// actual value is set. A blocked or failed case has no actual value, so it counts as wrong in
+/// every field it was expected to fill.
 struct FieldScore {
     let field: EvalField
     let correct: Int
@@ -152,7 +153,9 @@ struct FieldScore {
             var total = 0
             for outcome in outcomes {
                 guard let actual = outcome.actual else {
-                    total += 1
+                    if field.hasValue(outcome.expected) {
+                        total += 1
+                    }
                     continue
                 }
                 guard field.hasValue(outcome.expected) || field.hasValue(actual) else {
