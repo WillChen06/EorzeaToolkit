@@ -54,6 +54,17 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(conditions("給 ＷＨＭ 用"), [.job("WHM")])
         XCTAssertEqual(conditions("armor"), [])
         XCTAssertEqual(conditions("whm2"), [])
+        XCTAssertEqual(conditions("2whm"), [])
+        XCTAssertEqual(conditions("xmch"), [])
+    }
+
+    /// Whitespace is taken out before matching, but it still separates two Latin words.
+    func testWhitespaceSeparatesLatinWords() {
+        XCTAssertEqual(conditions("WHM 90級的頭部裝備"), [.job("WHM"), .equipLevel(min: 90, max: 90), .slot("頭部")])
+        XCTAssertEqual(conditions("whm90級"), [.equipLevel(min: 90, max: 90)])
+        XCTAssertEqual(conditions("WHM Lv.80"), [.job("WHM"), .equipLevel(min: 80, max: 80)])
+        XCTAssertEqual(conditions("SGE iLv700的賢具"), [.job("SGE"), .itemLevel(min: 700, max: 700), .categories(["賢具"])])
+        XCTAssertEqual(conditions("MCH HQ的火槍"), [.job("MCH"), .hq(true), .categories(["火槍"])])
     }
 
     func testBracketedCategoriesMatchWithoutTheirBrackets() {

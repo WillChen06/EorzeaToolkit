@@ -112,9 +112,9 @@ struct ItemQueryMatcher: Sendable {
             return ItemQueryFields(usage: usageLabel)
         }
 
-        let text = Array(Self.normalized(sentence))
+        let text = Normalized(sentence)
         var matches = self.matches(in: text)
-        let keyword = self.keyword(keyword, in: text, dropping: &matches)
+        let keyword = self.keyword(keyword, in: text.characters, dropping: &matches)
         if usage == .recipe {
             return ItemQueryFields(usage: usageLabel, keyword: keyword)
         }
@@ -227,10 +227,10 @@ struct ItemQueryMatcher: Sendable {
     /// Every condition in the sentence, in the order they appear. Where two overlap the longer
     /// one wins, so 龍騎士 is not also 騎士 and 武士刀 is not also 武士.
     func matches(in sentence: String) -> [Match] {
-        matches(in: Array(Self.normalized(sentence)))
+        matches(in: Normalized(sentence))
     }
 
-    private func matches(in text: [Character]) -> [Match] {
+    private func matches(in text: Normalized) -> [Match] {
         let candidates = nameMatches(in: text) + Self.levelMatches(in: text) + Self.flagMatches(in: text)
         let longestFirst = candidates.enumerated().sorted { lhs, rhs in
             let (left, right) = (lhs.element.range, rhs.element.range)
@@ -243,7 +243,7 @@ struct ItemQueryMatcher: Sendable {
             return lhs.offset < rhs.offset
         }
 
-        var taken = Array(repeating: false, count: text.count)
+        var taken = Array(repeating: false, count: text.characters.count)
         var kept: [Match] = []
         for (_, match) in longestFirst where !match.range.contains(where: { taken[$0] }) {
             kept.append(match)
@@ -254,10 +254,10 @@ struct ItemQueryMatcher: Sendable {
         return kept.sorted { $0.range.lowerBound < $1.range.lowerBound }
     }
 
-    private func nameMatches(in text: [Character]) -> [Match] {
+    private func nameMatches(in text: Normalized) -> [Match] {
         names.flatMap { name in
-            Self.occurrences(of: name.text, in: text)
-                .filter { Self.standsAlone($0, in: text) }
+            Self.occurrences(of: name.text, in: text.characters)
+                .filter { text.standsAlone($0) }
                 .map { Match(range: $0, condition: name.condition) }
         }
     }
@@ -297,7 +297,8 @@ struct ItemQueryMatcher: Sendable {
     /// 「80級」「等級80」「Lv.80」, optionally followed by 以上, 以下 or 以內, and ranges such as
     /// 「70到80級」. A number counts only with a marker before it or 級 after it, and is always
     /// read whole, so 700 is never 70.
-    private static func levelMatches(in text: [Character]) -> [Match] {
+    private static func levelMatches(in normalized: Normalized) -> [Match] {
+        let text = normalized.characters
         var matches: [Match] = []
         var index = 0
         while index < text.count {
@@ -306,7 +307,7 @@ struct ItemQueryMatcher: Sendable {
                 continue
             }
 
-            let marker = levelMarker(before: index, in: text)
+            let marker = levelMarker(before: index, in: normalized)
             var end = first.end
             var saysLevel = false
             if end < text.count, text[end] == "級" {
@@ -361,7 +362,8 @@ struct ItemQueryMatcher: Sendable {
         return (value, end)
     }
 
-    private static func levelMarker(before index: Int, in text: [Character]) -> (kind: LevelKind, start: Int)? {
+    private static func levelMarker(before index: Int, in normalized: Normalized) -> (kind: LevelKind, start: Int)? {
+        let text = normalized.characters
         var end = index
         if end > 0, levelSeparators.contains(text[end - 1]) {
             end -= 1
@@ -371,7 +373,7 @@ struct ItemQueryMatcher: Sendable {
             guard start >= 0, text[start..<end].elementsEqual(marker.text) else {
                 continue
             }
-            if isLatinOrDigit(marker.text[0]), start > 0, isLatinOrDigit(text[start - 1]) {
+            if normalized.joins(at: start) {
                 continue
             }
             return (marker.kind, start)
@@ -392,9 +394,10 @@ struct ItemQueryMatcher: Sendable {
 
     /// 「HQ」 is a condition on HQ and 「交易」「買賣」「市場板」 one on tradability, negative when
     /// a negation comes shortly before it in the same clause.
-    private static func flagMatches(in text: [Character]) -> [Match] {
+    private static func flagMatches(in normalized: Normalized) -> [Match] {
+        let text = normalized.characters
         var matches: [Match] = []
-        for range in occurrences(of: hqWord, in: text) where standsAlone(range, in: text) {
+        for range in occurrences(of: hqWord, in: text) where normalized.standsAlone(range) {
             matches.append(Match(range: range, condition: .hq(!isNegated(before: range.lowerBound, in: text))))
         }
         for word in tradableWords {
@@ -423,8 +426,46 @@ struct ItemQueryMatcher: Sendable {
     /// Half-width, lower-cased and without whitespace, so 「MCH」 matches 「mch」, 「iLv 600」
     /// matches 「ilv600」 and 「８０級」 matches 「80級」.
     static func normalized(_ text: String) -> String {
-        let halfWidth = text.applyingTransform(.fullwidthToHalfwidth, reverse: false) ?? text
-        return String(halfWidth.lowercased().filter { !$0.isWhitespace })
+        String(Normalized(text).characters)
+    }
+
+    /// A sentence as the matcher reads it: normalised, remembering where whitespace stood, so
+    /// that 「WHM 90級」 still keeps WHM apart from 90.
+    private struct Normalized {
+        let characters: [Character]
+        /// Whether whitespace stood right before each character.
+        let spaced: [Bool]
+
+        init(_ text: String) {
+            let halfWidth = text.applyingTransform(.fullwidthToHalfwidth, reverse: false) ?? text
+            var characters: [Character] = []
+            var spaced: [Bool] = []
+            var afterSpace = false
+            for character in halfWidth.lowercased() {
+                if character.isWhitespace {
+                    afterSpace = true
+                } else {
+                    characters.append(character)
+                    spaced.append(afterSpace)
+                    afterSpace = false
+                }
+            }
+            self.characters = characters
+            self.spaced = spaced
+        }
+
+        /// Whether a Latin letter or digit runs straight into another at `index`.
+        func joins(at index: Int) -> Bool {
+            index > 0 && index < characters.count && !spaced[index]
+                && ItemQueryMatcher.isLatinOrDigit(characters[index - 1])
+                && ItemQueryMatcher.isLatinOrDigit(characters[index])
+        }
+
+        /// A match that begins or ends with a Latin letter or digit must not run into another
+        /// one, so MCH is found in 「mch的火槍」 and 「MCH 80級」 but not inside a longer word.
+        func standsAlone(_ range: Range<Int>) -> Bool {
+            !joins(at: range.lowerBound) && !joins(at: range.upperBound)
+        }
     }
 
     private static func hasWord(_ word: String, at index: Int, in text: [Character]) -> Bool {
@@ -439,18 +480,6 @@ struct ItemQueryMatcher: Sendable {
         return (0...(text.count - word.count))
             .map { $0..<($0 + word.count) }
             .filter { text[$0].elementsEqual(word) }
-    }
-
-    /// A match that begins or ends with a Latin letter or digit must not run into another one,
-    /// so MCH is found in 「mch的火槍」 but not inside a longer word.
-    private static func standsAlone(_ range: Range<Int>, in text: [Character]) -> Bool {
-        if isLatinOrDigit(text[range.lowerBound]), range.lowerBound > 0, isLatinOrDigit(text[range.lowerBound - 1]) {
-            return false
-        }
-        if isLatinOrDigit(text[range.upperBound - 1]), range.upperBound < text.count, isLatinOrDigit(text[range.upperBound]) {
-            return false
-        }
-        return true
     }
 
     private static func isLatinOrDigit(_ character: Character) -> Bool {
