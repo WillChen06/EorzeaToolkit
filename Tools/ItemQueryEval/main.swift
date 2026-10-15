@@ -110,5 +110,5 @@ for (index, evalCase) in loaded.cases.enumerated() {
     ))
 }
 
-print(EvalReport.text(outcomes: outcomes, vocabulary: vocabulary))
+print(EvalReport.text(outcomes: outcomes, vocabulary: vocabulary, gate: options.gate))
 exit(0)

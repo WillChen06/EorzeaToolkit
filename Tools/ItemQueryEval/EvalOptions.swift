@@ -23,6 +23,10 @@ struct EvalOptions {
     let itemsURL: URL
     let casesURL: URL
 
+    var gate: EvalGate {
+        holdout ? .holdout : .perField
+    }
+
     /// Accepts both `--name value` and `--name=value`; the Xcode scheme passes `--root=…`.
     init(arguments: [String]) throws {
         var checkOnly = false

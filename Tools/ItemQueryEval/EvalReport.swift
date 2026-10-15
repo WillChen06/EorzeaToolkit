@@ -29,11 +29,11 @@ enum EvalReport {
         return "無法評估：\(reason)"
     }
 
-    static func text(outcomes: [EvalOutcome], vocabulary: ItemQueryVocabulary) -> String {
+    static func text(outcomes: [EvalOutcome], vocabulary: ItemQueryVocabulary, gate: EvalGate) -> String {
         var lines: [String] = []
         let scores = FieldScore.scores(for: outcomes)
 
-        lines.append("道具搜尋解析評估")
+        lines.append(gate == .holdout ? "道具搜尋解析評估（保留集）" : "道具搜尋解析評估")
         lines.append("環境：\(ProcessInfo.processInfo.operatingSystemVersionString)")
         lines.append("日期：\(timestamp())")
         lines.append(composition(outcomes.map(\.evalCase)))
@@ -41,18 +41,18 @@ enum EvalReport {
 
         lines.append("各欄位正確率（只算預期或實際有值的句子；被擋下或出錯的句子，在預期有值的欄位算錯）")
         for score in scores {
-            lines.append("  \(pad(score.field.title, 6))\(fraction(score.correct, score.total))\(verdict(score))")
+            let verdictText = gate.judgesEachField ? verdict(score) : ""
+            lines.append("  \(pad(score.field.title, 6))\(fraction(score.correct, score.total))\(verdictText)")
         }
         let fullMatches = outcomes.filter(\.isFullMatch).count
-        lines.append("  \(pad("整句完全正確", 6))\(fraction(fullMatches, outcomes.count))")
+        lines.append("  \(pad(EvalGate.fullMatchTitle, 6))\(fraction(fullMatches, outcomes.count))")
         lines.append("")
 
-        let missed = scores.filter { $0.meetsThreshold == false }
+        let missed = gate.missed(scores: scores, fullMatches: fullMatches, sentences: outcomes.count)
         if missed.isEmpty {
-            lines.append("門檻（用法、關鍵字 ≥ 90%，其他欄位 ≥ 85%）：達到")
+            lines.append("門檻（\(gate.description)）：達到")
         } else {
-            let names = missed.map(\.field.title).joined(separator: "、")
-            lines.append("門檻（用法、關鍵字 ≥ 90%，其他欄位 ≥ 85%）：未達到（\(names)）")
+            lines.append("門檻（\(gate.description)）：未達到（\(missed.joined(separator: "、"))）")
         }
         lines.append("")
 
