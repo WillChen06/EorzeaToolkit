@@ -25,7 +25,7 @@ struct ItemQuery: Equatable, Sendable {
         }
     }
 
-    /// Equip levels run from 1 to the level cap.
+    /// Matches `ItemFilter.defaultEquipLevelRange`, the equip level range the item filter offers.
     static let equipLevelBounds = 1...100
     /// Matches `ItemFilter.defaultIlvlRange`, the item level range the item filter offers.
     static let itemLevelBounds = 1...795

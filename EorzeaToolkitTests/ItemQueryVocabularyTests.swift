@@ -321,6 +321,10 @@ final class ItemQueryVocabularyTests: XCTestCase {
         XCTAssertEqual(ItemQuery.itemLevelBounds, ItemFilter.defaultIlvlRange)
     }
 
+    func testEquipLevelBoundsMatchTheItemFilter() {
+        XCTAssertEqual(ItemQuery.equipLevelBounds, ItemFilter.defaultEquipLevelRange)
+    }
+
     func testFlagsReadTheirTwoLabels() {
         let labels = ItemQueryVocabulary.hqLabels
 

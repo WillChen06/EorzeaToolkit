@@ -294,9 +294,10 @@ private struct ItemFilterSheet: View {
 
                     Slider(
                         value: minimumItemLevelBinding,
-                        in: Double(ItemFilter.defaultIlvlRange.lowerBound)...Double(viewModel.filter.ilvlRange.upperBound),
+                        in: Double(itemLevelSliders.minimumRange.lowerBound)...Double(itemLevelSliders.minimumRange.upperBound),
                         step: 1
                     )
+                    .disabled(itemLevelSliders.isMinimumDisabled)
                 }
 
                 VStack(alignment: .leading, spacing: 6) {
@@ -306,9 +307,57 @@ private struct ItemFilterSheet: View {
 
                     Slider(
                         value: maximumItemLevelBinding,
-                        in: Double(viewModel.filter.ilvlRange.lowerBound)...Double(ItemFilter.defaultIlvlRange.upperBound),
+                        in: Double(itemLevelSliders.maximumRange.lowerBound)...Double(itemLevelSliders.maximumRange.upperBound),
                         step: 1
                     )
+                    .disabled(itemLevelSliders.isMaximumDisabled)
+                }
+            }
+            .padding(.vertical, 4)
+        }
+        .appThemedListRow()
+
+        Section(L10n.ItemSearch.Filter.equipLevel) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("\(viewModel.filter.equipLevelRange.lowerBound)")
+                        .font(.headline.monospacedDigit())
+
+                    Spacer()
+
+                    Text("\(viewModel.filter.equipLevelRange.upperBound)")
+                        .font(.headline.monospacedDigit())
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(Text(L10n.ItemSearch.Filter.equipLevelRange(
+                    lowerBound: viewModel.filter.equipLevelRange.lowerBound,
+                    upperBound: viewModel.filter.equipLevelRange.upperBound
+                )))
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(L10n.ItemSearch.Filter.equipLevelMinimum)
+                        .font(.caption)
+                        .foregroundStyle(AppTheme.mutedInk)
+
+                    Slider(
+                        value: minimumEquipLevelBinding,
+                        in: Double(equipLevelSliders.minimumRange.lowerBound)...Double(equipLevelSliders.minimumRange.upperBound),
+                        step: 1
+                    )
+                    .disabled(equipLevelSliders.isMinimumDisabled)
+                }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(L10n.ItemSearch.Filter.equipLevelMaximum)
+                        .font(.caption)
+                        .foregroundStyle(AppTheme.mutedInk)
+
+                    Slider(
+                        value: maximumEquipLevelBinding,
+                        in: Double(equipLevelSliders.maximumRange.lowerBound)...Double(equipLevelSliders.maximumRange.upperBound),
+                        step: 1
+                    )
+                    .disabled(equipLevelSliders.isMaximumDisabled)
                 }
             }
             .padding(.vertical, 4)
@@ -398,6 +447,10 @@ private struct ItemFilterSheet: View {
         }
     }
 
+    private var itemLevelSliders: LevelRangeSliders {
+        LevelRangeSliders(range: viewModel.filter.ilvlRange, bounds: ItemFilter.defaultIlvlRange)
+    }
+
     private var minimumItemLevelBinding: Binding<Double> {
         Binding {
             Double(viewModel.filter.ilvlRange.lowerBound)
@@ -411,6 +464,26 @@ private struct ItemFilterSheet: View {
             Double(viewModel.filter.ilvlRange.upperBound)
         } set: { newValue in
             viewModel.updateMaximumItemLevel(Int(newValue.rounded()))
+        }
+    }
+
+    private var equipLevelSliders: LevelRangeSliders {
+        LevelRangeSliders(range: viewModel.filter.equipLevelRange, bounds: ItemFilter.defaultEquipLevelRange)
+    }
+
+    private var minimumEquipLevelBinding: Binding<Double> {
+        Binding {
+            Double(viewModel.filter.equipLevelRange.lowerBound)
+        } set: { newValue in
+            viewModel.updateMinimumEquipLevel(Int(newValue.rounded()))
+        }
+    }
+
+    private var maximumEquipLevelBinding: Binding<Double> {
+        Binding {
+            Double(viewModel.filter.equipLevelRange.upperBound)
+        } set: { newValue in
+            viewModel.updateMaximumEquipLevel(Int(newValue.rounded()))
         }
     }
 
@@ -591,7 +664,7 @@ private struct ItemSearchRow: View {
                     .font(.headline)
                     .foregroundStyle(AppTheme.ink)
 
-                Text(L10n.ItemSearch.itemLevel(item.ilvl))
+                Text(L10n.ItemSearch.levelText(for: item))
                     .font(.caption)
                     .foregroundStyle(AppTheme.mutedInk)
             }

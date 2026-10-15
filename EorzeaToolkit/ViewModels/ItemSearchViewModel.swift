@@ -8,9 +8,14 @@ enum ItemBoolFilterState: String, CaseIterable, Sendable {
 
 struct ItemFilter: Equatable, Sendable {
     static let defaultIlvlRange = 1...795
+    /// Equip levels run from 1 to the level cap. Raise the upper bound with the cap:
+    /// `scripts/validate_data.py` fails when an item's equip level is above it.
+    static let defaultEquipLevelRange = 1...100
     static let defaultRarities: Set<Int> = [1, 2, 3, 4, 7]
 
     var ilvlRange: ClosedRange<Int> = Self.defaultIlvlRange
+    /// Narrowing it keeps only equippable items whose equip level is in the range.
+    var equipLevelRange: ClosedRange<Int> = Self.defaultEquipLevelRange
     var selectedRarities: Set<Int> = Self.defaultRarities
     var hqState: ItemBoolFilterState = .any
     var tradableState: ItemBoolFilterState = .any
@@ -20,6 +25,7 @@ struct ItemFilter: Equatable, Sendable {
 
     var isActive: Bool {
         ilvlRange != Self.defaultIlvlRange ||
+            equipLevelRange != Self.defaultEquipLevelRange ||
             selectedRarities != Self.defaultRarities ||
             hqState != .any ||
             tradableState != .any ||
@@ -32,6 +38,10 @@ struct ItemFilter: Equatable, Sendable {
         var count = 0
 
         if ilvlRange != Self.defaultIlvlRange {
+            count += 1
+        }
+
+        if equipLevelRange != Self.defaultEquipLevelRange {
             count += 1
         }
 
@@ -69,6 +79,13 @@ struct ItemFilter: Equatable, Sendable {
             parts.append(L10n.ItemSearch.Filter.summaryItemLevel(
                 lowerBound: ilvlRange.lowerBound,
                 upperBound: ilvlRange.upperBound
+            ))
+        }
+
+        if equipLevelRange != Self.defaultEquipLevelRange {
+            parts.append(L10n.ItemSearch.Filter.summaryEquipLevel(
+                lowerBound: equipLevelRange.lowerBound,
+                upperBound: equipLevelRange.upperBound
             ))
         }
 
@@ -165,6 +182,26 @@ struct ItemFilter: Equatable, Sendable {
         } else {
             parts.append(countSummary(names.count))
         }
+    }
+}
+
+/// What the minimum and maximum sliders of a level range filter can move across.
+///
+/// Each slider stops at the other end of the range. When that leaves a slider only one value,
+/// because the minimum is at the top or the maximum at the bottom, it is disabled and kept one
+/// step wide: SwiftUI's stepped `Slider` traps on a range with no width.
+struct LevelRangeSliders: Equatable, Sendable {
+    let minimumRange: ClosedRange<Int>
+    let maximumRange: ClosedRange<Int>
+    let isMinimumDisabled: Bool
+    let isMaximumDisabled: Bool
+
+    /// `bounds` must span at least two levels, and `range` must lie inside it.
+    init(range: ClosedRange<Int>, bounds: ClosedRange<Int>) {
+        minimumRange = bounds.lowerBound...max(range.upperBound, bounds.lowerBound + 1)
+        maximumRange = min(range.lowerBound, bounds.upperBound - 1)...bounds.upperBound
+        isMinimumDisabled = range.upperBound == bounds.lowerBound
+        isMaximumDisabled = range.lowerBound == bounds.upperBound
     }
 }
 
@@ -303,6 +340,26 @@ final class ItemSearchViewModel {
         let clampedValue = max(min(value, ItemFilter.defaultIlvlRange.upperBound), filter.ilvlRange.lowerBound)
         updateFilter {
             $0.ilvlRange = $0.ilvlRange.lowerBound...clampedValue
+        }
+    }
+
+    func updateMinimumEquipLevel(_ value: Int) {
+        let clampedValue = min(
+            max(value, ItemFilter.defaultEquipLevelRange.lowerBound),
+            filter.equipLevelRange.upperBound
+        )
+        updateFilter {
+            $0.equipLevelRange = clampedValue...$0.equipLevelRange.upperBound
+        }
+    }
+
+    func updateMaximumEquipLevel(_ value: Int) {
+        let clampedValue = max(
+            min(value, ItemFilter.defaultEquipLevelRange.upperBound),
+            filter.equipLevelRange.lowerBound
+        )
+        updateFilter {
+            $0.equipLevelRange = $0.equipLevelRange.lowerBound...clampedValue
         }
     }
 
@@ -469,7 +526,8 @@ final class ItemSearchViewModel {
         }
     }
 
-    nonisolated private static func searchItems(
+    /// Internal rather than private so tests can search without loading the bundled data.
+    nonisolated static func searchItems(
         _ items: [Item],
         query: String,
         filter: ItemFilter,
@@ -527,6 +585,14 @@ final class ItemSearchViewModel {
             }
         } else if !filter.ilvlRange.contains(item.ilvl) {
             return false
+        }
+
+        // Only equipment is compared. Every other item has an equip level too (bait has the
+        // level needed to use it), but once the range is narrowed those items drop out.
+        if filter.equipLevelRange != ItemFilter.defaultEquipLevelRange {
+            guard item.equipSlot != 0, filter.equipLevelRange.contains(item.equipLevel) else {
+                return false
+            }
         }
 
         guard filter.selectedRarities.contains(item.rarity) else {
@@ -600,7 +666,7 @@ private struct ItemSearchMatch: Sendable {
     let rank: Int
 }
 
-private struct ItemSearchResult: Sendable {
+struct ItemSearchResult: Sendable {
     let items: [Item]
     let totalCount: Int
 }
