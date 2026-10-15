@@ -38,7 +38,11 @@ do {
 }
 
 let vocabulary = ItemQueryVocabulary(data: itemData)
-let loaded = EvalCaseLoader.load(from: options.casesURL, vocabulary: vocabulary)
+let loaded = EvalCaseLoader.load(
+    from: options.casesURL,
+    vocabulary: vocabulary,
+    checksComposition: !options.holdout
+)
 if !loaded.problems.isEmpty {
     printError("評估集有 \(loaded.problems.count) 個問題：")
     for problem in loaded.problems {

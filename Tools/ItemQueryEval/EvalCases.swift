@@ -53,7 +53,13 @@ enum EvalCaseLoader {
     /// Decodes each case on its own, so a broken case is reported by its position and id rather
     /// than failing the whole file at once. Returns every problem found; the cases are usable
     /// only when there are none.
-    static func load(from url: URL, vocabulary: ItemQueryVocabulary) -> (cases: [EvalCase], problems: [String]) {
+    ///
+    /// `checksComposition` is false for the held-out set, which only has to contain a sentence.
+    static func load(
+        from url: URL,
+        vocabulary: ItemQueryVocabulary,
+        checksComposition: Bool
+    ) -> (cases: [EvalCase], problems: [String]) {
         let data: Data
         do {
             data = try Data(contentsOf: url)
@@ -111,14 +117,18 @@ enum EvalCaseLoader {
             cases.append(evalCase)
         }
 
-        for group in EvalGroup.allCases {
-            let count = cases.filter { $0.group == group }.count
-            if count < group.minimumCount {
-                problems.append("「\(group.title)」有 \(count) 句，至少要 \(group.minimumCount) 句")
+        if checksComposition {
+            for group in EvalGroup.allCases {
+                let count = cases.filter { $0.group == group }.count
+                if count < group.minimumCount {
+                    problems.append("「\(group.title)」有 \(count) 句，至少要 \(group.minimumCount) 句")
+                }
             }
-        }
-        if cases.count < minimumTotal {
-            problems.append("評估集有 \(cases.count) 句，至少要 \(minimumTotal) 句")
+            if cases.count < minimumTotal {
+                problems.append("評估集有 \(cases.count) 句，至少要 \(minimumTotal) 句")
+            }
+        } else if entries.isEmpty {
+            problems.append("評估集沒有任何句子")
         }
 
         return (cases, problems)
