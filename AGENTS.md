@@ -65,6 +65,11 @@ These override anything a skill or general best practice says.
   its model downloaded; `--check` validates the evaluation set without calling the model. CI
   does not run it. Record each run in `docs/foundation-models-eval.md`, and run it again when a
   major OS release changes the model.
+  - `--holdout` runs the user's held-out set, `Tools/ItemQueryEval/holdout.json`, instead. It
+    skips the evaluation set's composition check, and the run is judged by usage and whole
+    sentences (`prompts/item-description-search.md`).
+  - The user writes the held-out set. Agents do not write it, and do not read it before its
+    first run.
 
 Rules for running them:
 
