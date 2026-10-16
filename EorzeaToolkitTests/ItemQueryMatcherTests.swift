@@ -401,6 +401,16 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(search("不能上板的頭").tradable, "不可交易")
     }
 
+    /// 市場 is the market board as well. (AC-36)
+    func testTheMarketIsTradability() {
+        XCTAssertEqual(conditions("能在市場上賣"), [.tradable(true)])
+        XCTAssertEqual(conditions("市場上買得到的"), [.tradable(true)])
+        XCTAssertEqual(conditions("能丟市場賣的"), [.tradable(true)])
+        XCTAssertEqual(conditions("不能在市場上賣"), [.tradable(false)])
+        XCTAssertEqual(conditions("市場板"), [.tradable(true)], "the longer word is one match")
+        XCTAssertEqual(search("有哪些能在市場上賣？").tradable, "可交易")
+    }
+
     /// A negation belongs to its own clause and reaches four characters back.
     func testNegationsStayInTheirClause() {
         XCTAssertEqual(conditions("可以HQ又不能交易"), [.hq(true), .tradable(false)])
