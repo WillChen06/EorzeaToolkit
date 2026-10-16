@@ -375,9 +375,9 @@ struct ItemQueryMatcher: Sendable {
     /// first, so 80等級 is read whole.
     private static let levelSuffixes = ["等級", "級", "等"]
 
-    /// 「80級」「80等」「等級80」「Lv.80」, optionally followed by 以上, 以下 or 以內, and ranges
-    /// such as 「70到80級」. A number counts only with a marker before it or a level word after it,
-    /// and is always read whole, so 700 is never 70.
+    /// 「80級」「80等」「等級80」「Lv.80」, optionally followed by 以上 (or +), 以下 or 以內, and
+    /// ranges such as 「70到80級」. A number counts only with a marker before it or a level word
+    /// after it, and is always read whole, so 700 is never 70.
     private static func levelMatches(in normalized: Normalized) -> [Match] {
         let text = normalized.characters
         var matches: [Match] = []
@@ -414,7 +414,10 @@ struct ItemQueryMatcher: Sendable {
             var lower: Int? = first.value
             var upper: Int? = second ?? first.value
             if second == nil {
-                if hasWord("以上", at: end, in: text) {
+                if end < text.count, text[end] == "+" {
+                    upper = nil
+                    end += 1
+                } else if hasWord("以上", at: end, in: text) {
                     upper = nil
                     end += 2
                 } else if hasWord("以下", at: end, in: text) || hasWord("以內", at: end, in: text) {

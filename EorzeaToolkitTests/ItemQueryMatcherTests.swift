@@ -318,6 +318,15 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertNil(search("il600的東西", keyword: "il600").keyword)
     }
 
+    /// 710+ is 710 or above. (AC-38)
+    func testAPlusAfterALevelMeansOrAbove() {
+        XCTAssertEqual(conditions("武士刀 il710+"), [.categories(["武士刀"]), .itemLevel(min: 710, max: nil)])
+        XCTAssertEqual(conditions("80級+"), [.equipLevel(min: 80, max: nil)])
+        XCTAssertEqual(conditions("80等+"), [.equipLevel(min: 80, max: nil)])
+        XCTAssertEqual(conditions("lv90＋"), [.equipLevel(min: 90, max: nil)])
+        XCTAssertEqual(conditions("80+"), [], "a number without a level word is still no level")
+    }
+
     /// The second run kept 70 from 「700」 because 70 is part of the text; numbers are read whole.
     func testNumbersAreReadWhole() {
         XCTAssertEqual(conditions("品級700"), [.itemLevel(min: 700, max: 700)])
