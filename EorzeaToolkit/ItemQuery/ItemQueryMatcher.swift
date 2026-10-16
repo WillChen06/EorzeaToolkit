@@ -88,16 +88,25 @@ struct ItemQueryMatcher: Sendable {
             add(rarity.colour + "裝", .rarity(rarity.name))
         }
 
-        let filterJobs = Set(vocabulary.jobs.map(\.abbreviation))
-        for group in ItemQueryEverydayNames.jobGroups {
-            let jobs = group.targets.filter { filterJobs.contains($0) }
-            guard !jobs.isEmpty else {
-                continue
-            }
-            for name in group.names {
-                add(name, .jobs(jobs))
+        // Players' words the data has no name for, kept to what the data and the job filter have.
+        func addEverydayNames(
+            _ groups: [ItemQueryEverydayNames.Group],
+            known: Set<String>,
+            _ condition: ([String]) -> Condition
+        ) {
+            for group in groups {
+                let targets = group.targets.filter { known.contains($0) }
+                guard !targets.isEmpty else {
+                    continue
+                }
+                for name in group.names {
+                    add(name, condition(targets))
+                }
             }
         }
+        addEverydayNames(ItemQueryEverydayNames.jobGroups, known: Set(vocabulary.jobs.map(\.abbreviation)), Condition.jobs)
+        addEverydayNames(ItemQueryEverydayNames.slots, known: Set(vocabulary.slots.map(\.name)), Condition.slots)
+        addEverydayNames(ItemQueryEverydayNames.categories, known: Set(vocabulary.categories.map(\.name)), Condition.categories)
 
         for name in unbracketedNames {
             add(name.text, .categories([name.category]))

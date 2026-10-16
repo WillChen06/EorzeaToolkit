@@ -6,11 +6,13 @@ import XCTest
 final class ItemQueryMatcherTests: XCTestCase {
     private typealias Condition = ItemQueryMatcher.Condition
 
-    private static let matcher: ItemQueryMatcher = {
-        // Loading the item data takes a while; every test shares one matcher.
+    // Loading the item data takes a while; every test shares one vocabulary and matcher.
+    private static let vocabulary: ItemQueryVocabulary = {
         let data: ItemDataResponse = try! LocalDataService.load("items")
-        return ItemQueryMatcher(vocabulary: ItemQueryVocabulary(data: data))
+        return ItemQueryVocabulary(data: data)
     }()
+
+    private static let matcher = ItemQueryMatcher(vocabulary: vocabulary)
 
     private var matcher: ItemQueryMatcher {
         Self.matcher
@@ -141,6 +143,102 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(conditions("吟遊能穿的"), [.jobs(["BRD"])])
         XCTAssertEqual(conditions("吟遊詩人"), [.jobs(["BRD"])], "the official name is still one match")
         XCTAssertNil(search("吟遊能穿的", keyword: "吟遊").keyword)
+    }
+
+    // MARK: - Everyday words for body parts and categories (AC-29, AC-30)
+
+    private static let everydaySlots: [(word: String, slots: [String])] = [
+        ("頭", ["頭部"]), ("帽子", ["頭部"]),
+        ("衣服", ["身體"]), ("上衣", ["身體"]),
+        ("手套", ["手部"]),
+        ("褲子", ["腿部"]),
+        ("鞋子", ["腳部"]), ("鞋", ["腳部"]), ("靴子", ["腳部"]),
+        ("耳環", ["耳部"]),
+        ("手環", ["腕部"]),
+        ("武器", ["主手", "副手"])
+    ]
+
+    private static let everydayCategories: [(word: String, categories: [String])] = [
+        ("杖", ["單手幻杖", "雙手幻杖", "單手咒杖", "雙手咒杖", "青魔杖"]),
+        ("刀", ["武士刀", "二刀流武器"]),
+        ("二刀", ["二刀流武器"]),
+        ("食物", ["食品"]), ("料理", ["食品"])
+    ]
+
+    /// Taken as the keyword, each word leaves nothing behind, which also fails when only a
+    /// shorter word such as 鞋 inside 鞋子 is known.
+    func testEverydayWordsForBodyParts() {
+        for (word, slots) in Self.everydaySlots {
+            XCTAssertEqual(conditions("找\(word)"), [.slots(slots)], word)
+
+            let fields = search("找\(word)", keyword: word)
+            XCTAssertEqual(fields.slots, slots, word)
+            XCTAssertNil(fields.categories, word)
+            XCTAssertNil(fields.keyword, word)
+        }
+    }
+
+    func testEverydayWordsForCategories() {
+        for (word, categories) in Self.everydayCategories {
+            XCTAssertEqual(conditions("找\(word)"), [.categories(categories)], word)
+
+            let fields = search("找\(word)", keyword: word)
+            XCTAssertEqual(fields.categories, categories, word)
+            XCTAssertNil(fields.slots, word)
+            XCTAssertNil(fields.keyword, word)
+        }
+    }
+
+    /// The matcher quietly skips a target the data lacks, so a misspelt one would go unnoticed.
+    func testEverydayWordsPointAtNamesInTheData() {
+        let slots = Set(Self.vocabulary.slots.map(\.name))
+        let categories = Set(Self.vocabulary.categories.map(\.name))
+        let jobs = Set(Self.vocabulary.jobs.map(\.abbreviation))
+
+        for group in ItemQueryEverydayNames.slots {
+            XCTAssertTrue(Set(group.targets).isSubset(of: slots), "\(group.targets)")
+        }
+        for group in ItemQueryEverydayNames.categories {
+            XCTAssertTrue(Set(group.targets).isSubset(of: categories), "\(group.targets)")
+        }
+        for group in ItemQueryEverydayNames.jobGroups {
+            XCTAssertTrue(Set(group.targets).isSubset(of: jobs), "\(group.targets)")
+        }
+    }
+
+    func testAnEverydayCategoryWordNarrowsToTheSentencesJobs() {
+        XCTAssertEqual(search("白魔的杖").categories, ["單手幻杖", "雙手幻杖"])
+        XCTAssertEqual(search("黑魔的杖").categories, ["單手咒杖", "雙手咒杖"])
+        XCTAssertEqual(search("補的杖").categories, ["單手幻杖", "雙手幻杖"])
+        XCTAssertEqual(search("法系的杖").categories, ["單手咒杖", "雙手咒杖"])
+        XCTAssertEqual(search("武士的刀").categories, ["武士刀"])
+        XCTAssertEqual(search("毒蛇的刀").categories, ["二刀流武器"])
+        XCTAssertEqual(search("杖").categories?.count, 5, "no job, no narrowing")
+        XCTAssertEqual(search("坦的杖").categories?.count, 5, "jobs that use none keep them all")
+    }
+
+    func testLongerNamesWinOverEverydayWordsInsideThem() {
+        let tanks = ["PLD", "WAR", "DRK", "GNB"]
+        let cases: [(String, [Condition])] = [
+            ("頭部", [.slots(["頭部"])]),
+            ("頭部防具", [.categories(["頭部防具"])]),
+            ("二刀流武器", [.categories(["二刀流武器"])]),
+            ("格鬥武器", [.categories(["格鬥武器"])]),
+            ("投擲武器", [.categories(["投擲武器"])]),
+            ("單手幻杖", [.categories(["單手幻杖"])]),
+            ("青魔杖", [.categories(["青魔杖"])]),
+            ("武士刀", [.categories(["武士刀"])]),
+            ("雙手鐮刀", [.categories(["雙手鐮刀"])]),
+            ("鐮刀", [.jobs(["RPR"])]),
+            ("二刀", [.categories(["二刀流武器"])]),
+            ("鞋子", [.slots(["腳部"])]),
+            ("坦克", [.jobs(tanks)]),
+            ("食品", [.categories(["食品"])])
+        ]
+
+        for (sentence, expected) in cases {
+            XCTAssertEqual(conditions(sentence), expected, sentence)
+        }
     }
 
     // MARK: - Names come from the data (AC-15)

@@ -21,4 +21,26 @@ enum ItemQueryEverydayNames {
         Group(names: ["採集職", "大地使者"], targets: ["MIN", "BTN", "FSH"]),
         Group(names: ["生產職", "能工巧匠"], targets: ["CRP", "BSM", "ARM", "GSM", "LTW", "WVR", "ALC", "CUL"])
     ]
+
+    /// Body parts, by their names in the item data. A weapon is in either hand, so 武器 also
+    /// covers a paladin's shield.
+    static let slots: [Group] = [
+        Group(names: ["頭", "帽子"], targets: ["頭部"]),
+        Group(names: ["衣服", "上衣"], targets: ["身體"]),
+        Group(names: ["手套"], targets: ["手部"]),
+        Group(names: ["褲子"], targets: ["腿部"]),
+        Group(names: ["鞋子", "鞋", "靴子"], targets: ["腳部"]),
+        Group(names: ["耳環"], targets: ["耳部"]),
+        Group(names: ["手環"], targets: ["腕部"]),
+        Group(names: ["武器"], targets: ["主手", "副手"])
+    ]
+
+    /// Categories, by their names in the item data. A word for several is narrowed to the jobs
+    /// in the sentence, as 副工具 is: 白魔的杖 is a conjurer's staff.
+    static let categories: [Group] = [
+        Group(names: ["杖"], targets: ["單手幻杖", "雙手幻杖", "單手咒杖", "雙手咒杖", "青魔杖"]),
+        Group(names: ["刀"], targets: ["武士刀", "二刀流武器"]),
+        Group(names: ["二刀"], targets: ["二刀流武器"]),
+        Group(names: ["食物", "料理"], targets: ["食品"])
+    ]
 }
