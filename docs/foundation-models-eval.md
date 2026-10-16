@@ -9,7 +9,7 @@
 
 - **環境**：與前幾輪相同（macOS 27.2 beta，Build 26B5101f；Xcode 27.1）。
 - **程式碼**：`feature/item-description-search` 的 `9f4b5aa`。解析程式碼和給模型的指示與第四輪相同。
-- **保留集**：`Tools/ItemQueryEval/holdout.json`，24 句（規則見 `prompts/item-description-search.md`「保留集」）：
+- **保留集**：24 句（規則見 `prompts/item-description-search.md`「保留集」）。跑的時候是 `Tools/ItemQueryEval/holdout.json`，規則依這一輪調整後改名為 `holdout-1.json`，只當回歸測試：
   - 使用者寫的 8 句（`holdout-01`～`08`）；
   - 沒讀過 repo、比對規則和指示的 subagent 照使用者的句子產生 18 句候選，使用者刪掉 2 句、確認其餘 16 句的預期結果（`holdout-g`）。
 - **門檻**：用法 ≥ 90%、整句完全正確 ≥ 80%：**未達到**。用法 24/24（100%），整句完全正確 5/24（20.8%）。

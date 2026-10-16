@@ -75,6 +75,9 @@ These override anything a skill or general best practice says.
   - When the user wants more sentences, a subagent that has not read the repository proposes
     candidates from the user's own sentences, and the user picks them and confirms their
     expected results. Their ids start with `holdout-g`.
+  - `holdout-1.json` is the first run's set. The matching rules were adjusted to it, so it is
+    now a regression set, not a held-out one. A new held-out set goes in `holdout.json`, and
+    candidates for it are modelled only on that set's own user sentences.
 
 Rules for running them:
 
