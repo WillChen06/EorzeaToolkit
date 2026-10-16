@@ -329,9 +329,13 @@ struct ItemQueryMatcher: Sendable {
     private static let levelSeparators: Set<Character> = [".", ":"]
     private static let rangeConnectors: Set<Character> = ["到", "至", "~", "〜", "-", "–", "—"]
 
-    /// 「80級」「等級80」「Lv.80」, optionally followed by 以上, 以下 or 以內, and ranges such as
-    /// 「70到80級」. A number counts only with a marker before it or 級 after it, and is always
-    /// read whole, so 700 is never 70.
+    /// Words after a number that make it a level. Players write 80等 as often as 80級; 等級 comes
+    /// first, so 80等級 is read whole.
+    private static let levelSuffixes = ["等級", "級", "等"]
+
+    /// 「80級」「80等」「等級80」「Lv.80」, optionally followed by 以上, 以下 or 以內, and ranges
+    /// such as 「70到80級」. A number counts only with a marker before it or a level word after it,
+    /// and is always read whole, so 700 is never 70.
     private static func levelMatches(in normalized: Normalized) -> [Match] {
         let text = normalized.characters
         var matches: [Match] = []
@@ -345,8 +349,8 @@ struct ItemQueryMatcher: Sendable {
             let marker = levelMarker(before: index, in: normalized)
             var end = first.end
             var saysLevel = false
-            if end < text.count, text[end] == "級" {
-                end += 1
+            if let suffix = levelSuffix(at: end, in: text) {
+                end += suffix
                 saysLevel = true
             }
 
@@ -354,8 +358,8 @@ struct ItemQueryMatcher: Sendable {
             if end < text.count, rangeConnectors.contains(text[end]), let next = number(at: end + 1, in: normalized) {
                 second = next.value
                 end = next.end
-                if end < text.count, text[end] == "級" {
-                    end += 1
+                if let suffix = levelSuffix(at: end, in: text) {
+                    end += suffix
                     saysLevel = true
                 }
             }
@@ -384,6 +388,11 @@ struct ItemQueryMatcher: Sendable {
             index = end
         }
         return matches
+    }
+
+    /// The length of the level word right after a number, if there is one.
+    private static func levelSuffix(at index: Int, in text: [Character]) -> Int? {
+        levelSuffixes.first { hasWord($0, at: index, in: text) }?.count
     }
 
     /// The digits from `index` on, up to the first other character or whitespace.

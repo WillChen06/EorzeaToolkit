@@ -329,6 +329,32 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertNil(fields.itemLevelMax)
     }
 
+    /// The whole list is compared, so a 級 left over from 80等級 or a dropped 以上 shows. (AC-31)
+    func testLevelsWrittenWith等() {
+        let cases: [(String, [Condition])] = [
+            ("80等", [.equipLevel(min: 80, max: 80)]),
+            ("80等級", [.equipLevel(min: 80, max: 80)]),
+            ("80等以上", [.equipLevel(min: 80, max: nil)]),
+            ("80等級以上", [.equipLevel(min: 80, max: nil)]),
+            ("30等以下", [.equipLevel(min: nil, max: 30)]),
+            ("50等以內", [.equipLevel(min: nil, max: 50)]),
+            ("70到80等", [.equipLevel(min: 70, max: 80)]),
+            ("70等到80等", [.equipLevel(min: 70, max: 80)]),
+            ("70等級~80等級", [.equipLevel(min: 70, max: 80)]),
+            ("頭部等", [.slots(["頭部"])])
+        ]
+
+        for (sentence, expected) in cases {
+            XCTAssertEqual(conditions(sentence), expected, sentence)
+        }
+    }
+
+    func testALevelWrittenWith等LeavesNothingInTheKeyword() {
+        let fields = search("50等的弓", keyword: "50等的弓")
+
+        XCTAssertEqual(fields, ItemQueryFields(usage: "搜尋", categories: ["弓"], equipLevelMin: 50, equipLevelMax: 50))
+    }
+
     // MARK: - Rarities, HQ and tradability (AC-20)
 
     func testRaritiesByNameOrColour() {
