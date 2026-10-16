@@ -97,6 +97,44 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(search("白魔的副工具").categories?.count, 11, "a job that uses none keeps them all")
     }
 
+    // MARK: - Job roles (AC-27)
+
+    private static let roles: [(words: [String], jobs: [String])] = [
+        (["坦", "坦克"], ["PLD", "WAR", "DRK", "GNB"]),
+        (["補", "補師", "治療"], ["WHM", "SCH", "AST", "SGE"]),
+        (["近戰"], ["MNK", "DRG", "NIN", "SAM", "RPR", "VPR"]),
+        (["遠敏", "遠程物理"], ["BRD", "MCH", "DNC"]),
+        (["法系", "遠程魔法"], ["BLM", "SMN", "RDM", "PCT"]),
+        (["採集職", "大地使者"], ["MIN", "BTN", "FSH"]),
+        (["生產職", "能工巧匠"], ["CRP", "BSM", "ARM", "GSM", "LTW", "WVR", "ALC", "CUL"])
+    ]
+
+    /// A role is one match for its whole group. Taken as the keyword, the word leaves nothing
+    /// behind, which also fails when only a shorter word such as 坦 inside 坦克 is known.
+    func testEveryRoleWordStandsForItsJobs() {
+        for (words, jobs) in Self.roles {
+            for word in words {
+                XCTAssertEqual(conditions("\(word)用的"), [.jobs(jobs)], word)
+
+                let fields = search("\(word)用的", keyword: word)
+                XCTAssertEqual(fields.jobs, jobs, word)
+                XCTAssertNil(fields.keyword, word)
+            }
+        }
+    }
+
+    func testTheRolesCoverEveryFilterJobOnce() {
+        let jobs = Self.roles.flatMap(\.jobs)
+
+        XCTAssertEqual(jobs.count, Set(jobs).count)
+        XCTAssertEqual(Set(jobs), Set(ItemJobFilterOption.displayOptions.map(\.abbreviation)))
+    }
+
+    func testARoleAddsToTheJobsNamedBesideIt() {
+        XCTAssertEqual(search("坦或白魔能穿的").jobs, ["PLD", "WAR", "DRK", "GNB", "WHM"])
+        XCTAssertEqual(search("補和學者").jobs, ["WHM", "SCH", "AST", "SGE"])
+    }
+
     // MARK: - Names come from the data (AC-15)
 
     func testNamesComeFromTheItemData() {

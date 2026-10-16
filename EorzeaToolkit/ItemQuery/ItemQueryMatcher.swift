@@ -88,6 +88,17 @@ struct ItemQueryMatcher: Sendable {
             add(rarity.colour + "裝", .rarity(rarity.name))
         }
 
+        let filterJobs = Set(vocabulary.jobs.map(\.abbreviation))
+        for group in ItemQueryEverydayNames.jobGroups {
+            let jobs = group.targets.filter { filterJobs.contains($0) }
+            guard !jobs.isEmpty else {
+                continue
+            }
+            for name in group.names {
+                add(name, .jobs(jobs))
+            }
+        }
+
         for name in unbracketedNames {
             add(name.text, .categories([name.category]))
         }
