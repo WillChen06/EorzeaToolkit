@@ -9,7 +9,7 @@ struct EvalOptions {
     static let usage = """
     用法：ItemQueryEval [--check] [--holdout] [--root <repo>] [--items <items.json>] [--cases <cases.json>]
       --check    只檢查評估集，不呼叫模型
-      --holdout  保留集模式：不檢查評估集的組成，預設讀 <root>/Tools/ItemQueryEval/holdout.json
+      --holdout  保留集模式：不檢查組成，允許原文沒有的關鍵字，預設讀 <root>/Tools/ItemQueryEval/holdout.json
       --root     repo 的根目錄，預設是目前的目錄
       --items    道具資料，預設是 <root>/EorzeaToolkit/Resources/Data/items.json
       --cases    評估集，預設是 <root>/Tools/ItemQueryEval/cases.json
@@ -17,8 +17,8 @@ struct EvalOptions {
 
     let checkOnly: Bool
     /// The user's held-out set (prompts/item-description-search.md) rather than the evaluation
-    /// set: it is written apart from the matching rules and need not follow the evaluation set's
-    /// composition.
+    /// set: it is written apart from the matching rules, need not follow the evaluation set's
+    /// composition, and may expect keywords the sentence does not contain.
     let holdout: Bool
     let itemsURL: URL
     let casesURL: URL
