@@ -4,8 +4,8 @@ import XCTest
 /// The conditions in a sentence are matched by code, not by the model, so every rule in the
 /// spec's 「程式比對」 section is pinned down here without a model.
 ///
-/// AC-15 to AC-21 are prompts/item-query-eval.md's; AC-27 to AC-33 are
-/// prompts/item-description-search.md's 「比對規則調整」.
+/// AC-15 to AC-21 are prompts/item-query-eval.md's. AC-27 to AC-33 and AC-36 to AC-41 are
+/// prompts/item-description-search.md's 「比對規則調整」, after the first and second held-out runs.
 final class ItemQueryMatcherTests: XCTestCase {
     private typealias Condition = ItemQueryMatcher.Condition
 

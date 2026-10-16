@@ -68,6 +68,8 @@ final class ItemQueryHoldoutRegressionTests: XCTestCase {
         ]
     )
 
+    /// None of the rebuilt sentences holds a word the second adjustment added, so they match
+    /// whatever keyword the model gave, as they did in the run.
     private static let secondRun = Run(
         file: "holdout-2",
         sentenceCount: 28,

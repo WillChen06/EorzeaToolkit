@@ -2,9 +2,9 @@ import Foundation
 
 /// Words players use that the item data has no name for, matched like any other name.
 ///
-/// They were added after the first held-out run, where most misses were sentences such as
-/// 「坦用的武器」 (prompts/item-description-search.md, 「比對規則調整」). The matcher keeps only the
-/// targets the data and the job filter have, and a longer name still wins over a word inside it.
+/// They were added after the held-out runs, where most misses were sentences such as 「坦用的武器」
+/// or 「drg槍 90等」 (prompts/item-description-search.md, 「比對規則調整」). The matcher keeps only
+/// the targets the data and the job filter have, and a longer name still wins over a word inside it.
 enum ItemQueryEverydayNames {
     struct Group: Sendable {
         let names: [String]
