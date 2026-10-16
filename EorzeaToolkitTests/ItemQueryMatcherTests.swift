@@ -135,6 +135,14 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(search("補和學者").jobs, ["WHM", "SCH", "AST", "SGE"])
     }
 
+    // MARK: - 吟遊 (AC-28)
+
+    func testYinYouIsTheBard() {
+        XCTAssertEqual(conditions("吟遊能穿的"), [.jobs(["BRD"])])
+        XCTAssertEqual(conditions("吟遊詩人"), [.jobs(["BRD"])], "the official name is still one match")
+        XCTAssertNil(search("吟遊能穿的", keyword: "吟遊").keyword)
+    }
+
     // MARK: - Names come from the data (AC-15)
 
     func testNamesComeFromTheItemData() {
