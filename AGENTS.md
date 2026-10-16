@@ -76,8 +76,9 @@ These override anything a skill or general best practice says.
     candidates from the user's own sentences, and the user picks them and confirms their
     expected results. Their ids start with `holdout-g`.
   - `holdout-1.json` is the first run's set. The matching rules were adjusted to it, so it is
-    now a regression set, not a held-out one. A new held-out set goes in `holdout.json`, and
-    candidates for it are modelled only on that set's own user sentences.
+    now a regression set, not a held-out one. A new held-out set goes in `holdout.json`. Its
+    candidates are never modelled on `holdout-1.json`: the second set is proposed without any
+    example sentences, and the user picks them.
 
 Rules for running them:
 
