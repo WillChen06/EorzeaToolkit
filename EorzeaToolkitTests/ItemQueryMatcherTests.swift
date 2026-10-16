@@ -501,6 +501,53 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(search("找ＡＢＣ長袍", keyword: " abc長袍 ").keyword, "abc長袍")
     }
 
+    // MARK: - Keywords ending in 的 and a condition (AC-33)
+
+    /// The first held-out run returned these keywords whole, which swallowed the body part.
+    func testASearchKeywordEndingIn的AndAConditionGivesUpBoth() {
+        XCTAssertEqual(search("伊甸的戒指", keyword: "伊甸的戒指"), ItemQueryFields(usage: "搜尋", keyword: "伊甸", slots: ["戒指"]))
+        XCTAssertEqual(search("寄葉的衣服", keyword: "寄葉的衣服"), ItemQueryFields(usage: "搜尋", keyword: "寄葉", slots: ["身體"]))
+        XCTAssertEqual(search("找 伊甸 的戒指", keyword: "伊甸 的戒指").keyword, "伊甸")
+    }
+
+    /// What is left goes through the usual rules, so a keyword of conditions is still dropped.
+    func testWhatIsLeftOfTheKeywordFollowsTheUsualRules() {
+        XCTAssertEqual(
+            search("白魔的杖", keyword: "白魔的杖"),
+            ItemQueryFields(usage: "搜尋", categories: ["單手幻杖", "雙手幻杖"], jobs: ["WHM"])
+        )
+        XCTAssertEqual(
+            search("毒蛇的二刀", keyword: "毒蛇的二刀"),
+            ItemQueryFields(usage: "搜尋", categories: ["二刀流武器"], jobs: ["VPR"])
+        )
+    }
+
+    func testAnItemsFullNameStaysWhole() {
+        for name in ["瑪托雅的帽子", "年代久遠的長槍"] {
+            XCTAssertEqual(search("找\(name)", keyword: name), ItemQueryFields(usage: "搜尋", keyword: name), name)
+        }
+    }
+
+    /// A recipe lookup's keyword is the item to make; cutting it would only truncate the name.
+    func testARecipeKeywordStaysWhole() {
+        for name in ["伊甸的戒指", "瑪托雅的帽子"] {
+            XCTAssertEqual(
+                matcher.fields(for: "\(name)怎麼做", usage: "查配方", keyword: name),
+                ItemQueryFields(usage: "查配方", keyword: name),
+                name
+            )
+        }
+    }
+
+    func testOnlyAConditionRightAfter的IsCut() {
+        XCTAssertEqual(search("伊甸戒指", keyword: "伊甸戒指"), ItemQueryFields(usage: "搜尋", keyword: "伊甸戒指"))
+        XCTAssertEqual(
+            search("伊甸的戒指，90級以上", keyword: "伊甸的戒指，90級以上").keyword,
+            "伊甸的戒指，90級以上",
+            "the level at the end does not follow a 的, so the keyword stays as it was"
+        )
+    }
+
     // MARK: - Usage (AC-21)
 
     func testASentenceThatCannotBeHandledKeepsOnlyItsUsage() {

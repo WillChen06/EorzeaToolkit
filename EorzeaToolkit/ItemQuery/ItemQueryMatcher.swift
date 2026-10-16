@@ -141,7 +141,13 @@ struct ItemQueryMatcher: Sendable {
 
         let text = Normalized(sentence)
         var matches = self.matches(in: text)
-        let keyword = self.keyword(keyword, in: text.characters, dropping: &matches)
+        // A recipe lookup's keyword is the item to make, and its conditions do not count.
+        let keyword = self.keyword(
+            keyword,
+            in: text.characters,
+            dropping: &matches,
+            cutsTrailingCondition: usage == .search
+        )
         if usage == .recipe {
             return ItemQueryFields(usage: usageLabel, keyword: keyword)
         }
@@ -152,13 +158,34 @@ struct ItemQueryMatcher: Sendable {
     /// conditions (頭部裝備, 繪靈法師的筆) is dropped unless an item has exactly that name and it is
     /// more than one condition (紅蓮盾, but not 毒蛇); otherwise the conditions inside it are part
     /// of an item's name (the 盾 in 守護者之盾) and are dropped instead.
-    private func keyword(_ keyword: String?, in text: [Character], dropping matches: inout [Match]) -> String? {
-        guard let keyword = keyword?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+    ///
+    /// With `cutsTrailingCondition`, a keyword ending in 的 and a condition loses both first, and
+    /// the condition still counts: 伊甸的戒指 is 伊甸 on the ring slot. An item's full name, such as
+    /// 瑪托雅的帽子, stays whole.
+    private func keyword(
+        _ keyword: String?,
+        in text: [Character],
+        dropping matches: inout [Match],
+        cutsTrailingCondition: Bool
+    ) -> String? {
+        guard var keyword = keyword?.trimmingCharacters(in: .whitespacesAndNewlines) else {
             return nil
         }
-        let normalizedKeyword = Array(Self.normalized(keyword))
-        guard let range = Self.occurrences(of: normalizedKeyword, in: text).first else {
+        var normalizedKeyword = Array(Self.normalized(keyword))
+        guard var range = Self.occurrences(of: normalizedKeyword, in: text).first else {
             return nil
+        }
+
+        if cutsTrailingCondition, !vocabulary.isItemName(keyword),
+           let cut = Self.trailingCondition(of: range, in: text, matches: matches),
+           let ofIndex = keyword.lastIndex(of: "的") {
+            let shorter = String(keyword[..<ofIndex]).trimmingCharacters(in: .whitespacesAndNewlines)
+            // The condition holds no 的, so the last 的 is the one before it; checked anyway.
+            if Array(Self.normalized(shorter)) == Array(text[range.lowerBound..<cut]) {
+                keyword = shorter
+                normalizedKeyword = Array(text[range.lowerBound..<cut])
+                range = range.lowerBound..<cut
+            }
         }
 
         var covered = Array(repeating: false, count: text.count)
@@ -187,6 +214,19 @@ struct ItemQueryMatcher: Sendable {
 
         matches.removeAll { range.lowerBound <= $0.range.lowerBound && $0.range.upperBound <= range.upperBound }
         return keyword
+    }
+
+    /// Where 的 stands when the keyword at `range` ends in 的 and a condition, with something
+    /// before the 的.
+    private static func trailingCondition(of range: Range<Int>, in text: [Character], matches: [Match]) -> Int? {
+        guard let condition = matches.first(where: { $0.range.upperBound == range.upperBound }) else {
+            return nil
+        }
+        let particle = condition.range.lowerBound - 1
+        guard particle > range.lowerBound, text[particle] == "的" else {
+            return nil
+        }
+        return particle
     }
 
     private func fields(usage: String?, keyword: String?, matches: [Match]) -> ItemQueryFields {
