@@ -1,0 +1,32 @@
+{
+  "cases": [
+    {"id": "holdout-g01", "group": "combination", "query": "坦克可以戴的帽子有哪些？", "expected": {"usage": "搜尋", "jobs": ["PLD", "WAR", "DRK", "GNB"], "slots": ["頭部"]}},
+    {"id": "holdout-g02", "group": "equipLevel", "query": "50等以下可以穿的", "expected": {"usage": "搜尋", "equipLevelMax": 50}},
+    {"id": "holdout-g03", "group": "recipe", "query": "鐵錠怎麼做", "expected": {"usage": "查配方", "keyword": "鐵錠"}},
+    {"id": "holdout-g04", "group": "itemLevel", "query": "裝等700以上", "expected": {"usage": "搜尋", "itemLevelMin": 700}},
+    {"id": "holdout-g05", "group": "combination", "query": "有沒有藍色的手環", "expected": {"usage": "搜尋", "slots": ["腕部"], "rarities": ["貴重"]}},
+    {"id": "holdout-g06", "group": "guardrail", "query": "毒蛇的武器", "expected": {"usage": "搜尋", "jobs": ["VPR"], "slots": ["主手"]}},
+    {"id": "holdout-g07", "group": "combination", "query": "亞拉戈的鞋子 戰士能穿的", "expected": {"usage": "搜尋", "keyword": "亞拉戈", "jobs": ["WAR"], "slots": ["腳部"]}},
+    {"id": "holdout-g08", "group": "unsupported", "query": "有沒有吃了會加直擊的料理", "expected": {"usage": "無法處理"}},
+    {"id": "holdout-g09", "group": "combination", "query": "drg槍 90等", "expected": {"usage": "搜尋", "jobs": ["DRG"], "categories": ["長槍"], "equipLevelMin": 90, "equipLevelMax": 90}},
+    {"id": "holdout-g10", "group": "combination", "query": "可以HQ的料理", "expected": {"usage": "搜尋", "categories": ["食品"], "hq": "可HQ"}},
+    {"id": "holdout-g11", "group": "itemLevel", "query": "il600的東西", "expected": {"usage": "搜尋", "itemLevelMin": 600, "itemLevelMax": 600}},
+    {"id": "holdout-g12", "group": "guardrail", "query": "武士刀 il710+", "expected": {"usage": "搜尋", "categories": ["武士刀"], "itemLevelMin": 710}},
+    {"id": "holdout-g13", "group": "recipe", "query": "強心劑要哪些材料啊", "expected": {"usage": "查配方", "keyword": "強心劑"}},
+    {"id": "holdout-g14", "group": "combination", "query": "暗物 市場上買得到的有哪幾種", "expected": {"usage": "搜尋", "keyword": "暗物質", "tradable": "可交易"}},
+    {"id": "holdout-g15", "group": "equipLevel", "query": "Lv.60 的裝備有哪些", "expected": {"usage": "搜尋", "equipLevelMin": 60, "equipLevelMax": 60}},
+    {"id": "holdout-g16", "group": "combination", "query": "補師耳環", "expected": {"usage": "搜尋", "jobs": ["WHM", "SCH", "AST", "SGE"], "slots": ["耳部"]}},
+    {"id": "holdout-g17", "group": "guardrail", "query": "鑲嵌用的魔晶石，有哪些能在市場上賣？", "expected": {"usage": "搜尋", "categories": ["魔晶石"], "tradable": "可交易"}},
+    {"id": "holdout-g18", "group": "unsupported", "query": "絕槍要去哪裡解鎖", "expected": {"usage": "無法處理"}},
+    {"id": "holdout-g19", "group": "combination", "query": "能丟市場賣的綠色耳環", "expected": {"usage": "搜尋", "slots": ["耳部"], "rarities": ["稀有"], "tradable": "可交易"}},
+    {"id": "holdout-g20", "group": "combination", "query": "有陸行鳥的寵物嗎", "expected": {"usage": "搜尋", "keyword": "陸行鳥", "categories": ["寵物"]}},
+    {"id": "holdout-g21", "group": "itemLevel", "query": "請幫我找品級 400 以下的道具", "expected": {"usage": "搜尋", "itemLevelMax": 400}},
+    {"id": "holdout-g22", "group": "guardrail", "query": "黑魔的雙手杖 lv100", "expected": {"usage": "搜尋", "jobs": ["BLM"], "categories": ["雙手咒杖"], "equipLevelMin": 100, "equipLevelMax": 100}},
+    {"id": "holdout-g23", "group": "recipe", "query": "請問做麻布需要準備什麼素材？", "expected": {"usage": "查配方", "keyword": "麻布"}},
+    {"id": "holdout-g24", "group": "combination", "query": "我想找採集職業可以用的手套，最好是可以 HQ 的", "expected": {"usage": "搜尋", "jobs": ["MIN", "BTN", "FSH"], "slots": ["手部"], "hq": "可HQ"}},
+    {"id": "holdout-g25", "group": "equipLevel", "query": "等級七十到八十之間的裝備", "expected": {"usage": "搜尋", "equipLevelMin": 70, "equipLevelMax": 80}},
+    {"id": "holdout-g26", "group": "combination", "query": "不能交易的紫武", "expected": {"usage": "搜尋", "slots": ["主手"], "rarities": ["武勳"], "tradable": "不可交易"}},
+    {"id": "holdout-g27", "group": "guardrail", "query": "想找血紅色的染劑", "expected": {"usage": "搜尋", "keyword": "血紅", "categories": ["染料"]}},
+    {"id": "holdout-g28", "group": "unsupported", "query": "零式打了三週還是沒出鞋子，好煩", "expected": {"usage": "無法處理"}}
+  ]
+}
