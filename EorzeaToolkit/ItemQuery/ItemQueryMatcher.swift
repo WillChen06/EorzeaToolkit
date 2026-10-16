@@ -356,12 +356,13 @@ struct ItemQueryMatcher: Sendable {
     }
 
     /// Words before a number that make it a level. Longer ones come first, so iLv is not read as
-    /// Lv; 品級 also ends in 級 but is a word before the number, not after it.
+    /// il or Lv; 品級 also ends in 級 but is a word before the number, not after it.
     private static let levelMarkers = [
         LevelMarker("品級", .item),
         LevelMarker("裝等", .item),
         LevelMarker("ilvl", .item),
         LevelMarker("ilv", .item),
+        LevelMarker("il", .item),
         LevelMarker("等級", .equip),
         LevelMarker("lvl", .equip),
         LevelMarker("lv", .equip)

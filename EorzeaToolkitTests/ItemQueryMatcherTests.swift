@@ -308,6 +308,16 @@ final class ItemQueryMatcherTests: XCTestCase {
         }
     }
 
+    /// Players shorten iLv to il. (AC-37)
+    func testILIsAnItemLevel() {
+        XCTAssertEqual(conditions("il600的東西"), [.itemLevel(min: 600, max: 600)])
+        XCTAssertEqual(conditions("IL 700"), [.itemLevel(min: 700, max: 700)])
+        XCTAssertEqual(conditions("ilv600"), [.itemLevel(min: 600, max: 600)])
+        XCTAssertEqual(conditions("lv60"), [.equipLevel(min: 60, max: 60)])
+        XCTAssertEqual(conditions("xil600"), [], "il must stand alone")
+        XCTAssertNil(search("il600的東西", keyword: "il600").keyword)
+    }
+
     /// The second run kept 70 from 「700」 because 70 is part of the text; numbers are read whole.
     func testNumbersAreReadWhole() {
         XCTAssertEqual(conditions("品級700"), [.itemLevel(min: 700, max: 700)])
