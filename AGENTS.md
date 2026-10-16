@@ -69,8 +69,9 @@ These override anything a skill or general best practice says.
     skips the evaluation set's composition check and allows expected keywords the sentence does
     not contain (a player's nickname for an item). The run is judged by usage and whole
     sentences (`prompts/item-description-search.md`).
-  - The user writes the held-out set. Agents do not write it, and do not read it before its
-    first run.
+  - The user writes the held-out set's sentences and expected results. An agent may only put
+    what the user wrote into the file's format, and must not change the matching rules or the
+    model's instructions because of it before its first run.
 
 Rules for running them:
 
