@@ -9,7 +9,7 @@
 
 - **環境**：與前幾輪相同（macOS 27.2 beta，Build 26B5101f；Xcode 27.1）。
 - **程式碼**：`feature/item-description-search` 的 `660bcf3`，包括第一輪後的比對規則調整；給模型的指示不變。
-- **保留集**：28 句，全部由沒讀過 repo、比對規則和指示的 subagent 產生，不拿任何既有句子當範例；使用者全部保留、預期結果沒改（`holdout-g`）。跑的時候是 `Tools/ItemQueryEval/holdout.json`。
+- **保留集**：28 句，全部由沒讀過 repo、比對規則和指示的 subagent 產生，不拿任何既有句子當範例；使用者全部保留、預期結果沒改（`holdout-g`）。跑的時候是 `Tools/ItemQueryEval/holdout.json`，規則依這一輪調整後改名為 `holdout-2.json`，只當回歸測試。
 - **門檻**：用法 ≥ 90%、整句完全正確 ≥ 80%：**未達到**。用法 25/28（89.3%），整句完全正確 14/28（50.0%）。
   - 使用者寫的句子：0 句。
   - 產生的句子：14/28（50.0%）。
