@@ -10,7 +10,8 @@ import Foundation
 /// lower-cased and without whitespace.
 struct ItemQueryMatcher: Sendable {
     enum Condition: Equatable, Sendable {
-        /// Category names. A partial name such as 採掘工具 or 副工具 stands for several.
+        /// Category names. A partial name such as 副工具, or an everyday word such as 杖, stands
+        /// for several.
         case categories([String])
         /// Body part names. One name stands for one body part, unless it names a group.
         case slots([String])
@@ -129,9 +130,9 @@ struct ItemQueryMatcher: Sendable {
         "在", "又", "但", "賣", "買", "不", ",", "、", "､", "。", "｡"
     ]
 
-    /// The parse result: the usage and keyword the model gave, and the conditions in the
-    /// sentence. A sentence that cannot be handled keeps only its usage, and a recipe lookup only
-    /// its keyword.
+    /// The parse result: the usage and keyword the model gave, the keyword checked against the
+    /// sentence, and the conditions in the sentence. A sentence that cannot be handled keeps only
+    /// its usage, and a recipe lookup only its keyword.
     func fields(for sentence: String, usage: String?, keyword: String?) -> ItemQueryFields {
         let usageLabel = usage?.trimmingCharacters(in: .whitespacesAndNewlines)
         let usage = usageLabel.flatMap { ItemQuery.Usage(label: $0) } ?? .search
