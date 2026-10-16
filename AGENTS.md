@@ -72,6 +72,9 @@ These override anything a skill or general best practice says.
   - The user writes the held-out set's sentences and expected results. An agent may only put
     what the user wrote into the file's format, and must not change the matching rules or the
     model's instructions because of it before its first run.
+  - When the user wants more sentences, a subagent that has not read the repository proposes
+    candidates from the user's own sentences, and the user picks them and confirms their
+    expected results. Their ids start with `holdout-g`.
 
 Rules for running them:
 
