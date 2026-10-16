@@ -12,9 +12,10 @@ struct ItemQueryMatcher: Sendable {
     enum Condition: Equatable, Sendable {
         /// Category names. A partial name such as 採掘工具 or 副工具 stands for several.
         case categories([String])
-        case slot(String)
-        /// A job abbreviation.
-        case job(String)
+        /// Body part names. One name stands for one body part, unless it names a group.
+        case slots([String])
+        /// Job abbreviations. One name stands for one job, unless it names a group.
+        case jobs([String])
         /// A rarity name.
         case rarity(String)
         case equipLevel(min: Int?, max: Int?)
@@ -71,14 +72,14 @@ struct ItemQueryMatcher: Sendable {
         // When two lists share a name, the earlier list wins: 戒指 is a body part before it is a
         // category.
         for slot in vocabulary.slots {
-            add(slot.name, .slot(slot.name))
+            add(slot.name, .slots([slot.name]))
         }
         for category in vocabulary.categories {
             add(category.name, .categories([category.name] + (categoriesByPartialName[category.name] ?? [])))
         }
         for job in vocabulary.jobs {
             for name in [job.abbreviation] + [job.officialName].compactMap({ $0 }) + job.nicknames {
-                add(name, .job(job.abbreviation))
+                add(name, .jobs([job.abbreviation]))
             }
         }
         for rarity in ItemQueryVocabulary.rarities {
@@ -187,10 +188,10 @@ struct ItemQueryMatcher: Sendable {
                 categories += names
             case .categories(let names):
                 partialCategories.append(names)
-            case .slot(let name):
-                slots.append(name)
-            case .job(let abbreviation):
-                jobs.append(abbreviation)
+            case .slots(let names):
+                slots += names
+            case .jobs(let abbreviations):
+                jobs += abbreviations
             case .rarity(let name):
                 rarities.append(name)
             case .equipLevel(let lower, let upper):

@@ -27,31 +27,31 @@ final class ItemQueryMatcherTests: XCTestCase {
     // MARK: - Names (AC-16)
 
     func testFindsCategoriesBodyPartsJobsAndRarities() {
-        XCTAssertEqual(conditions("龍騎的腿部裝備，紫色的"), [.job("DRG"), .slot("腿部"), .rarity("武勳")])
-        XCTAssertEqual(conditions("給騎士用的盾"), [.job("PLD"), .categories(["盾"])])
-        XCTAssertEqual(conditions("白魔或學者都能用的腕部裝備"), [.job("WHM"), .job("SCH"), .slot("腕部")])
+        XCTAssertEqual(conditions("龍騎的腿部裝備，紫色的"), [.jobs(["DRG"]), .slots(["腿部"]), .rarity("武勳")])
+        XCTAssertEqual(conditions("給騎士用的盾"), [.jobs(["PLD"]), .categories(["盾"])])
+        XCTAssertEqual(conditions("白魔或學者都能用的腕部裝備"), [.jobs(["WHM"]), .jobs(["SCH"]), .slots(["腕部"])])
     }
 
     /// 戒指 is both a body part and a category; as a body part it covers every ring.
     func testANameThatIsBothABodyPartAndACategoryIsTheBodyPart() {
-        XCTAssertEqual(conditions("戒指"), [.slot("戒指")])
+        XCTAssertEqual(conditions("戒指"), [.slots(["戒指"])])
     }
 
     func testOverlappingNamesKeepTheLongest() {
-        XCTAssertEqual(conditions("龍騎士"), [.job("DRG")])
-        XCTAssertEqual(conditions("暗黑騎士"), [.job("DRK")])
-        XCTAssertEqual(conditions("絕槍戰士用的槍刃"), [.job("GNB"), .categories(["槍刃"])])
+        XCTAssertEqual(conditions("龍騎士"), [.jobs(["DRG"])])
+        XCTAssertEqual(conditions("暗黑騎士"), [.jobs(["DRK"])])
+        XCTAssertEqual(conditions("絕槍戰士用的槍刃"), [.jobs(["GNB"]), .categories(["槍刃"])])
         XCTAssertEqual(conditions("武士刀"), [.categories(["武士刀"])])
         XCTAssertEqual(conditions("雙手鐮刀"), [.categories(["雙手鐮刀"])])
-        XCTAssertEqual(conditions("皮革師"), [.job("LTW")])
+        XCTAssertEqual(conditions("皮革師"), [.jobs(["LTW"])])
         XCTAssertEqual(conditions("皮革"), [.categories(["皮革"])])
         XCTAssertEqual(conditions("採掘工具（主工具）"), [.categories(["採掘工具（主工具）"])])
     }
 
     func testLatinAbbreviationsMustStandAlone() {
-        XCTAssertEqual(conditions("mch的火槍"), [.job("MCH"), .categories(["火槍"])])
-        XCTAssertEqual(conditions("SGE用的賢具"), [.job("SGE"), .categories(["賢具"])])
-        XCTAssertEqual(conditions("給 ＷＨＭ 用"), [.job("WHM")])
+        XCTAssertEqual(conditions("mch的火槍"), [.jobs(["MCH"]), .categories(["火槍"])])
+        XCTAssertEqual(conditions("SGE用的賢具"), [.jobs(["SGE"]), .categories(["賢具"])])
+        XCTAssertEqual(conditions("給 ＷＨＭ 用"), [.jobs(["WHM"])])
         XCTAssertEqual(conditions("armor"), [])
         XCTAssertEqual(conditions("whm2"), [])
         XCTAssertEqual(conditions("2whm"), [])
@@ -60,11 +60,11 @@ final class ItemQueryMatcherTests: XCTestCase {
 
     /// Whitespace is taken out before matching, but it still separates two Latin words.
     func testWhitespaceSeparatesLatinWords() {
-        XCTAssertEqual(conditions("WHM 90級的頭部裝備"), [.job("WHM"), .equipLevel(min: 90, max: 90), .slot("頭部")])
+        XCTAssertEqual(conditions("WHM 90級的頭部裝備"), [.jobs(["WHM"]), .equipLevel(min: 90, max: 90), .slots(["頭部"])])
         XCTAssertEqual(conditions("whm90級"), [.equipLevel(min: 90, max: 90)])
-        XCTAssertEqual(conditions("WHM Lv.80"), [.job("WHM"), .equipLevel(min: 80, max: 80)])
-        XCTAssertEqual(conditions("SGE iLv700的賢具"), [.job("SGE"), .itemLevel(min: 700, max: 700), .categories(["賢具"])])
-        XCTAssertEqual(conditions("MCH HQ的火槍"), [.job("MCH"), .hq(true), .categories(["火槍"])])
+        XCTAssertEqual(conditions("WHM Lv.80"), [.jobs(["WHM"]), .equipLevel(min: 80, max: 80)])
+        XCTAssertEqual(conditions("SGE iLv700的賢具"), [.jobs(["SGE"]), .itemLevel(min: 700, max: 700), .categories(["賢具"])])
+        XCTAssertEqual(conditions("MCH HQ的火槍"), [.jobs(["MCH"]), .hq(true), .categories(["火槍"])])
     }
 
     func testBracketedCategoriesMatchWithoutTheirBrackets() {
@@ -107,7 +107,7 @@ final class ItemQueryMatcherTests: XCTestCase {
         )
         let matcher = ItemQueryMatcher(vocabulary: ItemQueryVocabulary(data: data))
 
-        XCTAssertEqual(matcher.matches(in: "背部的測試分類").map(\.condition), [.slot("背部"), .categories(["測試分類"])])
+        XCTAssertEqual(matcher.matches(in: "背部的測試分類").map(\.condition), [.slots(["背部"]), .categories(["測試分類"])])
     }
 
     // MARK: - Armour and accessory categories (AC-17)
@@ -194,7 +194,7 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(conditions("粉色"), [.rarity("紅蓮")])
         XCTAssertEqual(conditions("白色"), [.rarity("一般")])
         XCTAssertEqual(conditions("貴重"), [.rarity("貴重")])
-        XCTAssertEqual(conditions("白魔"), [.job("WHM")], "a colour alone is no rarity")
+        XCTAssertEqual(conditions("白魔"), [.jobs(["WHM"])], "a colour alone is no rarity")
     }
 
     func testHQIsPositiveUnlessNegated() {
