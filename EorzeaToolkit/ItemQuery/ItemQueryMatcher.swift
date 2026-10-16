@@ -430,7 +430,8 @@ struct ItemQueryMatcher: Sendable {
     // MARK: - HQ and tradability
 
     private static let hqWord = Array("hq")
-    private static let tradableWords = ["交易", "買賣", "市場板"].map { Array($0) }
+    /// 上板 is putting an item up on the market board.
+    private static let tradableWords = ["交易", "買賣", "市場板", "上板"].map { Array($0) }
     private static let negations: Set<Character> = ["不", "無", "沒", "非", "禁"]
     /// Conjunctions that end a clause as punctuation does, so the 不 in 「不能HQ但可以交易」 stays
     /// with HQ.
@@ -438,8 +439,8 @@ struct ItemQueryMatcher: Sendable {
     /// How far back a negation still applies, in characters: 「不可以HQ」 reaches four.
     private static let negationReach = 4
 
-    /// 「HQ」 is a condition on HQ and 「交易」「買賣」「市場板」 one on tradability, negative when
-    /// a negation comes shortly before it in the same clause.
+    /// 「HQ」 is a condition on HQ and 「交易」「買賣」「市場板」「上板」 one on tradability,
+    /// negative when a negation comes shortly before it in the same clause.
     private static func flagMatches(in normalized: Normalized) -> [Match] {
         let text = normalized.characters
         var matches: [Match] = []
