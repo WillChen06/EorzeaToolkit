@@ -165,7 +165,12 @@ final class ItemQueryMatcherTests: XCTestCase {
         ("杖", ["單手幻杖", "雙手幻杖", "單手咒杖", "雙手咒杖", "青魔杖"]),
         ("刀", ["武士刀", "二刀流武器"]),
         ("二刀", ["二刀流武器"]),
-        ("食物", ["食品"]), ("料理", ["食品"])
+        ("食物", ["食品"]), ("料理", ["食品"]),
+        // After the second held-out run (AC-39).
+        ("雙手杖", ["雙手幻杖", "雙手咒杖"]),
+        ("單手杖", ["單手幻杖", "單手咒杖"]),
+        ("槍", ["長槍", "火槍", "槍刃"]),
+        ("染劑", ["染料"])
     ]
 
     /// Taken as the keyword, each word leaves nothing behind, which also fails when only a
@@ -216,6 +221,11 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(search("法系的杖").categories, ["單手咒杖", "雙手咒杖"])
         XCTAssertEqual(search("武士的刀").categories, ["武士刀"])
         XCTAssertEqual(search("毒蛇的刀").categories, ["二刀流武器"])
+        XCTAssertEqual(search("黑魔的雙手杖").categories, ["雙手咒杖"])
+        XCTAssertEqual(search("白魔的單手杖").categories, ["單手幻杖"])
+        XCTAssertEqual(search("drg槍").categories, ["長槍"])
+        XCTAssertEqual(search("mch的槍").categories, ["火槍"])
+        XCTAssertEqual(search("絕槍的槍").categories, ["槍刃"])
         XCTAssertEqual(search("杖").categories?.count, 5, "no job, no narrowing")
         XCTAssertEqual(search("坦的杖").categories?.count, 5, "jobs that use none keep them all")
     }
@@ -234,6 +244,12 @@ final class ItemQueryMatcherTests: XCTestCase {
             ("雙手鐮刀", [.categories(["雙手鐮刀"])]),
             ("鐮刀", [.jobs(["RPR"])]),
             ("二刀", [.categories(["二刀流武器"])]),
+            ("長槍", [.categories(["長槍"])]),
+            ("火槍", [.categories(["火槍"])]),
+            ("槍刃", [.categories(["槍刃"])]),
+            ("絕槍", [.jobs(["GNB"])]),
+            ("雙手幻杖", [.categories(["雙手幻杖"])]),
+            ("染料", [.categories(["染料"])]),
             ("鞋子", [.slots(["腳部"])]),
             ("坦克", [.jobs(tanks)]),
             ("食品", [.categories(["食品"])])

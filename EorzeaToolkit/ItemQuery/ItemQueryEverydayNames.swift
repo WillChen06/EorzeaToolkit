@@ -39,8 +39,12 @@ enum ItemQueryEverydayNames {
     /// in the sentence, as 副工具 is: 白魔的杖 is a conjurer's staff.
     static let categories: [Group] = [
         Group(names: ["杖"], targets: ["單手幻杖", "雙手幻杖", "單手咒杖", "雙手咒杖", "青魔杖"]),
+        Group(names: ["雙手杖"], targets: ["雙手幻杖", "雙手咒杖"]),
+        Group(names: ["單手杖"], targets: ["單手幻杖", "單手咒杖"]),
         Group(names: ["刀"], targets: ["武士刀", "二刀流武器"]),
         Group(names: ["二刀"], targets: ["二刀流武器"]),
-        Group(names: ["食物", "料理"], targets: ["食品"])
+        Group(names: ["槍"], targets: ["長槍", "火槍", "槍刃"]),
+        Group(names: ["食物", "料理"], targets: ["食品"]),
+        Group(names: ["染劑"], targets: ["染料"])
     ]
 }
