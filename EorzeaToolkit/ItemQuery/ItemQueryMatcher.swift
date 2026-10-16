@@ -23,6 +23,8 @@ struct ItemQueryMatcher: Sendable {
         case itemLevel(min: Int?, max: Int?)
         case hq(Bool)
         case tradable(Bool)
+        /// Several conditions one word stands for: 紫武 is a rarity and a weapon.
+        case all([Condition])
     }
 
     /// A condition and where it was found, in characters of the normalised sentence.
@@ -108,6 +110,14 @@ struct ItemQueryMatcher: Sendable {
         addEverydayNames(ItemQueryEverydayNames.jobGroups, known: Set(vocabulary.jobs.map(\.abbreviation)), Condition.jobs)
         addEverydayNames(ItemQueryEverydayNames.slots, known: Set(vocabulary.slots.map(\.name)), Condition.slots)
         addEverydayNames(ItemQueryEverydayNames.categories, known: Set(vocabulary.categories.map(\.name)), Condition.categories)
+
+        let slotNames = Set(vocabulary.slots.map(\.name))
+        let weaponSlots = ItemQueryEverydayNames.weaponSlots.filter { slotNames.contains($0) }
+        let rarityNames = Set(ItemQueryVocabulary.rarities.map(\.name))
+        for weapon in ItemQueryEverydayNames.rarityWeapons
+        where rarityNames.contains(weapon.rarity) && !weaponSlots.isEmpty {
+            add(weapon.name, .all([.rarity(weapon.rarity), .slots(weaponSlots)]))
+        }
 
         for name in unbracketedNames {
             add(name.text, .categories([name.category]))
@@ -243,8 +253,8 @@ struct ItemQueryMatcher: Sendable {
 
         // The first level of each kind counts. HQ and tradability are negative when any
         // mention is: 「市場板上不能買賣」 is untradable.
-        for match in matches {
-            switch match.condition {
+        func collect(_ condition: Condition) {
+            switch condition {
             case .categories(let names) where names.count == 1:
                 categories += names
             case .categories(let names):
@@ -263,7 +273,14 @@ struct ItemQueryMatcher: Sendable {
                 hq = (hq ?? true) && value
             case .tradable(let value):
                 tradable = (tradable ?? true) && value
+            case .all(let conditions):
+                for condition in conditions {
+                    collect(condition)
+                }
             }
+        }
+        for match in matches {
+            collect(match.condition)
         }
 
         // 副工具 alone is every sub-tool; with 鍊金術師 in the sentence it is the alchemist's.

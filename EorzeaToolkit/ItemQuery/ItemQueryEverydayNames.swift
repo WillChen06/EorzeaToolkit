@@ -11,6 +11,14 @@ enum ItemQueryEverydayNames {
         let targets: [String]
     }
 
+    struct RarityWeapon: Sendable {
+        let name: String
+        let rarity: String
+    }
+
+    /// Either hand. A weapon is in either hand, so 武器 also covers a paladin's shield.
+    static let weaponSlots = ["主手", "副手"]
+
     /// Job roles, by the item search filter's job abbreviations.
     static let jobGroups: [Group] = [
         Group(names: ["坦", "坦克"], targets: ["PLD", "WAR", "DRK", "GNB"]),
@@ -22,8 +30,7 @@ enum ItemQueryEverydayNames {
         Group(names: ["生產職", "能工巧匠"], targets: ["CRP", "BSM", "ARM", "GSM", "LTW", "WVR", "ALC", "CUL"])
     ]
 
-    /// Body parts, by their names in the item data. A weapon is in either hand, so 武器 also
-    /// covers a paladin's shield.
+    /// Body parts, by their names in the item data.
     static let slots: [Group] = [
         Group(names: ["頭", "帽子"], targets: ["頭部"]),
         Group(names: ["衣服", "上衣"], targets: ["身體"]),
@@ -32,7 +39,7 @@ enum ItemQueryEverydayNames {
         Group(names: ["鞋子", "鞋", "靴子"], targets: ["腳部"]),
         Group(names: ["耳環"], targets: ["耳部"]),
         Group(names: ["手環"], targets: ["腕部"]),
-        Group(names: ["武器"], targets: ["主手", "副手"])
+        Group(names: ["武器"], targets: weaponSlots)
     ]
 
     /// Categories, by their names in the item data. A word for several is narrowed to the jobs
@@ -46,5 +53,10 @@ enum ItemQueryEverydayNames {
         Group(names: ["槍"], targets: ["長槍", "火槍", "槍刃"]),
         Group(names: ["食物", "料理"], targets: ["食品"]),
         Group(names: ["染劑"], targets: ["染料"])
+    ]
+
+    /// A rarity's colour and 武, for a weapon of that rarity in either hand, as 武器 is.
+    static let rarityWeapons: [RarityWeapon] = [
+        RarityWeapon(name: "紫武", rarity: "武勳")
     ]
 }

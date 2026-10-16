@@ -212,6 +212,11 @@ final class ItemQueryMatcherTests: XCTestCase {
         for group in ItemQueryEverydayNames.jobGroups {
             XCTAssertTrue(Set(group.targets).isSubset(of: jobs), "\(group.targets)")
         }
+        XCTAssertTrue(Set(ItemQueryEverydayNames.weaponSlots).isSubset(of: slots))
+        let rarities = Set(ItemQueryVocabulary.rarities.map(\.name))
+        for weapon in ItemQueryEverydayNames.rarityWeapons {
+            XCTAssertTrue(rarities.contains(weapon.rarity), weapon.rarity)
+        }
     }
 
     func testAnEverydayCategoryWordNarrowsToTheSentencesJobs() {
@@ -228,6 +233,16 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(search("絕槍的槍").categories, ["槍刃"])
         XCTAssertEqual(search("杖").categories?.count, 5, "no job, no narrowing")
         XCTAssertEqual(search("坦的杖").categories?.count, 5, "jobs that use none keep them all")
+    }
+
+    /// 紫武 is a purple weapon, in either hand as 武器 is. (AC-40)
+    func testZiWuIsAPurpleWeapon() {
+        XCTAssertEqual(conditions("紫武"), [.all([.rarity("武勳"), .slots(["主手", "副手"])])])
+        XCTAssertEqual(
+            search("不能交易的紫武", keyword: "紫武"),
+            ItemQueryFields(usage: "搜尋", slots: ["主手", "副手"], rarities: ["武勳"], tradable: "不可交易")
+        )
+        XCTAssertEqual(conditions("紫色的武器"), [.rarity("武勳"), .slots(["主手", "副手"])], "the same as said in full")
     }
 
     func testLongerNamesWinOverEverydayWordsInsideThem() {
