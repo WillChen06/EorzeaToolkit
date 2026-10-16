@@ -53,8 +53,10 @@ targets:
     platform: iOS
     sources:
       - path: EorzeaToolkitTests
-      # The first held-out run's sentences, replayed by ItemQueryHoldoutRegressionTests.
+      # The held-out runs' sentences, replayed by ItemQueryHoldoutRegressionTests.
       - path: Tools/ItemQueryEval/holdout-1.json
+        buildPhase: resources
+      - path: Tools/ItemQueryEval/holdout-2.json
         buildPhase: resources
     dependencies:
       # Also makes XcodeGen set TEST_HOST/BUNDLE_LOADER, so tests can reach app code.
