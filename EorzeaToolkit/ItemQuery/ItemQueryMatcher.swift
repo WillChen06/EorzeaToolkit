@@ -392,9 +392,9 @@ struct ItemQueryMatcher: Sendable {
     /// first, so 80等級 is read whole.
     private static let levelSuffixes = ["等級", "級", "等"]
 
-    /// 「80級」「80等」「等級80」「Lv.80」, optionally followed by 以上 (or +), 以下 or 以內, and
-    /// ranges such as 「70到80級」. A number counts only with a marker before it or a level word
-    /// after it, and is always read whole, so 700 is never 70.
+    /// 「80級」「80等」「等級80」「Lv.80」「八十級」, optionally followed by 以上 (or +), 以下 or
+    /// 以內, and ranges such as 「70到80級」. A number counts only with a marker before it or a
+    /// level word after it, and is always read whole, so 700 is never 70.
     private static func levelMatches(in normalized: Normalized) -> [Match] {
         let text = normalized.characters
         var matches: [Match] = []
@@ -457,7 +457,8 @@ struct ItemQueryMatcher: Sendable {
         levelSuffixes.first { hasWord($0, at: index, in: text) }?.count
     }
 
-    /// The digits from `index` on, up to the first other character or whitespace.
+    /// The number from `index` on: the digits up to the first other character or whitespace, or
+    /// a number in Chinese numerals.
     private static func number(at index: Int, in normalized: Normalized) -> (value: Int, end: Int)? {
         let text = normalized.characters
         var end = index
@@ -465,9 +466,58 @@ struct ItemQueryMatcher: Sendable {
             end += 1
         }
         guard end > index, let value = Int(String(text[index..<end])) else {
-            return nil
+            return chineseNumber(at: index, in: normalized)
         }
         return (value, end)
+    }
+
+    private static let chineseDigits: [Character: Int] = [
+        "〇": 0, "零": 0, "一": 1, "二": 2, "兩": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9
+    ]
+
+    /// A number below a thousand in Chinese numerals, as players write levels: 十, 七十, 八十五,
+    /// 一百, 一百零五, 七百一十, and 一百五 for 150.
+    private static func chineseNumber(at index: Int, in normalized: Normalized) -> (value: Int, end: Int)? {
+        let text = normalized.characters
+        var position = index
+        func character(_ offset: Int = 0) -> Character? {
+            let at = position + offset
+            guard at < text.count, at == index || !normalized.spaced[at] else {
+                return nil
+            }
+            return text[at]
+        }
+        func digit(_ offset: Int = 0) -> Int? {
+            character(offset).flatMap { chineseDigits[$0] }
+        }
+
+        var value = 0
+        var hundreds = false
+        if let hundred = digit(), hundred > 0, character(1) == "百" {
+            value += hundred * 100
+            position += 2
+            hundreds = true
+        }
+        var zero = false
+        if hundreds, digit() == 0 {
+            position += 1
+            zero = true
+        }
+        if character() == "十" {
+            value += 10
+            position += 1
+        } else if let ten = digit(), ten > 0, character(1) == "十" {
+            value += ten * 10
+            position += 2
+        } else if hundreds, !zero, let ten = digit(), ten > 0 {
+            // 一百五 is 150.
+            return (value + ten * 10, position + 1)
+        }
+        if let one = digit() {
+            value += one
+            position += 1
+        }
+        return position > index ? (value, position) : nil
     }
 
     private static func levelMarker(before index: Int, in normalized: Normalized) -> (kind: LevelKind, start: Int)? {

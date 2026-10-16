@@ -358,6 +358,31 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(conditions("80+"), [], "a number without a level word is still no level")
     }
 
+    /// Levels in Chinese numerals follow the same rules as digits. (AC-41)
+    func testLevelsInChineseNumerals() {
+        let cases: [(String, [Condition])] = [
+            ("等級七十到八十之間的裝備", [.equipLevel(min: 70, max: 80)]),
+            ("八十級", [.equipLevel(min: 80, max: 80)]),
+            ("八十五等以上", [.equipLevel(min: 85, max: nil)]),
+            ("十級", [.equipLevel(min: 10, max: 10)]),
+            ("十五級", [.equipLevel(min: 15, max: 15)]),
+            ("一百級", [.equipLevel(min: 100, max: 100)]),
+            ("七十級到80級", [.equipLevel(min: 70, max: 80)]),
+            ("品級七百一十以上", [.itemLevel(min: 710, max: nil)]),
+            ("品級一百零五", [.itemLevel(min: 105, max: 105)]),
+            ("品級六百五", [.itemLevel(min: 650, max: 650)]),
+            ("品級兩百以下", [.itemLevel(min: nil, max: 200)]),
+            ("七十到八十", []),
+            ("一般", [.rarity("一般")]),
+            ("二刀", [.categories(["二刀流武器"])])
+        ]
+
+        for (sentence, expected) in cases {
+            XCTAssertEqual(conditions(sentence), expected, sentence)
+        }
+        XCTAssertNil(search("等級七十到八十之間的裝備", keyword: "七十到八十").keyword)
+    }
+
     /// The second run kept 70 from 「700」 because 70 is part of the text; numbers are read whole.
     func testNumbersAreReadWhole() {
         XCTAssertEqual(conditions("品級700"), [.itemLevel(min: 700, max: 700)])
