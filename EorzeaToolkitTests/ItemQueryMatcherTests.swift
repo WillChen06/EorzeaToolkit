@@ -3,6 +3,9 @@ import XCTest
 
 /// The conditions in a sentence are matched by code, not by the model, so every rule in the
 /// spec's 「程式比對」 section is pinned down here without a model.
+///
+/// AC-15 to AC-21 are prompts/item-query-eval.md's; AC-27 to AC-33 are
+/// prompts/item-description-search.md's 「比對規則調整」.
 final class ItemQueryMatcherTests: XCTestCase {
     private typealias Condition = ItemQueryMatcher.Condition
 
@@ -530,7 +533,7 @@ final class ItemQueryMatcherTests: XCTestCase {
 
     /// A recipe lookup's keyword is the item to make; cutting it would only truncate the name.
     func testARecipeKeywordStaysWhole() {
-        for name in ["伊甸的戒指", "瑪托雅的帽子"] {
+        for name in ["伊甸的戒指", "寄葉的衣服"] {
             XCTAssertEqual(
                 matcher.fields(for: "\(name)怎麼做", usage: "查配方", keyword: name),
                 ItemQueryFields(usage: "查配方", keyword: name),
