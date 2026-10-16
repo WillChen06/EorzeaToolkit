@@ -1,0 +1,28 @@
+{
+  "cases": [
+    {"id": "holdout-01", "group": "recipe", "query": "多瑪茶怎麼做", "expected": {"usage": "查配方", "keyword": "多瑪茶"}},
+    {"id": "holdout-02", "group": "recipe", "query": "爆發藥怎麼做", "expected": {"usage": "查配方", "keyword": "寶藥"}},
+    {"id": "holdout-03", "group": "combination", "query": "坦用的武器", "expected": {"usage": "搜尋", "slots": ["主手", "副手"], "jobs": ["PLD", "WAR", "DRK", "GNB"]}},
+    {"id": "holdout-04", "group": "combination", "query": "補用的武器", "expected": {"usage": "搜尋", "slots": ["主手", "副手"], "jobs": ["WHM", "SCH", "AST", "SGE"]}},
+    {"id": "holdout-05", "group": "combination", "query": "近戰用的武器", "expected": {"usage": "搜尋", "slots": ["主手", "副手"], "jobs": ["MNK", "DRG", "NIN", "SAM", "RPR", "VPR"]}},
+    {"id": "holdout-06", "group": "combination", "query": "遠敏用的武器", "expected": {"usage": "搜尋", "slots": ["主手", "副手"], "jobs": ["BRD", "MCH", "DNC"]}},
+    {"id": "holdout-07", "group": "combination", "query": "法系用的武器", "expected": {"usage": "搜尋", "slots": ["主手", "副手"], "jobs": ["BLM", "SMN", "RDM", "PCT"]}},
+    {"id": "holdout-08", "group": "combination", "query": "80等以上吟遊能穿的身體裝備，可HQ", "expected": {"usage": "搜尋", "slots": ["身體"], "jobs": ["BRD"], "equipLevelMin": 80, "hq": "可HQ"}},
+    {"id": "holdout-g01", "group": "combination", "query": "暗騎的頭", "expected": {"usage": "搜尋", "jobs": ["DRK"], "slots": ["頭部"]}},
+    {"id": "holdout-g02", "group": "combination", "query": "白魔的杖", "expected": {"usage": "搜尋", "jobs": ["WHM"], "categories": ["單手幻杖", "雙手幻杖"]}},
+    {"id": "holdout-g03", "group": "equipLevel", "query": "坦能戴的戒指，70等以上", "expected": {"usage": "搜尋", "jobs": ["PLD", "WAR", "DRK", "GNB"], "slots": ["戒指"], "equipLevelMin": 70}},
+    {"id": "holdout-g04", "group": "combination", "query": "採集職的副工具", "expected": {"usage": "搜尋", "jobs": ["MIN", "BTN", "FSH"], "slots": ["副手"]}},
+    {"id": "holdout-g05", "group": "combination", "query": "生產職的手套，能上板的", "expected": {"usage": "搜尋", "jobs": ["CRP", "BSM", "ARM", "GSM", "LTW", "WVR", "ALC", "CUL"], "slots": ["手部"], "tradable": "可交易"}},
+    {"id": "holdout-g07", "group": "guardrail", "query": "武士的刀，90等以上", "expected": {"usage": "搜尋", "jobs": ["SAM"], "categories": ["武士刀"], "equipLevelMin": 90}},
+    {"id": "holdout-g08", "group": "guardrail", "query": "毒蛇的二刀", "expected": {"usage": "搜尋", "jobs": ["VPR"], "categories": ["二刀流武器"]}},
+    {"id": "holdout-g09", "group": "combination", "query": "伊甸的戒指", "expected": {"usage": "搜尋", "keyword": "伊甸", "slots": ["戒指"]}},
+    {"id": "holdout-g10", "group": "combination", "query": "寄葉的衣服", "expected": {"usage": "搜尋", "keyword": "寄葉", "slots": ["身體"]}},
+    {"id": "holdout-g12", "group": "equipLevel", "query": "50等的弓", "expected": {"usage": "搜尋", "categories": ["弓"], "equipLevelMin": 50, "equipLevelMax": 50}},
+    {"id": "holdout-g13", "group": "equipLevel", "query": "30等以下的綠色鞋子", "expected": {"usage": "搜尋", "slots": ["腳部"], "equipLevelMax": 30, "rarities": ["稀有"]}},
+    {"id": "holdout-g14", "group": "combination", "query": "能上板的HQ食物", "expected": {"usage": "搜尋", "categories": ["食品"], "hq": "可HQ", "tradable": "可交易"}},
+    {"id": "holdout-g15", "group": "recipe", "query": "羅蘭莓派要什麼材料", "expected": {"usage": "查配方", "keyword": "羅蘭莓派"}},
+    {"id": "holdout-g16", "group": "guardrail", "query": "鐵刀木角材怎麼做", "expected": {"usage": "查配方", "keyword": "鐵刀木角材"}},
+    {"id": "holdout-g17", "group": "unsupported", "query": "加暴擊的食物", "expected": {"usage": "無法處理"}},
+    {"id": "holdout-g18", "group": "unsupported", "query": "每週幾點重置", "expected": {"usage": "無法處理"}}
+  ]
+}
