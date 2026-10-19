@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ItemSearchView: View {
     var onReturnHome: () -> Void = {}
-    @State private var viewModel = ItemSearchViewModel()
+    @State private var viewModel = ItemSearchViewModel(descriptionSearchEngine: .live)
     @State private var selectedItemID: Int?
     @State private var isShowingFilterSheet = false
 
@@ -16,6 +16,15 @@ struct ItemSearchView: View {
         }
         .task {
             viewModel.loadItems()
+            viewModel.refreshDescriptionSearchAvailability()
+        }
+        .onChange(of: viewModel.itemIDToOpen) { _, itemID in
+            // A recipe lookup found exactly one item with that name.
+            guard let itemID else {
+                return
+            }
+            selectedItemID = itemID
+            viewModel.didOpenItem()
         }
     }
 
@@ -45,12 +54,48 @@ struct ItemSearchView: View {
             prompt: L10n.ItemSearch.searchPrompt
         )
         .toolbar {
+            if viewModel.showsDescriptionSearchButton {
+                ToolbarItem(placement: .topBarTrailing) {
+                    descriptionSearchButton
+                }
+            }
+
             ToolbarItem(placement: .topBarTrailing) {
                 filterButton
             }
         }
         .appThemedBackground()
         .appThemedScreen(tint: HomeFeature.itemSearch.accent)
+    }
+
+    private var descriptionSearchButton: some View {
+        Button {
+            viewModel.openDescriptionSearch()
+        } label: {
+            Image(systemName: "sparkles")
+                .font(.title3)
+                .frame(width: 44, height: 44)
+        }
+        .disabled(!viewModel.canOpenDescriptionSearch)
+        .accessibilityLabel(Text(L10n.ItemSearch.DescriptionSearch.title))
+        .popover(isPresented: isShowingDescriptionSearch) {
+            ItemDescriptionSearchSheet(viewModel: viewModel)
+                .frame(idealWidth: 440, idealHeight: 360)
+                .presentationCompactAdaptation(horizontal: .sheet, vertical: .sheet)
+        }
+    }
+
+    /// Dismissing the screen, by swiping it down or tapping outside the popover, closes it as
+    /// 「取消」 does, abandoning a parse in progress.
+    private var isShowingDescriptionSearch: Binding<Bool> {
+        Binding(
+            get: { viewModel.isShowingDescriptionSearch },
+            set: { isShowing in
+                if !isShowing {
+                    viewModel.closeDescriptionSearch()
+                }
+            }
+        )
     }
 
     private var filterButton: some View {
