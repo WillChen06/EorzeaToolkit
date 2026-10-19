@@ -236,6 +236,21 @@ final class ItemSearchViewModel {
 
     private let pageSize = 50
     private let searchDebounceNanoseconds: UInt64 = 300_000_000
+    private let loadData: @Sendable () async throws -> ItemDataResponse
+    private let refreshData: @Sendable (_ currentVersion: String?) async throws -> ItemDataResponse?
+
+    /// The data comes from `ItemDataService` unless a test hands it in.
+    init(
+        loadData: @escaping @Sendable () async throws -> ItemDataResponse = {
+            try await ItemDataService.loadCachedOrBundledData()
+        },
+        refreshData: @escaping @Sendable (_ currentVersion: String?) async throws -> ItemDataResponse? = {
+            try await ItemDataService.refreshDataIfNeeded(currentVersion: $0)
+        }
+    ) {
+        self.loadData = loadData
+        self.refreshData = refreshData
+    }
 
     var hiddenResultCount: Int {
         max(totalMatchCount - results.count, 0)
@@ -294,7 +309,7 @@ final class ItemSearchViewModel {
 
         loadTask = Task {
             do {
-                let loadedData = try await ItemDataService.loadCachedOrBundledData()
+                let loadedData = try await loadData()
 
                 guard !Task.isCancelled else {
                     return
@@ -507,9 +522,7 @@ final class ItemSearchViewModel {
 
     private func refreshRemoteItemsIfNeeded() async {
         do {
-            guard let refreshedData = try await ItemDataService.refreshDataIfNeeded(
-                currentVersion: loadedDataVersion
-            ) else {
+            guard let refreshedData = try await refreshData(loadedDataVersion) else {
                 return
             }
 
@@ -524,6 +537,16 @@ final class ItemSearchViewModel {
                 return
             }
         }
+    }
+
+    /// Waits for the data to load, including the remote update, so tests can check the result.
+    func waitUntilLoaded() async {
+        await loadTask?.value
+    }
+
+    /// Waits for the search in progress, so tests can check its results.
+    func waitUntilSearchFinishes() async {
+        await searchTask?.value
     }
 
     /// Internal rather than private so tests can search without loading the bundled data.
