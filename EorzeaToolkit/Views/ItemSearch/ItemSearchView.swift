@@ -54,13 +54,14 @@ struct ItemSearchView: View {
             prompt: L10n.ItemSearch.searchPrompt
         )
         .toolbar {
-            if viewModel.showsDescriptionSearchButton {
-                ToolbarItem(placement: .topBarTrailing) {
+            // One group, so the system places both buttons together. As two separate items,
+            // a wide layout such as iPhone Duo's split them apart, and a screen opened from
+            // either button left its frame behind when it closed.
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                if viewModel.showsDescriptionSearchButton {
                     descriptionSearchButton
                 }
-            }
 
-            ToolbarItem(placement: .topBarTrailing) {
                 filterButton
             }
         }
