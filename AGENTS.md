@@ -65,6 +65,21 @@ These override anything a skill or general best practice says.
   its model downloaded; `--check` validates the evaluation set without calling the model. CI
   does not run it. Record each run in `docs/foundation-models-eval.md`, and run it again when a
   major OS release changes the model.
+  - `--holdout` runs the user's held-out set, `Tools/ItemQueryEval/holdout.json`, instead. It
+    skips the evaluation set's composition check and allows expected keywords the sentence does
+    not contain (a player's nickname for an item). The run is judged by usage and whole
+    sentences (`prompts/item-description-search.md`).
+  - The user writes the held-out set's sentences and expected results. An agent may only put
+    what the user wrote into the file's format, and must not change the matching rules or the
+    model's instructions because of it before its first run.
+  - When the user wants more sentences, a subagent that has not read the repository proposes
+    candidates from the user's own sentences, and the user picks them and confirms their
+    expected results. Their ids start with `holdout-g`.
+  - `holdout-1.json` and `holdout-2.json` are the first and second runs' sets. The matching
+    rules were adjusted to them, so they are regression sets (`ItemQueryHoldoutRegressionTests`),
+    not held-out ones. A new held-out set goes in `holdout.json`, and its candidates are never
+    modelled on the regression sets: the second set was proposed without any example sentences,
+    and the user picked them.
 
 Rules for running them:
 

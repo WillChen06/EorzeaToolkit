@@ -7,11 +7,13 @@ enum L10n {
     }
 
     enum Common {
+        static let cancel: LocalizedStringKey = "common.cancel"
         static let clear: LocalizedStringKey = "common.clear"
         static let collapse: LocalizedStringKey = "common.collapse"
         static let done: LocalizedStringKey = "common.done"
         static let retry: LocalizedStringKey = "common.retry"
         static let reset: LocalizedStringKey = "common.reset"
+        static let search: LocalizedStringKey = "common.search"
         static let selected: LocalizedStringKey = "common.selected"
         static let notSelected: LocalizedStringKey = "common.notSelected"
 
@@ -92,6 +94,7 @@ enum L10n {
         static let searching: LocalizedStringKey = "itemSearch.search.loading"
         static let noResultsTitle: LocalizedStringKey = "itemSearch.search.noResultsTitle"
         static let noResultsDescription: LocalizedStringKey = "itemSearch.search.noResultsDescription"
+        static let noFilterResultsDescription: LocalizedStringKey = "itemSearch.search.noFilterResultsDescription"
         static let loadMore: LocalizedStringKey = "itemSearch.results.loadMore"
 
         static func resultsStatus(visibleCount: Int, totalCount: Int, hiddenCount: Int) -> LocalizedStringKey {
@@ -104,6 +107,22 @@ enum L10n {
                 return String(localized: "itemSearch.row.itemLevel \(item.ilvl)")
             }
             return String(localized: "itemSearch.row.equipAndItemLevel \(equipLevel) \(item.ilvl)")
+        }
+
+        /// prompts/item-description-search.md, 「入口」「描述搜尋畫面」.
+        enum DescriptionSearch {
+            /// The screen's title and the button's VoiceOver label.
+            static let title: LocalizedStringKey = "itemSearch.descriptionSearch.title"
+            static let placeholder: LocalizedStringKey = "itemSearch.descriptionSearch.placeholder"
+            static let hint: LocalizedStringKey = "itemSearch.descriptionSearch.hint"
+            static let parsing: LocalizedStringKey = "itemSearch.descriptionSearch.parsing"
+            static let appleIntelligenceNotEnabled: LocalizedStringKey =
+                "itemSearch.descriptionSearch.status.appleIntelligenceNotEnabled"
+            static let modelNotReady: LocalizedStringKey = "itemSearch.descriptionSearch.status.modelNotReady"
+            static let unavailable: LocalizedStringKey = "itemSearch.descriptionSearch.status.unavailable"
+            static let notAnItemQuery: LocalizedStringKey = "itemSearch.descriptionSearch.message.notAnItemQuery"
+            static let nothingFound: LocalizedStringKey = "itemSearch.descriptionSearch.message.nothingFound"
+            static let failed: LocalizedStringKey = "itemSearch.descriptionSearch.message.failed"
         }
 
         enum Filter {

@@ -227,15 +227,54 @@ final class ItemSearchViewModel {
 
     var query = ""
 
+    // Description search (prompts/item-description-search.md).
+    private(set) var descriptionSearchAvailability: ItemDescriptionSearchAvailability = .unavailable
+    private(set) var isShowingDescriptionSearch = false
+    /// The sentence being edited on the description search screen.
+    var descriptionSentence = ""
+    private(set) var isParsingDescription = false
+    private(set) var descriptionSearchMessage: ItemDescriptionSearchMessage?
+    /// The item a recipe lookup found, for the screen to open; `didOpenItem()` clears it.
+    private(set) var itemIDToOpen: Int?
+    private var descriptionParser: ItemDescriptionParser?
+    /// A parsed sentence waiting for the screen to finish closing before it is applied.
+    private var pendingDescriptionResult: (query: ItemQuery, onlyNamesakeID: Int?)?
+
     private var items: [Item] = []
     private var allSearchResults: [Item] = []
     private var classjobJobSetsById: [Int: Set<String>] = [:]
     private var loadedDataVersion: String?
     private var loadTask: Task<Void, Never>?
     private var searchTask: Task<Void, Never>?
+    private var descriptionParserTask: Task<Void, Never>?
+    private var descriptionParseTask: Task<Void, Never>?
 
     private let pageSize = 50
     private let searchDebounceNanoseconds: UInt64 = 300_000_000
+    private let loadData: @Sendable () async throws -> ItemDataResponse
+    private let refreshData: @Sendable (_ currentVersion: String?) async throws -> ItemDataResponse?
+    private let descriptionSearchEngine: ItemDescriptionSearchEngine
+    private let descriptionSearchMemory: ItemDescriptionSearchMemory
+
+    /// The data comes from `ItemDataService` and description search is off, unless the caller
+    /// hands them in: the app passes `ItemDescriptionSearchEngine.live`, tests their own. The
+    /// memory defaults to `ItemDescriptionSearchMemory.shared`, read here rather than in a
+    /// default argument, which is evaluated outside the main actor.
+    init(
+        descriptionSearchEngine: ItemDescriptionSearchEngine = .unsupported,
+        descriptionSearchMemory: ItemDescriptionSearchMemory? = nil,
+        loadData: @escaping @Sendable () async throws -> ItemDataResponse = {
+            try await ItemDataService.loadCachedOrBundledData()
+        },
+        refreshData: @escaping @Sendable (_ currentVersion: String?) async throws -> ItemDataResponse? = {
+            try await ItemDataService.refreshDataIfNeeded(currentVersion: $0)
+        }
+    ) {
+        self.loadData = loadData
+        self.refreshData = refreshData
+        self.descriptionSearchEngine = descriptionSearchEngine
+        self.descriptionSearchMemory = descriptionSearchMemory ?? .shared
+    }
 
     var hiddenResultCount: Int {
         max(totalMatchCount - results.count, 0)
@@ -247,6 +286,20 @@ final class ItemSearchViewModel {
 
     var hasLoadedItems: Bool {
         loadState == .loaded
+    }
+
+    /// The search field is empty and the filter is at its defaults, so nothing is listed yet.
+    var isWaitingForSearch: Bool {
+        isQueryEmpty && !filter.isActive
+    }
+
+    /// The search field is empty but the filter is active: every item the filter keeps is listed.
+    var isFilterOnlySearch: Bool {
+        isQueryEmpty && filter.isActive
+    }
+
+    private var isQueryEmpty: Bool {
+        query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     var uiCategoryGroups: [UICategoryGroup] {
@@ -294,7 +347,7 @@ final class ItemSearchViewModel {
 
         loadTask = Task {
             do {
-                let loadedData = try await ItemDataService.loadCachedOrBundledData()
+                let loadedData = try await loadData()
 
                 guard !Task.isCancelled else {
                     return
@@ -425,6 +478,7 @@ final class ItemSearchViewModel {
         classjobJobSetsById = Dictionary(
             uniqueKeysWithValues: data.classjobCategories.map { ($0.id, Set($0.jobs)) }
         )
+        rebuildDescriptionParser(from: data)
     }
 
     private func updateFilter(_ newFilter: ItemFilter, debounce: Bool = true) {
@@ -446,7 +500,8 @@ final class ItemSearchViewModel {
         searchTask?.cancel()
 
         let trimmedQuery = rawQuery.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedQuery.isEmpty else {
+        // With an empty search field, an active filter alone lists its items.
+        guard !trimmedQuery.isEmpty || filter.isActive else {
             allSearchResults = []
             results = []
             totalMatchCount = 0
@@ -507,9 +562,7 @@ final class ItemSearchViewModel {
 
     private func refreshRemoteItemsIfNeeded() async {
         do {
-            guard let refreshedData = try await ItemDataService.refreshDataIfNeeded(
-                currentVersion: loadedDataVersion
-            ) else {
+            guard let refreshedData = try await refreshData(loadedDataVersion) else {
                 return
             }
 
@@ -526,7 +579,233 @@ final class ItemSearchViewModel {
         }
     }
 
-    /// Internal rather than private so tests can search without loading the bundled data.
+    // MARK: - Description search
+
+    /// Whether the toolbar shows the description search button. While the screen is open the
+    /// button stays, even when reopening found description search unavailable, so the screen
+    /// can say so; it goes once the screen closes.
+    var showsDescriptionSearchButton: Bool {
+        isShowingDescriptionSearch || descriptionSearchAvailability.showsButton
+    }
+
+    /// The button is disabled until the items have loaded and their vocabulary is built.
+    var canOpenDescriptionSearch: Bool {
+        hasLoadedItems && descriptionParser != nil
+    }
+
+    var canSubmitDescription: Bool {
+        descriptionSearchAvailability.canSearch
+            && descriptionParser != nil
+            && !isParsingDescription
+            && !descriptionSentence.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    /// Checks the model again, when the item search screen opens and when the description
+    /// search screen does.
+    func refreshDescriptionSearchAvailability() {
+        descriptionSearchAvailability = descriptionSearchEngine.availability()
+    }
+
+    func openDescriptionSearch() {
+        guard canOpenDescriptionSearch, !isShowingDescriptionSearch else {
+            return
+        }
+
+        refreshDescriptionSearchAvailability()
+        pendingDescriptionResult = nil
+        descriptionSentence = descriptionSearchMemory.lastSubmittedSentence
+        descriptionSearchMessage = nil
+        isShowingDescriptionSearch = true
+        if descriptionSearchAvailability.canSearch {
+            descriptionParser?.prewarm()
+        }
+    }
+
+    /// Closes the screen by 「取消」 or by dismissing it, and abandons a parse in progress:
+    /// its result is never applied.
+    func closeDescriptionSearch() {
+        // A parsed sentence already waiting stays: the screen closing is what applies it.
+        abandonDescriptionParse()
+        descriptionSearchMessage = nil
+        isShowingDescriptionSearch = false
+    }
+
+    /// Parses the sentence, then closes the screen, applying the result once it has closed, or
+    /// keeps the screen open with a message. Returns the parse for tests to wait on.
+    @discardableResult
+    func submitDescription() -> Task<Void, Never>? {
+        guard canSubmitDescription, let parser = descriptionParser else {
+            return nil
+        }
+
+        let sentence = descriptionSentence.trimmingCharacters(in: .whitespacesAndNewlines)
+        descriptionSearchMemory.lastSubmittedSentence = descriptionSentence
+        descriptionSearchMessage = nil
+        isParsingDescription = true
+        let sourceItems = items
+
+        let task = Task {
+            let result: Result<(query: ItemQuery, onlyNamesakeID: Int?), Error>
+            do {
+                let parsedQuery = try await parser.parse(sentence)
+                var onlyNamesakeID: Int?
+                if parsedQuery.usage == .recipe, let keyword = parsedQuery.keyword {
+                    // Comparing every item's name takes a moment; it stays off the main actor.
+                    onlyNamesakeID = await Task.detached(priority: .userInitiated) {
+                        Self.onlyItemID(named: keyword, in: sourceItems)
+                    }.value
+                }
+                result = .success((parsedQuery, onlyNamesakeID))
+            } catch {
+                result = .failure(error)
+            }
+
+            // Abandoning the parse cancels this task. Its result is dropped here even when the
+            // model ignored the cancellation and answered anyway.
+            guard !Task.isCancelled else {
+                return
+            }
+
+            isParsingDescription = false
+            switch result {
+            case .success(let parsed):
+                if let message = Self.message(for: parsed.query) {
+                    descriptionSearchMessage = message
+                    return
+                }
+                // The screen closes first; changing the filter, the search text and the toolbar
+                // while it animates away made the animation stutter.
+                // `descriptionSearchDidClose()` applies the result once it has gone.
+                pendingDescriptionResult = parsed
+                isShowingDescriptionSearch = false
+            case .failure:
+                descriptionSearchMessage = .failed
+            }
+        }
+        descriptionParseTask = task
+        return task
+    }
+
+    /// Called once the description search screen has finished closing. Applies a parsed
+    /// sentence waiting for it, and returns the work that opens a recipe lookup's item, for
+    /// tests to wait on.
+    @discardableResult
+    func descriptionSearchDidClose() -> Task<Void, Never>? {
+        guard !isShowingDescriptionSearch, let parsed = pendingDescriptionResult else {
+            return nil
+        }
+        pendingDescriptionResult = nil
+        applyDescriptionQuery(parsed.query)
+
+        guard let itemID = parsed.onlyNamesakeID else {
+            return nil
+        }
+        return Task {
+            // Opened once its name search has listed it: on a narrow screen the detail page is
+            // pushed from the result list, which must be showing.
+            await searchTask?.value
+            itemIDToOpen = itemID
+        }
+    }
+
+    /// Called once the screen has opened `itemIDToOpen`.
+    func didOpenItem() {
+        itemIDToOpen = nil
+    }
+
+    /// Waits for the vocabulary a parser needs to be built, so tests can check the result.
+    func waitUntilDescriptionSearchIsReady() async {
+        await descriptionParserTask?.value
+    }
+
+    private func abandonDescriptionParse() {
+        descriptionParseTask?.cancel()
+        descriptionParseTask = nil
+        isParsingDescription = false
+    }
+
+    /// Why a parsed sentence cannot be applied, or nil when it can
+    /// (prompts/item-description-search.md, 「描述搜尋畫面」).
+    private static func message(for parsedQuery: ItemQuery) -> ItemDescriptionSearchMessage? {
+        switch parsedQuery.usage {
+        case .unsupported:
+            return .notAnItemQuery
+        case .recipe:
+            return parsedQuery.keyword == nil ? .notAnItemQuery : nil
+        case .search:
+            return parsedQuery.keyword != nil || parsedQuery.hasConditions ? nil : .nothingFound
+        }
+    }
+
+    /// Applies a parsed sentence that `message(for:)` let through, replacing the filter and
+    /// search text whole (「套用」「查配方」).
+    private func applyDescriptionQuery(_ parsedQuery: ItemQuery) {
+        switch parsedQuery.usage {
+        case .unsupported:
+            break
+        case .recipe:
+            // The name search lists the item; the only item with that name, if there is one,
+            // is opened as well.
+            applySearch(filter: ItemFilter(), query: parsedQuery.keyword ?? "")
+        case .search:
+            applySearch(filter: ItemFilter(query: parsedQuery), query: parsedQuery.keyword ?? "")
+        }
+    }
+
+    /// The one item named `keyword`, compared as the name search compares names; nil when
+    /// none or several are.
+    nonisolated static func onlyItemID(named keyword: String, in items: [Item]) -> Int? {
+        let normalizedKeyword = normalize(keyword)
+        var found: Int?
+        for item in items where normalize(item.nameTw) == normalizedKeyword {
+            guard found == nil else {
+                return nil
+            }
+            found = item.id
+        }
+        return found
+    }
+
+    private func applySearch(filter newFilter: ItemFilter, query newQuery: String) {
+        filter = newFilter
+        query = newQuery
+        runSearch(for: newQuery, debounce: false)
+    }
+
+    /// The parser reads the same items as the search, rebuilt when a remote update arrives.
+    /// Building the vocabulary walks every item, so it runs off the main actor.
+    private func rebuildDescriptionParser(from data: ItemDataResponse) {
+        guard descriptionSearchEngine.isSupported else {
+            return
+        }
+
+        descriptionParserTask?.cancel()
+        descriptionParser = nil
+        let engine = descriptionSearchEngine
+        descriptionParserTask = Task {
+            let parser = await Task.detached(priority: .utility) {
+                engine.makeParser(ItemQueryVocabulary(data: data))
+            }.value
+
+            guard !Task.isCancelled else {
+                return
+            }
+            descriptionParser = parser
+        }
+    }
+
+    /// Waits for the data to load, including the remote update, so tests can check the result.
+    func waitUntilLoaded() async {
+        await loadTask?.value
+    }
+
+    /// Waits for the search in progress, so tests can check its results.
+    func waitUntilSearchFinishes() async {
+        await searchTask?.value
+    }
+
+    /// Internal rather than private so tests can search without loading the bundled data. An
+    /// empty query keeps every item the filter keeps, in the same order as a name search.
     nonisolated static func searchItems(
         _ items: [Item],
         query: String,
@@ -538,6 +817,11 @@ final class ItemSearchViewModel {
 
         for item in items {
             guard matchesFilter(item, filter: filter, classjobJobSetsById: classjobJobSetsById) else {
+                continue
+            }
+
+            guard !normalizedQuery.isEmpty else {
+                matches.append(ItemSearchMatch(item: item, rank: 0))
                 continue
             }
 

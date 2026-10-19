@@ -38,7 +38,11 @@ do {
 }
 
 let vocabulary = ItemQueryVocabulary(data: itemData)
-let loaded = EvalCaseLoader.load(from: options.casesURL, vocabulary: vocabulary)
+let loaded = EvalCaseLoader.load(
+    from: options.casesURL,
+    vocabulary: vocabulary,
+    heldOut: options.holdout
+)
 if !loaded.problems.isEmpty {
     printError("評估集有 \(loaded.problems.count) 個問題：")
     for problem in loaded.problems {
@@ -106,5 +110,5 @@ for (index, evalCase) in loaded.cases.enumerated() {
     ))
 }
 
-print(EvalReport.text(outcomes: outcomes, vocabulary: vocabulary))
+print(EvalReport.text(outcomes: outcomes, vocabulary: vocabulary, gate: options.gate))
 exit(0)

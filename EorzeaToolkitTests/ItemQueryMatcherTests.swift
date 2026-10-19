@@ -3,14 +3,19 @@ import XCTest
 
 /// The conditions in a sentence are matched by code, not by the model, so every rule in the
 /// spec's 「程式比對」 section is pinned down here without a model.
+///
+/// AC-15 to AC-21 are prompts/item-query-eval.md's. AC-27 to AC-33 and AC-36 to AC-41 are
+/// prompts/item-description-search.md's 「比對規則調整」, after the first and second held-out runs.
 final class ItemQueryMatcherTests: XCTestCase {
     private typealias Condition = ItemQueryMatcher.Condition
 
-    private static let matcher: ItemQueryMatcher = {
-        // Loading the item data takes a while; every test shares one matcher.
+    // Loading the item data takes a while; every test shares one vocabulary and matcher.
+    private static let vocabulary: ItemQueryVocabulary = {
         let data: ItemDataResponse = try! LocalDataService.load("items")
-        return ItemQueryMatcher(vocabulary: ItemQueryVocabulary(data: data))
+        return ItemQueryVocabulary(data: data)
     }()
+
+    private static let matcher = ItemQueryMatcher(vocabulary: vocabulary)
 
     private var matcher: ItemQueryMatcher {
         Self.matcher
@@ -27,31 +32,31 @@ final class ItemQueryMatcherTests: XCTestCase {
     // MARK: - Names (AC-16)
 
     func testFindsCategoriesBodyPartsJobsAndRarities() {
-        XCTAssertEqual(conditions("龍騎的腿部裝備，紫色的"), [.job("DRG"), .slot("腿部"), .rarity("武勳")])
-        XCTAssertEqual(conditions("給騎士用的盾"), [.job("PLD"), .categories(["盾"])])
-        XCTAssertEqual(conditions("白魔或學者都能用的腕部裝備"), [.job("WHM"), .job("SCH"), .slot("腕部")])
+        XCTAssertEqual(conditions("龍騎的腿部裝備，紫色的"), [.jobs(["DRG"]), .slots(["腿部"]), .rarity("武勳")])
+        XCTAssertEqual(conditions("給騎士用的盾"), [.jobs(["PLD"]), .categories(["盾"])])
+        XCTAssertEqual(conditions("白魔或學者都能用的腕部裝備"), [.jobs(["WHM"]), .jobs(["SCH"]), .slots(["腕部"])])
     }
 
     /// 戒指 is both a body part and a category; as a body part it covers every ring.
     func testANameThatIsBothABodyPartAndACategoryIsTheBodyPart() {
-        XCTAssertEqual(conditions("戒指"), [.slot("戒指")])
+        XCTAssertEqual(conditions("戒指"), [.slots(["戒指"])])
     }
 
     func testOverlappingNamesKeepTheLongest() {
-        XCTAssertEqual(conditions("龍騎士"), [.job("DRG")])
-        XCTAssertEqual(conditions("暗黑騎士"), [.job("DRK")])
-        XCTAssertEqual(conditions("絕槍戰士用的槍刃"), [.job("GNB"), .categories(["槍刃"])])
+        XCTAssertEqual(conditions("龍騎士"), [.jobs(["DRG"])])
+        XCTAssertEqual(conditions("暗黑騎士"), [.jobs(["DRK"])])
+        XCTAssertEqual(conditions("絕槍戰士用的槍刃"), [.jobs(["GNB"]), .categories(["槍刃"])])
         XCTAssertEqual(conditions("武士刀"), [.categories(["武士刀"])])
         XCTAssertEqual(conditions("雙手鐮刀"), [.categories(["雙手鐮刀"])])
-        XCTAssertEqual(conditions("皮革師"), [.job("LTW")])
+        XCTAssertEqual(conditions("皮革師"), [.jobs(["LTW"])])
         XCTAssertEqual(conditions("皮革"), [.categories(["皮革"])])
         XCTAssertEqual(conditions("採掘工具（主工具）"), [.categories(["採掘工具（主工具）"])])
     }
 
     func testLatinAbbreviationsMustStandAlone() {
-        XCTAssertEqual(conditions("mch的火槍"), [.job("MCH"), .categories(["火槍"])])
-        XCTAssertEqual(conditions("SGE用的賢具"), [.job("SGE"), .categories(["賢具"])])
-        XCTAssertEqual(conditions("給 ＷＨＭ 用"), [.job("WHM")])
+        XCTAssertEqual(conditions("mch的火槍"), [.jobs(["MCH"]), .categories(["火槍"])])
+        XCTAssertEqual(conditions("SGE用的賢具"), [.jobs(["SGE"]), .categories(["賢具"])])
+        XCTAssertEqual(conditions("給 ＷＨＭ 用"), [.jobs(["WHM"])])
         XCTAssertEqual(conditions("armor"), [])
         XCTAssertEqual(conditions("whm2"), [])
         XCTAssertEqual(conditions("2whm"), [])
@@ -60,11 +65,11 @@ final class ItemQueryMatcherTests: XCTestCase {
 
     /// Whitespace is taken out before matching, but it still separates two Latin words.
     func testWhitespaceSeparatesLatinWords() {
-        XCTAssertEqual(conditions("WHM 90級的頭部裝備"), [.job("WHM"), .equipLevel(min: 90, max: 90), .slot("頭部")])
+        XCTAssertEqual(conditions("WHM 90級的頭部裝備"), [.jobs(["WHM"]), .equipLevel(min: 90, max: 90), .slots(["頭部"])])
         XCTAssertEqual(conditions("whm90級"), [.equipLevel(min: 90, max: 90)])
-        XCTAssertEqual(conditions("WHM Lv.80"), [.job("WHM"), .equipLevel(min: 80, max: 80)])
-        XCTAssertEqual(conditions("SGE iLv700的賢具"), [.job("SGE"), .itemLevel(min: 700, max: 700), .categories(["賢具"])])
-        XCTAssertEqual(conditions("MCH HQ的火槍"), [.job("MCH"), .hq(true), .categories(["火槍"])])
+        XCTAssertEqual(conditions("WHM Lv.80"), [.jobs(["WHM"]), .equipLevel(min: 80, max: 80)])
+        XCTAssertEqual(conditions("SGE iLv700的賢具"), [.jobs(["SGE"]), .itemLevel(min: 700, max: 700), .categories(["賢具"])])
+        XCTAssertEqual(conditions("MCH HQ的火槍"), [.jobs(["MCH"]), .hq(true), .categories(["火槍"])])
     }
 
     func testBracketedCategoriesMatchWithoutTheirBrackets() {
@@ -97,6 +102,179 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(search("白魔的副工具").categories?.count, 11, "a job that uses none keeps them all")
     }
 
+    // MARK: - Job roles (AC-27)
+
+    private static let roles: [(words: [String], jobs: [String])] = [
+        (["坦", "坦克"], ["PLD", "WAR", "DRK", "GNB"]),
+        (["補", "補師", "治療"], ["WHM", "SCH", "AST", "SGE"]),
+        (["近戰"], ["MNK", "DRG", "NIN", "SAM", "RPR", "VPR"]),
+        (["遠敏", "遠程物理"], ["BRD", "MCH", "DNC"]),
+        (["法系", "遠程魔法"], ["BLM", "SMN", "RDM", "PCT"]),
+        (["採集職", "大地使者"], ["MIN", "BTN", "FSH"]),
+        (["生產職", "能工巧匠"], ["CRP", "BSM", "ARM", "GSM", "LTW", "WVR", "ALC", "CUL"])
+    ]
+
+    /// A role is one match for its whole group. Taken as the keyword, the word leaves nothing
+    /// behind, which also fails when only a shorter word such as 坦 inside 坦克 is known.
+    func testEveryRoleWordStandsForItsJobs() {
+        for (words, jobs) in Self.roles {
+            for word in words {
+                XCTAssertEqual(conditions("\(word)用的"), [.jobs(jobs)], word)
+
+                let fields = search("\(word)用的", keyword: word)
+                XCTAssertEqual(fields.jobs, jobs, word)
+                XCTAssertNil(fields.keyword, word)
+            }
+        }
+    }
+
+    func testTheRolesCoverEveryFilterJobOnce() {
+        let jobs = Self.roles.flatMap(\.jobs)
+
+        XCTAssertEqual(jobs.count, Set(jobs).count)
+        XCTAssertEqual(Set(jobs), Set(ItemJobFilterOption.displayOptions.map(\.abbreviation)))
+    }
+
+    func testARoleAddsToTheJobsNamedBesideIt() {
+        XCTAssertEqual(search("坦或白魔能穿的").jobs, ["PLD", "WAR", "DRK", "GNB", "WHM"])
+        XCTAssertEqual(search("補和學者").jobs, ["WHM", "SCH", "AST", "SGE"])
+    }
+
+    // MARK: - 吟遊 (AC-28)
+
+    func testYinYouIsTheBard() {
+        XCTAssertEqual(conditions("吟遊能穿的"), [.jobs(["BRD"])])
+        XCTAssertEqual(conditions("吟遊詩人"), [.jobs(["BRD"])], "the official name is still one match")
+        XCTAssertNil(search("吟遊能穿的", keyword: "吟遊").keyword)
+    }
+
+    // MARK: - Everyday words for body parts and categories (AC-29, AC-30)
+
+    private static let everydaySlots: [(word: String, slots: [String])] = [
+        ("頭", ["頭部"]), ("帽子", ["頭部"]),
+        ("衣服", ["身體"]), ("上衣", ["身體"]),
+        ("手套", ["手部"]),
+        ("褲子", ["腿部"]),
+        ("鞋子", ["腳部"]), ("鞋", ["腳部"]), ("靴子", ["腳部"]),
+        ("耳環", ["耳部"]),
+        ("手環", ["腕部"]),
+        ("武器", ["主手", "副手"])
+    ]
+
+    private static let everydayCategories: [(word: String, categories: [String])] = [
+        ("杖", ["單手幻杖", "雙手幻杖", "單手咒杖", "雙手咒杖", "青魔杖"]),
+        ("刀", ["武士刀", "二刀流武器"]),
+        ("二刀", ["二刀流武器"]),
+        ("食物", ["食品"]), ("料理", ["食品"]),
+        // After the second held-out run (AC-39).
+        ("雙手杖", ["雙手幻杖", "雙手咒杖"]),
+        ("單手杖", ["單手幻杖", "單手咒杖"]),
+        ("槍", ["長槍", "火槍", "槍刃"]),
+        ("染劑", ["染料"])
+    ]
+
+    /// Taken as the keyword, each word leaves nothing behind, which also fails when only a
+    /// shorter word such as 鞋 inside 鞋子 is known.
+    func testEverydayWordsForBodyParts() {
+        for (word, slots) in Self.everydaySlots {
+            XCTAssertEqual(conditions("找\(word)"), [.slots(slots)], word)
+
+            let fields = search("找\(word)", keyword: word)
+            XCTAssertEqual(fields.slots, slots, word)
+            XCTAssertNil(fields.categories, word)
+            XCTAssertNil(fields.keyword, word)
+        }
+    }
+
+    func testEverydayWordsForCategories() {
+        for (word, categories) in Self.everydayCategories {
+            XCTAssertEqual(conditions("找\(word)"), [.categories(categories)], word)
+
+            let fields = search("找\(word)", keyword: word)
+            XCTAssertEqual(fields.categories, categories, word)
+            XCTAssertNil(fields.slots, word)
+            XCTAssertNil(fields.keyword, word)
+        }
+    }
+
+    /// The matcher quietly skips a target the data lacks, so a misspelt one would go unnoticed.
+    func testEverydayWordsPointAtNamesInTheData() {
+        let slots = Set(Self.vocabulary.slots.map(\.name))
+        let categories = Set(Self.vocabulary.categories.map(\.name))
+        let jobs = Set(Self.vocabulary.jobs.map(\.abbreviation))
+
+        for group in ItemQueryEverydayNames.slots {
+            XCTAssertTrue(Set(group.targets).isSubset(of: slots), "\(group.targets)")
+        }
+        for group in ItemQueryEverydayNames.categories {
+            XCTAssertTrue(Set(group.targets).isSubset(of: categories), "\(group.targets)")
+        }
+        for group in ItemQueryEverydayNames.jobGroups {
+            XCTAssertTrue(Set(group.targets).isSubset(of: jobs), "\(group.targets)")
+        }
+        XCTAssertTrue(Set(ItemQueryEverydayNames.weaponSlots).isSubset(of: slots))
+        let rarities = Set(ItemQueryVocabulary.rarities.map(\.name))
+        for weapon in ItemQueryEverydayNames.rarityWeapons {
+            XCTAssertTrue(rarities.contains(weapon.rarity), weapon.rarity)
+        }
+    }
+
+    func testAnEverydayCategoryWordNarrowsToTheSentencesJobs() {
+        XCTAssertEqual(search("白魔的杖").categories, ["單手幻杖", "雙手幻杖"])
+        XCTAssertEqual(search("黑魔的杖").categories, ["單手咒杖", "雙手咒杖"])
+        XCTAssertEqual(search("補的杖").categories, ["單手幻杖", "雙手幻杖"])
+        XCTAssertEqual(search("法系的杖").categories, ["單手咒杖", "雙手咒杖"])
+        XCTAssertEqual(search("武士的刀").categories, ["武士刀"])
+        XCTAssertEqual(search("毒蛇的刀").categories, ["二刀流武器"])
+        XCTAssertEqual(search("黑魔的雙手杖").categories, ["雙手咒杖"])
+        XCTAssertEqual(search("白魔的單手杖").categories, ["單手幻杖"])
+        XCTAssertEqual(search("drg槍").categories, ["長槍"])
+        XCTAssertEqual(search("mch的槍").categories, ["火槍"])
+        XCTAssertEqual(search("絕槍的槍").categories, ["槍刃"])
+        XCTAssertEqual(search("杖").categories?.count, 5, "no job, no narrowing")
+        XCTAssertEqual(search("坦的杖").categories?.count, 5, "jobs that use none keep them all")
+    }
+
+    /// 紫武 is a purple weapon, in either hand as 武器 is. (AC-40)
+    func testZiWuIsAPurpleWeapon() {
+        XCTAssertEqual(conditions("紫武"), [.all([.rarity("武勳"), .slots(["主手", "副手"])])])
+        XCTAssertEqual(
+            search("不能交易的紫武", keyword: "紫武"),
+            ItemQueryFields(usage: "搜尋", slots: ["主手", "副手"], rarities: ["武勳"], tradable: "不可交易")
+        )
+        XCTAssertEqual(conditions("紫色的武器"), [.rarity("武勳"), .slots(["主手", "副手"])], "the same as said in full")
+    }
+
+    func testLongerNamesWinOverEverydayWordsInsideThem() {
+        let tanks = ["PLD", "WAR", "DRK", "GNB"]
+        let cases: [(String, [Condition])] = [
+            ("頭部", [.slots(["頭部"])]),
+            ("頭部防具", [.categories(["頭部防具"])]),
+            ("二刀流武器", [.categories(["二刀流武器"])]),
+            ("格鬥武器", [.categories(["格鬥武器"])]),
+            ("投擲武器", [.categories(["投擲武器"])]),
+            ("單手幻杖", [.categories(["單手幻杖"])]),
+            ("青魔杖", [.categories(["青魔杖"])]),
+            ("武士刀", [.categories(["武士刀"])]),
+            ("雙手鐮刀", [.categories(["雙手鐮刀"])]),
+            ("鐮刀", [.jobs(["RPR"])]),
+            ("二刀", [.categories(["二刀流武器"])]),
+            ("長槍", [.categories(["長槍"])]),
+            ("火槍", [.categories(["火槍"])]),
+            ("槍刃", [.categories(["槍刃"])]),
+            ("絕槍", [.jobs(["GNB"])]),
+            ("雙手幻杖", [.categories(["雙手幻杖"])]),
+            ("染料", [.categories(["染料"])]),
+            ("鞋子", [.slots(["腳部"])]),
+            ("坦克", [.jobs(tanks)]),
+            ("食品", [.categories(["食品"])])
+        ]
+
+        for (sentence, expected) in cases {
+            XCTAssertEqual(conditions(sentence), expected, sentence)
+        }
+    }
+
     // MARK: - Names come from the data (AC-15)
 
     func testNamesComeFromTheItemData() {
@@ -107,7 +285,7 @@ final class ItemQueryMatcherTests: XCTestCase {
         )
         let matcher = ItemQueryMatcher(vocabulary: ItemQueryVocabulary(data: data))
 
-        XCTAssertEqual(matcher.matches(in: "背部的測試分類").map(\.condition), [.slot("背部"), .categories(["測試分類"])])
+        XCTAssertEqual(matcher.matches(in: "背部的測試分類").map(\.condition), [.slots(["背部"]), .categories(["測試分類"])])
     }
 
     // MARK: - Armour and accessory categories (AC-17)
@@ -161,6 +339,50 @@ final class ItemQueryMatcherTests: XCTestCase {
         }
     }
 
+    /// Players shorten iLv to il. (AC-37)
+    func testILIsAnItemLevel() {
+        XCTAssertEqual(conditions("il600的東西"), [.itemLevel(min: 600, max: 600)])
+        XCTAssertEqual(conditions("IL 700"), [.itemLevel(min: 700, max: 700)])
+        XCTAssertEqual(conditions("ilv600"), [.itemLevel(min: 600, max: 600)])
+        XCTAssertEqual(conditions("lv60"), [.equipLevel(min: 60, max: 60)])
+        XCTAssertEqual(conditions("xil600"), [], "il must stand alone")
+        XCTAssertNil(search("il600的東西", keyword: "il600").keyword)
+    }
+
+    /// 710+ is 710 or above. (AC-38)
+    func testAPlusAfterALevelMeansOrAbove() {
+        XCTAssertEqual(conditions("武士刀 il710+"), [.categories(["武士刀"]), .itemLevel(min: 710, max: nil)])
+        XCTAssertEqual(conditions("80級+"), [.equipLevel(min: 80, max: nil)])
+        XCTAssertEqual(conditions("80等+"), [.equipLevel(min: 80, max: nil)])
+        XCTAssertEqual(conditions("lv90＋"), [.equipLevel(min: 90, max: nil)])
+        XCTAssertEqual(conditions("80+"), [], "a number without a level word is still no level")
+    }
+
+    /// Levels in Chinese numerals follow the same rules as digits. (AC-41)
+    func testLevelsInChineseNumerals() {
+        let cases: [(String, [Condition])] = [
+            ("等級七十到八十之間的裝備", [.equipLevel(min: 70, max: 80)]),
+            ("八十級", [.equipLevel(min: 80, max: 80)]),
+            ("八十五等以上", [.equipLevel(min: 85, max: nil)]),
+            ("十級", [.equipLevel(min: 10, max: 10)]),
+            ("十五級", [.equipLevel(min: 15, max: 15)]),
+            ("一百級", [.equipLevel(min: 100, max: 100)]),
+            ("七十級到80級", [.equipLevel(min: 70, max: 80)]),
+            ("品級七百一十以上", [.itemLevel(min: 710, max: nil)]),
+            ("品級一百零五", [.itemLevel(min: 105, max: 105)]),
+            ("品級六百五", [.itemLevel(min: 650, max: 650)]),
+            ("品級兩百以下", [.itemLevel(min: nil, max: 200)]),
+            ("七十到八十", []),
+            ("一般", [.rarity("一般")]),
+            ("二刀", [.categories(["二刀流武器"])])
+        ]
+
+        for (sentence, expected) in cases {
+            XCTAssertEqual(conditions(sentence), expected, sentence)
+        }
+        XCTAssertNil(search("等級七十到八十之間的裝備", keyword: "七十到八十").keyword)
+    }
+
     /// The second run kept 70 from 「700」 because 70 is part of the text; numbers are read whole.
     func testNumbersAreReadWhole() {
         XCTAssertEqual(conditions("品級700"), [.itemLevel(min: 700, max: 700)])
@@ -185,6 +407,32 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertNil(fields.itemLevelMax)
     }
 
+    /// The whole list is compared, so a 級 left over from 80等級 or a dropped 以上 shows. (AC-31)
+    func testLevelsWrittenWith等() {
+        let cases: [(String, [Condition])] = [
+            ("80等", [.equipLevel(min: 80, max: 80)]),
+            ("80等級", [.equipLevel(min: 80, max: 80)]),
+            ("80等以上", [.equipLevel(min: 80, max: nil)]),
+            ("80等級以上", [.equipLevel(min: 80, max: nil)]),
+            ("30等以下", [.equipLevel(min: nil, max: 30)]),
+            ("50等以內", [.equipLevel(min: nil, max: 50)]),
+            ("70到80等", [.equipLevel(min: 70, max: 80)]),
+            ("70等到80等", [.equipLevel(min: 70, max: 80)]),
+            ("70等級~80等級", [.equipLevel(min: 70, max: 80)]),
+            ("頭部等", [.slots(["頭部"])])
+        ]
+
+        for (sentence, expected) in cases {
+            XCTAssertEqual(conditions(sentence), expected, sentence)
+        }
+    }
+
+    func testALevelWrittenWith等LeavesNothingInTheKeyword() {
+        let fields = search("50等的弓", keyword: "50等的弓")
+
+        XCTAssertEqual(fields, ItemQueryFields(usage: "搜尋", categories: ["弓"], equipLevelMin: 50, equipLevelMax: 50))
+    }
+
     // MARK: - Rarities, HQ and tradability (AC-20)
 
     func testRaritiesByNameOrColour() {
@@ -194,7 +442,7 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(conditions("粉色"), [.rarity("紅蓮")])
         XCTAssertEqual(conditions("白色"), [.rarity("一般")])
         XCTAssertEqual(conditions("貴重"), [.rarity("貴重")])
-        XCTAssertEqual(conditions("白魔"), [.job("WHM")], "a colour alone is no rarity")
+        XCTAssertEqual(conditions("白魔"), [.jobs(["WHM"])], "a colour alone is no rarity")
     }
 
     func testHQIsPositiveUnlessNegated() {
@@ -216,6 +464,26 @@ final class ItemQueryMatcherTests: XCTestCase {
         XCTAssertEqual(conditions("不能買賣"), [.tradable(false)])
         XCTAssertEqual(conditions("禁止交易"), [.tradable(false)])
         XCTAssertEqual(conditions("沒辦法交易"), [.tradable(false)])
+    }
+
+    /// 上板 is putting an item up on the market board. (AC-32)
+    func testListingOnTheMarketBoardIsTradability() {
+        XCTAssertEqual(conditions("能上板的"), [.tradable(true)])
+        XCTAssertEqual(conditions("不能上板"), [.tradable(false)])
+        XCTAssertEqual(conditions("不可以上板"), [.tradable(false)])
+        XCTAssertEqual(conditions("不要紫色的，能上板"), [.rarity("武勳"), .tradable(true)])
+        XCTAssertEqual(search("能上板的HQ食物").tradable, "可交易")
+        XCTAssertEqual(search("不能上板的頭").tradable, "不可交易")
+    }
+
+    /// 市場 is the market board as well. (AC-36)
+    func testTheMarketIsTradability() {
+        XCTAssertEqual(conditions("能在市場上賣"), [.tradable(true)])
+        XCTAssertEqual(conditions("市場上買得到的"), [.tradable(true)])
+        XCTAssertEqual(conditions("能丟市場賣的"), [.tradable(true)])
+        XCTAssertEqual(conditions("不能在市場上賣"), [.tradable(false)])
+        XCTAssertEqual(conditions("市場板"), [.tradable(true)], "the longer word is one match")
+        XCTAssertEqual(search("有哪些能在市場上賣？").tradable, "可交易")
     }
 
     /// A negation belongs to its own clause and reaches four characters back.
@@ -319,6 +587,53 @@ final class ItemQueryMatcherTests: XCTestCase {
 
     func testKeywordsAreComparedNormalised() {
         XCTAssertEqual(search("找ＡＢＣ長袍", keyword: " abc長袍 ").keyword, "abc長袍")
+    }
+
+    // MARK: - Keywords ending in 的 and a condition (AC-33)
+
+    /// The first held-out run returned these keywords whole, which swallowed the body part.
+    func testASearchKeywordEndingIn的AndAConditionGivesUpBoth() {
+        XCTAssertEqual(search("伊甸的戒指", keyword: "伊甸的戒指"), ItemQueryFields(usage: "搜尋", keyword: "伊甸", slots: ["戒指"]))
+        XCTAssertEqual(search("寄葉的衣服", keyword: "寄葉的衣服"), ItemQueryFields(usage: "搜尋", keyword: "寄葉", slots: ["身體"]))
+        XCTAssertEqual(search("找 伊甸 的戒指", keyword: "伊甸 的戒指").keyword, "伊甸")
+    }
+
+    /// What is left goes through the usual rules, so a keyword of conditions is still dropped.
+    func testWhatIsLeftOfTheKeywordFollowsTheUsualRules() {
+        XCTAssertEqual(
+            search("白魔的杖", keyword: "白魔的杖"),
+            ItemQueryFields(usage: "搜尋", categories: ["單手幻杖", "雙手幻杖"], jobs: ["WHM"])
+        )
+        XCTAssertEqual(
+            search("毒蛇的二刀", keyword: "毒蛇的二刀"),
+            ItemQueryFields(usage: "搜尋", categories: ["二刀流武器"], jobs: ["VPR"])
+        )
+    }
+
+    func testAnItemsFullNameStaysWhole() {
+        for name in ["瑪托雅的帽子", "年代久遠的長槍"] {
+            XCTAssertEqual(search("找\(name)", keyword: name), ItemQueryFields(usage: "搜尋", keyword: name), name)
+        }
+    }
+
+    /// A recipe lookup's keyword is the item to make; cutting it would only truncate the name.
+    func testARecipeKeywordStaysWhole() {
+        for name in ["伊甸的戒指", "寄葉的衣服"] {
+            XCTAssertEqual(
+                matcher.fields(for: "\(name)怎麼做", usage: "查配方", keyword: name),
+                ItemQueryFields(usage: "查配方", keyword: name),
+                name
+            )
+        }
+    }
+
+    func testOnlyAConditionRightAfter的IsCut() {
+        XCTAssertEqual(search("伊甸戒指", keyword: "伊甸戒指"), ItemQueryFields(usage: "搜尋", keyword: "伊甸戒指"))
+        XCTAssertEqual(
+            search("伊甸的戒指，90級以上", keyword: "伊甸的戒指，90級以上").keyword,
+            "伊甸的戒指，90級以上",
+            "the level at the end does not follow a 的, so the keyword stays as it was"
+        )
     }
 
     // MARK: - Usage (AC-21)

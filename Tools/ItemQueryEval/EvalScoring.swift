@@ -173,3 +173,55 @@ struct FieldScore {
         }
     }
 }
+
+/// What the report judges a run by.
+enum EvalGate {
+    /// The evaluation set (prompts/item-query-eval.md): every field against its own threshold,
+    /// `EvalField.threshold`.
+    case perField
+    /// The user's held-out set (prompts/item-description-search.md): usage and whole sentences.
+    /// A held-out set is small, so a single field can have only a couple of sentences; the report
+    /// prints each field's rate to find causes, without judging it.
+    case holdout
+
+    static let holdoutUsagePercent = 90
+    static let holdoutFullMatchPercent = 80
+    static let fullMatchTitle = "整句完全正確"
+
+    var description: String {
+        switch self {
+        case .perField:
+            return "用法、關鍵字 ≥ 90%，其他欄位 ≥ 85%"
+        case .holdout:
+            return "用法 ≥ \(Self.holdoutUsagePercent)%、整句完全正確 ≥ \(Self.holdoutFullMatchPercent)%"
+        }
+    }
+
+    var judgesEachField: Bool {
+        self == .perField
+    }
+
+    /// The titles of the measures below their threshold, in report order; empty when the run
+    /// meets the gate. The held-out gate compares whole numbers, so a rate exactly on the
+    /// threshold meets it, and a measure with no sentences does not.
+    func missed(scores: [FieldScore], fullMatches: Int, sentences: Int) -> [String] {
+        switch self {
+        case .perField:
+            return scores.filter { $0.meetsThreshold == false }.map(\.field.title)
+        case .holdout:
+            var missed: [String] = []
+            let usage = scores.first { $0.field == .usage }
+            if !Self.meets(usage?.correct ?? 0, of: usage?.total ?? 0, percent: Self.holdoutUsagePercent) {
+                missed.append(EvalField.usage.title)
+            }
+            if !Self.meets(fullMatches, of: sentences, percent: Self.holdoutFullMatchPercent) {
+                missed.append(Self.fullMatchTitle)
+            }
+            return missed
+        }
+    }
+
+    private static func meets(_ correct: Int, of total: Int, percent: Int) -> Bool {
+        total > 0 && correct * 100 >= total * percent
+    }
+}

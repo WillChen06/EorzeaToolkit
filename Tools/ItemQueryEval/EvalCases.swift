@@ -53,7 +53,15 @@ enum EvalCaseLoader {
     /// Decodes each case on its own, so a broken case is reported by its position and id rather
     /// than failing the whole file at once. Returns every problem found; the cases are usable
     /// only when there are none.
-    static func load(from url: URL, vocabulary: ItemQueryVocabulary) -> (cases: [EvalCase], problems: [String]) {
+    ///
+    /// `heldOut` is true for the user's held-out set. It need not follow the evaluation set's
+    /// composition, only contain a sentence, and an expected keyword may be a name the sentence
+    /// does not contain, such as the item a player's nickname stands for.
+    static func load(
+        from url: URL,
+        vocabulary: ItemQueryVocabulary,
+        heldOut: Bool
+    ) -> (cases: [EvalCase], problems: [String]) {
         let data: Data
         do {
             data = try Data(contentsOf: url)
@@ -102,7 +110,7 @@ enum EvalCaseLoader {
                 continue
             }
 
-            for message in validate(evalCase, vocabulary: vocabulary) {
+            for message in validate(evalCase, vocabulary: vocabulary, keywordMustBeInQuery: !heldOut) {
                 problems.append("\(label)：\(message)")
             }
             if !seenIds.insert(evalCase.id).inserted {
@@ -111,14 +119,18 @@ enum EvalCaseLoader {
             cases.append(evalCase)
         }
 
-        for group in EvalGroup.allCases {
-            let count = cases.filter { $0.group == group }.count
-            if count < group.minimumCount {
-                problems.append("「\(group.title)」有 \(count) 句，至少要 \(group.minimumCount) 句")
+        if !heldOut {
+            for group in EvalGroup.allCases {
+                let count = cases.filter { $0.group == group }.count
+                if count < group.minimumCount {
+                    problems.append("「\(group.title)」有 \(count) 句，至少要 \(group.minimumCount) 句")
+                }
             }
-        }
-        if cases.count < minimumTotal {
-            problems.append("評估集有 \(cases.count) 句，至少要 \(minimumTotal) 句")
+            if cases.count < minimumTotal {
+                problems.append("評估集有 \(cases.count) 句，至少要 \(minimumTotal) 句")
+            }
+        } else if entries.isEmpty {
+            problems.append("評估集沒有任何句子")
         }
 
         return (cases, problems)
@@ -126,7 +138,11 @@ enum EvalCaseLoader {
 
     /// Checks one case against the spec's rules. The model's own answers are never checked this
     /// way: resolution ignores unknown names, but an expected result must not contain any.
-    static func validate(_ evalCase: EvalCase, vocabulary: ItemQueryVocabulary) -> [String] {
+    static func validate(
+        _ evalCase: EvalCase,
+        vocabulary: ItemQueryVocabulary,
+        keywordMustBeInQuery: Bool
+    ) -> [String] {
         var problems: [String] = []
         let expected = evalCase.expected
 
@@ -146,7 +162,7 @@ enum EvalCaseLoader {
             problems.append("沒有用法")
         }
 
-        if let keyword = expected.keyword, !evalCase.query.contains(keyword) {
+        if keywordMustBeInQuery, let keyword = expected.keyword, !evalCase.query.contains(keyword) {
             problems.append("關鍵字「\(keyword)」不在原文裡")
         }
 

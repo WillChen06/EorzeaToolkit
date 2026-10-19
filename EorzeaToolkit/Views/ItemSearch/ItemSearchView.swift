@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ItemSearchView: View {
     var onReturnHome: () -> Void = {}
-    @State private var viewModel = ItemSearchViewModel()
+    @State private var viewModel = ItemSearchViewModel(descriptionSearchEngine: .live)
     @State private var selectedItemID: Int?
     @State private var isShowingFilterSheet = false
 
@@ -16,6 +16,15 @@ struct ItemSearchView: View {
         }
         .task {
             viewModel.loadItems()
+            viewModel.refreshDescriptionSearchAvailability()
+        }
+        .onChange(of: viewModel.itemIDToOpen) { _, itemID in
+            // A recipe lookup found exactly one item with that name.
+            guard let itemID else {
+                return
+            }
+            selectedItemID = itemID
+            viewModel.didOpenItem()
         }
     }
 
@@ -45,12 +54,47 @@ struct ItemSearchView: View {
             prompt: L10n.ItemSearch.searchPrompt
         )
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            // One group, so the system places both buttons together.
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                if viewModel.showsDescriptionSearchButton {
+                    descriptionSearchButton
+                }
+
                 filterButton
             }
         }
         .appThemedBackground()
         .appThemedScreen(tint: HomeFeature.itemSearch.accent)
+    }
+
+    private var descriptionSearchButton: some View {
+        Button {
+            viewModel.openDescriptionSearch()
+        } label: {
+            Image(systemName: "sparkles")
+                .font(.title3)
+                .frame(width: 44, height: 44)
+        }
+        .disabled(!viewModel.canOpenDescriptionSearch)
+        .accessibilityLabel(Text(L10n.ItemSearch.DescriptionSearch.title))
+        .popover(isPresented: isShowingDescriptionSearch) {
+            ItemDescriptionSearchSheet(viewModel: viewModel)
+                .frame(idealWidth: 440, idealHeight: 360)
+                .presentationCompactAdaptation(horizontal: .sheet, vertical: .sheet)
+        }
+    }
+
+    /// Dismissing the screen, by swiping it down or tapping outside the popover, closes it as
+    /// 「取消」 does, abandoning a parse in progress.
+    private var isShowingDescriptionSearch: Binding<Bool> {
+        Binding(
+            get: { viewModel.isShowingDescriptionSearch },
+            set: { isShowing in
+                if !isShowing {
+                    viewModel.closeDescriptionSearch()
+                }
+            }
+        )
     }
 
     private var filterButton: some View {
@@ -62,15 +106,19 @@ struct ItemSearchView: View {
                     .font(.title3)
                     .frame(width: 36, height: 36)
 
-                if viewModel.filter.isActive {
-                    Text("\(viewModel.filter.activeFilterCount)")
-                        .font(.caption.bold())
-                        .foregroundStyle(.white)
-                        .frame(width: 16, height: 16)
-                        .background(.red, in: Circle())
-                        .padding(.top, 1)
-                        .padding(.trailing, 1)
-                }
+                // Always there and only hidden while the filter is at its defaults: inserting the
+                // badge changed the button's structure, and with a second button beside it,
+                // iPhone Duo then moved this button to the bottom of the screen and stretched the
+                // buttons' shared glass background between them.
+                Text("\(viewModel.filter.activeFilterCount)")
+                    .font(.caption.bold())
+                    .foregroundStyle(.white)
+                    .frame(width: 16, height: 16)
+                    .background(.red, in: Circle())
+                    .padding(.top, 1)
+                    .padding(.trailing, 1)
+                    .opacity(viewModel.filter.isActive ? 1 : 0)
+                    .accessibilityHidden(!viewModel.filter.isActive)
             }
             .frame(width: 44, height: 44)
         }
@@ -96,9 +144,7 @@ struct ItemSearchView: View {
     }
 
     private var shouldShowFilterBar: Bool {
-        viewModel.filter.isActive ||
-            !viewModel.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
-            viewModel.isSearching
+        !viewModel.isWaitingForSearch || viewModel.isSearching
     }
 
     private var filterBar: some View {
@@ -143,7 +189,7 @@ struct ItemSearchView: View {
 
     @ViewBuilder
     private var searchContent: some View {
-        if viewModel.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        if viewModel.isWaitingForSearch {
             ContentUnavailableView(
                 L10n.ItemSearch.emptySearchTitle,
                 systemImage: "magnifyingglass",
@@ -156,7 +202,11 @@ struct ItemSearchView: View {
                 ContentUnavailableView(
                     L10n.ItemSearch.noResultsTitle,
                     systemImage: "shippingbox",
-                    description: Text(L10n.ItemSearch.noResultsDescription)
+                    description: Text(
+                        viewModel.isFilterOnlySearch
+                            ? L10n.ItemSearch.noFilterResultsDescription
+                            : L10n.ItemSearch.noResultsDescription
+                    )
                 )
             }
         } else {

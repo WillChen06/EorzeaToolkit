@@ -10,17 +10,21 @@ import Foundation
 /// lower-cased and without whitespace.
 struct ItemQueryMatcher: Sendable {
     enum Condition: Equatable, Sendable {
-        /// Category names. A partial name such as 採掘工具 or 副工具 stands for several.
+        /// Category names. A partial name such as 副工具, or an everyday word such as 杖, stands
+        /// for several.
         case categories([String])
-        case slot(String)
-        /// A job abbreviation.
-        case job(String)
+        /// Body part names. One name stands for one body part, unless it names a group.
+        case slots([String])
+        /// Job abbreviations. One name stands for one job, unless it names a group.
+        case jobs([String])
         /// A rarity name.
         case rarity(String)
         case equipLevel(min: Int?, max: Int?)
         case itemLevel(min: Int?, max: Int?)
         case hq(Bool)
         case tradable(Bool)
+        /// Several conditions one word stands for: 紫武 is a rarity and a weapon.
+        case all([Condition])
     }
 
     /// A condition and where it was found, in characters of the normalised sentence.
@@ -71,20 +75,48 @@ struct ItemQueryMatcher: Sendable {
         // When two lists share a name, the earlier list wins: 戒指 is a body part before it is a
         // category.
         for slot in vocabulary.slots {
-            add(slot.name, .slot(slot.name))
+            add(slot.name, .slots([slot.name]))
         }
         for category in vocabulary.categories {
             add(category.name, .categories([category.name] + (categoriesByPartialName[category.name] ?? [])))
         }
         for job in vocabulary.jobs {
             for name in [job.abbreviation] + [job.officialName].compactMap({ $0 }) + job.nicknames {
-                add(name, .job(job.abbreviation))
+                add(name, .jobs([job.abbreviation]))
             }
         }
         for rarity in ItemQueryVocabulary.rarities {
             add(rarity.name, .rarity(rarity.name))
             add(rarity.colour + "色", .rarity(rarity.name))
             add(rarity.colour + "裝", .rarity(rarity.name))
+        }
+
+        // Players' words the data has no name for, kept to what the data and the job filter have.
+        func addEverydayNames(
+            _ groups: [ItemQueryEverydayNames.Group],
+            known: Set<String>,
+            _ condition: ([String]) -> Condition
+        ) {
+            for group in groups {
+                let targets = group.targets.filter { known.contains($0) }
+                guard !targets.isEmpty else {
+                    continue
+                }
+                for name in group.names {
+                    add(name, condition(targets))
+                }
+            }
+        }
+        addEverydayNames(ItemQueryEverydayNames.jobGroups, known: Set(vocabulary.jobs.map(\.abbreviation)), Condition.jobs)
+        addEverydayNames(ItemQueryEverydayNames.slots, known: Set(vocabulary.slots.map(\.name)), Condition.slots)
+        addEverydayNames(ItemQueryEverydayNames.categories, known: Set(vocabulary.categories.map(\.name)), Condition.categories)
+
+        let slotNames = Set(vocabulary.slots.map(\.name))
+        let weaponSlots = ItemQueryEverydayNames.weaponSlots.filter { slotNames.contains($0) }
+        let rarityNames = Set(ItemQueryVocabulary.rarities.map(\.name))
+        for weapon in ItemQueryEverydayNames.rarityWeapons
+        where rarityNames.contains(weapon.rarity) && !weaponSlots.isEmpty {
+            add(weapon.name, .all([.rarity(weapon.rarity), .slots(weaponSlots)]))
         }
 
         for name in unbracketedNames {
@@ -108,9 +140,9 @@ struct ItemQueryMatcher: Sendable {
         "在", "又", "但", "賣", "買", "不", ",", "、", "､", "。", "｡"
     ]
 
-    /// The parse result: the usage and keyword the model gave, and the conditions in the
-    /// sentence. A sentence that cannot be handled keeps only its usage, and a recipe lookup only
-    /// its keyword.
+    /// The parse result: the usage and keyword the model gave, the keyword checked against the
+    /// sentence, and the conditions in the sentence. A sentence that cannot be handled keeps only
+    /// its usage, and a recipe lookup only its keyword.
     func fields(for sentence: String, usage: String?, keyword: String?) -> ItemQueryFields {
         let usageLabel = usage?.trimmingCharacters(in: .whitespacesAndNewlines)
         let usage = usageLabel.flatMap { ItemQuery.Usage(label: $0) } ?? .search
@@ -120,7 +152,13 @@ struct ItemQueryMatcher: Sendable {
 
         let text = Normalized(sentence)
         var matches = self.matches(in: text)
-        let keyword = self.keyword(keyword, in: text.characters, dropping: &matches)
+        // A recipe lookup's keyword is the item to make, and its conditions do not count.
+        let keyword = self.keyword(
+            keyword,
+            in: text.characters,
+            dropping: &matches,
+            cutsTrailingCondition: usage == .search
+        )
         if usage == .recipe {
             return ItemQueryFields(usage: usageLabel, keyword: keyword)
         }
@@ -131,13 +169,34 @@ struct ItemQueryMatcher: Sendable {
     /// conditions (頭部裝備, 繪靈法師的筆) is dropped unless an item has exactly that name and it is
     /// more than one condition (紅蓮盾, but not 毒蛇); otherwise the conditions inside it are part
     /// of an item's name (the 盾 in 守護者之盾) and are dropped instead.
-    private func keyword(_ keyword: String?, in text: [Character], dropping matches: inout [Match]) -> String? {
-        guard let keyword = keyword?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+    ///
+    /// With `cutsTrailingCondition`, a keyword ending in 的 and a condition loses both first, and
+    /// the condition still counts: 伊甸的戒指 is 伊甸 on the ring slot. An item's full name, such as
+    /// 瑪托雅的帽子, stays whole.
+    private func keyword(
+        _ keyword: String?,
+        in text: [Character],
+        dropping matches: inout [Match],
+        cutsTrailingCondition: Bool
+    ) -> String? {
+        guard var keyword = keyword?.trimmingCharacters(in: .whitespacesAndNewlines) else {
             return nil
         }
-        let normalizedKeyword = Array(Self.normalized(keyword))
-        guard let range = Self.occurrences(of: normalizedKeyword, in: text).first else {
+        var normalizedKeyword = Array(Self.normalized(keyword))
+        guard var range = Self.occurrences(of: normalizedKeyword, in: text).first else {
             return nil
+        }
+
+        if cutsTrailingCondition, !vocabulary.isItemName(keyword),
+           let cut = Self.trailingCondition(of: range, in: text, matches: matches),
+           let ofIndex = keyword.lastIndex(of: "的") {
+            let shorter = String(keyword[..<ofIndex]).trimmingCharacters(in: .whitespacesAndNewlines)
+            // The condition holds no 的, so the last 的 is the one before it; checked anyway.
+            if Array(Self.normalized(shorter)) == Array(text[range.lowerBound..<cut]) {
+                keyword = shorter
+                normalizedKeyword = Array(text[range.lowerBound..<cut])
+                range = range.lowerBound..<cut
+            }
         }
 
         var covered = Array(repeating: false, count: text.count)
@@ -168,6 +227,19 @@ struct ItemQueryMatcher: Sendable {
         return keyword
     }
 
+    /// Where 的 stands when the keyword at `range` ends in 的 and a condition, with something
+    /// before the 的.
+    private static func trailingCondition(of range: Range<Int>, in text: [Character], matches: [Match]) -> Int? {
+        guard let condition = matches.first(where: { $0.range.upperBound == range.upperBound }) else {
+            return nil
+        }
+        let particle = condition.range.lowerBound - 1
+        guard particle > range.lowerBound, text[particle] == "的" else {
+            return nil
+        }
+        return particle
+    }
+
     private func fields(usage: String?, keyword: String?, matches: [Match]) -> ItemQueryFields {
         var categories: [String] = []
         var partialCategories: [[String]] = []
@@ -181,16 +253,16 @@ struct ItemQueryMatcher: Sendable {
 
         // The first level of each kind counts. HQ and tradability are negative when any
         // mention is: 「市場板上不能買賣」 is untradable.
-        for match in matches {
-            switch match.condition {
+        func collect(_ condition: Condition) {
+            switch condition {
             case .categories(let names) where names.count == 1:
                 categories += names
             case .categories(let names):
                 partialCategories.append(names)
-            case .slot(let name):
-                slots.append(name)
-            case .job(let abbreviation):
-                jobs.append(abbreviation)
+            case .slots(let names):
+                slots += names
+            case .jobs(let abbreviations):
+                jobs += abbreviations
             case .rarity(let name):
                 rarities.append(name)
             case .equipLevel(let lower, let upper):
@@ -201,7 +273,14 @@ struct ItemQueryMatcher: Sendable {
                 hq = (hq ?? true) && value
             case .tradable(let value):
                 tradable = (tradable ?? true) && value
+            case .all(let conditions):
+                for condition in conditions {
+                    collect(condition)
+                }
             }
+        }
+        for match in matches {
+            collect(match.condition)
         }
 
         // 副工具 alone is every sub-tool; with 鍊金術師 in the sentence it is the alchemist's.
@@ -294,12 +373,13 @@ struct ItemQueryMatcher: Sendable {
     }
 
     /// Words before a number that make it a level. Longer ones come first, so iLv is not read as
-    /// Lv; 品級 also ends in 級 but is a word before the number, not after it.
+    /// il or Lv; 品級 also ends in 級 but is a word before the number, not after it.
     private static let levelMarkers = [
         LevelMarker("品級", .item),
         LevelMarker("裝等", .item),
         LevelMarker("ilvl", .item),
         LevelMarker("ilv", .item),
+        LevelMarker("il", .item),
         LevelMarker("等級", .equip),
         LevelMarker("lvl", .equip),
         LevelMarker("lv", .equip)
@@ -308,9 +388,13 @@ struct ItemQueryMatcher: Sendable {
     private static let levelSeparators: Set<Character> = [".", ":"]
     private static let rangeConnectors: Set<Character> = ["到", "至", "~", "〜", "-", "–", "—"]
 
-    /// 「80級」「等級80」「Lv.80」, optionally followed by 以上, 以下 or 以內, and ranges such as
-    /// 「70到80級」. A number counts only with a marker before it or 級 after it, and is always
-    /// read whole, so 700 is never 70.
+    /// Words after a number that make it a level. Players write 80等 as often as 80級; 等級 comes
+    /// first, so 80等級 is read whole.
+    private static let levelSuffixes = ["等級", "級", "等"]
+
+    /// 「80級」「80等」「等級80」「Lv.80」「八十級」, optionally followed by 以上 (or +), 以下 or
+    /// 以內, and ranges such as 「70到80級」. A number counts only with a marker before it or a
+    /// level word after it, and is always read whole, so 700 is never 70.
     private static func levelMatches(in normalized: Normalized) -> [Match] {
         let text = normalized.characters
         var matches: [Match] = []
@@ -324,8 +408,8 @@ struct ItemQueryMatcher: Sendable {
             let marker = levelMarker(before: index, in: normalized)
             var end = first.end
             var saysLevel = false
-            if end < text.count, text[end] == "級" {
-                end += 1
+            if let suffix = levelSuffix(at: end, in: text) {
+                end += suffix
                 saysLevel = true
             }
 
@@ -333,8 +417,8 @@ struct ItemQueryMatcher: Sendable {
             if end < text.count, rangeConnectors.contains(text[end]), let next = number(at: end + 1, in: normalized) {
                 second = next.value
                 end = next.end
-                if end < text.count, text[end] == "級" {
-                    end += 1
+                if let suffix = levelSuffix(at: end, in: text) {
+                    end += suffix
                     saysLevel = true
                 }
             }
@@ -347,7 +431,10 @@ struct ItemQueryMatcher: Sendable {
             var lower: Int? = first.value
             var upper: Int? = second ?? first.value
             if second == nil {
-                if hasWord("以上", at: end, in: text) {
+                if end < text.count, text[end] == "+" {
+                    upper = nil
+                    end += 1
+                } else if hasWord("以上", at: end, in: text) {
                     upper = nil
                     end += 2
                 } else if hasWord("以下", at: end, in: text) || hasWord("以內", at: end, in: text) {
@@ -365,7 +452,13 @@ struct ItemQueryMatcher: Sendable {
         return matches
     }
 
-    /// The digits from `index` on, up to the first other character or whitespace.
+    /// The length of the level word right after a number, if there is one.
+    private static func levelSuffix(at index: Int, in text: [Character]) -> Int? {
+        levelSuffixes.first { hasWord($0, at: index, in: text) }?.count
+    }
+
+    /// The number from `index` on: the digits up to the first other character or whitespace, or
+    /// a number in Chinese numerals.
     private static func number(at index: Int, in normalized: Normalized) -> (value: Int, end: Int)? {
         let text = normalized.characters
         var end = index
@@ -373,9 +466,58 @@ struct ItemQueryMatcher: Sendable {
             end += 1
         }
         guard end > index, let value = Int(String(text[index..<end])) else {
-            return nil
+            return chineseNumber(at: index, in: normalized)
         }
         return (value, end)
+    }
+
+    private static let chineseDigits: [Character: Int] = [
+        "〇": 0, "零": 0, "一": 1, "二": 2, "兩": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9
+    ]
+
+    /// A number below a thousand in Chinese numerals, as players write levels: 十, 七十, 八十五,
+    /// 一百, 一百零五, 七百一十, and 一百五 for 150.
+    private static func chineseNumber(at index: Int, in normalized: Normalized) -> (value: Int, end: Int)? {
+        let text = normalized.characters
+        var position = index
+        func character(_ offset: Int = 0) -> Character? {
+            let at = position + offset
+            guard at < text.count, at == index || !normalized.spaced[at] else {
+                return nil
+            }
+            return text[at]
+        }
+        func digit(_ offset: Int = 0) -> Int? {
+            character(offset).flatMap { chineseDigits[$0] }
+        }
+
+        var value = 0
+        var hundreds = false
+        if let hundred = digit(), hundred > 0, character(1) == "百" {
+            value += hundred * 100
+            position += 2
+            hundreds = true
+        }
+        var zero = false
+        if hundreds, digit() == 0 {
+            position += 1
+            zero = true
+        }
+        if character() == "十" {
+            value += 10
+            position += 1
+        } else if let ten = digit(), ten > 0, character(1) == "十" {
+            value += ten * 10
+            position += 2
+        } else if hundreds, !zero, let ten = digit(), ten > 0 {
+            // 一百五 is 150.
+            return (value + ten * 10, position + 1)
+        }
+        if let one = digit() {
+            value += one
+            position += 1
+        }
+        return position > index ? (value, position) : nil
     }
 
     private static func levelMarker(before index: Int, in normalized: Normalized) -> (kind: LevelKind, start: Int)? {
@@ -400,7 +542,8 @@ struct ItemQueryMatcher: Sendable {
     // MARK: - HQ and tradability
 
     private static let hqWord = Array("hq")
-    private static let tradableWords = ["交易", "買賣", "市場板"].map { Array($0) }
+    /// 上板 is putting an item up on the market board, and 市場 is the market board too.
+    private static let tradableWords = ["交易", "買賣", "市場板", "市場", "上板"].map { Array($0) }
     private static let negations: Set<Character> = ["不", "無", "沒", "非", "禁"]
     /// Conjunctions that end a clause as punctuation does, so the 不 in 「不能HQ但可以交易」 stays
     /// with HQ.
@@ -408,8 +551,8 @@ struct ItemQueryMatcher: Sendable {
     /// How far back a negation still applies, in characters: 「不可以HQ」 reaches four.
     private static let negationReach = 4
 
-    /// 「HQ」 is a condition on HQ and 「交易」「買賣」「市場板」 one on tradability, negative when
-    /// a negation comes shortly before it in the same clause.
+    /// 「HQ」 is a condition on HQ and 「交易」「買賣」「市場板」「市場」「上板」 one on
+    /// tradability, negative when a negation comes shortly before it in the same clause.
     private static func flagMatches(in normalized: Normalized) -> [Match] {
         let text = normalized.characters
         var matches: [Match] = []
