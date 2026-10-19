@@ -22,6 +22,18 @@ struct ItemDescriptionSearchSheet: View {
                     .onSubmit(submit)
                     .focused($isSentenceFocused)
                     .disabled(viewModel.isParsingDescription)
+                    .onChange(of: viewModel.descriptionSentence) { oldText, newText in
+                        // Long sentences wrap, but the field never breaks a line: the return key
+                        // searches. The text is corrected after the field took it, which the
+                        // field shows reliably, rather than refused as it is typed.
+                        let edit = ItemDescriptionInput.edit(from: oldText, to: newText)
+                        if edit.text != newText {
+                            viewModel.descriptionSentence = edit.text
+                        }
+                        if edit.submits {
+                            submit()
+                        }
+                    }
                 } footer: {
                     Text(L10n.ItemSearch.DescriptionSearch.hint)
                 }
@@ -74,17 +86,10 @@ struct ItemDescriptionSearchSheet: View {
         }
     }
 
-    /// Long sentences wrap, but the field never breaks a line: the return key searches.
     private var sentence: Binding<String> {
         Binding(
             get: { viewModel.descriptionSentence },
-            set: { newValue in
-                let edit = ItemDescriptionInput.edit(from: viewModel.descriptionSentence, to: newValue)
-                viewModel.descriptionSentence = edit.text
-                if edit.submits {
-                    submit()
-                }
-            }
+            set: { viewModel.descriptionSentence = $0 }
         )
     }
 
