@@ -227,20 +227,38 @@ final class ItemSearchViewModel {
 
     var query = ""
 
+    // Description search (prompts/item-description-search.md).
+    private(set) var descriptionSearchAvailability: ItemDescriptionSearchAvailability = .unavailable
+    private(set) var isShowingDescriptionSearch = false
+    /// The sentence being edited on the description search screen.
+    var descriptionSentence = ""
+    private(set) var isParsingDescription = false
+    private(set) var descriptionSearchMessage: ItemDescriptionSearchMessage?
+    /// The item a recipe lookup found, for the screen to open; `didOpenItem()` clears it.
+    private(set) var itemIDToOpen: Int?
+    private var descriptionParser: ItemDescriptionParser?
+
     private var items: [Item] = []
     private var allSearchResults: [Item] = []
     private var classjobJobSetsById: [Int: Set<String>] = [:]
     private var loadedDataVersion: String?
     private var loadTask: Task<Void, Never>?
     private var searchTask: Task<Void, Never>?
+    private var descriptionParserTask: Task<Void, Never>?
+    private var descriptionParseTask: Task<Void, Never>?
 
     private let pageSize = 50
     private let searchDebounceNanoseconds: UInt64 = 300_000_000
     private let loadData: @Sendable () async throws -> ItemDataResponse
     private let refreshData: @Sendable (_ currentVersion: String?) async throws -> ItemDataResponse?
+    private let descriptionSearchEngine: ItemDescriptionSearchEngine
+    private let descriptionSearchMemory: ItemDescriptionSearchMemory
 
-    /// The data comes from `ItemDataService` unless a test hands it in.
+    /// The data comes from `ItemDataService` and description search is off, unless the caller
+    /// hands them in: the app passes `ItemDescriptionSearchEngine.live`, tests their own.
     init(
+        descriptionSearchEngine: ItemDescriptionSearchEngine = .unsupported,
+        descriptionSearchMemory: ItemDescriptionSearchMemory = .shared,
         loadData: @escaping @Sendable () async throws -> ItemDataResponse = {
             try await ItemDataService.loadCachedOrBundledData()
         },
@@ -250,6 +268,8 @@ final class ItemSearchViewModel {
     ) {
         self.loadData = loadData
         self.refreshData = refreshData
+        self.descriptionSearchEngine = descriptionSearchEngine
+        self.descriptionSearchMemory = descriptionSearchMemory
     }
 
     var hiddenResultCount: Int {
@@ -454,6 +474,7 @@ final class ItemSearchViewModel {
         classjobJobSetsById = Dictionary(
             uniqueKeysWithValues: data.classjobCategories.map { ($0.id, Set($0.jobs)) }
         )
+        rebuildDescriptionParser(from: data)
     }
 
     private func updateFilter(_ newFilter: ItemFilter, debounce: Bool = true) {
@@ -551,6 +572,168 @@ final class ItemSearchViewModel {
             guard !Task.isCancelled else {
                 return
             }
+        }
+    }
+
+    // MARK: - Description search
+
+    /// Whether the toolbar shows the description search button. While the screen is open the
+    /// button stays, even when reopening found description search unavailable, so the screen
+    /// can say so; it goes once the screen closes.
+    var showsDescriptionSearchButton: Bool {
+        isShowingDescriptionSearch || descriptionSearchAvailability.showsButton
+    }
+
+    /// The button is disabled until the items have loaded and their vocabulary is built.
+    var canOpenDescriptionSearch: Bool {
+        hasLoadedItems && descriptionParser != nil
+    }
+
+    var canSubmitDescription: Bool {
+        descriptionSearchAvailability.canSearch
+            && descriptionParser != nil
+            && !isParsingDescription
+            && !descriptionSentence.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    /// Checks the model again, when the item search screen opens and when the description
+    /// search screen does.
+    func refreshDescriptionSearchAvailability() {
+        descriptionSearchAvailability = descriptionSearchEngine.availability()
+    }
+
+    func openDescriptionSearch() {
+        guard canOpenDescriptionSearch, !isShowingDescriptionSearch else {
+            return
+        }
+
+        refreshDescriptionSearchAvailability()
+        descriptionSentence = descriptionSearchMemory.lastSubmittedSentence
+        descriptionSearchMessage = nil
+        isShowingDescriptionSearch = true
+        if descriptionSearchAvailability.canSearch {
+            descriptionParser?.prewarm()
+        }
+    }
+
+    /// Closes the screen by 「取消」 or by dismissing it, and abandons a parse in progress:
+    /// its result is never applied.
+    func closeDescriptionSearch() {
+        abandonDescriptionParse()
+        descriptionSearchMessage = nil
+        isShowingDescriptionSearch = false
+    }
+
+    /// Parses the sentence, then applies it and closes the screen, or keeps the screen open
+    /// with a message. Returns the parse for tests to wait on.
+    @discardableResult
+    func submitDescription() -> Task<Void, Never>? {
+        guard canSubmitDescription, let parser = descriptionParser else {
+            return nil
+        }
+
+        let sentence = descriptionSentence.trimmingCharacters(in: .whitespacesAndNewlines)
+        descriptionSearchMemory.lastSubmittedSentence = descriptionSentence
+        descriptionSearchMessage = nil
+        isParsingDescription = true
+
+        let task = Task {
+            let result: Result<ItemQuery, Error>
+            do {
+                result = .success(try await parser.parse(sentence))
+            } catch {
+                result = .failure(error)
+            }
+
+            // Abandoning the parse cancels this task. Its result is dropped here even when the
+            // model ignored the cancellation and answered anyway.
+            guard !Task.isCancelled else {
+                return
+            }
+
+            isParsingDescription = false
+            switch result {
+            case .success(let parsedQuery):
+                if let message = applyDescriptionQuery(parsedQuery) {
+                    descriptionSearchMessage = message
+                } else {
+                    isShowingDescriptionSearch = false
+                }
+            case .failure:
+                descriptionSearchMessage = .failed
+            }
+        }
+        descriptionParseTask = task
+        return task
+    }
+
+    /// Called once the screen has opened `itemIDToOpen`.
+    func didOpenItem() {
+        itemIDToOpen = nil
+    }
+
+    /// Waits for the vocabulary a parser needs to be built, so tests can check the result.
+    func waitUntilDescriptionSearchIsReady() async {
+        await descriptionParserTask?.value
+    }
+
+    private func abandonDescriptionParse() {
+        descriptionParseTask?.cancel()
+        descriptionParseTask = nil
+        isParsingDescription = false
+    }
+
+    /// Applies a parsed sentence, replacing the filter and search text whole, or returns why
+    /// it was not applied (prompts/item-description-search.md, 「套用」「查配方」).
+    private func applyDescriptionQuery(_ parsedQuery: ItemQuery) -> ItemDescriptionSearchMessage? {
+        switch parsedQuery.usage {
+        case .unsupported:
+            return .notAnItemQuery
+        case .recipe:
+            guard let keyword = parsedQuery.keyword else {
+                return .notAnItemQuery
+            }
+            // Compared as the name search compares names. Only one item with that name is
+            // opened; several, or none, are left to the name search.
+            let normalizedKeyword = Self.normalize(keyword)
+            let namesakes = items.filter { Self.normalize($0.nameTw) == normalizedKeyword }
+            applySearch(filter: ItemFilter(), query: keyword)
+            itemIDToOpen = namesakes.count == 1 ? namesakes[0].id : nil
+            return nil
+        case .search:
+            guard parsedQuery.keyword != nil || parsedQuery.hasConditions else {
+                return .nothingFound
+            }
+            applySearch(filter: ItemFilter(query: parsedQuery), query: parsedQuery.keyword ?? "")
+            return nil
+        }
+    }
+
+    private func applySearch(filter newFilter: ItemFilter, query newQuery: String) {
+        filter = newFilter
+        query = newQuery
+        runSearch(for: newQuery, debounce: false)
+    }
+
+    /// The parser reads the same items as the search, rebuilt when a remote update arrives.
+    /// Building the vocabulary walks every item, so it runs off the main actor.
+    private func rebuildDescriptionParser(from data: ItemDataResponse) {
+        guard descriptionSearchEngine.isSupported else {
+            return
+        }
+
+        descriptionParserTask?.cancel()
+        descriptionParser = nil
+        let engine = descriptionSearchEngine
+        descriptionParserTask = Task {
+            let parser = await Task.detached(priority: .utility) {
+                engine.makeParser(ItemQueryVocabulary(data: data))
+            }.value
+
+            guard !Task.isCancelled else {
+                return
+            }
+            descriptionParser = parser
         }
     }
 
