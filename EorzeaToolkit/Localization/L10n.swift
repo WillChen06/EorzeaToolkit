@@ -92,6 +92,7 @@ enum L10n {
         static let searching: LocalizedStringKey = "itemSearch.search.loading"
         static let noResultsTitle: LocalizedStringKey = "itemSearch.search.noResultsTitle"
         static let noResultsDescription: LocalizedStringKey = "itemSearch.search.noResultsDescription"
+        static let noFilterResultsDescription: LocalizedStringKey = "itemSearch.search.noFilterResultsDescription"
         static let loadMore: LocalizedStringKey = "itemSearch.results.loadMore"
 
         static func resultsStatus(visibleCount: Int, totalCount: Int, hiddenCount: Int) -> LocalizedStringKey {

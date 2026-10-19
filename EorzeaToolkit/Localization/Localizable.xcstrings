@@ -2551,13 +2551,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enter an item name to start searching"
+            "value" : "Enter an item name or set filters"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "輸入道具名稱開始搜尋"
+            "value" : "輸入道具名稱，或設定篩選條件"
           }
         }
       }
@@ -2592,6 +2592,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "搜尋中"
+          }
+        }
+      }
+    },
+    "itemSearch.search.noFilterResultsDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try adjusting the filters"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請試著調整篩選條件"
           }
         }
       }

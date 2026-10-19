@@ -96,9 +96,7 @@ struct ItemSearchView: View {
     }
 
     private var shouldShowFilterBar: Bool {
-        viewModel.filter.isActive ||
-            !viewModel.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
-            viewModel.isSearching
+        !viewModel.isWaitingForSearch || viewModel.isSearching
     }
 
     private var filterBar: some View {
@@ -143,7 +141,7 @@ struct ItemSearchView: View {
 
     @ViewBuilder
     private var searchContent: some View {
-        if viewModel.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        if viewModel.isWaitingForSearch {
             ContentUnavailableView(
                 L10n.ItemSearch.emptySearchTitle,
                 systemImage: "magnifyingglass",
@@ -156,7 +154,11 @@ struct ItemSearchView: View {
                 ContentUnavailableView(
                     L10n.ItemSearch.noResultsTitle,
                     systemImage: "shippingbox",
-                    description: Text(L10n.ItemSearch.noResultsDescription)
+                    description: Text(
+                        viewModel.isFilterOnlySearch
+                            ? L10n.ItemSearch.noFilterResultsDescription
+                            : L10n.ItemSearch.noResultsDescription
+                    )
                 )
             }
         } else {

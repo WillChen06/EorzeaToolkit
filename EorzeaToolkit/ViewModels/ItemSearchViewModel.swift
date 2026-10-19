@@ -264,6 +264,20 @@ final class ItemSearchViewModel {
         loadState == .loaded
     }
 
+    /// The search field is empty and the filter is at its defaults, so nothing is listed yet.
+    var isWaitingForSearch: Bool {
+        isQueryEmpty && !filter.isActive
+    }
+
+    /// The search field is empty but the filter is active: every item the filter keeps is listed.
+    var isFilterOnlySearch: Bool {
+        isQueryEmpty && filter.isActive
+    }
+
+    private var isQueryEmpty: Bool {
+        query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
     var uiCategoryGroups: [UICategoryGroup] {
         let grouped = Dictionary(grouping: uiCategories) { $0.orderMajor }
 
@@ -461,7 +475,8 @@ final class ItemSearchViewModel {
         searchTask?.cancel()
 
         let trimmedQuery = rawQuery.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedQuery.isEmpty else {
+        // With an empty search field, an active filter alone lists its items.
+        guard !trimmedQuery.isEmpty || filter.isActive else {
             allSearchResults = []
             results = []
             totalMatchCount = 0
@@ -549,7 +564,8 @@ final class ItemSearchViewModel {
         await searchTask?.value
     }
 
-    /// Internal rather than private so tests can search without loading the bundled data.
+    /// Internal rather than private so tests can search without loading the bundled data. An
+    /// empty query keeps every item the filter keeps, in the same order as a name search.
     nonisolated static func searchItems(
         _ items: [Item],
         query: String,
@@ -561,6 +577,11 @@ final class ItemSearchViewModel {
 
         for item in items {
             guard matchesFilter(item, filter: filter, classjobJobSetsById: classjobJobSetsById) else {
+                continue
+            }
+
+            guard !normalizedQuery.isEmpty else {
+                matches.append(ItemSearchMatch(item: item, rank: 0))
                 continue
             }
 
