@@ -257,10 +257,12 @@ final class ItemSearchViewModel {
     private let descriptionSearchMemory: ItemDescriptionSearchMemory
 
     /// The data comes from `ItemDataService` and description search is off, unless the caller
-    /// hands them in: the app passes `ItemDescriptionSearchEngine.live`, tests their own.
+    /// hands them in: the app passes `ItemDescriptionSearchEngine.live`, tests their own. The
+    /// memory defaults to `ItemDescriptionSearchMemory.shared`, read here rather than in a
+    /// default argument, which is evaluated outside the main actor.
     init(
         descriptionSearchEngine: ItemDescriptionSearchEngine = .unsupported,
-        descriptionSearchMemory: ItemDescriptionSearchMemory = .shared,
+        descriptionSearchMemory: ItemDescriptionSearchMemory? = nil,
         loadData: @escaping @Sendable () async throws -> ItemDataResponse = {
             try await ItemDataService.loadCachedOrBundledData()
         },
@@ -271,7 +273,7 @@ final class ItemSearchViewModel {
         self.loadData = loadData
         self.refreshData = refreshData
         self.descriptionSearchEngine = descriptionSearchEngine
-        self.descriptionSearchMemory = descriptionSearchMemory
+        self.descriptionSearchMemory = descriptionSearchMemory ?? .shared
     }
 
     var hiddenResultCount: Int {

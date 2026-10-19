@@ -23,7 +23,9 @@ final class ItemSearchFilterOnlyTests: XCTestCase {
     )
 
     private func loadedViewModel() async -> ItemSearchViewModel {
-        let viewModel = ItemSearchViewModel(loadData: { Self.data }, refreshData: { _ in nil })
+        // Read on the main actor; the loader runs outside it.
+        let data = Self.data
+        let viewModel = ItemSearchViewModel(loadData: { data }, refreshData: { _ in nil })
         viewModel.loadItems()
         await viewModel.waitUntilLoaded()
         return viewModel
