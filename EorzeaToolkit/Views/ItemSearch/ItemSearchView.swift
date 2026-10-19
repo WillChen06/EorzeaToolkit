@@ -108,15 +108,19 @@ struct ItemSearchView: View {
                     .font(.title3)
                     .frame(width: 36, height: 36)
 
-                if viewModel.filter.isActive {
-                    Text("\(viewModel.filter.activeFilterCount)")
-                        .font(.caption.bold())
-                        .foregroundStyle(.white)
-                        .frame(width: 16, height: 16)
-                        .background(.red, in: Circle())
-                        .padding(.top, 1)
-                        .padding(.trailing, 1)
-                }
+                // Always there and only hidden while the filter is at its defaults: inserting the
+                // badge changed the button's structure, and with a second button beside it,
+                // iPhone Duo then moved this button to the bottom of the screen and stretched the
+                // buttons' shared glass background between them.
+                Text("\(viewModel.filter.activeFilterCount)")
+                    .font(.caption.bold())
+                    .foregroundStyle(.white)
+                    .frame(width: 16, height: 16)
+                    .background(.red, in: Circle())
+                    .padding(.top, 1)
+                    .padding(.trailing, 1)
+                    .opacity(viewModel.filter.isActive ? 1 : 0)
+                    .accessibilityHidden(!viewModel.filter.isActive)
             }
             .frame(width: 44, height: 44)
         }
