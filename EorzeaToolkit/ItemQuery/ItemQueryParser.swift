@@ -67,6 +67,12 @@ struct ItemQueryParser: Sendable {
         return response.content
     }
 
+    /// Loads the model and these instructions ahead of the first sentence, so that it answers
+    /// sooner. Each sentence still gets a session of its own.
+    func prewarm() {
+        LanguageModelSession(model: model, tools: [], instructions: ItemQueryInstructions.text).prewarm()
+    }
+
     /// The usage and keyword read from the model's answer, with the conditions the sentence
     /// states.
     func fields(for sentence: String, answer: String) throws -> ItemQueryFields {
