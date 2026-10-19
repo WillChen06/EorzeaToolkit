@@ -104,13 +104,17 @@ final class ItemDescriptionSearchTests: XCTestCase {
         return viewModel
     }
 
-    /// Opens the screen, searches with `sentence`, and waits for the parse.
+    /// Opens the screen, searches with `sentence`, waits for the parse, and, when the screen
+    /// closed, lets it finish closing as the view reports.
     private func search(_ sentence: String, in viewModel: ItemSearchViewModel) async {
         viewModel.openDescriptionSearch()
         viewModel.descriptionSentence = sentence
         let parse = viewModel.submitDescription()
         XCTAssertNotNil(parse, "the search did not start")
         await parse?.value
+        if !viewModel.isShowingDescriptionSearch {
+            await viewModel.descriptionSearchDidClose()?.value
+        }
         await viewModel.waitUntilSearchFinishes()
     }
 
@@ -254,6 +258,65 @@ final class ItemDescriptionSearchTests: XCTestCase {
         XCTAssertEqual(viewModel.query, "長袍")
         XCTAssertFalse(viewModel.isShowingDescriptionSearch)
         XCTAssertNil(viewModel.descriptionSearchMessage)
+    }
+
+    /// Changing the filter and the search text while the screen animates away made it stutter,
+    /// so the result waits until the screen has closed.
+    func testTheResultIsAppliedOnlyOnceTheScreenHasClosed() async {
+        let viewModel = await viewModelWithEverythingSet()
+        let before = (viewModel.filter, viewModel.query)
+        model.answers["白魔"] = .success(ItemQuery(usage: .search, jobs: ["WHM"]))
+        viewModel.openDescriptionSearch()
+        viewModel.descriptionSentence = "白魔"
+
+        await viewModel.submitDescription()?.value
+
+        XCTAssertFalse(viewModel.isShowingDescriptionSearch)
+        XCTAssertEqual(viewModel.filter, before.0)
+        XCTAssertEqual(viewModel.query, before.1)
+
+        // Dismissing reports closing too; the waiting result must survive it.
+        viewModel.closeDescriptionSearch()
+        viewModel.descriptionSearchDidClose()
+
+        XCTAssertEqual(viewModel.filter.selectedJobAbbrs, ["WHM"])
+        XCTAssertEqual(viewModel.query, "")
+
+        viewModel.toggleJob("BLM")
+        viewModel.descriptionSearchDidClose()
+        XCTAssertEqual(viewModel.filter.selectedJobAbbrs, ["WHM", "BLM"], "applied only once")
+    }
+
+    /// Had the view never reported the screen closing, the waiting result must not surface
+    /// when the screen next closes.
+    func testReopeningDropsAResultThatWasNeverApplied() async {
+        let viewModel = await viewModelWithEverythingSet()
+        let before = (viewModel.filter, viewModel.query)
+        model.answers["白魔"] = .success(ItemQuery(usage: .search, jobs: ["WHM"]))
+        viewModel.openDescriptionSearch()
+        viewModel.descriptionSentence = "白魔"
+        await viewModel.submitDescription()?.value
+
+        viewModel.openDescriptionSearch()
+        viewModel.closeDescriptionSearch()
+        viewModel.descriptionSearchDidClose()
+
+        XCTAssertEqual(viewModel.filter, before.0)
+        XCTAssertEqual(viewModel.query, before.1)
+    }
+
+    /// A screen closed without a result, by 取消 or after a message, applies nothing.
+    func testClosingWithoutAResultAppliesNothing() async {
+        let viewModel = await viewModelWithEverythingSet()
+        let before = (viewModel.filter, viewModel.query)
+        model.answers["幫我找"] = .success(ItemQuery(usage: .search))
+        await search("幫我找", in: viewModel)
+
+        viewModel.closeDescriptionSearch()
+        viewModel.descriptionSearchDidClose()
+
+        XCTAssertEqual(viewModel.filter, before.0)
+        XCTAssertEqual(viewModel.query, before.1)
     }
 
     func testTheOtherFlagValuesReachTheFilter() async {
@@ -515,6 +578,7 @@ final class ItemDescriptionSearchTests: XCTestCase {
         await second?.value
         model.finish("白魔", with: .success(ItemQuery(usage: .search, jobs: ["WHM"])))
         await first?.value
+        viewModel.descriptionSearchDidClose()
 
         XCTAssertEqual(viewModel.filter.selectedJobAbbrs, ["BLM"])
     }

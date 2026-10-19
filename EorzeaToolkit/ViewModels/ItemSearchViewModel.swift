@@ -237,6 +237,8 @@ final class ItemSearchViewModel {
     /// The item a recipe lookup found, for the screen to open; `didOpenItem()` clears it.
     private(set) var itemIDToOpen: Int?
     private var descriptionParser: ItemDescriptionParser?
+    /// A parsed sentence waiting for the screen to finish closing before it is applied.
+    private var pendingDescriptionResult: (query: ItemQuery, onlyNamesakeID: Int?)?
 
     private var items: [Item] = []
     private var allSearchResults: [Item] = []
@@ -608,6 +610,7 @@ final class ItemSearchViewModel {
         }
 
         refreshDescriptionSearchAvailability()
+        pendingDescriptionResult = nil
         descriptionSentence = descriptionSearchMemory.lastSubmittedSentence
         descriptionSearchMessage = nil
         isShowingDescriptionSearch = true
@@ -619,13 +622,14 @@ final class ItemSearchViewModel {
     /// Closes the screen by 「取消」 or by dismissing it, and abandons a parse in progress:
     /// its result is never applied.
     func closeDescriptionSearch() {
+        // A parsed sentence already waiting stays: the screen closing is what applies it.
         abandonDescriptionParse()
         descriptionSearchMessage = nil
         isShowingDescriptionSearch = false
     }
 
-    /// Parses the sentence, then applies it and closes the screen, or keeps the screen open
-    /// with a message. Returns the parse for tests to wait on.
+    /// Parses the sentence, then closes the screen, applying the result once it has closed, or
+    /// keeps the screen open with a message. Returns the parse for tests to wait on.
     @discardableResult
     func submitDescription() -> Task<Void, Never>? {
         guard canSubmitDescription, let parser = descriptionParser else {
@@ -663,24 +667,43 @@ final class ItemSearchViewModel {
             isParsingDescription = false
             switch result {
             case .success(let parsed):
-                if let message = applyDescriptionQuery(parsed.query) {
+                if let message = Self.message(for: parsed.query) {
                     descriptionSearchMessage = message
                     return
                 }
+                // The screen closes first; changing the filter, the search text and the toolbar
+                // while it animates away made the animation stutter.
+                // `descriptionSearchDidClose()` applies the result once it has gone.
+                pendingDescriptionResult = parsed
                 isShowingDescriptionSearch = false
-
-                if let itemID = parsed.onlyNamesakeID {
-                    // Opened once its name search has listed it: on a narrow screen the detail
-                    // page is pushed from the result list, which must be showing.
-                    await searchTask?.value
-                    itemIDToOpen = itemID
-                }
             case .failure:
                 descriptionSearchMessage = .failed
             }
         }
         descriptionParseTask = task
         return task
+    }
+
+    /// Called once the description search screen has finished closing. Applies a parsed
+    /// sentence waiting for it, and returns the work that opens a recipe lookup's item, for
+    /// tests to wait on.
+    @discardableResult
+    func descriptionSearchDidClose() -> Task<Void, Never>? {
+        guard !isShowingDescriptionSearch, let parsed = pendingDescriptionResult else {
+            return nil
+        }
+        pendingDescriptionResult = nil
+        applyDescriptionQuery(parsed.query)
+
+        guard let itemID = parsed.onlyNamesakeID else {
+            return nil
+        }
+        return Task {
+            // Opened once its name search has listed it: on a narrow screen the detail page is
+            // pushed from the result list, which must be showing.
+            await searchTask?.value
+            itemIDToOpen = itemID
+        }
     }
 
     /// Called once the screen has opened `itemIDToOpen`.
@@ -699,26 +722,31 @@ final class ItemSearchViewModel {
         isParsingDescription = false
     }
 
-    /// Applies a parsed sentence, replacing the filter and search text whole, or returns why
-    /// it was not applied (prompts/item-description-search.md, 「套用」「查配方」).
-    private func applyDescriptionQuery(_ parsedQuery: ItemQuery) -> ItemDescriptionSearchMessage? {
+    /// Why a parsed sentence cannot be applied, or nil when it can
+    /// (prompts/item-description-search.md, 「描述搜尋畫面」).
+    private static func message(for parsedQuery: ItemQuery) -> ItemDescriptionSearchMessage? {
         switch parsedQuery.usage {
         case .unsupported:
             return .notAnItemQuery
         case .recipe:
-            guard let keyword = parsedQuery.keyword else {
-                return .notAnItemQuery
-            }
+            return parsedQuery.keyword == nil ? .notAnItemQuery : nil
+        case .search:
+            return parsedQuery.keyword != nil || parsedQuery.hasConditions ? nil : .nothingFound
+        }
+    }
+
+    /// Applies a parsed sentence that `message(for:)` let through, replacing the filter and
+    /// search text whole (「套用」「查配方」).
+    private func applyDescriptionQuery(_ parsedQuery: ItemQuery) {
+        switch parsedQuery.usage {
+        case .unsupported:
+            break
+        case .recipe:
             // The name search lists the item; the only item with that name, if there is one,
             // is opened as well.
-            applySearch(filter: ItemFilter(), query: keyword)
-            return nil
+            applySearch(filter: ItemFilter(), query: parsedQuery.keyword ?? "")
         case .search:
-            guard parsedQuery.keyword != nil || parsedQuery.hasConditions else {
-                return .nothingFound
-            }
             applySearch(filter: ItemFilter(query: parsedQuery), query: parsedQuery.keyword ?? "")
-            return nil
         }
     }
 

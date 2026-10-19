@@ -79,6 +79,10 @@ struct ItemDescriptionSearchSheet: View {
             }
             .appThemedScreen(tint: HomeFeature.itemSearch.accent)
         }
+        .onDisappear {
+            // Called once the sheet or popover has finished closing, however it closed.
+            viewModel.descriptionSearchDidClose()
+        }
         .task {
             // Focusing as the sheet or popover appears is ignored; a moment later it holds.
             try? await Task.sleep(nanoseconds: 300_000_000)
