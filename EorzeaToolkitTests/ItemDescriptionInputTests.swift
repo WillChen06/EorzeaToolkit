@@ -27,6 +27,14 @@ final class ItemDescriptionInputTests: XCTestCase {
         XCTAssertFalse(edit.submits)
     }
 
+    /// Only one line break at a time is the return key; pasted blank lines are not.
+    func testPastedBlankLinesAreNotTheReturnKey() {
+        let edit = ItemDescriptionInput.edit(from: "白魔", to: "白魔\n\n")
+
+        XCTAssertEqual(edit.text, "白魔")
+        XCTAssertFalse(edit.submits)
+    }
+
     func testAPastedLineBreakIsNotTheReturnKey() {
         let edit = ItemDescriptionInput.edit(from: "白魔", to: "白魔\n的頭")
 
