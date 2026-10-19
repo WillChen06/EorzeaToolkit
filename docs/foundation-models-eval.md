@@ -5,6 +5,19 @@
 
 ---
 
+## 2026-10-16：第六輪，第二輪後的比對規則（達到門檻）
+
+- **環境**：與前幾輪相同（macOS 27.2 beta，Build 26B5101f；Xcode 27.1）。
+- **程式碼**：`feature/item-description-search` 的 `15834d1`，加上 `prompts/item-description-search.md`「比對規則調整」的「第二輪後」規則；給模型的指示不變；評估集與第四輪相同。
+- **目的**：確認第二輪後的規則沒讓評估集退步（`prompts/item-description-search.md` AC-43）。
+- **門檻**：**達到**，和第五輪完全相同：用法 41/42，整句完全正確 41/42，其他欄位都是 100%。
+- **guardrail**：0 句被擋下，0 句其他錯誤。
+- **耗時**：每句平均約 0.47 秒。
+- **唯一的錯誤**：和前兩輪相同，unsupported-01「可以讓陸行鳥變色的道具」被判成搜尋。
+- **unit test**：`./scripts/run_tests.sh` 通過，0 個失敗、0 個警告；包括兩輪保留集的回歸測試（`ItemQueryHoldoutRegressionTests`），兩份檔案都從 test bundle 讀取。
+
+---
+
 ## 2026-10-16：保留集第二輪（未達門檻）
 
 - **環境**：與前幾輪相同（macOS 27.2 beta，Build 26B5101f；Xcode 27.1）。
