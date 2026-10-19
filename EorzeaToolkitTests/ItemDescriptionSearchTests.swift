@@ -301,6 +301,7 @@ final class ItemDescriptionSearchTests: XCTestCase {
         await search("白鋼錠怎麼做", in: viewModel)
 
         XCTAssertEqual(viewModel.itemIDToOpen, 1)
+        XCTAssertEqual(viewModel.results.map(\.id), [1], "listed before it opens")
         XCTAssertEqual(viewModel.query, "白鋼錠")
         XCTAssertEqual(viewModel.filter, ItemFilter())
         XCTAssertFalse(viewModel.isShowingDescriptionSearch)
@@ -339,6 +340,15 @@ final class ItemDescriptionSearchTests: XCTestCase {
         XCTAssertNil(viewModel.itemIDToOpen, "白鋼錠 only contains the keyword")
         XCTAssertEqual(viewModel.query, "白鋼")
         XCTAssertEqual(viewModel.filter, ItemFilter())
+    }
+
+    func testTheOnlyItemWithANameIsFoundWhateverItsCase() {
+        let items = Fixture.data.items
+
+        XCTAssertEqual(ItemSearchViewModel.onlyItemID(named: "白鋼錠", in: items), 1)
+        XCTAssertEqual(ItemSearchViewModel.onlyItemID(named: "ex無瑕白染劑", in: items), 4)
+        XCTAssertNil(ItemSearchViewModel.onlyItemID(named: "奶油", in: items), "two items")
+        XCTAssertNil(ItemSearchViewModel.onlyItemID(named: "白鋼", in: items), "only part of a name")
     }
 
     // MARK: - Messages (AC-13, AC-14)

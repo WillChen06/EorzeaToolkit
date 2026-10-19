@@ -636,11 +636,20 @@ final class ItemSearchViewModel {
         descriptionSearchMemory.lastSubmittedSentence = descriptionSentence
         descriptionSearchMessage = nil
         isParsingDescription = true
+        let sourceItems = items
 
         let task = Task {
-            let result: Result<ItemQuery, Error>
+            let result: Result<(query: ItemQuery, onlyNamesakeID: Int?), Error>
             do {
-                result = .success(try await parser.parse(sentence))
+                let parsedQuery = try await parser.parse(sentence)
+                var onlyNamesakeID: Int?
+                if parsedQuery.usage == .recipe, let keyword = parsedQuery.keyword {
+                    // Comparing every item's name takes a moment; it stays off the main actor.
+                    onlyNamesakeID = await Task.detached(priority: .userInitiated) {
+                        Self.onlyItemID(named: keyword, in: sourceItems)
+                    }.value
+                }
+                result = .success((parsedQuery, onlyNamesakeID))
             } catch {
                 result = .failure(error)
             }
@@ -653,11 +662,18 @@ final class ItemSearchViewModel {
 
             isParsingDescription = false
             switch result {
-            case .success(let parsedQuery):
-                if let message = applyDescriptionQuery(parsedQuery) {
+            case .success(let parsed):
+                if let message = applyDescriptionQuery(parsed.query) {
                     descriptionSearchMessage = message
-                } else {
-                    isShowingDescriptionSearch = false
+                    return
+                }
+                isShowingDescriptionSearch = false
+
+                if let itemID = parsed.onlyNamesakeID {
+                    // Opened once its name search has listed it: on a narrow screen the detail
+                    // page is pushed from the result list, which must be showing.
+                    await searchTask?.value
+                    itemIDToOpen = itemID
                 }
             case .failure:
                 descriptionSearchMessage = .failed
@@ -693,12 +709,9 @@ final class ItemSearchViewModel {
             guard let keyword = parsedQuery.keyword else {
                 return .notAnItemQuery
             }
-            // Compared as the name search compares names. Only one item with that name is
-            // opened; several, or none, are left to the name search.
-            let normalizedKeyword = Self.normalize(keyword)
-            let namesakes = items.filter { Self.normalize($0.nameTw) == normalizedKeyword }
+            // The name search lists the item; the only item with that name, if there is one,
+            // is opened as well.
             applySearch(filter: ItemFilter(), query: keyword)
-            itemIDToOpen = namesakes.count == 1 ? namesakes[0].id : nil
             return nil
         case .search:
             guard parsedQuery.keyword != nil || parsedQuery.hasConditions else {
@@ -707,6 +720,20 @@ final class ItemSearchViewModel {
             applySearch(filter: ItemFilter(query: parsedQuery), query: parsedQuery.keyword ?? "")
             return nil
         }
+    }
+
+    /// The one item named `keyword`, compared as the name search compares names; nil when
+    /// none or several are.
+    nonisolated static func onlyItemID(named keyword: String, in items: [Item]) -> Int? {
+        let normalizedKeyword = normalize(keyword)
+        var found: Int?
+        for item in items where normalize(item.nameTw) == normalizedKeyword {
+            guard found == nil else {
+                return nil
+            }
+            found = item.id
+        }
+        return found
     }
 
     private func applySearch(filter newFilter: ItemFilter, query newQuery: String) {
