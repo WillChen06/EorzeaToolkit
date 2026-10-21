@@ -68,99 +68,27 @@ struct ItemFilterSheet: View {
 
     @ViewBuilder
     private var generalFilterSections: some View {
-        Section(L10n.ItemSearch.Filter.itemLevel) {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text("\(viewModel.filter.ilvlRange.lowerBound)")
-                        .font(.headline.monospacedDigit())
+        LevelRangeFilterSection(
+            title: L10n.ItemSearch.Filter.itemLevel,
+            minimumLabel: L10n.ItemSearch.Filter.itemLevelMinimum,
+            maximumLabel: L10n.ItemSearch.Filter.itemLevelMaximum,
+            range: viewModel.filter.ilvlRange,
+            bounds: ItemFilter.defaultIlvlRange,
+            accessibilityLabel: L10n.ItemSearch.Filter.itemLevelRange(lowerBound:upperBound:),
+            updateMinimum: viewModel.updateMinimumItemLevel,
+            updateMaximum: viewModel.updateMaximumItemLevel
+        )
 
-                    Spacer()
-
-                    Text("\(viewModel.filter.ilvlRange.upperBound)")
-                        .font(.headline.monospacedDigit())
-                }
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel(Text(L10n.ItemSearch.Filter.itemLevelRange(
-                    lowerBound: viewModel.filter.ilvlRange.lowerBound,
-                    upperBound: viewModel.filter.ilvlRange.upperBound
-                )))
-
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(L10n.ItemSearch.Filter.itemLevelMinimum)
-                        .font(.caption)
-                        .foregroundStyle(AppTheme.mutedInk)
-
-                    Slider(
-                        value: minimumItemLevelBinding,
-                        in: Double(itemLevelSliders.minimumRange.lowerBound)...Double(itemLevelSliders.minimumRange.upperBound),
-                        step: 1
-                    )
-                    .disabled(itemLevelSliders.isMinimumDisabled)
-                }
-
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(L10n.ItemSearch.Filter.itemLevelMaximum)
-                        .font(.caption)
-                        .foregroundStyle(AppTheme.mutedInk)
-
-                    Slider(
-                        value: maximumItemLevelBinding,
-                        in: Double(itemLevelSliders.maximumRange.lowerBound)...Double(itemLevelSliders.maximumRange.upperBound),
-                        step: 1
-                    )
-                    .disabled(itemLevelSliders.isMaximumDisabled)
-                }
-            }
-            .padding(.vertical, 4)
-        }
-        .appThemedListRow()
-
-        Section(L10n.ItemSearch.Filter.equipLevel) {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text("\(viewModel.filter.equipLevelRange.lowerBound)")
-                        .font(.headline.monospacedDigit())
-
-                    Spacer()
-
-                    Text("\(viewModel.filter.equipLevelRange.upperBound)")
-                        .font(.headline.monospacedDigit())
-                }
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel(Text(L10n.ItemSearch.Filter.equipLevelRange(
-                    lowerBound: viewModel.filter.equipLevelRange.lowerBound,
-                    upperBound: viewModel.filter.equipLevelRange.upperBound
-                )))
-
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(L10n.ItemSearch.Filter.equipLevelMinimum)
-                        .font(.caption)
-                        .foregroundStyle(AppTheme.mutedInk)
-
-                    Slider(
-                        value: minimumEquipLevelBinding,
-                        in: Double(equipLevelSliders.minimumRange.lowerBound)...Double(equipLevelSliders.minimumRange.upperBound),
-                        step: 1
-                    )
-                    .disabled(equipLevelSliders.isMinimumDisabled)
-                }
-
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(L10n.ItemSearch.Filter.equipLevelMaximum)
-                        .font(.caption)
-                        .foregroundStyle(AppTheme.mutedInk)
-
-                    Slider(
-                        value: maximumEquipLevelBinding,
-                        in: Double(equipLevelSliders.maximumRange.lowerBound)...Double(equipLevelSliders.maximumRange.upperBound),
-                        step: 1
-                    )
-                    .disabled(equipLevelSliders.isMaximumDisabled)
-                }
-            }
-            .padding(.vertical, 4)
-        }
-        .appThemedListRow()
+        LevelRangeFilterSection(
+            title: L10n.ItemSearch.Filter.equipLevel,
+            minimumLabel: L10n.ItemSearch.Filter.equipLevelMinimum,
+            maximumLabel: L10n.ItemSearch.Filter.equipLevelMaximum,
+            range: viewModel.filter.equipLevelRange,
+            bounds: ItemFilter.defaultEquipLevelRange,
+            accessibilityLabel: L10n.ItemSearch.Filter.equipLevelRange(lowerBound:upperBound:),
+            updateMinimum: viewModel.updateMinimumEquipLevel,
+            updateMaximum: viewModel.updateMaximumEquipLevel
+        )
 
         Section(L10n.ItemSearch.Filter.rarity) {
             LazyVGrid(columns: optionColumns, alignment: .leading, spacing: 8) {
@@ -252,46 +180,6 @@ struct ItemFilterSheet: View {
                 }
             }
             .appThemedListRow()
-        }
-    }
-
-    private var itemLevelSliders: LevelRangeSliders {
-        LevelRangeSliders(range: viewModel.filter.ilvlRange, bounds: ItemFilter.defaultIlvlRange)
-    }
-
-    private var minimumItemLevelBinding: Binding<Double> {
-        Binding {
-            Double(viewModel.filter.ilvlRange.lowerBound)
-        } set: { newValue in
-            viewModel.updateMinimumItemLevel(Int(newValue.rounded()))
-        }
-    }
-
-    private var maximumItemLevelBinding: Binding<Double> {
-        Binding {
-            Double(viewModel.filter.ilvlRange.upperBound)
-        } set: { newValue in
-            viewModel.updateMaximumItemLevel(Int(newValue.rounded()))
-        }
-    }
-
-    private var equipLevelSliders: LevelRangeSliders {
-        LevelRangeSliders(range: viewModel.filter.equipLevelRange, bounds: ItemFilter.defaultEquipLevelRange)
-    }
-
-    private var minimumEquipLevelBinding: Binding<Double> {
-        Binding {
-            Double(viewModel.filter.equipLevelRange.lowerBound)
-        } set: { newValue in
-            viewModel.updateMinimumEquipLevel(Int(newValue.rounded()))
-        }
-    }
-
-    private var maximumEquipLevelBinding: Binding<Double> {
-        Binding {
-            Double(viewModel.filter.equipLevelRange.upperBound)
-        } set: { newValue in
-            viewModel.updateMaximumEquipLevel(Int(newValue.rounded()))
         }
     }
 
@@ -490,6 +378,82 @@ private enum ItemFilterPage: String, CaseIterable, Identifiable {
             return L10n.ItemSearch.Filter.general
         case .advanced:
             return L10n.ItemSearch.Filter.advanced
+        }
+    }
+}
+
+/// A level range's two bounds over a slider for each of them.
+private struct LevelRangeFilterSection: View {
+    let title: LocalizedStringKey
+    let minimumLabel: LocalizedStringKey
+    let maximumLabel: LocalizedStringKey
+    let range: ClosedRange<Int>
+    let bounds: ClosedRange<Int>
+    let accessibilityLabel: (Int, Int) -> LocalizedStringKey
+    let updateMinimum: @MainActor (Int) -> Void
+    let updateMaximum: @MainActor (Int) -> Void
+
+    var body: some View {
+        let sliders = LevelRangeSliders(range: range, bounds: bounds)
+
+        Section(title) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("\(range.lowerBound)")
+                        .font(.headline.monospacedDigit())
+
+                    Spacer()
+
+                    Text("\(range.upperBound)")
+                        .font(.headline.monospacedDigit())
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(Text(accessibilityLabel(range.lowerBound, range.upperBound)))
+
+                slider(
+                    label: minimumLabel,
+                    value: Binding {
+                        Double(range.lowerBound)
+                    } set: { newValue in
+                        updateMinimum(Int(newValue.rounded()))
+                    },
+                    in: sliders.minimumRange,
+                    isDisabled: sliders.isMinimumDisabled
+                )
+
+                slider(
+                    label: maximumLabel,
+                    value: Binding {
+                        Double(range.upperBound)
+                    } set: { newValue in
+                        updateMaximum(Int(newValue.rounded()))
+                    },
+                    in: sliders.maximumRange,
+                    isDisabled: sliders.isMaximumDisabled
+                )
+            }
+            .padding(.vertical, 4)
+        }
+        .appThemedListRow()
+    }
+
+    private func slider(
+        label: LocalizedStringKey,
+        value: Binding<Double>,
+        in sliderRange: ClosedRange<Int>,
+        isDisabled: Bool
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(AppTheme.mutedInk)
+
+            Slider(
+                value: value,
+                in: Double(sliderRange.lowerBound)...Double(sliderRange.upperBound),
+                step: 1
+            )
+            .disabled(isDisabled)
         }
     }
 }
