@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct RootView: View {
-    @State private var marketPriceSettings = MarketPriceSettings()
     @State private var selectedFeature: HomeFeature?
 
     var body: some View {
@@ -17,7 +16,6 @@ struct RootView: View {
             }
         }
         .appThemedScreen(tint: AppTheme.crystal)
-        .environment(marketPriceSettings)
     }
 }
 
