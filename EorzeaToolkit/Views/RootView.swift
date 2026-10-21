@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct MainTabView: View {
+struct RootView: View {
     @State private var marketPriceSettings = MarketPriceSettings()
     @State private var selectedFeature: HomeFeature?
 
@@ -22,5 +22,5 @@ struct MainTabView: View {
 }
 
 #Preview {
-    MainTabView()
+    RootView()
 }

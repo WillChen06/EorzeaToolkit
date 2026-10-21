@@ -5,7 +5,7 @@ import SwiftData
 struct EorzeaToolkitApp: App {
     var body: some Scene {
         WindowGroup {
-            MainTabView()
+            RootView()
         }
         .modelContainer(for: [RelicWeaponProgress.self, SkillRotationSlotRecord.self])
     }
