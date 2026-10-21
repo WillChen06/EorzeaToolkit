@@ -2,12 +2,6 @@ import Foundation
 
 @MainActor
 @Observable
-final class MarketPriceSettings {
-    var selectedScope: MarketPriceScope = .chocobo
-}
-
-@MainActor
-@Observable
 final class MarketPriceViewModel {
     enum LoadState: Equatable {
         case idle

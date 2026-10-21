@@ -3,6 +3,9 @@ import SwiftUI
 struct ItemSearchView: View {
     var onReturnHome: () -> Void = {}
     @State private var viewModel = ItemSearchViewModel(descriptionSearchEngine: .live)
+    // Only item details show market prices. The settings restore the saved server, so
+    // leaving for the home page and coming back keeps it.
+    @State private var marketPriceSettings = MarketPriceSettings()
     @State private var selectedItemID: Int?
     @State private var isShowingFilterSheet = false
 
@@ -14,6 +17,7 @@ struct ItemSearchView: View {
                 ItemDetailView(item: item, itemsByID: viewModel.itemsByID)
             }
         }
+        .environment(marketPriceSettings)
         .task {
             viewModel.loadItems()
             viewModel.refreshDescriptionSearchAvailability()
@@ -725,5 +729,4 @@ private struct ItemSearchRow: View {
 
 #Preview {
     ItemSearchView()
-        .environment(MarketPriceSettings())
 }
