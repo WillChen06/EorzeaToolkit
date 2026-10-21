@@ -80,15 +80,7 @@ enum HomeFeature: CaseIterable, Identifiable {
         case .relicWeapon:
             RelicWeaponListView(onReturnHome: onReturnHome)
         case .miniCactpot:
-            NavigationStack {
-                MiniCactpotView()
-                    .toolbar {
-                        ToolbarItem(placement: .topBarLeading) {
-                            Button(L10n.Navigation.home, systemImage: "house", action: onReturnHome)
-                                .accessibilityIdentifier("navigation.home.miniCactpot")
-                        }
-                    }
-            }
+            MiniCactpotView(onReturnHome: onReturnHome)
         case .skillRotation:
             BattleJobListView(onReturnHome: onReturnHome)
         }
