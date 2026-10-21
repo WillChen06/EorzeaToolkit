@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MiniCactpotView: View {
+    var onReturnHome: () -> Void = {}
     @State private var cells: [Int?] = Array(repeating: nil, count: 9)
     @State private var selectedCellIndex: Int?
 
@@ -21,6 +22,15 @@ struct MiniCactpotView: View {
     }
 
     var body: some View {
+        NavigationStack {
+            calculator
+                .toolbar {
+                    ReturnHomeToolbarItem(feature: .miniCactpot, action: onReturnHome)
+                }
+        }
+    }
+
+    private var calculator: some View {
         List {
             Section {
                 MiniCactpotBoardView(
@@ -106,7 +116,5 @@ struct MiniCactpotView: View {
 }
 
 #Preview {
-    NavigationStack {
-        MiniCactpotView()
-    }
+    MiniCactpotView()
 }

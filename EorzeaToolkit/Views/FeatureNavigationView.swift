@@ -14,10 +14,7 @@ struct FeatureNavigationView<Selection: Hashable, Sidebar: View, Detail: View>: 
             sidebar()
                 .navigationSplitViewColumnWidth(min: 280, ideal: 320, max: 400)
                 .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button(L10n.Navigation.home, systemImage: "house", action: onReturnHome)
-                            .accessibilityIdentifier("navigation.home.\(feature.id)")
-                    }
+                    ReturnHomeToolbarItem(feature: feature, action: onReturnHome)
                 }
         } detail: {
             NavigationStack {
