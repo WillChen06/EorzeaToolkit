@@ -688,6 +688,7 @@ private struct ItemFilterSheet: View {
             .frame(maxWidth: .infinity, minHeight: 44)
         }
         .buttonStyle(.bordered)
+        .buttonBorderShape(.roundedRectangle)
         .tint(isSelected ? HomeFeature.itemSearch.accent : AppTheme.mutedInk)
         .accessibilityLabel(equipSlot.displayName)
         .accessibilityValue(Text(isSelected ? L10n.Common.selected : L10n.Common.notSelected))
