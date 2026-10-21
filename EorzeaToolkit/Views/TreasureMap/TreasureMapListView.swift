@@ -111,7 +111,6 @@ struct TreasureMapListView: View {
                         .accessibilityHidden(true)
                 }
             }
-            .frame(width: 44, height: 44)
         }
         .accessibilityLabel(Text(L10n.TreasureMap.filterAction))
         .accessibilityIdentifier("treasureMap.filter.open")

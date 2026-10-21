@@ -77,7 +77,7 @@ struct ItemSearchView: View {
         } label: {
             Image(systemName: "sparkles")
                 .font(.title3)
-                .frame(width: 44, height: 44)
+                .frame(width: 36, height: 36)
         }
         .disabled(!viewModel.canOpenDescriptionSearch)
         .accessibilityLabel(Text(L10n.ItemSearch.DescriptionSearch.title))
@@ -124,7 +124,6 @@ struct ItemSearchView: View {
                     .opacity(viewModel.filter.isActive ? 1 : 0)
                     .accessibilityHidden(!viewModel.filter.isActive)
             }
-            .frame(width: 44, height: 44)
         }
         .accessibilityLabel(Text(L10n.ItemSearch.filterAccessibility))
         // Both entry points use this stable anchor, even when clearing removes the summary bar.
