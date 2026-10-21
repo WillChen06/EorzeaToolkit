@@ -492,14 +492,24 @@ private struct ItemFilterSheet: View {
             .appThemedListRow()
         }
 
-        if !viewModel.equipSlots.isEmpty {
+        if !viewModel.baseEquipSlots.isEmpty {
             Section(L10n.ItemSearch.Filter.equipSlot) {
                 LazyVGrid(columns: equipSlotColumns, alignment: .leading, spacing: 8) {
-                    ForEach(viewModel.equipSlots) { equipSlot in
+                    ForEach(viewModel.baseEquipSlots) { equipSlot in
                         equipSlotButton(equipSlot)
                     }
                 }
                 .padding(.vertical, 4)
+            }
+            .appThemedListRow()
+        }
+
+        // The variants' names run long, so each gets a full row with its restriction underneath.
+        if !viewModel.restrictedEquipSlots.isEmpty {
+            Section(L10n.ItemSearch.Filter.restrictedEquipSlot) {
+                ForEach(viewModel.restrictedEquipSlots) { equipSlot in
+                    restrictedEquipSlotRow(equipSlot)
+                }
             }
             .appThemedListRow()
         }
@@ -690,6 +700,39 @@ private struct ItemFilterSheet: View {
         .buttonStyle(.bordered)
         .buttonBorderShape(.roundedRectangle)
         .tint(isSelected ? HomeFeature.itemSearch.accent : AppTheme.mutedInk)
+        .accessibilityLabel(equipSlot.displayName)
+        .accessibilityValue(Text(isSelected ? L10n.Common.selected : L10n.Common.notSelected))
+    }
+
+    private func restrictedEquipSlotRow(_ equipSlot: EquipSlot) -> some View {
+        let isSelected = viewModel.filter.selectedEquipSlots.contains(equipSlot.id)
+
+        return Button {
+            viewModel.toggleEquipSlot(equipSlot.id)
+        } label: {
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .imageScale(.small)
+                    .foregroundStyle(isSelected ? HomeFeature.itemSearch.accent : AppTheme.mutedInk)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(equipSlot.baseName)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(AppTheme.ink)
+
+                    if let restriction = equipSlot.restriction {
+                        Text(restriction)
+                            .font(.caption)
+                            .foregroundStyle(AppTheme.mutedInk)
+                    }
+                }
+                .fixedSize(horizontal: false, vertical: true)
+
+                Spacer(minLength: 0)
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
         .accessibilityLabel(equipSlot.displayName)
         .accessibilityValue(Text(isSelected ? L10n.Common.selected : L10n.Common.notSelected))
     }

@@ -223,6 +223,8 @@ final class ItemSearchViewModel {
     private(set) var uiCategories: [UICategory] = []
     private(set) var classjobCategories: [ClassJobCategory] = []
     private(set) var equipSlots: [EquipSlot] = []
+    private(set) var baseEquipSlots: [EquipSlot] = []
+    private(set) var restrictedEquipSlots: [EquipSlot] = []
     private(set) var itemsByID: [Int: Item] = [:]
 
     var query = ""
@@ -475,6 +477,7 @@ final class ItemSearchViewModel {
         uiCategories = data.uiCategories
         classjobCategories = data.classjobCategories
         equipSlots = data.equipSlots.filter { $0.id > 0 }
+        (baseEquipSlots, restrictedEquipSlots) = EquipSlot.filterSections(equipSlots)
         classjobJobSetsById = Dictionary(
             uniqueKeysWithValues: data.classjobCategories.map { ($0.id, Set($0.jobs)) }
         )

@@ -1763,6 +1763,23 @@
         }
       }
     },
+    "itemSearch.filter.restrictedEquipSlot.section" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Special Slots"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "特殊部位"
+          }
+        }
+      }
+    },
     "itemSearch.filter.summary.activeCount %lld" : {
       "extractionState" : "manual",
       "localizations" : {

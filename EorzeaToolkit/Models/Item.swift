@@ -186,4 +186,40 @@ struct EquipSlot: Codable, Identifiable, Hashable, Sendable {
     var displayName: String {
         nameTw
     }
+
+    /// The slot a restricted variant belongs to: 「身體」 for 「身體（無法裝備頭部）」.
+    var baseName: String {
+        nameParts.base
+    }
+
+    /// What a variant keeps from being equipped: 「無法裝備頭部」 for 「身體（無法裝備頭部）」.
+    var restriction: String? {
+        nameParts.restriction
+    }
+
+    private var nameParts: (base: String, restriction: String?) {
+        guard nameTw.hasSuffix("）"), let open = nameTw.firstIndex(of: "（") else {
+            return (nameTw, nil)
+        }
+        let restriction = nameTw[nameTw.index(after: open)..<nameTw.index(before: nameTw.endIndex)]
+        return (String(nameTw[..<open]), restriction.isEmpty ? nil : String(restriction))
+    }
+
+    /// Splits slots into the plain ones, in their given order, and the restricted variants, grouped
+    /// in the order of their plain slots and by id within each group.
+    static func filterSections(_ slots: [EquipSlot]) -> (base: [EquipSlot], restricted: [EquipSlot]) {
+        let base = slots.filter { $0.restriction == nil }
+        let baseOrder = Dictionary(
+            base.enumerated().map { ($0.element.baseName, $0.offset) },
+            uniquingKeysWith: { first, _ in first }
+        )
+        let restricted = slots
+            .filter { $0.restriction != nil }
+            .sorted { lhs, rhs in
+                let lhsOrder = baseOrder[lhs.baseName] ?? Int.max
+                let rhsOrder = baseOrder[rhs.baseName] ?? Int.max
+                return lhsOrder == rhsOrder ? lhs.id < rhs.id : lhsOrder < rhsOrder
+            }
+        return (base, restricted)
+    }
 }

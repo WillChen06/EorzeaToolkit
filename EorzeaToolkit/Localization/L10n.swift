@@ -148,6 +148,7 @@ enum L10n {
             static let category: LocalizedStringKey = "itemSearch.filter.category.section"
             static let jobs: LocalizedStringKey = "itemSearch.filter.jobs.section"
             static let equipSlot: LocalizedStringKey = "itemSearch.filter.equipSlot.section"
+            static let restrictedEquipSlot: LocalizedStringKey = "itemSearch.filter.restrictedEquipSlot.section"
 
             static func itemLevelRange(lowerBound: Int, upperBound: Int) -> LocalizedStringKey {
                 "itemSearch.filter.itemLevel.range \(lowerBound) \(upperBound)"
