@@ -8,7 +8,12 @@ struct TreasureMapListView: View {
     @State private var isShowingFilterSheet = false
 
     var body: some View {
-        FeatureNavigationView(feature: .treasureMap, selectionID: selectedMapID, onReturnHome: onReturnHome) {
+        FeatureNavigationView(
+            feature: .treasureMap,
+            selectionID: selectedMapID,
+            onReturnHome: onReturnHome,
+            hidesSidebarTitleWhenSplit: true
+        ) {
             sidebar
         } detail: {
             if let map = viewModel.maps.first(where: { $0.id == selectedMapID }) {
@@ -111,7 +116,6 @@ struct TreasureMapListView: View {
                         .accessibilityHidden(true)
                 }
             }
-            .frame(width: 44, height: 44)
         }
         .accessibilityLabel(Text(L10n.TreasureMap.filterAction))
         .accessibilityIdentifier("treasureMap.filter.open")
