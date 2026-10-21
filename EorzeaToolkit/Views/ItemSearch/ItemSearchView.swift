@@ -10,7 +10,12 @@ struct ItemSearchView: View {
     @State private var isShowingFilterSheet = false
 
     var body: some View {
-        FeatureNavigationView(feature: .itemSearch, selectionID: selectedItemID, onReturnHome: onReturnHome) {
+        FeatureNavigationView(
+            feature: .itemSearch,
+            selectionID: selectedItemID,
+            onReturnHome: onReturnHome,
+            hidesSidebarTitleWhenSplit: true
+        ) {
             sidebar
         } detail: {
             if let selectedItemID, let item = viewModel.itemsByID[selectedItemID] {
