@@ -73,12 +73,15 @@ struct GatheringNode: Codable {
     let type: Int
     let job: String
     let zoneId: Int
+    /// The map the node is on. Several maps can share one zone (PlaceName), so open this one.
+    let mapId: Int
     let x: Double
     let y: Double
 
     enum CodingKeys: String, CodingKey {
         case type, job, x, y
         case zoneId = "zone_id"
+        case mapId = "map_id"
     }
 }
 
@@ -101,6 +104,7 @@ struct GatheringNodeDisplay: Identifiable {
     let type: Int
     let zoneName: String
     let zoneId: Int
+    let mapId: Int
     let x: Double
     let y: Double
 

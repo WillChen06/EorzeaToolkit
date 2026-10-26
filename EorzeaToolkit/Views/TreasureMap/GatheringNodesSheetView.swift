@@ -119,7 +119,7 @@ struct GatheringNodeMapView: View {
     @ScaledMetric(relativeTo: .body) private var minimumInformationWidth = 240.0
 
     private var mapInfo: MapInfo? {
-        viewModel.mapInfo(forZoneId: node.zoneId)
+        viewModel.mapInfo(forMapId: node.mapId)
     }
 
     var body: some View {

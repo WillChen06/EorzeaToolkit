@@ -12,7 +12,6 @@ final class TreasureMapViewModel {
     private(set) var loadError: String?
     private var spotsByKey: [String: [TreasureSpot]] = [:]  // "itemId-mapId" → spots
     private var mapInfosByKey: [String: MapInfo] = [:]
-    private var mapInfosByPlacename: [Int: MapInfo] = [:]
 
     init(maps: [TreasureMap] = []) {
         self.maps = maps
@@ -80,9 +79,6 @@ final class TreasureMapViewModel {
             let zhNames = (try LocalDataService.load("zh-maps") as ZhMapNames).names
             let mapInfos: [String: MapInfo] = try LocalDataService.load("maps")
             mapInfosByKey = mapInfos
-            for info in mapInfos.values where !info.dungeon {
-                mapInfosByPlacename[info.placenameId] = info
-            }
 
             // 依 (item, map) 分組點位
             var groupedSpots: [String: [TreasureSpot]] = [:]
@@ -117,7 +113,6 @@ final class TreasureMapViewModel {
             zoneNames = [:]
             spotsByKey = [:]
             mapInfosByKey = [:]
-            mapInfosByPlacename = [:]
             hasLoadedMaps = true
             loadError = error.localizedDescription
         }
@@ -131,18 +126,16 @@ final class TreasureMapViewModel {
         spotsByKey["\(map.itemId)-\(zone.mapId)"] ?? []
     }
 
-    func mapImageURL(for mapId: Int) -> String? {
-        mapInfosByKey[String(mapId)]?.image
+    func mapInfo(forMapId mapId: Int) -> MapInfo? {
+        mapInfosByKey[String(mapId)]
     }
 
     func gatheringNodes(for map: TreasureMap) -> [GatheringNodeDisplay] {
         map.gatheringNodes.map { node in
             let zoneName = zoneNames[String(node.zoneId)]?.tw ?? L10n.TreasureMap.unknownRegionText
-            return GatheringNodeDisplay(type: node.type, zoneName: zoneName, zoneId: node.zoneId, x: node.x, y: node.y)
+            return GatheringNodeDisplay(
+                type: node.type, zoneName: zoneName, zoneId: node.zoneId, mapId: node.mapId, x: node.x, y: node.y
+            )
         }
-    }
-
-    func mapInfo(forZoneId zoneId: Int) -> MapInfo? {
-        mapInfosByPlacename[zoneId]
     }
 }

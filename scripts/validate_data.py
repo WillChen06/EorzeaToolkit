@@ -22,7 +22,8 @@ EorzeaToolkitTests/BundledDataTests.swift 直接用真正的型別驗證,不在�
 8. 技能說明以技能循環可選的等級為 key:從習得等級起的每個等級各一份且不是空字串,
    習得等級以下的沒有。
 9. 爆發藥的道具 id 都在 items.json,且名稱與 items.json 相同;每個爆發藥的屬性都有名稱。
-10. 藏寶圖的道具 id 都在 items.json,且名稱相同;採集區域與採集點引用的地區都有名稱。
+10. 藏寶圖的道具 id 都在 items.json,且名稱相同;採集區域與採集點引用的地區都有名稱;
+    採集點的 map_id 在 maps.json,且那張地圖的地名就是採集點的 zone_id。
 11. 職業 id 不重複,同一職業內技能 id 也不重複:App 以 id 建索引還原技能循環,
     重複的 id 會讓 App 當掉。
 12. treasures.json 的每個寶藏點所在地圖,在 zh-maps.json 都有名稱;否則藏寶圖頁只能顯示「未知地區」。
@@ -345,6 +346,7 @@ def main():
     check_sources('treasure_maps_final.json', treasure_data['_meta'], sources)
     check(treasure_data['maps'], 'treasure_maps_final.json: 沒有地圖')
     zone_names = treasure_data['zone_names']
+    map_infos = load('maps.json')
     for treasure_map in treasure_data['maps']:
         grade, item_id = treasure_map['grade'], treasure_map['item_id']
         check(item_id in item_ids, f'treasure_maps_final.json: {grade} 的道具 {item_id} 不在 items.json')
@@ -355,6 +357,10 @@ def main():
         zone_ids |= {node['zone_id'] for node in treasure_map['gathering_nodes']}
         unnamed = sorted(z for z in zone_ids if not (zone_names.get(str(z)) or {}).get('tw', '').strip())
         check(not unnamed, f'treasure_maps_final.json: {grade} 引用的地區沒有名稱: {unnamed}')
+        misplaced = sorted({(node['zone_id'], node['map_id']) for node in treasure_map['gathering_nodes']
+                            if (map_infos.get(str(node['map_id'])) or {}).get('placename_id') != node['zone_id']})
+        check(not misplaced, f'treasure_maps_final.json: {grade} 的採集點地圖不在 maps.json 或地名不符 '
+                             f'(zone_id, map_id): {misplaced}')
 
     # --- zh-maps.json ---
     zh_maps = load('zh-maps.json')
