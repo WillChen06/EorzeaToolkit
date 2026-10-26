@@ -79,16 +79,20 @@ struct GatheringNodesSheetView: View {
                 .padding(.vertical, 6)
                 .background(node.typeColor.opacity(0.15))
                 .clipShape(RoundedRectangle(cornerRadius: 6))
+                .fixedSize()
 
             Text(node.zoneName)
                 .font(.subheadline)
                 .foregroundStyle(AppTheme.ink)
-
-            Spacer()
+                .lineLimit(2)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
             Text(L10n.TreasureMap.coordinatePair(x: coordinateText(node.x), y: coordinateText(node.y)))
                 .font(.subheadline)
+                .monospacedDigit()
                 .foregroundStyle(AppTheme.mutedInk)
+                .lineLimit(1)
+                .fixedSize()
 
             Button(L10n.TreasureMap.gatheringNodes, systemImage: "map") {
                 selectedNode = node
