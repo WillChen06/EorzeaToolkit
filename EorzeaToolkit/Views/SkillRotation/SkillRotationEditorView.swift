@@ -267,7 +267,8 @@ struct SkillRotationEditorView: View {
                 proxy.scrollTo("rotationEnd")
             }
         }
-        .background(AppTheme.surface)
+        // Stay out of the horizontal safe area, such as iPhone Duo's trailing toolbar column.
+        .background(AppTheme.surface, ignoresSafeAreaEdges: .vertical)
     }
 
     private var rotationTitle: some View {
@@ -377,21 +378,23 @@ struct RotationSlotView: View {
                 RoundedRectangle(cornerRadius: 8)
                     .strokeBorder(AppTheme.gold.opacity(0.25), lineWidth: 1)
             )
+            .padding(.top, onDelete == nil ? 0 : 6)
+            .padding(.trailing, onDelete == nil ? 0 : 6)
 
             if let onDelete {
                 Button(action: onDelete) {
+                    // The badge sits on the icon's top-trailing corner; the tap target stays 44pt.
                     Image(systemName: "xmark.circle.fill")
                         .font(.system(size: 16))
                         .symbolRenderingMode(.palette)
                         .foregroundStyle(.white, .red)
                         .shadow(color: .black.opacity(0.2), radius: 1, y: 1)
+                        .frame(width: 44, height: 44, alignment: .topTrailing)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .frame(width: 44, height: 44)
             }
         }
-        .padding(.top, onDelete == nil ? 0 : 6)
-        .padding(.trailing, onDelete == nil ? 0 : 6)
     }
 }
 
@@ -440,6 +443,7 @@ struct SkillDetailCard: View {
                 }
                 Spacer()
             }
+            .fixedSize(horizontal: false, vertical: true)
 
             HStack(spacing: 16) {
                 statBlock(title: L10n.SkillRotation.distance, value: action.rangeText)
@@ -451,18 +455,29 @@ struct SkillDetailCard: View {
                     statBlock(title: L10n.SkillRotation.recast, value: rc)
                 }
             }
+            .fixedSize(horizontal: false, vertical: true)
 
             if let description = action.description(at: level.rawValue), !description.isEmpty {
                 Divider()
-                Text(description)
-                    .font(.footnote)
-                    .foregroundStyle(AppTheme.ink)
-                    .fixedSize(horizontal: false, vertical: true)
+                // The context menu can lay the preview out narrower or shorter than its ideal
+                // size and clips what overflows; shrink the description to fit instead.
+                ViewThatFits(in: .vertical) {
+                    descriptionText(description)
+                        .fixedSize(horizontal: false, vertical: true)
+                    descriptionText(description)
+                        .minimumScaleFactor(0.6)
+                }
             }
         }
         .padding(16)
         .frame(minWidth: 280, maxWidth: 360, alignment: .leading)
         .appThemedCard()
+    }
+
+    private func descriptionText(_ description: String) -> some View {
+        Text(description)
+            .font(.footnote)
+            .foregroundStyle(AppTheme.ink)
     }
 
     private func tag(_ text: LocalizedStringKey, color: Color) -> some View {
