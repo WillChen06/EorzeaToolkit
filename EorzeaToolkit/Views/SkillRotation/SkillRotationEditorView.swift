@@ -443,6 +443,7 @@ struct SkillDetailCard: View {
                 }
                 Spacer()
             }
+            .fixedSize(horizontal: false, vertical: true)
 
             HStack(spacing: 16) {
                 statBlock(title: L10n.SkillRotation.distance, value: action.rangeText)
@@ -454,18 +455,29 @@ struct SkillDetailCard: View {
                     statBlock(title: L10n.SkillRotation.recast, value: rc)
                 }
             }
+            .fixedSize(horizontal: false, vertical: true)
 
             if let description = action.description(at: level.rawValue), !description.isEmpty {
                 Divider()
-                Text(description)
-                    .font(.footnote)
-                    .foregroundStyle(AppTheme.ink)
-                    .fixedSize(horizontal: false, vertical: true)
+                // The context menu can lay the preview out narrower or shorter than its ideal
+                // size and clips what overflows; shrink the description to fit instead.
+                ViewThatFits(in: .vertical) {
+                    descriptionText(description)
+                        .fixedSize(horizontal: false, vertical: true)
+                    descriptionText(description)
+                        .minimumScaleFactor(0.6)
+                }
             }
         }
         .padding(16)
         .frame(minWidth: 280, maxWidth: 360, alignment: .leading)
         .appThemedCard()
+    }
+
+    private func descriptionText(_ description: String) -> some View {
+        Text(description)
+            .font(.footnote)
+            .foregroundStyle(AppTheme.ink)
     }
 
     private func tag(_ text: LocalizedStringKey, color: Color) -> some View {
