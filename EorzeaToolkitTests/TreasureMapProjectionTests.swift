@@ -59,3 +59,38 @@ final class TreasureSpotMapProjectionTests: XCTestCase {
         )
     }
 }
+
+/// Gathering nodes carry a PlaceName id, and several non-dungeon maps can share one PlaceName.
+/// The node map has to open the map the nodes are actually on, every time. The expected maps are
+/// where the pinned Teamcraft nodes.json puts the treasure map gathering nodes of each shared
+/// PlaceName.
+@MainActor
+final class TreasureMapGatheringZoneMapTests: XCTestCase {
+    private let expectedMapIdByZoneId = [
+        45: 23,     // 南薩納蘭; map 93 shares the PlaceName
+        55: 5,      // 黑衣森林東部林區; map 180 (size factor 200) shares it
+        56: 6,      // 黑衣森林南部林區; maps 181 and 187 share it
+        67: 25,     // 摩杜納; map 105 (size factor 400) shares it
+        3712: 699,  // 天外天垓; map 751 shares it
+    ]
+
+    func testSharedPlaceNamesResolveToTheMapOfTheirGatheringNodes() {
+        let viewModel = TreasureMapViewModel()
+        viewModel.loadMaps()
+        XCTAssertNil(viewModel.loadError)
+
+        var checkedZoneIds: Set<Int> = []
+        for map in viewModel.maps {
+            for node in viewModel.gatheringNodes(for: map) {
+                guard let expectedMapId = expectedMapIdByZoneId[node.zoneId] else { continue }
+                checkedZoneIds.insert(node.zoneId)
+                XCTAssertEqual(
+                    viewModel.mapInfo(forMapId: node.mapId)?.id, expectedMapId,
+                    "\(map.grade) node in zone \(node.zoneId) at (\(node.x), \(node.y))"
+                )
+            }
+        }
+
+        XCTAssertEqual(checkedZoneIds, Set(expectedMapIdByZoneId.keys), "zones with no gathering nodes to check")
+    }
+}
