@@ -267,7 +267,8 @@ struct SkillRotationEditorView: View {
                 proxy.scrollTo("rotationEnd")
             }
         }
-        .background(AppTheme.surface)
+        // Stay out of the horizontal safe area, such as iPhone Duo's trailing toolbar column.
+        .background(AppTheme.surface, ignoresSafeAreaEdges: .vertical)
     }
 
     private var rotationTitle: some View {
