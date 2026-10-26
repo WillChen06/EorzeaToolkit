@@ -131,8 +131,8 @@ final class TreasureMapViewModel {
         spotsByKey["\(map.itemId)-\(zone.mapId)"] ?? []
     }
 
-    func mapImageURL(for mapId: Int) -> String? {
-        mapInfosByKey[String(mapId)]?.image
+    func mapInfo(forMapId mapId: Int) -> MapInfo? {
+        mapInfosByKey[String(mapId)]
     }
 
     func gatheringNodes(for map: TreasureMap) -> [GatheringNodeDisplay] {

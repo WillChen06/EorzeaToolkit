@@ -13,7 +13,7 @@ struct TreasureMapDetailView: View {
                         TreasureSpotListView(
                             zoneName: zone.name,
                             spots: viewModel.spots(for: map, in: zone),
-                            mapImageURL: viewModel.mapImageURL(for: zone.mapId)
+                            mapInfo: viewModel.mapInfo(forMapId: zone.mapId)
                         )
                     } label: {
                         HStack {

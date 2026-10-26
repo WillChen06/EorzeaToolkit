@@ -3,7 +3,7 @@ import SwiftUI
 struct TreasureSpotListView: View {
     let zoneName: String
     let spots: [TreasureSpot]
-    let mapImageURL: String?
+    let mapInfo: MapInfo?
 
     var body: some View {
         ScrollView {
@@ -13,7 +13,7 @@ struct TreasureSpotListView: View {
                         index: index + 1,
                         spot: spot,
                         zoneName: zoneName,
-                        mapImageURL: mapImageURL
+                        mapInfo: mapInfo
                     )
                 }
             }
@@ -32,7 +32,7 @@ private struct TreasureSpotCard: View {
     let index: Int
     let spot: TreasureSpot
     let zoneName: String
-    let mapImageURL: String?
+    let mapInfo: MapInfo?
 
     var body: some View {
         ZStack {
@@ -42,9 +42,11 @@ private struct TreasureSpotCard: View {
 
             // 地圖裁切 + 標記
             CroppedMapView(
-                imageURL: mapImageURL,
-                normalizedX: (spot.coords.x - 1) / 41.0,
-                normalizedY: (spot.coords.y - 1) / 41.0
+                imageURL: mapInfo?.image,
+                normalizedPosition: TreasureSpotMapProjection.normalizedPosition(
+                    of: spot.coords,
+                    sizeFactor: mapInfo?.sizeFactor
+                )
             )
             .padding(.horizontal, 22)
             .padding(.vertical, 18)
@@ -106,10 +108,17 @@ private struct TreasureSpotCard: View {
 
 // MARK: - 地圖裁切視圖
 
+enum TreasureSpotMapProjection {
+    /// The spot's position on its map image, from 0 to 1 on each axis. Map coordinates run from 1
+    /// to 1 + 41 / (size factor / 100), so a map with a size factor other than 100 is scaled too.
+    static func normalizedPosition(of coords: TreasureSpot.Coordinate, sizeFactor: Int?) -> CGPoint {
+        GatheringMapProjection.position(x: coords.x, y: coords.y, sizeFactor: sizeFactor, mapSize: 1)
+    }
+}
+
 private struct CroppedMapView: View {
     let imageURL: String?
-    let normalizedX: Double
-    let normalizedY: Double
+    let normalizedPosition: CGPoint
 
     var body: some View {
         GeometryReader { geo in
@@ -117,8 +126,8 @@ private struct CroppedMapView: View {
             // 完整地圖放大到裁切範圍的 5 倍（顯示約 20% 的地圖）
             let scale: CGFloat = 5.0
             let mapSize = max(size.width, size.height) * scale
-            let offsetX = size.width / 2 - normalizedX * mapSize
-            let offsetY = size.height / 2 - normalizedY * mapSize
+            let offsetX = size.width / 2 - normalizedPosition.x * mapSize
+            let offsetY = size.height / 2 - normalizedPosition.y * mapSize
 
             if let url = imageURL.flatMap({ URL(string: $0) }) {
                 AsyncImage(url: url) { phase in
