@@ -9,7 +9,8 @@ build_treasure_maps.py — treasure_map_definitions.json + 繁中 datamining 的
 - 地圖:依 scripts/treasure_map_definitions.json 的順序。名稱讀 Item;繁中資料沒有名稱的地圖
   (繁中服尚未開放)不收,列在 `_meta.unreleased_map_ids`。
 - 採集點:Teamcraft 的採集點中,類型在 gathering_types、所在地圖(Map 的 PlaceName)在
-  gathering_zone_ids、等級不低於地圖等級者。zone_id 用 Map 的 PlaceName,座標取到小數一位,
+  gathering_zone_ids、等級不低於地圖等級者。zone_id 用 Map 的 PlaceName,map_id 是採集點所在的
+  Map(同一個 PlaceName 可能有好幾張地圖,App 開地圖要用 map_id),座標取到小數一位,
   依(類型, zone_id, x, y)排序。
 - 地區名稱:收錄的地圖的 gathering_zone_ids 對到 PlaceName 的繁中名稱;找不到名稱時結束程式。
 """
@@ -46,13 +47,15 @@ def gathering_nodes(definition, nodes, map_places):
     selected = []
     for node in nodes.values():
         node_type = node.get('type')
-        zone_id = map_places.get(node.get('map', 0))
+        map_id = node.get('map', 0)
+        zone_id = map_places.get(map_id)
         if node_type not in types or zone_id not in zones or node.get('level', 0) < definition['level']:
             continue
         selected.append({
             'type': node_type,
             'job': NODE_TYPE_JOBS[node_type],
             'zone_id': zone_id,
+            'map_id': map_id,
             'x': coordinate(node['x']),
             'y': coordinate(node['y']),
         })
