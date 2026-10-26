@@ -378,21 +378,23 @@ struct RotationSlotView: View {
                 RoundedRectangle(cornerRadius: 8)
                     .strokeBorder(AppTheme.gold.opacity(0.25), lineWidth: 1)
             )
+            .padding(.top, onDelete == nil ? 0 : 6)
+            .padding(.trailing, onDelete == nil ? 0 : 6)
 
             if let onDelete {
                 Button(action: onDelete) {
+                    // The badge sits on the icon's top-trailing corner; the tap target stays 44pt.
                     Image(systemName: "xmark.circle.fill")
                         .font(.system(size: 16))
                         .symbolRenderingMode(.palette)
                         .foregroundStyle(.white, .red)
                         .shadow(color: .black.opacity(0.2), radius: 1, y: 1)
+                        .frame(width: 44, height: 44, alignment: .topTrailing)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .frame(width: 44, height: 44)
             }
         }
-        .padding(.top, onDelete == nil ? 0 : 6)
-        .padding(.trailing, onDelete == nil ? 0 : 6)
     }
 }
 
