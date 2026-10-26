@@ -182,20 +182,22 @@ private struct TreasureMapRow: View {
 
             if hasGatheringNodes {
                 Button(action: showGatheringNodes) {
-                    Label {
-                        Text(L10n.TreasureMap.gatheringNodes)
-                    } icon: {
+                    HStack(spacing: 3) {
                         Image(systemName: "leaf")
+                            .imageScale(.small)
+                            .accessibilityHidden(true)
+                        Text(L10n.TreasureMap.gatheringNodes)
                     }
-                        .font(.caption.weight(.semibold))
-                        .labelStyle(.titleAndIcon)
-                        .padding(.horizontal, 7)
-                        .foregroundStyle(.green)
-                        .frame(minHeight: 44)
-                        .overlay {
-                            Capsule()
-                                .strokeBorder(.green.opacity(0.45), lineWidth: 1)
-                        }
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.green)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 3)
+                    .overlay {
+                        Capsule()
+                            .strokeBorder(.green.opacity(0.45), lineWidth: 1)
+                    }
+                    // Keep the capsule as small as the other badges but extend the tap area to about 44pt.
+                    .contentShape(Rectangle().inset(by: -12))
                 }
                 .buttonStyle(.plain)
             }
