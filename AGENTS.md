@@ -47,8 +47,12 @@ These override anything a skill or general best practice says.
 - Generate the project: `./scripts/generate_project.sh`, or double-click
   `Generate EorzeaToolkit Project.command`. Needed before `xcodebuild` on a clean clone;
   `scripts/run_tests.sh` and CI run it themselves.
-- Build: `xcodebuild build -project EorzeaToolkit.xcodeproj -scheme EorzeaToolkit -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO`
+- Build: `xcodebuild build -quiet -project EorzeaToolkit.xcodeproj -scheme EorzeaToolkit -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO`
+  `-quiet` leaves only warnings and errors; drop it when you need the full build log.
 - Unit tests: `./scripts/run_tests.sh`. CI runs it too, so breaking it fails the build.
+  Locally it prints only errors, failing tests and the result, and writes the full output to
+  `build/logs/run_tests.log`; read that file when the summary is not enough. CI, or
+  `RUN_TESTS_VERBOSE=1`, streams the full output instead.
 - UI tests (opt-in, not run by CI): `./scripts/run_ui_tests.sh <SIMULATOR_UDID>`; list UDIDs
   with `xcrun simctl list devices available`.
 - Regenerate data: `python3 scripts/build_data.py` downloads the pinned upstream files, rewrites
