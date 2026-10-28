@@ -1,15 +1,20 @@
 ---
-description: 根據 prompts 資料夾裡的 spec 實作功能
-argument-hint: <spec 檔名，不含 .md>
+description: Implement a feature from a spec in the prompts folder
+argument-hint: <spec file name, without .md>
 ---
 
-實作 `prompts/$ARGUMENTS.md`。先閱讀現有的專案結構和相關程式碼，再開始修改。
+Implement `prompts/$ARGUMENTS.md`. Read the existing project structure and the relevant code
+before making changes.
 
-規則都在 AGENTS.md，這裡不重複：
+The rules live in AGENTS.md and are not repeated here:
 
-- 「Specs」：`## 驗收` 是這次實作的契約。逐條實作、不為了過關改條件、不做「不在這個 Phase」的事。
-- 「Subagents」：spec 有 `## 驗收` 時，開工前平行跑 `project-explorer` 與 `acceptance-reviewer`
-  （planning review），實作驗證完再跑一次 `acceptance-reviewer`（implementation review）。
-- 「Commands」：交出前跑過 build、`./scripts/run_tests.sh`、`python3 scripts/validate_data.py`。
+- "Specs": `## 驗收` is the contract for this implementation. Implement every criterion, do not
+  change a criterion to make it pass, and do not build anything listed under 「不在這個 Phase」.
+- "Subagents": when the spec has a `## 驗收` section, run `project-explorer` and
+  `acceptance-reviewer` (planning review) in parallel before starting, and run
+  `acceptance-reviewer` again (implementation review) after implementing and verifying.
+- "Commands": before handing off, run the build, `./scripts/run_tests.sh`, and
+  `python3 scripts/validate_data.py`.
 
-最後在 PR 內文逐條回報每個驗收條件的結果，包括沒做到的。
+Finally, report every acceptance criterion's outcome in the PR body, including any you did not
+meet.
