@@ -37,12 +37,59 @@ print(max(candidates)[1])
 
 echo "Testing on simulator ${udid}"
 
-exec xcodebuild test \
-  -project EorzeaToolkit.xcodeproj \
-  -scheme EorzeaToolkit \
-  -configuration Debug \
-  -destination "id=${udid}" \
-  -derivedDataPath DerivedData \
-  -disableAutomaticPackageResolution \
-  CODE_SIGNING_ALLOWED=NO \
+xcodebuild_args=(
+  test
+  -project EorzeaToolkit.xcodeproj
+  -scheme EorzeaToolkit
+  -configuration Debug
+  -destination "id=${udid}"
+  -derivedDataPath DerivedData
+  -disableAutomaticPackageResolution
+  CODE_SIGNING_ALLOWED=NO
   "$@"
+)
+
+# CI keeps the full output in the job log. Set RUN_TESTS_VERBOSE=1 to stream it locally too.
+if [[ -n "${CI:-}" || -n "${RUN_TESTS_VERBOSE:-}" ]]; then
+  exec xcodebuild "${xcodebuild_args[@]}"
+fi
+
+# Locally the full output, thousands of lines, goes to a file and only errors, failing tests and
+# the result are printed. Coding agents read everything a command prints, so this keeps a test
+# run from filling their context; the log is there when the summary is not enough.
+log_path="build/logs/run_tests.log"
+mkdir -p "$(dirname "$log_path")"
+echo "Writing the full xcodebuild output to ${log_path}"
+
+status=0
+xcodebuild "${xcodebuild_args[@]}" >"$log_path" 2>&1 || status=$?
+
+summary="$(awk '
+  /^Failing tests:$/ { listing = 1; print; next }
+  listing && (NF == 0 || /^\*\* /) { listing = 0 }
+  listing { print; next }
+  /: (fatal )?error: / || /^xcodebuild: error/ || /[Tt]est [Cc]ase .* failed/ {
+    if (seen[$0]++) next
+    if (shown < 40) { print; shown++ } else { hidden++ }
+    next
+  }
+  /^[[:space:]]*Executed [0-9]+ tests?, with / { executed = $0 }
+  /^\*\* [A-Z ]+ \*\*$/ { result = $0 }
+  END {
+    if (hidden) printf "... %d more error lines in the log\n", hidden
+    if (executed) print executed
+    if (result) print result
+  }
+' "$log_path")"
+
+if [[ -n "$summary" ]]; then
+  echo "$summary"
+fi
+
+# Nothing recognisable in a failed run (a crash, a destination problem): show the end of the log.
+if [[ "$status" -ne 0 && -z "$summary" ]]; then
+  tail -n 30 "$log_path"
+fi
+
+echo "Full log: ${log_path}"
+exit "$status"
