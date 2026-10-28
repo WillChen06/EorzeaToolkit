@@ -108,7 +108,7 @@ private struct RelicWeaponMaterialRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            HStack(alignment: .top, spacing: 6) {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
                 Text("•")
                     .foregroundStyle(AppTheme.mutedInk)
 
@@ -122,7 +122,7 @@ private struct RelicWeaponMaterialRow: View {
                         toggleNote()
                     } label: {
                         Image(systemName: "info.circle")
-                            .font(.caption)
+                            .font(.subheadline)
                     }
                     .buttonStyle(.plain)
                     .foregroundStyle(HomeFeature.relicWeapon.accent)
