@@ -85,18 +85,38 @@ struct RelicWeaponFeatureTests {
         }
     }
     
-    @Test func seriesSelectionUpdatesSelectedID() async {
-        let seriesID = "123"
-        let store = TestStore(initialState: RelicWeaponFeature.State()) {
+    @Test func seriesSelectionCreatesDetail() async {
+        let sample = WeaponSeries(
+            id: "1",
+            nameTw: "A",
+            fullNameTw: "AAA",
+            expansion: "",
+            levelCap: 10,
+            availableJobs: ["PLD", "MNK", "WAR"],
+            stages: []
+        )
+        
+        let store = TestStore(initialState: RelicWeaponFeature.State(weaponSeriesList: [sample])) {
             RelicWeaponFeature()
         }
         
-        await store.send(.seriesSelected(seriesID)) {
-            $0.selectedSeriesID = seriesID
+        await store.send(.seriesSelected("1")) {
+            $0.seriesDetail = RelicWeaponSeriesFeature.State(series: sample)
+        }
+        await store.send(.seriesDetail(.modeSelected(.tracking))) {
+            $0.seriesDetail?.selectedMode = .tracking
+        }
+        
+        await store.send(.seriesSelected("not-exist")) {
+            $0.seriesDetail = nil
+        }
+        
+        await store.send(.seriesSelected("1")) {
+            $0.seriesDetail = RelicWeaponSeriesFeature.State(series: sample)
         }
         
         await store.send(.seriesSelected(nil)) {
-            $0.selectedSeriesID = nil
+            $0.seriesDetail = nil
         }
     }
 }
