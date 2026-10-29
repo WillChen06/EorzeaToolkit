@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import ComposableArchitecture
 
 private enum RelicWeaponMode: CaseIterable, Identifiable {
     case view
@@ -25,20 +26,34 @@ private enum RelicWeaponMode: CaseIterable, Identifiable {
 }
 
 struct RelicWeaponListView: View {
-    var onReturnHome: () -> Void = {}
+    @State private var store: StoreOf<RelicWeaponFeature>
+    
+    let onReturnHome: () -> Void
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = RelicWeaponViewModel()
-    @State private var selectedSeriesID: String?
+    
+    init(
+        store: StoreOf<RelicWeaponFeature> = Store(initialState: RelicWeaponFeature.State()) {
+            RelicWeaponFeature()
+        },
+        onReturnHome: @escaping () -> Void = {}
+    ) {
+        _store = State(initialValue: store)
+        self.onReturnHome = onReturnHome
+    }
 
     var body: some View {
-        FeatureNavigationView(feature: .relicWeapon, selectionID: selectedSeriesID, onReturnHome: onReturnHome) {
+        FeatureNavigationView(feature: .relicWeapon, selectionID: store.selectedSeriesID, onReturnHome: onReturnHome) {
             sidebar
         } detail: {
-            if let series = viewModel.weaponSeriesList.first(where: { $0.id == selectedSeriesID }) {
+            if let id = store.selectedSeriesID, let series = store.weaponSeriesList[id: id] {
                 RelicWeaponSeriesView(series: series, viewModel: viewModel)
             }
         }
         .task {
+            store.send(.task)
+            
+            // 詳細頁的進度還在 ViewModel，等子 Reducer 和進度 client 完成後再移除
             if !viewModel.hasLoadedWeapons {
                 viewModel.configure(modelContext: modelContext)
                 viewModel.loadWeapons()
@@ -48,32 +63,35 @@ struct RelicWeaponListView: View {
 
     private var sidebar: some View {
         Group {
-            if let loadError = viewModel.loadError {
+            switch store.loadState {
+            case .idle, .loading:
+                ProgressView(L10n.RelicWeapon.loading)
+            case .loaded:
+                if store.weaponSeriesList.isEmpty {
+                    ContentUnavailableView(
+                        L10n.RelicWeapon.emptyTitle,
+                        systemImage: "sparkles",
+                        description: Text(L10n.RelicWeapon.emptyDescription)
+                    )
+                } else {
+                    List(store.weaponSeriesList, selection: $store.selectedSeriesID.sending(\.seriesSelected)) { series in
+                        NavigationLink(value: series.id) {
+                            RelicWeaponSeriesRow(
+                                series: series,
+                                isLatest: series.id == store.weaponSeriesList.last?.id
+                            )
+                        }
+                        .appThemedListRow()
+                    }
+                    .listStyle(.insetGrouped)
+                    .appThemedScrollContent()
+                }
+            case let .failed(loadError):
                 ContentUnavailableView(
                     L10n.RelicWeapon.loadFailedTitle,
                     systemImage: "exclamationmark.triangle",
                     description: Text(loadError)
                 )
-            } else if !viewModel.weaponSeriesList.isEmpty {
-                List(Array(viewModel.weaponSeriesList.enumerated()), id: \.element.id, selection: $selectedSeriesID) { index, series in
-                    NavigationLink(value: series.id) {
-                        RelicWeaponSeriesRow(
-                            series: series,
-                            isLatest: index == viewModel.weaponSeriesList.count - 1
-                        )
-                    }
-                    .appThemedListRow()
-                }
-                .listStyle(.insetGrouped)
-                .appThemedScrollContent()
-            } else if viewModel.hasLoadedWeapons {
-                ContentUnavailableView(
-                    L10n.RelicWeapon.emptyTitle,
-                    systemImage: "sparkles",
-                    description: Text(L10n.RelicWeapon.emptyDescription)
-                )
-            } else {
-                ProgressView(L10n.RelicWeapon.loading)
             }
         }
         .navigationTitle(L10n.RelicWeapon.title)
