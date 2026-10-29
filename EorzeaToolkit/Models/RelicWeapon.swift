@@ -8,7 +8,7 @@ struct RelicWeaponData: Codable {
     }
 }
 
-struct WeaponSeries: Codable, Identifiable {
+struct WeaponSeries: Codable, Equatable, Identifiable {
     let id: String
     let nameTw: String
     let fullNameTw: String
@@ -26,7 +26,7 @@ struct WeaponSeries: Codable, Identifiable {
     }
 }
 
-struct WeaponStage: Codable, Identifiable {
+struct WeaponStage: Codable, Equatable, Identifiable {
     var id: Int { stageIndex }
 
     let stageIndex: Int
@@ -76,7 +76,7 @@ enum MaterialQuantity: Codable, Equatable {
     }
 }
 
-struct WeaponMaterial: Codable, Identifiable {
+struct WeaponMaterial: Codable, Equatable, Identifiable {
     var id: String { "\(nameTw)-\(sourceTw ?? "")-\(quantity)" }
 
     let nameTw: String
