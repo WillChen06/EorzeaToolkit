@@ -9,11 +9,17 @@ import ComposableArchitecture
 
 @Reducer
 struct RelicWeaponFeature {
+    enum LoadState: Equatable {
+        case idle
+        case loading
+        case loaded
+        case failed(String)
+    }
+    
     @ObservableState
     struct State: Equatable {
         var weaponSeriesList: IdentifiedArrayOf<WeaponSeries> = []
-        var loadError: String?
-        var hasLoadedWeapons: Bool
+        var loadState: LoadState = .idle
     }
     
     enum Action {
@@ -27,17 +33,17 @@ struct RelicWeaponFeature {
         Reduce { state, action in
             switch action {
             case .task:
+                state.loadState = .loading
                 return .run { send in
                     await send(.weaponSeriesResponse(Result { try await relicWeapon.fetch() }))
                 }
             case let .weaponSeriesResponse(result):
-                state.hasLoadedWeapons = true
                 switch result {
                 case let .success(response):
                     state.weaponSeriesList = IdentifiedArray(uniqueElements: response)
-                    state.loadError = nil
+                    state.loadState = .loaded
                 case let .failure(error):
-                    state.loadError = error.localizedDescription
+                    state.loadState = .failed(error.localizedDescription)
                 }
                 return .none
             }
