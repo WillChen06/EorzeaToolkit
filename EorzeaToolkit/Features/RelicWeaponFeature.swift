@@ -33,6 +33,12 @@ struct RelicWeaponFeature {
         Reduce { state, action in
             switch action {
             case .task:
+                switch state.loadState {
+                case .loading, .loaded:
+                    return .none
+                case .idle, .failed:
+                    break
+                }
                 state.loadState = .loading
                 return .run { send in
                     await send(.weaponSeriesResponse(Result { try await relicWeapon.fetch() }))
