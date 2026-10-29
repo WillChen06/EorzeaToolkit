@@ -45,6 +45,8 @@ xcodebuild_args=(
   -destination "id=${udid}"
   -derivedDataPath DerivedData
   -disableAutomaticPackageResolution
+  # TCA's macros would otherwise need trusting in Xcode first, which CI cannot do.
+  -skipMacroValidation
   CODE_SIGNING_ALLOWED=NO
   "$@"
 )

@@ -75,6 +75,7 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath DerivedData \
             -disableAutomaticPackageResolution \
+            -skipMacroValidation \
             CODE_SIGNING_ALLOWED=NO
 
       # Reuses the DerivedData the build step just produced. Resolving a simulator udid is

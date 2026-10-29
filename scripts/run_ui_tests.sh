@@ -24,5 +24,6 @@ exec xcodebuild test \
   -derivedDataPath DerivedData \
   -parallel-testing-enabled NO \
   -disableAutomaticPackageResolution \
+  -skipMacroValidation \
   CODE_SIGNING_ALLOWED=NO \
   "$@"
