@@ -2,18 +2,8 @@ import SwiftUI
 import SwiftData
 import ComposableArchitecture
 
-private enum RelicWeaponMode: CaseIterable, Identifiable {
-    case view
-    case tracking
-
-    var id: String {
-        switch self {
-        case .view:
-            "view"
-        case .tracking:
-            "tracking"
-        }
-    }
+extension RelicWeaponSeriesFeature.Mode: Identifiable {
+    var id: Self { self }
 
     var title: LocalizedStringKey {
         switch self {
@@ -46,8 +36,8 @@ struct RelicWeaponListView: View {
         FeatureNavigationView(feature: .relicWeapon, selectionID: store.selectedSeriesID, onReturnHome: onReturnHome) {
             sidebar
         } detail: {
-            if let id = store.selectedSeriesID, let series = store.weaponSeriesList[id: id] {
-                RelicWeaponSeriesView(series: series, viewModel: viewModel)
+            if let detailStore = store.scope(state: \.seriesDetail, action: \.seriesDetail) {
+                RelicWeaponSeriesView(store: detailStore, viewModel: viewModel)
             }
         }
         .task {
@@ -173,18 +163,15 @@ private struct RelicWeaponSeriesRow: View {
 }
 
 private struct RelicWeaponSeriesView: View {
-    let series: WeaponSeries
+    @Bindable var store: StoreOf<RelicWeaponSeriesFeature>
     let viewModel: RelicWeaponViewModel
-
-    @State private var mode: RelicWeaponMode = .view
-    @State private var selectedJob = ""
     @State private var expandedStageIndices: Set<Int> = []
 
     var body: some View {
         List {
             Section {
-                Picker(L10n.RelicWeapon.mode, selection: $mode) {
-                    ForEach(RelicWeaponMode.allCases) { option in
+                Picker(L10n.RelicWeapon.mode, selection: $store.selectedMode.sending(\.modeSelected)) {
+                    ForEach(RelicWeaponSeriesFeature.Mode.allCases) { option in
                         Text(option.title).tag(option)
                     }
                 }
@@ -192,19 +179,19 @@ private struct RelicWeaponSeriesView: View {
             }
             .appThemedListRow()
 
-            if mode == .tracking {
+            if store.selectedMode == .tracking {
                 trackingSummarySection
             }
 
             Section(L10n.RelicWeapon.stagesSection) {
-                ForEach(series.stages) { stage in
+                ForEach(store.series.stages) { stage in
                     RelicWeaponStageDisclosureView(
                         stage: stage,
-                        isTrackingEnabled: mode == .tracking,
-                        isCompleted: viewModel.isStageCompleted(stage, for: series.id, job: selectedJob),
+                        isTrackingEnabled: store.selectedMode == .tracking,
+                        isCompleted: viewModel.isStageCompleted(stage, for: store.series.id, job: store.selectedJob),
                         isExpanded: binding(for: stage),
                         toggleCompletion: {
-                            viewModel.toggleStage(stage, for: series.id, job: selectedJob)
+                            viewModel.toggleStage(stage, for: store.series.id, job: store.selectedJob)
                         }
                     )
                 }
@@ -213,25 +200,22 @@ private struct RelicWeaponSeriesView: View {
         }
         .listStyle(.insetGrouped)
         .appThemedScrollContent()
-        .navigationTitle(L10n.RelicWeapon.seriesTitle(shortName: series.nameTw, fullName: series.fullNameTw))
+        .navigationTitle(L10n.RelicWeapon.seriesTitle(shortName: store.series.nameTw, fullName: store.series.fullNameTw))
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            updateSelectedJobIfNeeded()
-        }
         .appThemedScreen(tint: HomeFeature.relicWeapon.accent)
     }
 
     private var trackingSummarySection: some View {
         Section {
-            Picker(L10n.RelicWeapon.job, selection: $selectedJob) {
-                ForEach(series.availableJobs, id: \.self) { job in
+            Picker(L10n.RelicWeapon.job, selection: $store.selectedJob.sending(\.jobSelected)) {
+                ForEach(store.series.availableJobs, id: \.self) { job in
                     Text(L10n.RelicWeapon.jobName(job)).tag(job)
                 }
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                let completedCount = viewModel.completedStageCount(for: series.id, job: selectedJob)
-                let totalCount = series.stages.count
+                let completedCount = viewModel.completedStageCount(for: store.series.id, job: store.selectedJob)
+                let totalCount = store.series.stages.count
                 let percentage = totalCount == 0 ? 0 : Int((Double(completedCount) / Double(totalCount) * 100).rounded())
 
                 HStack {
@@ -266,17 +250,6 @@ private struct RelicWeaponSeriesView: View {
                 }
             }
         )
-    }
-
-    private func updateSelectedJobIfNeeded() {
-        guard !series.availableJobs.isEmpty else {
-            selectedJob = ""
-            return
-        }
-
-        if !series.availableJobs.contains(selectedJob) {
-            selectedJob = series.availableJobs[0]
-        }
     }
 }
 
