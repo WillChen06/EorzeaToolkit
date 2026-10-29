@@ -1,6 +1,6 @@
 import Foundation
 
-struct RelicWeaponData: Codable {
+struct RelicWeaponData: Codable, Sendable {
     let weaponSeriesList: [WeaponSeries]
 
     enum CodingKeys: String, CodingKey {
@@ -8,7 +8,7 @@ struct RelicWeaponData: Codable {
     }
 }
 
-struct WeaponSeries: Codable, Equatable, Identifiable {
+struct WeaponSeries: Codable, Equatable, Identifiable, Sendable {
     let id: String
     let nameTw: String
     let fullNameTw: String
@@ -26,7 +26,7 @@ struct WeaponSeries: Codable, Equatable, Identifiable {
     }
 }
 
-struct WeaponStage: Codable, Equatable, Identifiable {
+struct WeaponStage: Codable, Equatable, Identifiable, Sendable {
     var id: Int { stageIndex }
 
     let stageIndex: Int
@@ -43,7 +43,7 @@ struct WeaponStage: Codable, Equatable, Identifiable {
     }
 }
 
-enum MaterialQuantity: Codable, Equatable {
+enum MaterialQuantity: Codable, Equatable, Sendable {
     case none
     case number(Int)
     case text(String)
@@ -76,7 +76,7 @@ enum MaterialQuantity: Codable, Equatable {
     }
 }
 
-struct WeaponMaterial: Codable, Equatable, Identifiable {
+struct WeaponMaterial: Codable, Equatable, Identifiable, Sendable {
     var id: String { "\(nameTw)-\(sourceTw ?? "")-\(quantity)" }
 
     let nameTw: String
