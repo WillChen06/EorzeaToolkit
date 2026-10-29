@@ -7,8 +7,13 @@
 
 import ComposableArchitecture
 
+@DependencyClient
 struct RelicWeaponClient: Sendable {
     var fetch: @Sendable () async throws -> [WeaponSeries]
+}
+
+extension RelicWeaponClient: TestDependencyKey {
+    static let testValue = Self()
 }
 
 extension RelicWeaponClient: DependencyKey {
