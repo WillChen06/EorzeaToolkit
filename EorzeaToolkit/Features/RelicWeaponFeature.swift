@@ -20,11 +20,13 @@ struct RelicWeaponFeature {
     struct State: Equatable {
         var weaponSeriesList: IdentifiedArrayOf<WeaponSeries> = []
         var loadState: LoadState = .idle
+        var selectedSeriesID: String?
     }
     
     enum Action {
         case task
         case weaponSeriesResponse(Result<[WeaponSeries], Error>)
+        case seriesSelected(String?)
     }
     
     @Dependency(\.relicWeapon) var relicWeapon
@@ -51,6 +53,9 @@ struct RelicWeaponFeature {
                 case let .failure(error):
                     state.loadState = .failed(error.localizedDescription)
                 }
+                return .none
+            case let .seriesSelected(seriesID):
+                state.selectedSeriesID = seriesID
                 return .none
             }
         }
