@@ -24,9 +24,11 @@ These override anything a skill or general best practice says.
   - When the change needs separate code paths for newer and older OS versions (for example a
     new UI style or component on iOS 26 alongside the existing one), ask the user before
     implementing it. Do not build both paths on your own.
-- **Kingfisher is the only third-party dependency**, used solely by
-  `Views/CachedIconImage.swift` for remote icon loading. Do not add another SPM package without
-  the user's approval.
+- **Kingfisher and The Composable Architecture are the only third-party dependencies.**
+  Kingfisher is used solely by `Views/CachedIconImage.swift` for remote icon loading. TCA is
+  being trialled on the relic weapon feature (`Features/`); other features keep their
+  `ViewModels/` pattern unless the user decides otherwise. Do not add another SPM package
+  without the user's approval.
 - **User-facing text goes through `EorzeaToolkit/Localization/Localizable.xcstrings`.** No
   hard-coded strings in views.
 - **Follow the existing patterns** in `Views/`, `ViewModels/`, `Services/`, and `Models/`
@@ -47,7 +49,8 @@ These override anything a skill or general best practice says.
 - Generate the project: `./scripts/generate_project.sh`, or double-click
   `Generate EorzeaToolkit Project.command`. Needed before `xcodebuild` on a clean clone;
   `scripts/run_tests.sh` and CI run it themselves.
-- Build: `xcodebuild build -quiet -project EorzeaToolkit.xcodeproj -scheme EorzeaToolkit -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO`
+- Build: `xcodebuild build -quiet -project EorzeaToolkit.xcodeproj -scheme EorzeaToolkit -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData -skipMacroValidation CODE_SIGNING_ALLOWED=NO`
+  `-skipMacroValidation` lets TCA's macros run without first trusting them in Xcode.
   `-quiet` leaves only warnings and errors; drop it when you need the full build log.
 - Unit tests: `./scripts/run_tests.sh`. CI runs it too, so breaking it fails the build.
   Locally it prints only errors, failing tests and the result, and writes the full output to
