@@ -4,6 +4,7 @@ struct RelicWeaponStageDisclosureView: View {
     let stage: WeaponStage
     let isTrackingEnabled: Bool
     let isCompleted: Bool
+    let isToggleEnabled: Bool
     @Binding var isExpanded: Bool
     let toggleCompletion: () -> Void
 
@@ -23,6 +24,7 @@ struct RelicWeaponStageDisclosureView: View {
                             .frame(width: 44, height: 44)
                     }
                     .buttonStyle(.plain)
+                    .disabled(!isToggleEnabled)
                     .accessibilityLabel(isCompleted ? L10n.RelicWeapon.markIncomplete : L10n.RelicWeapon.markComplete)
                 }
 

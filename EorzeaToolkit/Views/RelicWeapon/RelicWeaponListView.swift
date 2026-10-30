@@ -17,10 +17,7 @@ extension RelicWeaponSeriesFeature.Mode: Identifiable {
 
 struct RelicWeaponListView: View {
     @State private var store: StoreOf<RelicWeaponFeature>
-    
     let onReturnHome: () -> Void
-    @Environment(\.modelContext) private var modelContext
-    @State private var viewModel = RelicWeaponViewModel()
     
     init(
         store: StoreOf<RelicWeaponFeature> = Store(initialState: RelicWeaponFeature.State()) {
@@ -37,17 +34,11 @@ struct RelicWeaponListView: View {
             sidebar
         } detail: {
             if let detailStore = store.scope(state: \.seriesDetail, action: \.seriesDetail) {
-                RelicWeaponSeriesView(store: detailStore, viewModel: viewModel)
+                RelicWeaponSeriesView(store: detailStore)
             }
         }
         .task {
             store.send(.task)
-            
-            // 詳細頁的進度還在 ViewModel，等子 Reducer 和進度 client 完成後再移除
-            if !viewModel.hasLoadedWeapons {
-                viewModel.configure(modelContext: modelContext)
-                viewModel.loadWeapons()
-            }
         }
     }
 
@@ -164,7 +155,6 @@ private struct RelicWeaponSeriesRow: View {
 
 private struct RelicWeaponSeriesView: View {
     @Bindable var store: StoreOf<RelicWeaponSeriesFeature>
-    let viewModel: RelicWeaponViewModel
     @State private var expandedStageIndices: Set<Int> = []
 
     var body: some View {
@@ -188,15 +178,19 @@ private struct RelicWeaponSeriesView: View {
                     RelicWeaponStageDisclosureView(
                         stage: stage,
                         isTrackingEnabled: store.selectedMode == .tracking,
-                        isCompleted: viewModel.isStageCompleted(stage, for: store.series.id, job: store.selectedJob),
+                        isCompleted: store.completedStageIndices.contains(stage.stageIndex),
+                        isToggleEnabled: store.isProgressLoaded,
                         isExpanded: binding(for: stage),
                         toggleCompletion: {
-                            viewModel.toggleStage(stage, for: store.series.id, job: store.selectedJob)
+                            store.send(.stageToggled(stage.stageIndex))
                         }
                     )
                 }
             }
             .appThemedListRow()
+        }
+        .task(id: store.series.id) {
+            store.send(.task)
         }
         .listStyle(.insetGrouped)
         .appThemedScrollContent()
@@ -214,7 +208,7 @@ private struct RelicWeaponSeriesView: View {
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                let completedCount = viewModel.completedStageCount(for: store.series.id, job: store.selectedJob)
+                let completedCount = store.completedStageIndices.count
                 let totalCount = store.series.stages.count
                 let percentage = totalCount == 0 ? 0 : Int((Double(completedCount) / Double(totalCount) * 100).rounded())
 
