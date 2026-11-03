@@ -43,10 +43,11 @@ extension DependencyValues {
 
 struct TreasureMapCatalog: Equatable, Sendable {
     let maps: IdentifiedArrayOf<TreasureMap>
-    private let spotsByKey: [String: [TreasureSpot]]  // "itemId-mapId" → spots
-    private let mapInfosByKey: [String: MapInfo]
-    private var zonesByItemId: [Int: [TreasureZone]] = [:]
-    private let zoneNames: [String: ZoneNameEntry]
+    
+    private let spotsByItem: [Int: [Int: [TreasureSpot]]] // itemId → mapId → spots
+    private let zonesByItemId: [Int: [TreasureZone]]
+    private let mapInfosById: [Int: MapInfo]
+    private let zoneNamesById: [Int: String]  // zoneId → 繁中地區名
     
     init(
         finalData: TreasureMapFinalData,
@@ -55,33 +56,30 @@ struct TreasureMapCatalog: Equatable, Sendable {
         mapInfos: [String: MapInfo]
     ) {
         maps = IdentifiedArray(uniqueElements: finalData.maps)
-        zoneNames = finalData.zoneNames
-        mapInfosByKey = mapInfos
+        zoneNamesById = Dictionary(uniqueKeysWithValues: finalData.zoneNames.compactMap { key, entry in
+            Int(key).map { ($0, entry.tw) }
+        })
+        let mapInfosById = Dictionary(uniqueKeysWithValues: mapInfos.compactMap { key, info in
+            Int(key).map { ($0, info) }
+        })
+        self.mapInfosById = mapInfosById
         
         // 依 (item, map) 分組點位
-        var groupedSpots: [String: [TreasureSpot]] = [:]
-        var spotCountByItem: [Int: [Int: Int]] = [:]  // [itemId: [mapId: count]]
-
+        var spotsByItem: [Int: [Int: [TreasureSpot]]] = [:]
         for spot in spots {
-            let key = "\(spot.item)-\(spot.map)"
-            groupedSpots[key, default: []].append(spot)
-            spotCountByItem[spot.item, default: [:]][spot.map, default: 0] += 1
+            spotsByItem[spot.item, default: [:]][spot.map, default: []].append(spot)
         }
-        spotsByKey = groupedSpots
 
         // 組合地區資訊
-        for (itemId, mapCounts) in spotCountByItem {
-            let zones = mapCounts.compactMap { (mapId, count) -> TreasureZone? in
-                if let info = mapInfos[String(mapId)], info.dungeon {
-                    return nil
-                }
+        zonesByItemId = spotsByItem.mapValues { spotsByMap in
+            spotsByMap.compactMap { mapId, mapSpots -> TreasureZone? in
+                guard mapInfosById[mapId]?.dungeon != true else { return nil }
                 let name = zhNames[String(mapId)]?.zh ?? L10n.TreasureMap.unknownRegion(id: mapId)
-                return TreasureZone(mapId: mapId, name: name, spotCount: count)
+                return TreasureZone(mapId: mapId, name: name, spotCount: mapSpots.count)
             }
             .sorted { $0.mapId < $1.mapId }
-
-            zonesByItemId[itemId] = zones
         }
+        self.spotsByItem = spotsByItem
     }
     
     func zones(for map: TreasureMap) -> [TreasureZone] {
@@ -89,16 +87,16 @@ struct TreasureMapCatalog: Equatable, Sendable {
     }
 
     func spots(for map: TreasureMap, in zone: TreasureZone) -> [TreasureSpot] {
-        spotsByKey["\(map.itemId)-\(zone.mapId)"] ?? []
+        spotsByItem[map.itemId]?[zone.mapId] ?? []
     }
 
     func mapInfo(forMapId mapId: Int) -> MapInfo? {
-        mapInfosByKey[String(mapId)]
+        mapInfosById[mapId]
     }
 
     func gatheringNodes(for map: TreasureMap) -> [GatheringNodeDisplay] {
         map.gatheringNodes.map { node in
-            let zoneName = zoneNames[String(node.zoneId)]?.tw ?? L10n.TreasureMap.unknownRegionText
+            let zoneName = zoneNamesById[node.zoneId] ?? L10n.TreasureMap.unknownRegionText
             return GatheringNodeDisplay(
                 type: node.type, zoneName: zoneName, zoneId: node.zoneId, mapId: node.mapId, x: node.x, y: node.y
             )
