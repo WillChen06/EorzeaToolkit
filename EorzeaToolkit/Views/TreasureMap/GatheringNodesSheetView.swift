@@ -1,18 +1,15 @@
 import SwiftUI
+import ComposableArchitecture
 
 struct GatheringNodesSheetView: View {
-    let map: TreasureMap
-    let nodes: [GatheringNodeDisplay]
-    let viewModel: TreasureMapViewModel
-    @Environment(\.dismiss) private var dismiss
-    @State private var selectedNode: GatheringNodeDisplay?
+    @Bindable var store: StoreOf<GatheringNodesFeature>
 
     private var minerNodes: [GatheringNodeDisplay] {
-        nodes.filter { $0.job == .miner }
+        store.nodes.filter { $0.job == .miner }
     }
 
     private var botanistNodes: [GatheringNodeDisplay] {
-        nodes.filter { $0.job == .botanist }
+        store.nodes.filter { $0.job == .botanist }
     }
 
     var body: some View {
@@ -29,19 +26,21 @@ struct GatheringNodesSheetView: View {
                 .padding()
             }
             .appThemedBackground()
-            .navigationTitle(L10n.TreasureMap.gatheringSheetTitle(grade: map.grade, name: map.name, level: map.level))
+            .navigationTitle(L10n.TreasureMap.gatheringSheetTitle(grade: store.map.grade, name: store.map.name, level: store.map.level))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(L10n.Common.done, systemImage: "xmark", action: dismiss.callAsFunction)
-                        .labelStyle(.iconOnly)
-                        .foregroundStyle(HomeFeature.treasureMap.accent)
-                        .frame(width: 44, height: 44)
-                        .background(AppTheme.surfaceDepth, in: Circle())
+                    Button(L10n.Common.done, systemImage: "xmark") {
+                        store.send(.closeButtonTapped)
+                    }
+                    .labelStyle(.iconOnly)
+                    .foregroundStyle(HomeFeature.treasureMap.accent)
+                    .frame(width: 44, height: 44)
+                    .background(AppTheme.surfaceDepth, in: Circle())
                 }
             }
-            .fullScreenCover(item: $selectedNode) { node in
-                GatheringNodeMapView(node: node, viewModel: viewModel)
+            .fullScreenCover(item: $store.selectedNode.sending(\.nodeSelected)) { node in
+                GatheringNodeMapView(node: node, mapInfo: store.mapInfos[node.mapId])
             }
             .appThemedScreen(tint: HomeFeature.treasureMap.accent)
         }
@@ -95,7 +94,7 @@ struct GatheringNodesSheetView: View {
                 .fixedSize()
 
             Button(L10n.TreasureMap.gatheringNodes, systemImage: "map") {
-                selectedNode = node
+                store.send(.nodeSelected(node))
             }
             .labelStyle(.iconOnly)
             .foregroundStyle(HomeFeature.treasureMap.accent)
@@ -112,15 +111,11 @@ struct GatheringNodesSheetView: View {
 
 struct GatheringNodeMapView: View {
     let node: GatheringNodeDisplay
-    let viewModel: TreasureMapViewModel
+    let mapInfo: MapInfo?
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric(relativeTo: .body) private var minimumMapWidth = 320.0
     @ScaledMetric(relativeTo: .body) private var minimumInformationWidth = 240.0
-
-    private var mapInfo: MapInfo? {
-        viewModel.mapInfo(forMapId: node.mapId)
-    }
 
     var body: some View {
         ZStack {

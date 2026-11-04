@@ -1,7 +1,8 @@
 import SwiftUI
+import ComposableArchitecture
 
 struct TreasureMapFilterSheet: View {
-    let viewModel: TreasureMapViewModel
+    let store: StoreOf<TreasureMapFeature>
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -19,12 +20,12 @@ struct TreasureMapFilterSheet: View {
                 .appThemedListRow()
 
                 Section(L10n.TreasureMap.filterVersionSection) {
-                    ForEach(viewModel.versionOptions, id: \.self) { majorVersion in
+                    ForEach(store.versionOptions, id: \.self) { majorVersion in
                         optionButton(
                             L10n.TreasureMap.filterVersionOption(majorVersion),
-                            isSelected: viewModel.filter.selectedMajorVersions.contains(majorVersion)
+                            isSelected: store.filter.selectedMajorVersions.contains(majorVersion)
                         ) {
-                            viewModel.toggleMajorVersion(majorVersion)
+                            store.send(.majorVersionToggled(majorVersion))
                         }
                         .accessibilityIdentifier("treasureMap.filter.version.\(majorVersion)")
                     }
@@ -32,12 +33,12 @@ struct TreasureMapFilterSheet: View {
                 .appThemedListRow()
 
                 Section(L10n.TreasureMap.filterLevelSection) {
-                    ForEach(viewModel.levelOptions, id: \.self) { level in
+                    ForEach(store.levelOptions, id: \.self) { level in
                         optionButton(
                             L10n.TreasureMap.filterLevelOption(level),
-                            isSelected: viewModel.filter.selectedLevels.contains(level)
+                            isSelected: store.filter.selectedLevels.contains(level)
                         ) {
-                            viewModel.toggleLevel(level)
+                            store.send(.levelToggled(level))
                         }
                         .accessibilityIdentifier("treasureMap.filter.level.\(level)")
                     }
@@ -49,9 +50,11 @@ struct TreasureMapFilterSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(L10n.TreasureMap.clearAllFilters, action: viewModel.clearFilters)
-                        .accessibilityIdentifier("treasureMap.filter.clear")
-                        .disabled(!viewModel.isFilterActive)
+                    Button(L10n.TreasureMap.clearAllFilters) {
+                        store.send(.clearFiltersButtonTapped)
+                    }
+                    .accessibilityIdentifier("treasureMap.filter.clear")
+                    .disabled(!store.isFilterActive)
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
