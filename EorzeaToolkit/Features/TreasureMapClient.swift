@@ -93,6 +93,13 @@ struct TreasureMapCatalog: Equatable, Sendable {
     func mapInfo(forMapId mapId: Int) -> MapInfo? {
         mapInfosById[mapId]
     }
+    
+    func mapInfos(for nodes: [GatheringNodeDisplay]) -> [Int: MapInfo] {
+        Dictionary(
+            nodes.compactMap { node in mapInfo(forMapId: node.mapId).map { (node.mapId, $0) } },
+            uniquingKeysWith: { first, _ in first }
+        )
+    }
 
     func gatheringNodes(for map: TreasureMap) -> [GatheringNodeDisplay] {
         map.gatheringNodes.map { node in

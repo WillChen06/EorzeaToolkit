@@ -33,8 +33,8 @@ private func spot(item: Int, map: Int, id: String = UUID().uuidString) -> Treasu
     TreasureSpot(id: id, coords: TreasureSpot.Coordinate(x: 0, y: 0, z: 0), map: map, partySize: 0, item: item)
 }
 
-private func mapInfo(id: Int, dungeon: Bool = false) -> MapInfo {
-    MapInfo(id: id, image: "", placenameId: 0, sizeFactor: 100, territoryId: 0, dungeon: dungeon)
+private func node(mapId: Int, x: Double = 0) -> GatheringNodeDisplay {
+    GatheringNodeDisplay(type: 0, zoneName: "", zoneId: 0, mapId: mapId, x: x, y: 0)
 }
 
 struct TreasureMapCatalogTests {
@@ -75,7 +75,7 @@ struct TreasureMapCatalogTests {
                 spot(item: 1, map: 20),
             ],
             mapInfos: [
-                mapInfo(id: 40, dungeon: true)
+                TreasureMapFixture.mapInfo(id: 40, dungeon: true)
             ]
         )
 
@@ -89,7 +89,7 @@ struct TreasureMapCatalogTests {
                 spot(item: 1, map: 50),
             ],
             mapInfos: [
-                mapInfo(id: 10)
+                TreasureMapFixture.mapInfo(id: 10)
             ]
         )
 
@@ -140,8 +140,8 @@ struct TreasureMapCatalogTests {
                 spot(item: 1, map: 41),
             ],
             mapInfos: [
-                mapInfo(id: 40, dungeon: true),
-                mapInfo(id: 41, dungeon: true),
+                TreasureMapFixture.mapInfo(id: 40, dungeon: true),
+                TreasureMapFixture.mapInfo(id: 41, dungeon: true),
             ]
         )
 
@@ -176,12 +176,12 @@ struct TreasureMapCatalogTests {
     @Test func mapInfoIsFoundByMapId() {
         let catalog = makeCatalog(
             mapInfos: [
-                mapInfo(id: 10),
-                mapInfo(id: 20, dungeon: true),
+                TreasureMapFixture.mapInfo(id: 10),
+                TreasureMapFixture.mapInfo(id: 20, dungeon: true),
             ]
         )
 
-        #expect(catalog.mapInfo(forMapId: 20) == mapInfo(id: 20, dungeon: true))
+        #expect(catalog.mapInfo(forMapId: 20) == TreasureMapFixture.mapInfo(id: 20, dungeon: true))
         #expect(catalog.mapInfo(forMapId: 30) == nil)
     }
 
@@ -219,5 +219,33 @@ struct TreasureMapCatalogTests {
         ])
 
         #expect(catalog.maps.map(\.id) == ["G3", "G1", "G2"])
+    }
+    
+    @Test func mapInfosHaveOneEntryPerMapForNodesSharingAMap() {
+        let catalog = makeCatalog(mapInfos: [
+            TreasureMapFixture.mapInfo(id: 10),
+            TreasureMapFixture.mapInfo(id: 20)
+        ])
+        
+        let nodes = [
+            node(mapId: 10, x: 1),
+            node(mapId: 10, x: 2),
+            node(mapId: 20)
+        ]
+        
+        #expect(catalog.mapInfos(for: nodes) == [10: TreasureMapFixture.mapInfo(id: 10), 20: TreasureMapFixture.mapInfo(id: 20)])
+    }
+
+    @Test func mapInfosSkipMapsMissingFromMapInfos() {
+        let catalog = makeCatalog(mapInfos: [
+            TreasureMapFixture.mapInfo(id: 10)
+        ])
+
+        let nodes = [
+            node(mapId: 10),
+            node(mapId: 50)
+        ]
+
+        #expect(catalog.mapInfos(for: nodes) == [10: TreasureMapFixture.mapInfo(id: 10)])
     }
 }

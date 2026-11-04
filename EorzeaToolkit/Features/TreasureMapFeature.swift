@@ -18,6 +18,7 @@ struct TreasureMapFeature {
     
     @ObservableState
     struct State: Equatable {
+        @Presents var gathering: GatheringNodesFeature.State?
         var loadState: LoadState = .idle
         var selectedMapID: String?
         var sortDirection: TreasureMapSortDirection = .descending
@@ -67,6 +68,8 @@ struct TreasureMapFeature {
         case majorVersionToggled(Int)
         case levelToggled(Int)
         case clearFiltersButtonTapped
+        case gatheringButtonTapped(TreasureMap.ID)
+        case gathering(PresentationAction<GatheringNodesFeature.Action>)
     }
     
     @Dependency(\.treasureMap) var treasureMap
@@ -112,7 +115,21 @@ struct TreasureMapFeature {
             case .clearFiltersButtonTapped:
                 state.filter = TreasureMapFilter()
                 return .none
+            case .gathering:
+                return .none
+            case let .gatheringButtonTapped(mapID):
+                guard let catalog = state.catalog, let map = catalog.maps[id: mapID] else { return .none }
+                let nodes = catalog.gatheringNodes(for: map)
+                state.gathering = GatheringNodesFeature.State(
+                    nodes: nodes,
+                    map: map,
+                    mapInfos: catalog.mapInfos(for: nodes)
+                )
+                return .none
             }
+        }
+        .ifLet(\.$gathering, action: \.gathering) {
+            GatheringNodesFeature()
         }
     }
 }

@@ -11,8 +11,10 @@ import ComposableArchitecture
 
 @MainActor
 struct TreasureMapFeatureTests {
-    private func makeLoadedStore() -> TestStoreOf<TreasureMapFeature> {
-        TestStore(initialState: TreasureMapFeature.State(loadState: .loaded(TreasureMapFixture.catalog()))) {
+    private func makeLoadedStore(
+        catalog: TreasureMapCatalog = TreasureMapFixture.catalog()
+    ) -> TestStoreOf<TreasureMapFeature> {
+        TestStore(initialState: TreasureMapFeature.State(loadState: .loaded(catalog))) {
             TreasureMapFeature()
         }
     }
@@ -224,5 +226,79 @@ struct TreasureMapFeatureTests {
         }
         
         #expect(store.state.selectedMap == nil)
+    }
+    
+    // MARK: Gathering Tests
+    private let gatheringMap = TreasureMapFixture.map(gatheringNodes: [
+        GatheringNode(type: 0, job: "miner", zoneId: 100, mapId: 10, x: 12.3, y: 45.6),
+        GatheringNode(type: 2, job: "botanist", zoneId: 200, mapId: 20, x: 7.8, y: 9.1),
+    ])
+    
+    private var expectedGathering: GatheringNodesFeature.State {
+        GatheringNodesFeature.State(
+            nodes: [
+                GatheringNodeDisplay(
+                    type: 0,
+                    zoneName: L10n.TreasureMap.unknownRegionText,
+                    zoneId: 100,
+                    mapId: 10,
+                    x: 12.3,
+                    y: 45.6
+                ),
+                GatheringNodeDisplay(
+                    type: 2,
+                    zoneName: L10n.TreasureMap.unknownRegionText,
+                    zoneId: 200,
+                    mapId: 20,
+                    x: 7.8,
+                    y: 9.1
+                ),
+            ],
+            map: gatheringMap,
+            mapInfos: [10: TreasureMapFixture.mapInfo(id: 10)]
+        )
+    }
+    
+    private func makeGatheringStore() -> TestStoreOf<TreasureMapFeature> {
+        makeLoadedStore(catalog: TreasureMapFixture.catalog(
+            maps: [gatheringMap],
+            mapInfos: [TreasureMapFixture.mapInfo(id: 10)]
+        ))
+    }
+
+    @Test func gatheringButtonPresentsNodesAndMapInfos() async {
+        let store = makeGatheringStore()
+
+        await store.send(.gatheringButtonTapped("G1")) {
+            $0.gathering = expectedGathering
+        }
+    }
+
+    @Test func gatheringButtonIgnoresUnknownMap() async {
+        let store = makeLoadedStore()
+
+        await store.send(.gatheringButtonTapped("G100"))
+    }
+
+    @Test func gatheringButtonDoesNothingBeforeCatalogLoads() async {
+        let store = TestStore(initialState: TreasureMapFeature.State()) {
+            TreasureMapFeature()
+        }
+
+        await store.send(.gatheringButtonTapped("G1"))
+    }
+
+    @Test func closeButtonDismissesGatheringSheet() async {
+        let store = makeGatheringStore()
+
+        await store.send(.gatheringButtonTapped("G1")) {
+            $0.gathering = expectedGathering
+        }
+        
+        await store.send(\.gathering.closeButtonTapped)
+            
+        await store.receive(\.gathering.dismiss) {
+            $0.gathering = nil
+        }
     }
 }

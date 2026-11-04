@@ -38,12 +38,16 @@ enum TreasureMapFixture {
         )
     }
     
-    static func catalog(maps: [TreasureMap] = filteringMaps) -> TreasureMapCatalog {
+    static func catalog(maps: [TreasureMap] = filteringMaps, mapInfos: [MapInfo] = []) -> TreasureMapCatalog {
         TreasureMapCatalog(
             finalData: TreasureMapFinalData(maps: maps, zoneNames: [:]),
             spots: [],
             zhNames: [:],
-            mapInfos: [:]
+            mapInfos: Dictionary(uniqueKeysWithValues: mapInfos.map { (String($0.id), $0) })
         )
+    }
+    
+    static func mapInfo(id: Int, dungeon: Bool = false) -> MapInfo {
+        MapInfo(id: id, image: "", placenameId: 0, sizeFactor: 100, territoryId: 0, dungeon: dungeon)
     }
 }
