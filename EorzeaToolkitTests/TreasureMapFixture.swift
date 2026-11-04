@@ -37,4 +37,13 @@ enum TreasureMapFixture {
             gatheringNodes: gatheringNodes
         )
     }
+    
+    static func catalog(maps: [TreasureMap] = filteringMaps) -> TreasureMapCatalog {
+        TreasureMapCatalog(
+            finalData: TreasureMapFinalData(maps: maps, zoneNames: [:]),
+            spots: [],
+            zhNames: [:],
+            mapInfos: [:]
+        )
+    }
 }
