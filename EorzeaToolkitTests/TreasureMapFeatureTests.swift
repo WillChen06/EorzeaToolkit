@@ -188,6 +188,22 @@ struct TreasureMapFeatureTests {
         #expect(store.state.displayedMaps.count == TreasureMapFixture.filteringMaps.count)
     }
     
+    @Test func closingFilterPopoverKeepsFilter() async {
+        let store = makeLoadedStore()
+
+        await store.send(.filterPresentationChanged(true)) {
+            $0.isFilterPresented = true
+        }
+        await store.send(.majorVersionToggled(6)) {
+            $0.filter.selectedMajorVersions = [6]
+        }
+        await store.send(.filterPresentationChanged(false)) {
+            $0.isFilterPresented = false
+        }
+
+        #expect(Set(store.state.displayedMaps.map(\.id)) == ["G2", "G3"])  // 只剩 6.x 的圖
+    }
+    
     @Test func selectingMapSetsSelectedMap() async {
         let mapID = "G2"
         let store = makeLoadedStore()

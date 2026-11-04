@@ -23,6 +23,7 @@ struct TreasureMapFeature {
         var selectedMapID: String?
         var sortDirection: TreasureMapSortDirection = .descending
         var filter = TreasureMapFilter()
+        var isFilterPresented = false
         
         var catalog: TreasureMapCatalog? {
             guard case let .loaded(catalog) = loadState else {
@@ -68,6 +69,7 @@ struct TreasureMapFeature {
         case majorVersionToggled(Int)
         case levelToggled(Int)
         case clearFiltersButtonTapped
+        case filterPresentationChanged(Bool)
         case gatheringButtonTapped(TreasureMap.ID)
         case gathering(PresentationAction<GatheringNodesFeature.Action>)
     }
@@ -114,6 +116,9 @@ struct TreasureMapFeature {
                 return .none
             case .clearFiltersButtonTapped:
                 state.filter = TreasureMapFilter()
+                return .none
+            case let .filterPresentationChanged(isPresented):
+                state.isFilterPresented = isPresented
                 return .none
             case .gathering:
                 return .none
