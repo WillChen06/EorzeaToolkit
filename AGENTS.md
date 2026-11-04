@@ -26,8 +26,8 @@ These override anything a skill or general best practice says.
     implementing it. Do not build both paths on your own.
 - **Kingfisher and The Composable Architecture are the only third-party dependencies.**
   Kingfisher is used solely by `Views/CachedIconImage.swift` for remote icon loading. TCA is
-  being trialled on the relic weapon feature (`Features/`); other features keep their
-  `ViewModels/` pattern unless the user decides otherwise. Do not add another SPM package
+  being trialled on the relic weapon and treasure map features (`Features/`); other features
+  keep their `ViewModels/` pattern unless the user decides otherwise. Do not add another SPM package
   without the user's approval.
 - **User-facing text goes through `EorzeaToolkit/Localization/Localizable.xcstrings`.** No
   hard-coded strings in views.

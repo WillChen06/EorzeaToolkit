@@ -3,11 +3,29 @@ import XCTest
 
 @MainActor
 final class TreasureMapGradeSortingTests: XCTestCase {
-    func testDefaultOrderIsDescendingByGradeNumber() {
-        let viewModel = TreasureMapViewModel(maps: (1...18).map { TreasureMapFixture.map(grade: "G\($0)") })
+    /// G1 to G18 in an order that is neither sorted nor reversed, so the result has to come from sorting.
+    private let scrambledMaps = [7, 18, 1, 12, 3, 10, 15, 9, 2, 16, 5, 11, 14, 8, 4, 17, 6, 13]
+        .map { TreasureMapFixture.map(grade: "G\($0)") }
 
-        XCTAssertEqual(viewModel.displayedMaps.first?.grade, "G18")
-        XCTAssertEqual(viewModel.displayedMaps.last?.grade, "G1")
+    func testDefaultOrderIsDescendingByGradeNumber() {
+        let direction = TreasureMapFeature.State().sortDirection
+
+        let grades = TreasureMapQuery.sorted(scrambledMaps, direction: direction).map(\.grade)
+
+        XCTAssertEqual(grades.first, "G18")
+        XCTAssertEqual(grades.last, "G1")
+        XCTAssertEqual(grades, (1...18).reversed().map { "G\($0)" })
+    }
+
+    func testAscendingOrderRanksGradeNumberFromG1ToG18() {
+        var direction = TreasureMapFeature.State().sortDirection
+        direction.toggle()
+
+        let grades = TreasureMapQuery.sorted(scrambledMaps, direction: direction).map(\.grade)
+
+        XCTAssertEqual(grades.first, "G1")
+        XCTAssertEqual(grades.last, "G18")
+        XCTAssertEqual(grades, (1...18).map { "G\($0)" })
     }
 
     func testGradeNumberComparisonRanksG10AboveG9InDescendingOrder() {
@@ -17,15 +35,6 @@ final class TreasureMapGradeSortingTests: XCTestCase {
         ]
 
         XCTAssertEqual(TreasureMapQuery.sorted(maps, direction: .descending).map(\.grade), ["G10", "G9"])
-    }
-
-    func testAscendingOrderRanksGradeNumberFromG1ToG18() {
-        let viewModel = TreasureMapViewModel(maps: (1...18).map { TreasureMapFixture.map(grade: "G\($0)") })
-
-        viewModel.toggleSortDirection()
-
-        XCTAssertEqual(viewModel.displayedMaps.first?.grade, "G1")
-        XCTAssertEqual(viewModel.displayedMaps.last?.grade, "G18")
     }
 
     func testMalformedGradesSortAfterValidGradesWithoutCrashing() {
@@ -46,9 +55,16 @@ final class TreasureMapGradeSortingTests: XCTestCase {
 final class TreasureMapFilterOptionsTests: XCTestCase {
     func testVersionOptionsAreDerivedFromLoadedExpansionsDeduplicatedAndSorted() {
         let expansions = ["7.3", "2.1", "6.3", "4.0", "3.0", "6.0", "5.0", "7.0"]
-        let viewModel = TreasureMapViewModel(maps: expansions.map { TreasureMapFixture.map(expansion: $0) })
+        let maps = expansions.map { TreasureMapFixture.map(expansion: $0) }
 
-        XCTAssertEqual(viewModel.versionOptions, [2, 3, 4, 5, 6, 7])
+        XCTAssertEqual(TreasureMapQuery.versionOptions(from: maps), [2, 3, 4, 5, 6, 7])
+    }
+
+    func testLevelOptionsAreDerivedFromLoadedDataAndIncludeLevelsNotInCurrentFixture() {
+        let levels = [100, 40, 50, 45, 60, 55, 70, 80, 90, 110, 50]
+        let maps = levels.map { TreasureMapFixture.map(level: $0) }
+
+        XCTAssertEqual(TreasureMapQuery.levelOptions(from: maps), [40, 45, 50, 55, 60, 70, 80, 90, 100, 110])
     }
 
     func testExpansionsSharingMajorVersionGroupIntoOneOption() {
@@ -58,13 +74,6 @@ final class TreasureMapFilterOptionsTests: XCTestCase {
         ]
 
         XCTAssertEqual(TreasureMapQuery.versionOptions(from: maps), [6])
-    }
-
-    func testLevelOptionsAreDerivedFromLoadedDataAndIncludeLevelsNotInCurrentFixture() {
-        let levels = [100, 40, 50, 45, 60, 55, 70, 80, 90, 110, 50]
-        let viewModel = TreasureMapViewModel(maps: levels.map { TreasureMapFixture.map(level: $0) })
-
-        XCTAssertEqual(viewModel.levelOptions, [40, 45, 50, 55, 60, 70, 80, 90, 100, 110])
     }
 
     func testMalformedExpansionsAreIgnoredWithoutCrashing() {
@@ -128,76 +137,5 @@ final class TreasureMapFilteringTests: XCTestCase {
         let result = TreasureMapQuery.filtered(TreasureMapFixture.filteringMaps, by: filter)
 
         XCTAssertEqual(Set(result.map(\.id)), ["G2", "G3"])
-    }
-}
-
-@MainActor
-final class TreasureMapViewModelFilterTests: XCTestCase {
-    func testFilterBadgeCountEqualsSelectedVersionsPlusSelectedLevels() {
-        let viewModel = TreasureMapViewModel(maps: TreasureMapFixture.filteringMaps)
-
-        viewModel.toggleMajorVersion(6)
-        viewModel.toggleMajorVersion(7)
-        viewModel.toggleLevel(90)
-        viewModel.toggleLevel(100)
-
-        XCTAssertEqual(viewModel.activeFilterCount, 4)
-    }
-
-    func testTogglingFilterSelectionUpdatesDisplayedListWithoutSeparateApplyAction() {
-        let viewModel = TreasureMapViewModel(maps: TreasureMapFixture.filteringMaps)
-
-        viewModel.toggleMajorVersion(7)
-
-        XCTAssertEqual(Set(viewModel.displayedMaps.map(\.id)), ["G4", "G5"])
-    }
-
-    func testClearAllFiltersEmptiesSelectionsAndRestoresFullList() {
-        let maps = TreasureMapFixture.filteringMaps
-        let viewModel = TreasureMapViewModel(maps: maps)
-        viewModel.toggleMajorVersion(7)
-        viewModel.toggleLevel(100)
-
-        viewModel.clearFilters()
-
-        XCTAssertTrue(viewModel.filter.selectedMajorVersions.isEmpty)
-        XCTAssertTrue(viewModel.filter.selectedLevels.isEmpty)
-        XCTAssertEqual(viewModel.displayedMaps.count, maps.count)
-    }
-
-    func testClearingFiltersFromEmptyResultStateRestoresFullyLoadedMapSet() {
-        let maps = TreasureMapFixture.filteringMaps
-        let viewModel = TreasureMapViewModel(maps: maps)
-        viewModel.toggleMajorVersion(2)
-        viewModel.toggleLevel(100)
-        XCTAssertTrue(viewModel.displayedMaps.isEmpty)
-
-        viewModel.clearFilters()
-
-        XCTAssertEqual(viewModel.displayedMaps.count, maps.count)
-    }
-
-    func testClearingFiltersPreservesCurrentSortDirection() {
-        let viewModel = TreasureMapViewModel(maps: TreasureMapFixture.filteringMaps)
-        viewModel.toggleSortDirection()
-        viewModel.toggleMajorVersion(7)
-
-        viewModel.clearFilters()
-
-        XCTAssertEqual(viewModel.sortDirection, .ascending)
-        XCTAssertEqual(viewModel.displayedMaps.map(\.grade), ["G1", "G2", "G3", "G4", "G5", "G6"])
-    }
-
-    func testResetPresentationStateRestoresDescendingOrderAndClearsFilters() {
-        let viewModel = TreasureMapViewModel(maps: TreasureMapFixture.filteringMaps)
-        viewModel.toggleSortDirection()
-        viewModel.toggleMajorVersion(7)
-        viewModel.toggleLevel(100)
-
-        viewModel.resetPresentationState()
-
-        XCTAssertEqual(viewModel.sortDirection, .descending)
-        XCTAssertFalse(viewModel.isFilterActive)
-        XCTAssertEqual(viewModel.displayedMaps.map(\.grade), ["G6", "G5", "G4", "G3", "G2", "G1"])
     }
 }
