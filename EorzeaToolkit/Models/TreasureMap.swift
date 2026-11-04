@@ -13,11 +13,11 @@ struct TreasureMapFinalData: Codable {
     }
 }
 
-struct ZoneNameEntry: Codable {
+struct ZoneNameEntry: Codable, Equatable {
     let tw: String
 }
 
-struct TreasureMap: Codable, Identifiable {
+struct TreasureMap: Codable, Identifiable, Equatable {
     let id: String
     let itemId: Int
     let grade: String
@@ -69,7 +69,7 @@ struct TreasureMap: Codable, Identifiable {
 
 // MARK: - 採集點 JSON 資料
 
-struct GatheringNode: Codable {
+struct GatheringNode: Codable, Equatable {
     let type: Int
     let job: String
     let zoneId: Int
@@ -99,8 +99,8 @@ enum GatheringJob: String {
     }
 }
 
-struct GatheringNodeDisplay: Identifiable {
-    let id = UUID()
+struct GatheringNodeDisplay: Identifiable, Equatable {
+    var id: String { "\(mapId)-\(type)-\(x)-\(y)" }
     let type: Int
     let zoneName: String
     let zoneId: Int
@@ -147,14 +147,14 @@ struct GatheringNodeDisplay: Identifiable {
 
 // MARK: - 寶藏點位資料（treasures.json）
 
-struct TreasureSpot: Codable {
+struct TreasureSpot: Codable, Equatable {
     let id: String
     let coords: Coordinate
     let map: Int
     let partySize: Int
     let item: Int
 
-    struct Coordinate: Codable {
+    struct Coordinate: Codable, Equatable {
         let x: Double
         let y: Double
         let z: Double
@@ -163,7 +163,7 @@ struct TreasureSpot: Codable {
 
 // MARK: - 地圖資訊（maps.json）
 
-struct MapInfo: Codable {
+struct MapInfo: Codable, Equatable {
     let id: Int
     let image: String
     let placenameId: Int
@@ -217,7 +217,7 @@ struct ZhMapNames: Decodable {
 
 // MARK: - 組合後的地區資訊
 
-struct TreasureZone: Identifiable {
+struct TreasureZone: Identifiable, Equatable {
     let mapId: Int
     let name: String
     let spotCount: Int

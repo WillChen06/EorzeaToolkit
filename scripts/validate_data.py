@@ -361,6 +361,12 @@ def main():
                             if (map_infos.get(str(node['map_id'])) or {}).get('placename_id') != node['zone_id']})
         check(not misplaced, f'treasure_maps_final.json: {grade} 的採集點地圖不在 maps.json 或地名不符 '
                              f'(zone_id, map_id): {misplaced}')
+        # App 以 (map_id, type, x, y) 當 GatheringNodeDisplay.id
+        node_keys = [(node['map_id'], node['type'], node['x'], node['y'])
+                     for node in treasure_map['gathering_nodes']]
+        duplicated = sorted({key for key in node_keys if node_keys.count(key) > 1})
+        check(not duplicated, f'treasure_maps_final.json: {grade} 的採集點重複 '
+                              f'(map_id, type, x, y): {duplicated}')
 
     # --- zh-maps.json ---
     zh_maps = load('zh-maps.json')

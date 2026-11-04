@@ -139,7 +139,7 @@ final class BundledDataTests: XCTestCase {
         XCTAssertTrue(names.values.allSatisfy { !$0.zh.isEmpty }, "map with an empty name")
     }
 
-    /// `TreasureMapViewModel` joins the four treasure files on map id, so a spot pointing at a
+    /// `TreasureMapCatalog` joins the four treasure files on map id, so a spot pointing at a
     /// map that no longer exists would drop out of the UI without any decode error.
     func testEveryTreasureSpotResolvesToAMap() throws {
         let spots: [TreasureSpot] = try LocalDataService.load("treasures")

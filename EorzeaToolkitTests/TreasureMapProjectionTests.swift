@@ -74,18 +74,18 @@ final class TreasureMapGatheringZoneMapTests: XCTestCase {
         3712: 699,  // 天外天垓; map 751 shares it
     ]
 
-    func testSharedPlaceNamesResolveToTheMapOfTheirGatheringNodes() {
-        let viewModel = TreasureMapViewModel()
-        viewModel.loadMaps()
-        XCTAssertNil(viewModel.loadError)
+    func testSharedPlaceNamesResolveToTheMapOfTheirGatheringNodes() async throws {
+        let catalog = try await TreasureMapClient.liveValue.fetch()
 
         var checkedZoneIds: Set<Int> = []
-        for map in viewModel.maps {
-            for node in viewModel.gatheringNodes(for: map) {
+        for map in catalog.maps {
+            let nodes = catalog.gatheringNodes(for: map)
+            let mapInfos = catalog.mapInfos(for: nodes)
+            for node in nodes {
                 guard let expectedMapId = expectedMapIdByZoneId[node.zoneId] else { continue }
                 checkedZoneIds.insert(node.zoneId)
                 XCTAssertEqual(
-                    viewModel.mapInfo(forMapId: node.mapId)?.id, expectedMapId,
+                    mapInfos[node.mapId]?.id, expectedMapId,
                     "\(map.grade) node in zone \(node.zoneId) at (\(node.x), \(node.y))"
                 )
             }

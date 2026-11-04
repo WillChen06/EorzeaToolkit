@@ -2,8 +2,10 @@ import SwiftUI
 
 struct TreasureMapDetailView: View {
     let map: TreasureMap
-    let zones: [TreasureZone]
-    let viewModel: TreasureMapViewModel
+    let catalog: TreasureMapCatalog
+    private var zones: [TreasureZone] {
+        catalog.zones(for: map)
+    }
 
     var body: some View {
         List {
@@ -12,8 +14,8 @@ struct TreasureMapDetailView: View {
                     NavigationLink {
                         TreasureSpotListView(
                             zoneName: zone.name,
-                            spots: viewModel.spots(for: map, in: zone),
-                            mapInfo: viewModel.mapInfo(forMapId: zone.mapId)
+                            spots: catalog.spots(for: map, in: zone),
+                            mapInfo: catalog.mapInfo(forMapId: zone.mapId)
                         )
                     } label: {
                         HStack {

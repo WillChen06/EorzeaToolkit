@@ -1,66 +1,51 @@
 import SwiftUI
+import ComposableArchitecture
 
 struct TreasureMapListView: View {
-    var onReturnHome: () -> Void = {}
-    @State private var viewModel = TreasureMapViewModel()
-    @State private var selectedMapID: String?
-    @State private var selectedMapForGathering: TreasureMap?
-    @State private var isShowingFilterSheet = false
+    var onReturnHome: () -> Void
+    @State private var store: StoreOf<TreasureMapFeature>
+    
+    init(
+        store: StoreOf<TreasureMapFeature> = Store(initialState: TreasureMapFeature.State()) {
+            TreasureMapFeature()
+        },
+        onReturnHome: @escaping () -> Void = {}
+    ) {
+        _store = State(initialValue: store)
+        self.onReturnHome = onReturnHome
+    }
 
     var body: some View {
         FeatureNavigationView(
             feature: .treasureMap,
-            selectionID: selectedMapID,
+            selectionID: store.selectedMapID,
             onReturnHome: onReturnHome,
             hidesSidebarTitleWhenSplit: true
         ) {
             sidebar
         } detail: {
-            if let map = viewModel.maps.first(where: { $0.id == selectedMapID }) {
-                TreasureMapDetailView(map: map, zones: viewModel.zones(for: map), viewModel: viewModel)
+            if let map = store.selectedMap, let catalog = store.catalog {
+                TreasureMapDetailView(map: map, catalog: catalog)
             }
         }
         .task {
-            if !viewModel.hasLoadedMaps {
-                viewModel.loadMaps()
-            }
+            store.send(.task)
         }
     }
 
     private var sidebar: some View {
         Group {
-            if let loadError = viewModel.loadError {
+            switch store.loadState {
+            case .idle, .loading:
+                ProgressView(L10n.TreasureMap.loading)
+            case let .failed(loadError):
                 ContentUnavailableView(
                     L10n.TreasureMap.loadFailedTitle,
                     systemImage: "exclamationmark.triangle",
                     description: Text(loadError)
                 )
-            } else if !viewModel.hasLoadedMaps {
-                ProgressView(L10n.TreasureMap.loading)
-            } else if viewModel.maps.isEmpty {
-                ContentUnavailableView(
-                    L10n.TreasureMap.emptyTitle,
-                    systemImage: "map",
-                    description: Text(L10n.TreasureMap.emptyDescription)
-                )
-            } else if viewModel.displayedMaps.isEmpty && viewModel.isFilterActive {
-                ContentUnavailableView {
-                    Label(L10n.TreasureMap.filteredEmptyTitle, systemImage: "line.3.horizontal.decrease.circle")
-                } actions: {
-                    Button(L10n.TreasureMap.clearFilters, action: viewModel.clearFilters)
-                }
-            } else {
-                List(viewModel.displayedMaps, selection: $selectedMapID) { map in
-                    NavigationLink(value: map.id) {
-                        TreasureMapRow(map: map) {
-                            selectedMapForGathering = map
-                        }
-                    }
-                    .appThemedListRow()
-                    .accessibilityIdentifier("treasureMap.row.\(map.id)")
-                }
-                .listStyle(.insetGrouped)
-                .appThemedScrollContent()
+            case let .loaded(catalog):
+                loadedContent(catalog: catalog, maps: store.displayedMaps)
             }
         }
         .navigationTitle(L10n.TreasureMap.title)
@@ -74,39 +59,67 @@ struct TreasureMapListView: View {
                 filterButton
             }
         }
-        .sheet(item: $selectedMapForGathering) { map in
-            GatheringNodesSheetView(
-                map: map,
-                nodes: viewModel.gatheringNodes(for: map),
-                viewModel: viewModel
-            )
-            .presentationDetents([.medium, .large])
+        .sheet(item: $store.scope(state: \.gathering, action: \.gathering)) { gatheringStore in
+            GatheringNodesSheetView(store: gatheringStore)
+                .presentationDetents([.medium, .large])
         }
         .appThemedBackground()
         .appThemedScreen(tint: HomeFeature.treasureMap.accent)
     }
 
+    @ViewBuilder
+    private func loadedContent(catalog: TreasureMapCatalog, maps: [TreasureMap]) -> some View {
+        if catalog.maps.isEmpty {
+            ContentUnavailableView(
+                L10n.TreasureMap.emptyTitle,
+                systemImage: "map",
+                description: Text(L10n.TreasureMap.emptyDescription)
+            )
+        } else if maps.isEmpty && store.isFilterActive {
+            ContentUnavailableView {
+                Label(L10n.TreasureMap.filteredEmptyTitle, systemImage: "line.3.horizontal.decrease.circle")
+            } actions: {
+                Button(L10n.TreasureMap.clearFilters) {
+                    store.send(.clearFiltersButtonTapped)
+                }
+            }
+        } else {
+            List(maps, selection: $store.selectedMapID.sending(\.mapSelected)) { map in
+                NavigationLink(value: map.id) {
+                    TreasureMapRow(map: map) {
+                        store.send(.gatheringButtonTapped(map.id))
+                    }
+                }
+                .appThemedListRow()
+                .accessibilityIdentifier("treasureMap.row.\(map.id)")
+            }
+            .listStyle(.insetGrouped)
+            .appThemedScrollContent()
+        }
+    }
+
     private var sortButton: some View {
         Button(
-            viewModel.sortDirection == .ascending
+            store.sortDirection == .ascending
                 ? L10n.TreasureMap.sortAscending
                 : L10n.TreasureMap.sortDescending,
-            systemImage: viewModel.sortDirection == .ascending ? "arrow.up" : "arrow.down",
-            action: viewModel.toggleSortDirection
-        )
+            systemImage: store.sortDirection == .ascending ? "arrow.up" : "arrow.down"
+        ) {
+            store.send(.sortButtonTapped)
+        }
     }
 
     private var filterButton: some View {
         Button {
-            isShowingFilterSheet = true
+            store.send(.filterPresentationChanged(true))
         } label: {
             ZStack(alignment: .topTrailing) {
                 Image(systemName: "line.3.horizontal.decrease.circle")
                     .font(.title3)
                     .frame(width: 36, height: 36)
 
-                if viewModel.activeFilterCount > 0 {
-                    Text(viewModel.activeFilterCount, format: .number)
+                if store.activeFilterCount > 0 {
+                    Text(store.activeFilterCount, format: .number)
                         .font(.caption.bold())
                         .foregroundStyle(.white)
                         .frame(width: 16, height: 16)
@@ -119,9 +132,9 @@ struct TreasureMapListView: View {
         }
         .accessibilityLabel(Text(L10n.TreasureMap.filterAction))
         .accessibilityIdentifier("treasureMap.filter.open")
-        .accessibilityValue(Text(L10n.TreasureMap.filterSelectionCount(viewModel.activeFilterCount)))
-        .popover(isPresented: $isShowingFilterSheet) {
-            TreasureMapFilterSheet(viewModel: viewModel)
+        .accessibilityValue(Text(L10n.TreasureMap.filterSelectionCount(store.activeFilterCount)))
+        .popover(isPresented: $store.isFilterPresented.sending(\.filterPresentationChanged)) {
+            TreasureMapFilterSheet(store: store)
                 .frame(idealWidth: 440, idealHeight: 600)
                 .presentationCompactAdaptation(horizontal: .sheet, vertical: .sheet)
         }
