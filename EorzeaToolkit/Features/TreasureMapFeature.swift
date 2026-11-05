@@ -124,12 +124,7 @@ struct TreasureMapFeature {
                 return .none
             case let .gatheringButtonTapped(mapID):
                 guard let catalog = state.catalog, let map = catalog.maps[id: mapID] else { return .none }
-                let nodes = catalog.gatheringNodes(for: map)
-                state.gathering = GatheringNodesFeature.State(
-                    nodes: nodes,
-                    map: map,
-                    mapInfos: catalog.mapInfos(for: nodes)
-                )
+                state.gathering = GatheringNodesFeature.State(nodes: map.gatheringNodes, map: map)
                 return .none
             }
         }

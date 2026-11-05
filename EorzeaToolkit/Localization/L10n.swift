@@ -542,14 +542,6 @@ enum L10n {
             "treasureMap.gathering.nodeCoordinates \(x) \(y)"
         }
 
-        static func unknownRegion(id: Int) -> String {
-            String(localized: "treasureMap.unknownRegion.id \(id)")
-        }
-
-        static var unknownRegionText: String {
-            String(localized: "treasureMap.unknownRegion")
-        }
-
         enum MapType {
             static var soloText: String {
                 String(localized: "treasureMap.mapType.solo")

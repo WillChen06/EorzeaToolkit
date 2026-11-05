@@ -11,18 +11,17 @@ import ComposableArchitecture
 struct GatheringNodesFeature {
     @ObservableState
     struct State: Equatable {
-        let nodes: [GatheringNodeDisplay]
+        let nodes: [GatheringNode]
         let map: TreasureMap
-        let mapInfos: [Int: MapInfo]
-        var selectedNodeID: GatheringNodeDisplay.ID?
-        var selectedNode: GatheringNodeDisplay? {
+        var selectedNodeID: GatheringNode.ID?
+        var selectedNode: GatheringNode? {
             nodes.first { $0.id == selectedNodeID }
         }
     }
     
     enum Action {
         case closeButtonTapped
-        case nodeSelected(GatheringNodeDisplay?)
+        case nodeSelected(GatheringNode?)
     }
     
     @Dependency(\.dismiss) var dismiss

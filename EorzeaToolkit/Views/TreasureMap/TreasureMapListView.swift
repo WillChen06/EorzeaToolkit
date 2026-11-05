@@ -24,8 +24,8 @@ struct TreasureMapListView: View {
         ) {
             sidebar
         } detail: {
-            if let map = store.selectedMap, let catalog = store.catalog {
-                TreasureMapDetailView(map: map, catalog: catalog)
+            if let map = store.selectedMap {
+                TreasureMapDetailView(map: map)
             }
         }
         .task {

@@ -1,25 +1,25 @@
 import SwiftUI
 
 struct TreasureSpotListView: View {
-    let zoneName: String
-    let spots: [TreasureSpot]
-    let mapInfo: MapInfo?
+    let zone: TreasureZone
+    /// The map's maximum party size, shown on every card.
+    let partySize: Int
 
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 16) {
-                ForEach(Array(spots.enumerated()), id: \.element.id) { index, spot in
+                ForEach(Array(zone.spots.enumerated()), id: \.element.id) { index, spot in
                     TreasureSpotCard(
                         index: index + 1,
                         spot: spot,
-                        zoneName: zoneName,
-                        mapInfo: mapInfo
+                        zone: zone,
+                        partySize: partySize
                     )
                 }
             }
             .padding()
         }
-        .navigationTitle(zoneName)
+        .navigationTitle(zone.name)
         .navigationBarTitleDisplayMode(.inline)
         .appThemedBackground()
         .appThemedScreen(tint: HomeFeature.treasureMap.accent)
@@ -31,8 +31,8 @@ struct TreasureSpotListView: View {
 private struct TreasureSpotCard: View {
     let index: Int
     let spot: TreasureSpot
-    let zoneName: String
-    let mapInfo: MapInfo?
+    let zone: TreasureZone
+    let partySize: Int
 
     var body: some View {
         ZStack {
@@ -42,10 +42,10 @@ private struct TreasureSpotCard: View {
 
             // 地圖裁切 + 標記
             CroppedMapView(
-                imageURL: mapInfo?.image,
+                imageURL: zone.image,
                 normalizedPosition: TreasureSpotMapProjection.normalizedPosition(
-                    of: spot.coords,
-                    sizeFactor: mapInfo?.sizeFactor
+                    of: spot,
+                    sizeFactor: zone.sizeFactor
                 )
             )
             .padding(.horizontal, 22)
@@ -64,7 +64,7 @@ private struct TreasureSpotCard: View {
                     Spacer()
 
                     VStack(alignment: .trailing, spacing: 2) {
-                        Text(L10n.TreasureMap.coordinatesXY(x: coordinateText(spot.coords.x), y: coordinateText(spot.coords.y)))
+                        Text(L10n.TreasureMap.coordinatesXY(x: coordinateText(spot.x), y: coordinateText(spot.y)))
                             .font(.caption)
                             .fontWeight(.bold)
                             .foregroundStyle(.white)
@@ -74,7 +74,7 @@ private struct TreasureSpotCard: View {
                             Circle()
                                 .fill(.white.opacity(0.8))
                                 .frame(width: 6, height: 6)
-                            Text(zoneName)
+                            Text(zone.name)
                                 .font(.caption2)
                                 .foregroundStyle(.white)
                                 .shadow(color: .black, radius: 2)
@@ -90,7 +90,7 @@ private struct TreasureSpotCard: View {
                         Image(.treasuremapPlayer)
                             .resizable()
                             .frame(width: 18, height: 18)
-                        Text("\(spot.partySize)")
+                        Text("\(partySize)")
                             .font(.caption)
                             .fontWeight(.bold)
                             .foregroundStyle(.white)
@@ -111,13 +111,13 @@ private struct TreasureSpotCard: View {
 enum TreasureSpotMapProjection {
     /// The spot's position on its map image, from 0 to 1 on each axis. Map coordinates run from 1
     /// to 1 + 41 / (size factor / 100), so a map with a size factor other than 100 is scaled too.
-    static func normalizedPosition(of coords: TreasureSpot.Coordinate, sizeFactor: Int?) -> CGPoint {
-        GatheringMapProjection.position(x: coords.x, y: coords.y, sizeFactor: sizeFactor, mapSize: 1)
+    static func normalizedPosition(of spot: TreasureSpot, sizeFactor: Int) -> CGPoint {
+        GatheringMapProjection.position(x: spot.x, y: spot.y, sizeFactor: sizeFactor, mapSize: 1)
     }
 }
 
 private struct CroppedMapView: View {
-    let imageURL: String?
+    let imageURL: String
     let normalizedPosition: CGPoint
 
     var body: some View {
@@ -129,7 +129,7 @@ private struct CroppedMapView: View {
             let offsetX = size.width / 2 - normalizedPosition.x * mapSize
             let offsetY = size.height / 2 - normalizedPosition.y * mapSize
 
-            if let url = imageURL.flatMap({ URL(string: $0) }) {
+            if let url = URL(string: imageURL) {
                 AsyncImage(url: url) { phase in
                     switch phase {
                     case .success(let image):

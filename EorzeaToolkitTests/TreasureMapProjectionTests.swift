@@ -6,57 +6,64 @@ import XCTest
 /// the spot's raw world coordinates instead, the way the game maps them onto the 2048-pixel map
 /// image, so it does not share a formula with the code under test.
 final class TreasureSpotMapProjectionTests: XCTestCase {
-    private struct RawSpot: Decodable {
-        struct Coordinate: Decodable {
-            let x: Double
-            let y: Double
-            let z: Double
-        }
-
+    private struct RawSpot {
         let id: String
-        let map: Int
-        let coords: Coordinate
-        let rawCoords: Coordinate
+        let mapId: Int
+        /// `Level` X and Z for the spot's `TreasureSpot.Location`, from the pinned datamining commit.
+        let worldX: Double
+        let worldZ: Double
     }
 
-    private struct RawMap: Decodable {
-        let sizeFactor: Int
-        let offsetX: Double
-        let offsetY: Double
-
-        enum CodingKeys: String, CodingKey {
-            case sizeFactor = "size_factor"
-            case offsetX = "offset_x"
-            case offsetY = "offset_y"
-        }
-    }
+    /// Two spots on size factor 100 maps and two on size factor 95 maps. Every map they are on has
+    /// an offset of 0.
+    private let rawSpots = [
+        RawSpot(id: "1.0", mapId: 4, worldX: 364.934, worldZ: 60.0566),
+        RawSpot(id: "28.16", mapId: 857, worldX: 639.239, worldZ: 379.987),
+        RawSpot(id: "10.10", mapId: 212, worldX: -42.3056, worldZ: 673.399),
+        RawSpot(id: "11.0", mapId: 211, worldX: -788.745, worldZ: -519.184),
+    ]
 
     func testSpotCardPositionAccountsForTheMapSizeFactor() throws {
-        let spots: [RawSpot] = try LocalDataService.load("treasures")
-        let maps: [String: RawMap] = try LocalDataService.load("maps")
-        XCTAssertFalse(spots.isEmpty)
+        let data: TreasureMapData = try LocalDataService.load("treasure_maps")
+        let zonesBySpotId = Dictionary(
+            data.maps.flatMap(\.zones).flatMap { zone in zone.spots.map { ($0.id, (zone, $0)) } },
+            uniquingKeysWith: { first, _ in first }
+        )
 
-        var misplacedSpotsByMap: [Int: Int] = [:]
-        for spot in spots {
-            let map = try XCTUnwrap(maps[String(spot.map)], "map \(spot.map)")
-            let scale = Double(map.sizeFactor) / 100
-            let expectedX = ((spot.rawCoords.x + map.offsetX) * scale + 1024) / 2048
-            let expectedY = ((spot.rawCoords.y + map.offsetY) * scale + 1024) / 2048
+        var sizeFactors: Set<Int> = []
+        for raw in rawSpots {
+            let (zone, spot) = try XCTUnwrap(zonesBySpotId[raw.id], "spot \(raw.id)")
+            XCTAssertEqual(zone.mapId, raw.mapId, "spot \(raw.id)")
+            sizeFactors.insert(zone.sizeFactor)
 
-            let actual = TreasureSpotMapProjection.normalizedPosition(
-                of: TreasureSpot.Coordinate(x: spot.coords.x, y: spot.coords.y, z: spot.coords.z),
-                sizeFactor: map.sizeFactor
-            )
+            let scale = Double(zone.sizeFactor) / 100
+            let expectedX = (raw.worldX * scale + 1024) / 2048
+            let expectedY = (raw.worldZ * scale + 1024) / 2048
 
-            if abs(actual.x - expectedX) > 0.001 || abs(actual.y - expectedY) > 0.001 {
-                misplacedSpotsByMap[spot.map, default: 0] += 1
+            let actual = TreasureSpotMapProjection.normalizedPosition(of: spot, sizeFactor: zone.sizeFactor)
+
+            XCTAssertEqual(actual.x, expectedX, accuracy: 0.001, "spot \(raw.id)")
+            XCTAssertEqual(actual.y, expectedY, accuracy: 0.001, "spot \(raw.id)")
+        }
+
+        XCTAssertEqual(sizeFactors, [95, 100], "the checked spots should cover both size factors in use")
+    }
+
+    /// Every spot sits on its map image, whatever the map's size factor.
+    func testEverySpotFallsInsideItsMapImage() throws {
+        let data: TreasureMapData = try LocalDataService.load("treasure_maps")
+
+        var outside: [String] = []
+        for zone in data.maps.flatMap(\.zones) {
+            for spot in zone.spots {
+                let position = TreasureSpotMapProjection.normalizedPosition(of: spot, sizeFactor: zone.sizeFactor)
+                if !(0...1).contains(position.x) || !(0...1).contains(position.y) {
+                    outside.append(spot.id)
+                }
             }
         }
 
-        XCTAssertTrue(
-            misplacedSpotsByMap.isEmpty,
-            "spots placed off their map position, by map id: \(misplacedSpotsByMap.sorted { $0.key < $1.key })"
-        )
+        XCTAssertTrue(outside.isEmpty, "spots outside their map image: \(outside)")
     }
 }
 
@@ -74,20 +81,27 @@ final class TreasureMapGatheringZoneMapTests: XCTestCase {
         3712: 699,  // 天外天垓; map 751 shares it
     ]
 
+    /// The image of each expected map, and its size factor.
+    private let expectedImageByMapId = [
+        23: "https://xivapi.com/m/w1f4/w1f4.01.jpg",
+        5: "https://xivapi.com/m/f1f2/f1f2.00.jpg",
+        6: "https://xivapi.com/m/f1f3/f1f3.00.jpg",
+        25: "https://xivapi.com/m/l1f1/l1f1.01.jpg",
+        699: "https://xivapi.com/m/u5f2/u5f2.00.jpg",
+    ]
+
     func testSharedPlaceNamesResolveToTheMapOfTheirGatheringNodes() async throws {
         let catalog = try await TreasureMapClient.liveValue.fetch()
 
         var checkedZoneIds: Set<Int> = []
         for map in catalog.maps {
-            let nodes = catalog.gatheringNodes(for: map)
-            let mapInfos = catalog.mapInfos(for: nodes)
-            for node in nodes {
+            for node in map.gatheringNodes {
                 guard let expectedMapId = expectedMapIdByZoneId[node.zoneId] else { continue }
                 checkedZoneIds.insert(node.zoneId)
-                XCTAssertEqual(
-                    mapInfos[node.mapId]?.id, expectedMapId,
-                    "\(map.grade) node in zone \(node.zoneId) at (\(node.x), \(node.y))"
-                )
+                let label = "\(map.grade) node in zone \(node.zoneId) at (\(node.x), \(node.y))"
+                XCTAssertEqual(node.mapId, expectedMapId, label)
+                XCTAssertEqual(node.image, expectedImageByMapId[expectedMapId], label)
+                XCTAssertEqual(node.sizeFactor, 100, label)
             }
         }
 

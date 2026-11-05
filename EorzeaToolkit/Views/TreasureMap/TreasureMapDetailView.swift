@@ -2,9 +2,8 @@ import SwiftUI
 
 struct TreasureMapDetailView: View {
     let map: TreasureMap
-    let catalog: TreasureMapCatalog
     private var zones: [TreasureZone] {
-        catalog.zones(for: map)
+        map.zones
     }
 
     var body: some View {
@@ -12,16 +11,12 @@ struct TreasureMapDetailView: View {
             Section(L10n.TreasureMap.selectMap(count: zones.count)) {
                 ForEach(zones) { zone in
                     NavigationLink {
-                        TreasureSpotListView(
-                            zoneName: zone.name,
-                            spots: catalog.spots(for: map, in: zone),
-                            mapInfo: catalog.mapInfo(forMapId: zone.mapId)
-                        )
+                        TreasureSpotListView(zone: zone, partySize: map.maxPartySize)
                     } label: {
                         HStack {
                             Text(zone.name)
                             Spacer()
-                            Text(L10n.TreasureMap.spotCount(zone.spotCount))
+                            Text(L10n.TreasureMap.spotCount(zone.spots.count))
                                 .font(.caption)
                                 .foregroundStyle(AppTheme.mutedInk)
                         }
