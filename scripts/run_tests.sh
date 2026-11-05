@@ -14,11 +14,15 @@ cd "$(dirname "$0")/.."
 ./scripts/generate_project.sh
 
 udid="$(xcrun simctl list devices available --json | python3 -c '
-import json, sys
+import itertools, json, sys
 
+# Identifiers look like SimRuntime.iOS-27-2, but a runtime made for one device carries a suffix
+# after the version, such as SimRuntime.iOS-27-2-iPhone19. Read only the leading numbers, and
+# for the same version prefer the general runtime over a device-specific one.
 def runtime_key(identifier):
-    version = identifier.rsplit(".", 1)[-1].split("-")[1:]
-    return tuple(int(part) for part in version)
+    parts = identifier.rsplit(".", 1)[-1].split("-")[1:]
+    version = tuple(int(part) for part in itertools.takewhile(str.isdigit, parts))
+    return version, len(version) == len(parts)
 
 devices = json.load(sys.stdin)["devices"]
 candidates = [

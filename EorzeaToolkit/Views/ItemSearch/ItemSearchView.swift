@@ -86,10 +86,9 @@ struct ItemSearchView: View {
         }
         .disabled(!viewModel.canOpenDescriptionSearch)
         .accessibilityLabel(Text(L10n.ItemSearch.DescriptionSearch.title))
-        .popover(isPresented: isShowingDescriptionSearch) {
+        .adaptivePopover(isPresented: isShowingDescriptionSearch) {
             ItemDescriptionSearchSheet(viewModel: viewModel)
                 .frame(idealWidth: 440, idealHeight: 360)
-                .presentationCompactAdaptation(horizontal: .sheet, vertical: .sheet)
         }
     }
 
@@ -132,10 +131,9 @@ struct ItemSearchView: View {
         }
         .accessibilityLabel(Text(L10n.ItemSearch.filterAccessibility))
         // Both entry points use this stable anchor, even when clearing removes the summary bar.
-        .popover(isPresented: $isShowingFilterSheet) {
+        .adaptivePopover(isPresented: $isShowingFilterSheet) {
             ItemFilterSheet(viewModel: viewModel)
                 .frame(idealWidth: 440, idealHeight: 600)
-                .presentationCompactAdaptation(horizontal: .sheet, vertical: .sheet)
         }
     }
 
