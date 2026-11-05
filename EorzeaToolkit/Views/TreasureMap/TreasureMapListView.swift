@@ -133,10 +133,9 @@ struct TreasureMapListView: View {
         .accessibilityLabel(Text(L10n.TreasureMap.filterAction))
         .accessibilityIdentifier("treasureMap.filter.open")
         .accessibilityValue(Text(L10n.TreasureMap.filterSelectionCount(store.activeFilterCount)))
-        .popover(isPresented: $store.isFilterPresented.sending(\.filterPresentationChanged)) {
+        .adaptivePopover(isPresented: $store.isFilterPresented.sending(\.filterPresentationChanged)) {
             TreasureMapFilterSheet(store: store)
                 .frame(idealWidth: 440, idealHeight: 600)
-                .presentationCompactAdaptation(horizontal: .sheet, vertical: .sheet)
         }
     }
 }

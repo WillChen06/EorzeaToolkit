@@ -8,7 +8,7 @@
 
 - 每個功能只有一個篩選 presentation，錨定在始終存在的工具列篩選按鈕。
 - 道具摘要列是同一篩選器的第二入口，刻意共用工具列錨點；清除後摘要列可以消失，不影響已開啟的篩選器。
-- 使用系統 popover 自適應，水平或垂直 compact 時偏好 sheet，不以裝置型號或手動寬窄分支重建呈現內容。
+- 水平或垂直 compact 時以 sheet 呈現，否則為 popover，由共用的 `adaptivePopover` 依 size class 決定；不以裝置型號分支，兩種呈現共用同一份內容。原本用系統 `presentationCompactAdaptation(.sheet)`，但 iOS 27.0.1 實機上下滑關閉自適應 sheet 後再開會 crash（「Attempt to dismiss (null)」），因此改為直接呈現 sheet。
 - popover 提供 440×600pt 理想尺寸，不強制固定尺寸；Form 可捲動，保留系統 safe area 與鍵盤調整。
 - 道具 Accessibility 字級採單欄選項與 menu picker，選項完整換行；保留一般字級的 segmented picker。
 - 已選篩選直接沿用功能 ViewModel，完成只關閉，不新增 Apply 或草稿邏輯。
@@ -19,7 +19,7 @@
 
 ## 參考
 
-沿用 Xcode app-resizability skill 與系統 presentationCompactAdaptation；保持 iOS 17、Swift 5.9、既有本地化與視覺風格。
+沿用 Xcode app-resizability skill 與 size class；保持 iOS 18、Swift 5.9、既有本地化與視覺風格。
 
 ## 驗收
 
@@ -30,6 +30,6 @@
 - **AC-5** `[人工]` 最大Accessibility字級中英文篩選內容可捲到末端，選項文字不截斷且完成/清除可用。
 - **AC-6** `[人工]` 道具摘要列開啟後清除所有條件，不會因摘要列消失而非預期關閉篩選。
 - **AC-7** `[diff]` 每功能僅一個篩選presentation來源，維持既有VM與篩選邏輯，無resize重設。
-- **AC-8** `[diff]` iOS17/Swift5.9、既有本地化/風格，不引入全域screen/裝置型號/方向決策；不改採集點sheet與任務5-8。
+- **AC-8** `[diff]` iOS18/Swift5.9、既有本地化/風格，不引入全域screen/裝置型號/方向決策；不改採集點sheet與任務5-8。
 
 驗證執行專案生成、Simulator build 與 scripts/run_tests.sh。現有測試為資料／狀態回歸，不視為 UI 驗證；人工項未驗證時明確列出。
