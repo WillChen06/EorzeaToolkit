@@ -1,20 +1,10 @@
 import Foundation
 import SwiftUI
 
-// MARK: - 主要藏寶圖資料（treasure_maps_final.json）
+// MARK: - 藏寶圖資料（treasure_maps.json）
 
-struct TreasureMapFinalData: Codable {
+struct TreasureMapData: Decodable {
     let maps: [TreasureMap]
-    let zoneNames: [String: ZoneNameEntry]
-
-    enum CodingKeys: String, CodingKey {
-        case maps
-        case zoneNames = "zone_names"
-    }
-}
-
-struct ZoneNameEntry: Codable, Equatable {
-    let tw: String
 }
 
 struct TreasureMap: Codable, Identifiable, Equatable {
@@ -25,14 +15,18 @@ struct TreasureMap: Codable, Identifiable, Equatable {
     let level: Int
     let expansion: String
     let type: MapType
+    let maxPartySize: Int
     let gatheringTypes: [Int]
     let gatheringZoneIds: [Int]
+    /// The maps the treasure spots are on, sorted by map id.
+    let zones: [TreasureZone]
     let gatheringNodes: [GatheringNode]
 
     enum CodingKeys: String, CodingKey {
-        case id, grade, level, expansion, type
+        case id, grade, level, expansion, type, zones
         case itemId = "item_id"
         case name = "name_tw"
+        case maxPartySize = "max_party_size"
         case gatheringTypes = "gathering_types"
         case gatheringZoneIds = "gathering_zone_ids"
         case gatheringNodes = "gathering_nodes"
@@ -67,27 +61,36 @@ struct TreasureMap: Codable, Identifiable, Equatable {
     }
 }
 
-// MARK: - 採集點 JSON 資料
+// MARK: - 地區與寶藏點
 
-struct GatheringNode: Codable, Equatable {
-    let type: Int
-    let job: String
-    let zoneId: Int
-    /// The map the node is on. Several maps can share one zone (PlaceName), so open this one.
+/// A map that treasure spots are on, with what the spot cards need to draw it.
+struct TreasureZone: Codable, Identifiable, Equatable {
     let mapId: Int
-    let x: Double
-    let y: Double
+    let name: String
+    let image: String
+    let sizeFactor: Int
+    let spots: [TreasureSpot]
+
+    var id: Int { mapId }
 
     enum CodingKeys: String, CodingKey {
-        case type, job, x, y
-        case zoneId = "zone_id"
+        case image, spots
         case mapId = "map_id"
+        case name = "name_tw"
+        case sizeFactor = "size_factor"
     }
 }
 
-// MARK: - 採集點顯示用
+struct TreasureSpot: Codable, Identifiable, Equatable {
+    /// The `TreasureSpot` sheet key, for example `"1.0"`.
+    let id: String
+    let x: Double
+    let y: Double
+}
 
-enum GatheringJob: String {
+// MARK: - 採集點
+
+enum GatheringJob: String, Codable {
     case miner
     case botanist
 
@@ -99,17 +102,26 @@ enum GatheringJob: String {
     }
 }
 
-struct GatheringNodeDisplay: Identifiable, Equatable {
+struct GatheringNode: Codable, Identifiable, Equatable {
     var id: String { "\(mapId)-\(type)-\(x)-\(y)" }
     let type: Int
-    let zoneName: String
+    let job: GatheringJob
     let zoneId: Int
+    /// The map the node is on. Several maps can share one zone (PlaceName), so open this one.
     let mapId: Int
     let x: Double
     let y: Double
+    let zoneName: String
+    /// The image of the map the node is on.
+    let image: String
+    let sizeFactor: Int
 
-    var job: GatheringJob {
-        type <= 1 ? .miner : .botanist
+    enum CodingKeys: String, CodingKey {
+        case type, job, x, y, image
+        case zoneId = "zone_id"
+        case mapId = "map_id"
+        case zoneName = "zone_name_tw"
+        case sizeFactor = "size_factor"
     }
 
     var typeName: String {
@@ -143,84 +155,4 @@ struct GatheringNodeDisplay: Identifiable, Equatable {
         }
         return URL(string: path)
     }
-}
-
-// MARK: - 寶藏點位資料（treasures.json）
-
-struct TreasureSpot: Codable, Equatable {
-    let id: String
-    let coords: Coordinate
-    let map: Int
-    let partySize: Int
-    let item: Int
-
-    struct Coordinate: Codable, Equatable {
-        let x: Double
-        let y: Double
-        let z: Double
-    }
-}
-
-// MARK: - 地圖資訊（maps.json）
-
-struct MapInfo: Codable, Equatable {
-    let id: Int
-    let image: String
-    let placenameId: Int
-    let sizeFactor: Int
-    let territoryId: Int
-    let dungeon: Bool
-
-    enum CodingKeys: String, CodingKey {
-        case id, image, dungeon
-        case placenameId = "placename_id"
-        case sizeFactor = "size_factor"
-        case territoryId = "territory_id"
-    }
-}
-
-// MARK: - 地圖中文名稱（zh-maps.json）
-
-struct ZhMapName: Codable {
-    let zh: String
-}
-
-/// zh-maps.json: map id → name. The file also carries a `_meta` block describing where it came
-/// from, which is not a map and is skipped.
-struct ZhMapNames: Decodable {
-    let names: [String: ZhMapName]
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: AnyCodingKey.self)
-        var names: [String: ZhMapName] = [:]
-        for key in container.allKeys where key.stringValue != "_meta" {
-            names[key.stringValue] = try container.decode(ZhMapName.self, forKey: key)
-        }
-        self.names = names
-    }
-
-    private struct AnyCodingKey: CodingKey {
-        let stringValue: String
-        let intValue: Int?
-
-        init?(stringValue: String) {
-            self.stringValue = stringValue
-            self.intValue = nil
-        }
-
-        init?(intValue: Int) {
-            self.stringValue = String(intValue)
-            self.intValue = intValue
-        }
-    }
-}
-
-// MARK: - 組合後的地區資訊
-
-struct TreasureZone: Identifiable, Equatable {
-    let mapId: Int
-    let name: String
-    let spotCount: Int
-
-    var id: Int { mapId }
 }

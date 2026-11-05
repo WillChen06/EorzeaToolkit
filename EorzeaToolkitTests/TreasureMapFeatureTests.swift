@@ -246,43 +246,19 @@ struct TreasureMapFeatureTests {
     
     // MARK: Gathering Tests
     private let gatheringMap = TreasureMapFixture.map(gatheringNodes: [
-        GatheringNode(type: 0, job: "miner", zoneId: 100, mapId: 10, x: 12.3, y: 45.6),
-        GatheringNode(type: 2, job: "botanist", zoneId: 200, mapId: 20, x: 7.8, y: 9.1),
+        TreasureMapFixture.node(type: 0, zoneId: 100, mapId: 10, x: 12.3, y: 45.6, zoneName: "中拉諾西亞"),
+        TreasureMapFixture.node(type: 2, zoneId: 200, mapId: 20, x: 7.8, y: 9.1, zoneName: "黑衣森林中央林區"),
     ])
-    
+
     private var expectedGathering: GatheringNodesFeature.State {
-        GatheringNodesFeature.State(
-            nodes: [
-                GatheringNodeDisplay(
-                    type: 0,
-                    zoneName: L10n.TreasureMap.unknownRegionText,
-                    zoneId: 100,
-                    mapId: 10,
-                    x: 12.3,
-                    y: 45.6
-                ),
-                GatheringNodeDisplay(
-                    type: 2,
-                    zoneName: L10n.TreasureMap.unknownRegionText,
-                    zoneId: 200,
-                    mapId: 20,
-                    x: 7.8,
-                    y: 9.1
-                ),
-            ],
-            map: gatheringMap,
-            mapInfos: [10: TreasureMapFixture.mapInfo(id: 10)]
-        )
-    }
-    
-    private func makeGatheringStore() -> TestStoreOf<TreasureMapFeature> {
-        makeLoadedStore(catalog: TreasureMapFixture.catalog(
-            maps: [gatheringMap],
-            mapInfos: [TreasureMapFixture.mapInfo(id: 10)]
-        ))
+        GatheringNodesFeature.State(nodes: gatheringMap.gatheringNodes, map: gatheringMap)
     }
 
-    @Test func gatheringButtonPresentsNodesAndMapInfos() async {
+    private func makeGatheringStore() -> TestStoreOf<TreasureMapFeature> {
+        makeLoadedStore(catalog: TreasureMapFixture.catalog(maps: [gatheringMap]))
+    }
+
+    @Test func gatheringButtonPresentsTheMapsNodes() async {
         let store = makeGatheringStore()
 
         await store.send(.gatheringButtonTapped("G1")) {

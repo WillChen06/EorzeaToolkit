@@ -101,53 +101,36 @@ final class BundledDataTests: XCTestCase {
         XCTAssertTrue(data.weaponSeriesList.allSatisfy { !$0.stages.isEmpty }, "series with no stages")
     }
 
+    /// The treasure map feature reads only this file, through the same type the client decodes.
     func testTreasureMapDataDecodes() throws {
-        let finalData: TreasureMapFinalData = try LocalDataService.load("treasure_maps_final")
-        let spots: [TreasureSpot] = try LocalDataService.load("treasures")
-        let zhNames = (try LocalDataService.load("zh-maps") as ZhMapNames).names
-        let mapInfos: [String: MapInfo] = try LocalDataService.load("maps")
-
-        XCTAssertFalse(finalData.maps.isEmpty)
-        XCTAssertFalse(finalData.zoneNames.isEmpty)
-        XCTAssertFalse(spots.isEmpty)
-        XCTAssertFalse(zhNames.isEmpty)
-        XCTAssertFalse(mapInfos.isEmpty)
-    }
-
-    /// Map names come from the item sheet and zone names from PlaceName. An empty name decodes
-    /// fine and shows up as a blank row, so assert the names are really there.
-    func testTreasureMapsHaveNamesAndNodes() throws {
-        let data: TreasureMapFinalData = try LocalDataService.load("treasure_maps_final")
+        let data: TreasureMapData = try LocalDataService.load("treasure_maps")
+        let zones = data.maps.flatMap(\.zones)
 
         XCTAssertFalse(data.maps.isEmpty)
-        XCTAssertTrue(data.maps.allSatisfy { !$0.name.isEmpty }, "map with an empty name")
+        XCTAssertTrue(data.maps.allSatisfy { !$0.zones.isEmpty }, "map with no zones")
+        XCTAssertTrue(zones.allSatisfy { !$0.spots.isEmpty }, "zone with no spots")
         XCTAssertTrue(data.maps.allSatisfy { !$0.gatheringNodes.isEmpty }, "map with no gathering nodes")
-        XCTAssertFalse(data.zoneNames.isEmpty)
-        XCTAssertTrue(data.zoneNames.values.allSatisfy { !$0.tw.isEmpty }, "zone with an empty name")
     }
 
-    /// zh-maps.json carries a `_meta` block next to the map ids. It has to be skipped rather
-    /// than decoded as a map, and every other key has to be a map id the view model can look up
-    /// with `String(mapId)`.
-    func testZhMapsDecodeWithoutMeta() throws {
-        let names = (try LocalDataService.load("zh-maps") as ZhMapNames).names
+    /// Names come from the item and PlaceName sheets, and images from the Map sheet. An empty
+    /// value decodes fine and shows up as a blank row or an empty map, so assert they are there.
+    func testTreasureMapsHaveNamesAndImages() throws {
+        let data: TreasureMapData = try LocalDataService.load("treasure_maps")
+        let zones = data.maps.flatMap(\.zones)
+        let nodes = data.maps.flatMap(\.gatheringNodes)
 
-        let malformed = names.keys.filter { Int($0).map(String.init) != $0 }
-
-        XCTAssertFalse(names.isEmpty)
-        XCTAssertTrue(malformed.isEmpty, "keys that are not map ids: \(malformed.prefix(5))")
-        XCTAssertTrue(names.values.allSatisfy { !$0.zh.isEmpty }, "map with an empty name")
+        XCTAssertTrue(data.maps.allSatisfy { !$0.name.isEmpty }, "map with an empty name")
+        XCTAssertTrue(zones.allSatisfy { !$0.name.isEmpty && URL(string: $0.image) != nil }, "zone without a name or image")
+        XCTAssertTrue(nodes.allSatisfy { !$0.zoneName.isEmpty && URL(string: $0.image) != nil }, "node without a name or image")
     }
 
-    /// `TreasureMapCatalog` joins the four treasure files on map id, so a spot pointing at a
-    /// map that no longer exists would drop out of the UI without any decode error.
-    func testEveryTreasureSpotResolvesToAMap() throws {
-        let spots: [TreasureSpot] = try LocalDataService.load("treasures")
-        let mapInfos: [String: MapInfo] = try LocalDataService.load("maps")
+    /// The spot card shows the map's party size: 1 for solo maps and 8 for party maps.
+    func testTreasureMapPartySizesMatchTheirType() throws {
+        let data: TreasureMapData = try LocalDataService.load("treasure_maps")
 
-        let unresolved = Set(spots.map(\.map)).subtracting(mapInfos.values.map(\.id))
+        let mismatched = data.maps.filter { $0.maxPartySize != ($0.type == .solo ? 1 : 8) }
 
-        XCTAssertTrue(unresolved.isEmpty, "treasure spots reference unknown map ids: \(unresolved.sorted())")
+        XCTAssertTrue(mismatched.isEmpty, "maps whose party size does not match their type: \(mismatched.map(\.grade))")
     }
 
     /// The shop index is keyed by the item id rendered as a string. `ItemShopDataService` looks

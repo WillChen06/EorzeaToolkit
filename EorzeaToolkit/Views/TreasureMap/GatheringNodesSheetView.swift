@@ -4,11 +4,11 @@ import ComposableArchitecture
 struct GatheringNodesSheetView: View {
     @Bindable var store: StoreOf<GatheringNodesFeature>
 
-    private var minerNodes: [GatheringNodeDisplay] {
+    private var minerNodes: [GatheringNode] {
         store.nodes.filter { $0.job == .miner }
     }
 
-    private var botanistNodes: [GatheringNodeDisplay] {
+    private var botanistNodes: [GatheringNode] {
         store.nodes.filter { $0.job == .botanist }
     }
 
@@ -40,14 +40,14 @@ struct GatheringNodesSheetView: View {
                 }
             }
             .fullScreenCover(item: $store.selectedNode.sending(\.nodeSelected)) { node in
-                GatheringNodeMapView(node: node, mapInfo: store.mapInfos[node.mapId])
+                GatheringNodeMapView(node: node)
             }
             .appThemedScreen(tint: HomeFeature.treasureMap.accent)
         }
     }
 
     @ViewBuilder
-    private func jobSection(job: GatheringJob, nodes: [GatheringNodeDisplay]) -> some View {
+    private func jobSection(job: GatheringJob, nodes: [GatheringNode]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(L10n.TreasureMap.jobSection(jobLabel: job.label, count: nodes.count))
                 .font(.subheadline)
@@ -68,7 +68,7 @@ struct GatheringNodesSheetView: View {
         .appThemedCard()
     }
 
-    private func nodeRow(_ node: GatheringNodeDisplay) -> some View {
+    private func nodeRow(_ node: GatheringNode) -> some View {
         HStack(spacing: 12) {
             Text(node.typeName)
                 .font(.subheadline)
@@ -110,8 +110,7 @@ struct GatheringNodesSheetView: View {
 // MARK: - 採集點地圖視圖
 
 struct GatheringNodeMapView: View {
-    let node: GatheringNodeDisplay
-    let mapInfo: MapInfo?
+    let node: GatheringNode
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric(relativeTo: .body) private var minimumMapWidth = 320.0
@@ -161,7 +160,7 @@ struct GatheringNodeMapView: View {
         GeometryReader { geometry in
             let mapSize = GatheringNodeMapLayout.squareSide(in: geometry.size)
             ZStack {
-                if let imageURL = mapInfo.flatMap({ URL(string: $0.image) }) {
+                if let imageURL = URL(string: node.image) {
                     AsyncImage(url: imageURL) { phase in
                         switch phase {
                         case .success(let image):
@@ -201,7 +200,7 @@ struct GatheringNodeMapView: View {
     }
 
     private func markerOverlay(mapSize: CGFloat) -> some View {
-        let marker = GatheringMapProjection.position(x: node.x, y: node.y, sizeFactor: mapInfo?.sizeFactor, mapSize: mapSize)
+        let marker = GatheringMapProjection.position(x: node.x, y: node.y, sizeFactor: node.sizeFactor, mapSize: mapSize)
         let markerX = marker.x
         let markerY = marker.y
         let circleRadius: CGFloat = mapSize * 0.08

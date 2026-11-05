@@ -22,6 +22,7 @@ enum TreasureMapFixture {
         level: Int = 40,
         expansion: String = "2.1",
         itemId: Int = 1,
+        zones: [TreasureZone] = [],
         gatheringNodes: [GatheringNode] = []
     ) -> TreasureMap {
         TreasureMap(
@@ -32,22 +33,36 @@ enum TreasureMapFixture {
             level: level,
             expansion: expansion,
             type: .solo,
+            maxPartySize: 1,
             gatheringTypes: [],
             gatheringZoneIds: [],
+            zones: zones,
             gatheringNodes: gatheringNodes
         )
     }
-    
-    static func catalog(maps: [TreasureMap] = filteringMaps, mapInfos: [MapInfo] = []) -> TreasureMapCatalog {
-        TreasureMapCatalog(
-            finalData: TreasureMapFinalData(maps: maps, zoneNames: [:]),
-            spots: [],
-            zhNames: [:],
-            mapInfos: Dictionary(uniqueKeysWithValues: mapInfos.map { (String($0.id), $0) })
-        )
+
+    static func catalog(maps: [TreasureMap] = filteringMaps) -> TreasureMapCatalog {
+        TreasureMapCatalog(maps: maps)
     }
-    
-    static func mapInfo(id: Int, dungeon: Bool = false) -> MapInfo {
-        MapInfo(id: id, image: "", placenameId: 0, sizeFactor: 100, territoryId: 0, dungeon: dungeon)
+
+    static func node(
+        type: Int = 0,
+        zoneId: Int = 100,
+        mapId: Int = 10,
+        x: Double = 12.3,
+        y: Double = 45.6,
+        zoneName: String = "中拉諾西亞"
+    ) -> GatheringNode {
+        GatheringNode(
+            type: type,
+            job: type <= 1 ? .miner : .botanist,
+            zoneId: zoneId,
+            mapId: mapId,
+            x: x,
+            y: y,
+            zoneName: zoneName,
+            image: "https://xivapi.com/m/f1f1/f1f1.00.jpg",
+            sizeFactor: 100
+        )
     }
 }

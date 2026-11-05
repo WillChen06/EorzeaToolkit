@@ -13,16 +13,15 @@ import ComposableArchitecture
 @MainActor
 struct GatheringNodesFeatureTests {
     private let nodes = [
-        GatheringNodeDisplay(type: 0, zoneName: "中拉諾西亞", zoneId: 100, mapId: 10, x: 12.3, y: 45.6),
-        GatheringNodeDisplay(type: 2, zoneName: "黑衣森林中央林區", zoneId: 200, mapId: 20, x: 7.8, y: 9.1),
+        TreasureMapFixture.node(type: 0, zoneId: 100, mapId: 10, x: 12.3, y: 45.6, zoneName: "中拉諾西亞"),
+        TreasureMapFixture.node(type: 2, zoneId: 200, mapId: 20, x: 7.8, y: 9.1, zoneName: "黑衣森林中央林區"),
     ]
 
-    private func makeStore(selectedNodeID: GatheringNodeDisplay.ID? = nil) -> TestStoreOf<GatheringNodesFeature> {
+    private func makeStore(selectedNodeID: GatheringNode.ID? = nil) -> TestStoreOf<GatheringNodesFeature> {
         TestStore(
             initialState: GatheringNodesFeature.State(
                 nodes: nodes,
                 map: TreasureMapFixture.map(),
-                mapInfos: [:],
                 selectedNodeID: selectedNodeID
             )
         ) {
@@ -54,7 +53,7 @@ struct GatheringNodesFeatureTests {
 
     @Test func selectingUnknownNodeClearsSelection() async throws {
         let node = try #require(nodes.first)
-        let unknownNode = GatheringNodeDisplay(type: 0, zoneName: "", zoneId: 900, mapId: 99, x: 1, y: 1)
+        let unknownNode = TreasureMapFixture.node(type: 0, zoneId: 900, mapId: 99, x: 1, y: 1, zoneName: "")
         let store = makeStore(selectedNodeID: node.id)
 
         await store.send(.nodeSelected(unknownNode)) {
