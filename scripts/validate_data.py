@@ -22,12 +22,13 @@ EorzeaToolkitTests/BundledDataTests.swift 直接用真正的型別驗證,不在�
 8. 技能說明以技能循環可選的等級為 key:從習得等級起的每個等級各一份且不是空字串,
    習得等級以下的沒有。
 9. 爆發藥的道具 id 都在 items.json,且名稱與 items.json 相同;每個爆發藥的屬性都有名稱。
-10. 藏寶圖的道具 id 都在 items.json,且名稱相同;採集區域與採集點引用的地區都有名稱;
-    採集點的 map_id 在 maps.json,且那張地圖的地名就是採集點的 zone_id。
+10. 藏寶圖的道具 id 都在 items.json,且名稱相同;每張地圖至少有一個地區。地區有非空的地名、
+    圖片網址,size_factor 大於 0,依 map_id 遞增且不重複,每個地區至少有一個寶藏點;寶藏點 id
+    在整個檔案內唯一。採集點有非空的地名、圖片網址,size_factor 大於 0;同一張 Map 的採集點
+    與地區,地區 id、地名、圖片與 size_factor 都一致。
 11. 職業 id 不重複,同一職業內技能 id 也不重複:App 以 id 建索引還原技能循環,
     重複的 id 會讓 App 當掉。
-12. treasures.json 的每個寶藏點所在地圖,在 zh-maps.json 都有名稱;否則藏寶圖頁只能顯示「未知地區」。
-13. items.json 每筆道具的 equip_level 都是 1–100 的整數。道具搜尋的裝備等級 filter 只到 100,
+12. items.json 每筆道具的 equip_level 都是 1–100 的整數。道具搜尋的裝備等級 filter 只到 100,
     等級上限提高時,filter 要跟著改。
 
 用法:
@@ -36,6 +37,7 @@ EorzeaToolkitTests/BundledDataTests.swift 直接用真正的型別驗證,不在�
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 SCRIPTS_DIR = Path(__file__).resolve().parent
@@ -50,8 +52,7 @@ FILE_UPSTREAMS = {
     'gathering.json': ('ffxiv-datamining-tc', 'teamcraft'),
     'fishing.json': ('ffxiv-datamining-tc', 'teamcraft'),
     'battle_actions.json': ('ffxiv-datamining-tc',),
-    'treasure_maps_final.json': ('ffxiv-datamining-tc', 'teamcraft'),
-    'zh-maps.json': ('ffxiv-datamining-tc',),
+    'treasure_maps.json': ('ffxiv-datamining-tc', 'teamcraft'),
 }
 
 MARKUP = re.compile(r'<[^>]*>')
@@ -338,45 +339,73 @@ def main():
         check(stat.get('name_tw', '').strip(),
               f"battle_actions.json: 爆發藥 {tincture['id']} 的屬性 {tincture['stat']} 在 tincture_stat_jobs 沒有名稱")
 
-    # --- treasure_maps_final.json ---
-    treasure_data = load('treasure_maps_final.json')
-    check_counters('treasure_maps_final.json', treasure_data, None, {
+    # --- treasure_maps.json ---
+    treasure_data = load('treasure_maps.json')
+    check_counters('treasure_maps.json', treasure_data, None, {
         'map_count': len(treasure_data['maps']),
     })
-    check_sources('treasure_maps_final.json', treasure_data['_meta'], sources)
-    check(treasure_data['maps'], 'treasure_maps_final.json: 沒有地圖')
-    zone_names = treasure_data['zone_names']
-    map_infos = load('maps.json')
+    check_sources('treasure_maps.json', treasure_data['_meta'], sources)
+    check(treasure_data['maps'], 'treasure_maps.json: 沒有地圖')
+    check('zone_names' not in treasure_data, 'treasure_maps.json: 不應再有頂層的 zone_names')
+    spot_ids = []
+    # 同一張 Map 在檔案內各處(地區、採集點)的地名、圖片與 size_factor 要一致;
+    # 同一張 Map 的採集點,zone_id 也要一致(zone_id 是 Map 的 PlaceName)
+    map_details = {}
+    node_zone_ids = {}
+
+    def check_map_detail(label, map_id, detail):
+        known = map_details.setdefault(map_id, detail)
+        check(known == detail,
+              f'treasure_maps.json: {label} 的地圖 {map_id} 與檔案內其他地方不一致: {known} / {detail}')
+
     for treasure_map in treasure_data['maps']:
         grade, item_id = treasure_map['grade'], treasure_map['item_id']
-        check(item_id in item_ids, f'treasure_maps_final.json: {grade} 的道具 {item_id} 不在 items.json')
+        check(item_id in item_ids, f'treasure_maps.json: {grade} 的道具 {item_id} 不在 items.json')
         check(item_id not in item_ids or treasure_map['name_tw'] == item_names[item_id],
-              f"treasure_maps_final.json: {grade} 的名稱 {treasure_map['name_tw']!r} "
+              f"treasure_maps.json: {grade} 的名稱 {treasure_map['name_tw']!r} "
               f'與 items.json 的 {item_names.get(item_id)!r} 不同')
-        zone_ids = set(treasure_map['gathering_zone_ids'])
-        zone_ids |= {node['zone_id'] for node in treasure_map['gathering_nodes']}
-        unnamed = sorted(z for z in zone_ids if not (zone_names.get(str(z)) or {}).get('tw', '').strip())
-        check(not unnamed, f'treasure_maps_final.json: {grade} 引用的地區沒有名稱: {unnamed}')
-        misplaced = sorted({(node['zone_id'], node['map_id']) for node in treasure_map['gathering_nodes']
-                            if (map_infos.get(str(node['map_id'])) or {}).get('placename_id') != node['zone_id']})
-        check(not misplaced, f'treasure_maps_final.json: {grade} 的採集點地圖不在 maps.json 或地名不符 '
-                             f'(zone_id, map_id): {misplaced}')
-        # App 以 (map_id, type, x, y) 當 GatheringNodeDisplay.id
-        node_keys = [(node['map_id'], node['type'], node['x'], node['y'])
-                     for node in treasure_map['gathering_nodes']]
+
+        zones = treasure_map['zones']
+        check(zones, f'treasure_maps.json: {grade} 沒有任何地區')
+        # AC-1:地區的地名、圖片網址非空,size_factor 大於 0
+        incomplete = [zone['map_id'] for zone in zones
+                      if not (zone.get('name_tw') or '').strip() or not (zone.get('image') or '').strip()
+                      or not (type(zone.get('size_factor')) is int and zone['size_factor'] > 0)]
+        check(not incomplete, f'treasure_maps.json: {grade} 的地區缺少地名、圖片或 size_factor: {incomplete}')
+        # AC-2:地區依 map_id 遞增,且不重複
+        zone_map_ids = [zone['map_id'] for zone in zones]
+        check(all(a < b for a, b in zip(zone_map_ids, zone_map_ids[1:])),
+              f'treasure_maps.json: {grade} 的地區沒有依 map_id 遞增排列或有重複: {zone_map_ids}')
+        # AC-4:每個地區至少一個寶藏點
+        empty = [zone['map_id'] for zone in zones if not zone['spots']]
+        check(not empty, f'treasure_maps.json: {grade} 的地區沒有寶藏點: {empty}')
+        for zone in zones:
+            spot_ids.extend(spot['id'] for spot in zone['spots'])
+            check_map_detail(f'{grade} 的地區', zone['map_id'],
+                             (zone.get('name_tw'), zone.get('image'), zone.get('size_factor')))
+
+        nodes = treasure_map['gathering_nodes']
+        # AC-5:採集點的地名、圖片網址非空,size_factor 大於 0
+        incomplete = sorted({(node['zone_id'], node['map_id']) for node in nodes
+                             if not (node.get('zone_name_tw') or '').strip() or not (node.get('image') or '').strip()
+                             or not (type(node.get('size_factor')) is int and node['size_factor'] > 0)})
+        check(not incomplete, f'treasure_maps.json: {grade} 的採集點缺少地名、圖片或 size_factor '
+                              f'(zone_id, map_id): {incomplete}')
+        for node in nodes:
+            check_map_detail(f'{grade} 的採集點', node['map_id'],
+                             (node.get('zone_name_tw'), node.get('image'), node.get('size_factor')))
+            zone_id = node_zone_ids.setdefault(node['map_id'], node['zone_id'])
+            check(zone_id == node['zone_id'],
+                  f"treasure_maps.json: 地圖 {node['map_id']} 的採集點 zone_id 不一致: {zone_id} / {node['zone_id']}")
+        # App 以 (map_id, type, x, y) 當 GatheringNode.id
+        node_keys = [(node['map_id'], node['type'], node['x'], node['y']) for node in nodes]
         duplicated = sorted({key for key in node_keys if node_keys.count(key) > 1})
-        check(not duplicated, f'treasure_maps_final.json: {grade} 的採集點重複 '
+        check(not duplicated, f'treasure_maps.json: {grade} 的採集點重複 '
                               f'(map_id, type, x, y): {duplicated}')
 
-    # --- zh-maps.json ---
-    zh_maps = load('zh-maps.json')
-    check_counters('zh-maps.json', zh_maps, None, {
-        'map_count': len(zh_maps) - 1,
-    })
-    check_sources('zh-maps.json', zh_maps['_meta'], sources)
-    spot_maps = {spot['map'] for spot in load('treasures.json')}
-    unnamed_maps = sorted(m for m in spot_maps if not (zh_maps.get(str(m)) or {}).get('zh', '').strip())
-    check(not unnamed_maps, f'zh-maps.json: 寶藏點所在的地圖沒有名稱: {unnamed_maps}')
+    # AC-3:寶藏點 id 在整個檔案內唯一
+    duplicated_spot_ids = sorted(spot_id for spot_id, count in Counter(spot_ids).items() if count > 1)
+    check(not duplicated_spot_ids, f'treasure_maps.json: 寶藏點 id 重複: {duplicated_spot_ids[:10]}')
 
     # --- 只用繁中資料 ---
     for filename in FILE_UPSTREAMS:
