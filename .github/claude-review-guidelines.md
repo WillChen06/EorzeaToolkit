@@ -26,7 +26,7 @@ anything the skills say. In a review they mean:
   key built at runtime must be marked `manual`; left as extracted, builds mark it stale.
 - **Existing patterns.** Structural proposals belong in an issue, not a review.
 - **Generated data.** If a data file and its generator disagree, say so; do not propose
-  hand-editing the generated output. The eight generated files listed in `AGENTS.md` are
+  hand-editing the generated output. The seven generated files listed in `AGENTS.md` are
   reproducible from the upstream commits pinned in `scripts/data_sources.json` (plus
   `scripts/treasure_map_definitions.json`) with `python3 scripts/build_data.py`,
   but CI does not run it, since it needs the network. What CI checks is
