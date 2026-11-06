@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - 戰鬥技能 JSON 資料（battle_actions.json）
 
-struct BattleActionsData: Codable {
+struct BattleActionsData: Codable, Sendable {
     let jobs: [BattleJob]
     let tinctures: [Tincture]
     let tinctureStatJobs: [String: TinctureStatJob]
@@ -13,7 +13,7 @@ struct BattleActionsData: Codable {
     }
 }
 
-struct BattleJob: Codable, Identifiable, Hashable {
+struct BattleJob: Codable, Identifiable, Hashable, Sendable {
     let id: Int
     let nameTw: String
     let abbreviation: String
@@ -40,7 +40,7 @@ struct BattleJob: Codable, Identifiable, Hashable {
     }
 }
 
-struct BattleAction: Codable, Identifiable, Hashable {
+struct BattleAction: Codable, Identifiable, Hashable, Sendable {
     let id: Int
     let nameTw: String
     let iconId: Int
@@ -109,7 +109,7 @@ struct BattleAction: Codable, Identifiable, Hashable {
     }
 }
 
-struct Tincture: Codable, Identifiable, Hashable {
+struct Tincture: Codable, Identifiable, Hashable, Sendable {
     let id: Int
     let nameTw: String
     let iconId: Int
@@ -132,7 +132,7 @@ struct Tincture: Codable, Identifiable, Hashable {
     }
 }
 
-struct TinctureStatJob: Codable, Hashable {
+struct TinctureStatJob: Codable, Hashable, Sendable {
     let nameTw: String
     let jobs: [String]
 
@@ -144,7 +144,7 @@ struct TinctureStatJob: Codable, Hashable {
 
 // MARK: - 技能分類
 
-enum SkillCategory: String, CaseIterable, Identifiable, Hashable {
+enum SkillCategory: String, CaseIterable, Identifiable, Hashable, Sendable {
     case weaponskill
     case spell
     case ability
@@ -158,7 +158,7 @@ enum SkillCategory: String, CaseIterable, Identifiable, Hashable {
 
 // MARK: - Rotation（編輯區）
 
-enum SkillRotationLevel: Int, CaseIterable, Identifiable, Hashable, Codable {
+enum SkillRotationLevel: Int, CaseIterable, Identifiable, Hashable, Codable, Sendable {
     case level50 = 50
     case level60 = 60
     case level70 = 70
@@ -179,7 +179,7 @@ enum SkillRotationLevel: Int, CaseIterable, Identifiable, Hashable, Codable {
     }
 }
 
-enum RotationItem: Hashable, Codable {
+enum RotationItem: Hashable, Codable, Sendable {
     case action(BattleAction)
     case tincture(Tincture)
 
@@ -229,7 +229,7 @@ enum RotationItem: Hashable, Codable {
     }
 }
 
-struct RotationSlot: Identifiable, Hashable, Codable {
+struct RotationSlot: Identifiable, Hashable, Codable, Sendable {
     let id: UUID
     let item: RotationItem
 
