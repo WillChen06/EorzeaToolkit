@@ -1,46 +1,15 @@
 import SwiftUI
 import UniformTypeIdentifiers
+import ComposableArchitecture
 
 struct SkillRotationEditorView: View {
-    let job: BattleJob
-    @Bindable var viewModel: SkillRotationViewModel
+    let store: StoreOf<SkillRotationEditorFeature>
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric(relativeTo: .headline) private var minimumPaneWidth: CGFloat = 300
-
-    @State private var selectedLevel: SkillRotationLevel = .defaultLevel
-    @State private var selectedCategory: SkillRotationCategory = .all
-
+    
     private let columns = [GridItem(.adaptive(minimum: 56), spacing: 10)]
     private let rotationColumns = [GridItem(.adaptive(minimum: 60), spacing: 8, alignment: .leading)]
-
-    private var filteredActions: [BattleAction] {
-        switch selectedCategory {
-        case .all:
-            return viewModel.actions(for: job, level: selectedLevel, category: nil)
-        case .item:
-            return []
-        case .weaponskill, .spell, .ability:
-            return viewModel.actions(for: job, level: selectedLevel, category: selectedCategory.skillCategory)
-        }
-    }
-
-    private var filteredTinctures: [Tincture] {
-        switch selectedCategory {
-        case .all, .item:
-            return viewModel.tinctures(for: job)
-        case .weaponskill, .spell, .ability:
-            return []
-        }
-    }
-
-    private var rotation: [RotationSlot] {
-        viewModel.rotation(for: job.id, level: selectedLevel)
-    }
-
-    private var showsTinctureSectionSeparator: Bool {
-        selectedCategory == .all && !filteredActions.isEmpty && !filteredTinctures.isEmpty
-    }
 
     var body: some View {
         GeometryReader { geometry in
@@ -75,13 +44,13 @@ struct SkillRotationEditorView: View {
             }
         }
         .appThemedBackground()
-        .navigationTitle(L10n.SkillRotation.editorTitle(jobName: job.displayName, abbreviation: job.abbreviation))
+        .navigationTitle(L10n.SkillRotation.editorTitle(jobName: store.job.displayName, abbreviation: store.job.abbreviation))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                if !rotation.isEmpty {
+                if !store.rotation.isEmpty {
                     Button(L10n.Common.clear, systemImage: "trash", role: .destructive) {
-                        viewModel.clearRotation(for: job.id, level: selectedLevel)
+                        store.send(.clearTapped)
                     }
                     .labelStyle(.iconOnly)
                 }
@@ -92,21 +61,21 @@ struct SkillRotationEditorView: View {
 
     @ViewBuilder
     private var actionGrid: some View {
-        if !filteredActions.isEmpty {
+        if !store.filteredActions.isEmpty {
             LazyVGrid(columns: columns, spacing: 10) {
-                ForEach(filteredActions) { action in
+                ForEach(store.filteredActions) { action in
                     SkillGridIcon(item: .action(action))
                         .onTapGesture {
-                            viewModel.addSkill(action, to: job.id, level: selectedLevel)
+                            store.send(.actionAdded(action))
                         }
                         .contextMenu {
                             Button {
-                                viewModel.addSkill(action, to: job.id, level: selectedLevel)
+                                store.send(.actionAdded(action))
                             } label: {
                                 Label(L10n.SkillRotation.addToRotation, systemImage: "plus.circle")
                             }
                         } preview: {
-                            RotationItemDetailCard(item: .action(action), statName: nil, level: selectedLevel)
+                            RotationItemDetailCard(item: .action(action), statName: nil, level: store.selectedLevel)
                         }
                 }
             }
@@ -115,8 +84,8 @@ struct SkillRotationEditorView: View {
 
     @ViewBuilder
     private var tinctureGrid: some View {
-        if !filteredTinctures.isEmpty {
-            if showsTinctureSectionSeparator {
+        if !store.filteredTinctures.isEmpty {
+            if store.showsTinctureSectionSeparator {
                 Text(L10n.SkillRotation.itemSection)
                     .font(.caption)
                     .fontWeight(.semibold)
@@ -126,22 +95,22 @@ struct SkillRotationEditorView: View {
             }
 
             LazyVGrid(columns: columns, spacing: 10) {
-                ForEach(filteredTinctures) { tincture in
+                ForEach(store.filteredTinctures) { tincture in
                     SkillGridIcon(item: .tincture(tincture))
                         .onTapGesture {
-                            viewModel.addTincture(tincture, to: job.id, level: selectedLevel)
+                            store.send(.tinctureAdded(tincture))
                         }
                         .contextMenu {
                             Button {
-                                viewModel.addTincture(tincture, to: job.id, level: selectedLevel)
+                                store.send(.tinctureAdded(tincture))
                             } label: {
                                 Label(L10n.SkillRotation.addToRotation, systemImage: "plus.circle")
                             }
                         } preview: {
                             RotationItemDetailCard(
                                 item: .tincture(tincture),
-                                statName: viewModel.statName(for: tincture),
-                                level: selectedLevel
+                                statName: store.state.statName(for: tincture),
+                                level: store.selectedLevel
                             )
                         }
                 }
@@ -156,8 +125,8 @@ struct SkillRotationEditorView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 ForEach(SkillRotationLevel.displayCases) { level in
-                    filterChip(label: level.label, isSelected: selectedLevel == level) {
-                        selectedLevel = level
+                    filterChip(label: level.label, isSelected: store.selectedLevel == level) {
+                        store.send(.levelSelected(level))
                     }
                 }
             }
@@ -169,8 +138,8 @@ struct SkillRotationEditorView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 ForEach(SkillRotationCategory.allCases) { category in
-                    filterChip(label: category.label, isSelected: selectedCategory == category) {
-                        selectedCategory = category
+                    filterChip(label: category.label, isSelected: store.selectedCategory == category) {
+                        store.send(.categorySelected(category))
                     }
                 }
                 Spacer(minLength: 0)
@@ -212,7 +181,7 @@ struct SkillRotationEditorView: View {
                     }
                     .padding(.horizontal)
 
-                    if rotation.isEmpty {
+                    if store.rotation.isEmpty {
                         Text(L10n.SkillRotation.emptyRotationHint)
                             .font(.footnote)
                             .foregroundStyle(AppTheme.mutedInk)
@@ -232,7 +201,7 @@ struct SkillRotationEditorView: View {
                 }
                 .padding(.top, 10)
             }
-            .onChange(of: rotation.count) { oldValue, newValue in
+            .onChange(of: store.rotation.count) { oldValue, newValue in
                 guard newValue > oldValue else { return }
                 // Keep short content in place and reveal only the vertical overflow.
                 proxy.scrollTo("rotationEnd")
@@ -243,21 +212,21 @@ struct SkillRotationEditorView: View {
     }
 
     private var rotationTitle: some View {
-        Text(L10n.SkillRotation.rotationTitle(level: selectedLevel.label))
+        Text(L10n.SkillRotation.rotationTitle(level: store.selectedLevel.label))
             .font(.subheadline)
             .fontWeight(.semibold)
             .fixedSize(horizontal: false, vertical: true)
     }
 
     private var rotationCount: some View {
-        Text(L10n.SkillRotation.rotationCount(rotation.count))
+        Text(L10n.SkillRotation.rotationCount(store.rotation.count))
             .font(.caption)
             .foregroundStyle(AppTheme.mutedInk)
     }
 
     @ViewBuilder
     private var rotationReorderHint: some View {
-        if !rotation.isEmpty {
+        if !store.rotation.isEmpty {
             Text(L10n.SkillRotation.reorderHint)
                 .font(.caption)
                 .foregroundStyle(AppTheme.mutedInk)
@@ -267,15 +236,15 @@ struct SkillRotationEditorView: View {
 
     private var rotationGrid: some View {
         LazyVGrid(columns: rotationColumns, alignment: .leading, spacing: 8) {
-            ForEach(Array(rotation.enumerated()), id: \.element.id) { index, slot in
+            ForEach(Array(store.rotation.enumerated()), id: \.element.id) { index, slot in
                 HStack(spacing: 8) {
                     RotationSlotView(slot: slot, iconSize: 44) {
-                        viewModel.removeSlot(id: slot.id, from: job.id, level: selectedLevel)
+                        store.send(.slotRemoved(id: slot.id))
                     }
                     Image(systemName: "chevron.right")
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(AppTheme.mutedInk)
-                        .opacity(index == rotation.count - 1 ? 0 : 1)
+                        .opacity(index == store.rotation.count - 1 ? 0 : 1)
                 }
                 .id(slot.id)
                 .draggable(slot.id.uuidString) {
@@ -287,7 +256,7 @@ struct SkillRotationEditorView: View {
                           let droppedID = UUID(uuidString: droppedIDString) else {
                         return false
                     }
-                    viewModel.moveSlot(in: job.id, level: selectedLevel, fromID: droppedID, toIndex: index)
+                    store.send(.slotMoved(id: droppedID, toIndex: index))
                     return true
                 }
             }
