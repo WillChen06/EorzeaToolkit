@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - 戰鬥技能 JSON 資料（battle_actions.json）
 
-struct BattleActionsData: Codable, Sendable {
+struct BattleActionsData: Codable, Equatable, Sendable {
     let jobs: [BattleJob]
     let tinctures: [Tincture]
     let tinctureStatJobs: [String: TinctureStatJob]
