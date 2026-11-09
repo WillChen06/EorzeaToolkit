@@ -255,6 +255,38 @@ struct SkillRotationFeatureTests {
         #expect(store.state.savedLevels(for: paladinID) == [.level100])
     }
 
+    // AC-7
+    @Test func editorChangesLeaveOtherJobsCachedRotationsAlone() async {
+        let monkSlot = RotationSlot(id: UUID(100), action: BattleActionFixture.bootshine)
+        var state = loadedState()
+        state.rotationsByJobID = [monkID: [.level50: [monkSlot]]]
+        state.editor = BattleActionFixture.editorState()
+        let store = TestStore(initialState: state) {
+            SkillRotationFeature()
+        } withDependencies: {
+            $0.uuid = .incrementing
+            $0.skillRotationPersistence.save = { _, _, _ in }
+        }
+        let added = RotationSlot(id: UUID(0), action: BattleActionFixture.fastBlade)
+
+        // Only the paladin's entry changes; the store fails if the monk's does too.
+        await store.send(.editor(.actionAdded(BattleActionFixture.fastBlade))) {
+            $0.editor?.rotationsByLevel = [.level100: [added]]
+        }
+        await store.receive(\.editor.delegate) {
+            $0.rotationsByJobID[paladinID] = [.level100: [added]]
+        }
+        await store.send(.editor(.clearTapped)) {
+            $0.editor?.rotationsByLevel = [:]
+        }
+        await store.receive(\.editor.delegate) {
+            $0.rotationsByJobID[paladinID] = nil
+        }
+        await store.finish()
+
+        #expect(store.state.rotationsByJobID == [monkID: [.level50: [monkSlot]]])
+    }
+
     @Test func clearingTheLastLevelRemovesTheJobFromTheCache() async {
         let slot = RotationSlot(id: UUID(100), action: BattleActionFixture.fastBlade)
         var state = loadedState()
