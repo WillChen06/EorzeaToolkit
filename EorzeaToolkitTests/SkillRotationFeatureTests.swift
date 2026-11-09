@@ -138,4 +138,29 @@ struct SkillRotationFeatureTests {
             $0.loadState = .loaded
         }
     }
+    
+    @Test func jobSelectedSelectsAJobInTheCatalog() async {
+        let paladin = BattleActionFixture.paladin
+        let jobs = IdentifiedArray(uniqueElements: [paladin])
+        let store = TestStore(initialState: SkillRotationFeature.State(jobs: jobs)) {
+            SkillRotationFeature()
+        }
+        
+        await store.send(.jobSelected(paladinID)) {
+            $0.selectedJobID = paladinID
+        }
+    }
+    
+    @Test(arguments: [Optional(BattleActionFixture.monk.id), nil])
+    func jobSelectedClearsTheSelection(jobID: Int?) async {
+        var state = SkillRotationFeature.State(jobs: [BattleActionFixture.paladin])
+        state.selectedJobID = paladinID
+        let store = TestStore(initialState: state) {
+            SkillRotationFeature()
+        }
+
+        await store.send(.jobSelected(jobID)) {
+            $0.selectedJobID = nil
+        }
+    }
 }

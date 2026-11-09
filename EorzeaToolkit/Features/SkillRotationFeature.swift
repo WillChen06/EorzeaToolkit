@@ -23,6 +23,7 @@ struct SkillRotationFeature {
         var tinctures: [Tincture] = []
         var tinctureStatJobs: [String: TinctureStatJob] = [:]
         var rotationsByJobID: [Int: [SkillRotationLevel: [RotationSlot]]] = [:]
+        var selectedJobID: Int?
     }
     
     struct Loaded: Equatable {
@@ -33,6 +34,7 @@ struct SkillRotationFeature {
     enum Action {
         case task
         case loadResponse(Result<Loaded, Error>)
+        case jobSelected(Int?)
     }
     
     @Dependency(\.skillRotationCatalog) var skillRotationCatalog
@@ -74,6 +76,13 @@ struct SkillRotationFeature {
                 return .none
             case let .loadResponse(.failure(error)):
                 state.loadState = .failed(error.localizedDescription)
+                return .none
+            case let .jobSelected(jobID):
+                if let jobID, state.jobs[id: jobID] != nil {
+                    state.selectedJobID = jobID
+                } else {
+                    state.selectedJobID = nil
+                }
                 return .none
             }
         }
