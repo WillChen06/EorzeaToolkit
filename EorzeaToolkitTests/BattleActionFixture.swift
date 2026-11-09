@@ -104,4 +104,23 @@ enum BattleActionFixture {
             stat: stat
         )
     }
+    
+    // MARK: - Editor
+
+    /// An editor for the paladin with every tincture in the catalog. Pass only what the test is about.
+    static func editorState(
+        rotationsByLevel: [SkillRotationLevel: [RotationSlot]] = [:],
+        selectedLevel: SkillRotationLevel = .defaultLevel,
+        selectedCategory: SkillRotationCategory = .all
+    ) -> SkillRotationEditorFeature.State {
+        let catalog = catalog()
+        return SkillRotationEditorFeature.State(
+            job: paladin,
+            rotationsByLevel: rotationsByLevel,
+            tinctures: catalog.tinctures,
+            tinctureStatJobs: catalog.tinctureStatJobs,
+            selectedLevel: selectedLevel,
+            selectedCategory: selectedCategory
+        )
+    }
 }
