@@ -23,7 +23,10 @@ struct SkillRotationFeature {
         var tinctures: [Tincture] = []
         var tinctureStatJobs: [String: TinctureStatJob] = [:]
         var rotationsByJobID: [Int: [SkillRotationLevel: [RotationSlot]]] = [:]
-        var selectedJobID: Int?
+        var editor: SkillRotationEditorFeature.State?
+        var selectedJobID: Int? {
+            editor?.job.id
+        }
     }
     
     struct Loaded: Equatable {
@@ -35,6 +38,7 @@ struct SkillRotationFeature {
         case task
         case loadResponse(Result<Loaded, Error>)
         case jobSelected(Int?)
+        case editor(SkillRotationEditorFeature.Action)
     }
     
     @Dependency(\.skillRotationCatalog) var skillRotationCatalog
@@ -78,14 +82,36 @@ struct SkillRotationFeature {
                 state.loadState = .failed(error.localizedDescription)
                 return .none
             case let .jobSelected(jobID):
-                if let jobID, state.jobs[id: jobID] != nil {
-                    state.selectedJobID = jobID
+                guard jobID != state.selectedJobID else { return .none }
+                if let jobID, let job = state.jobs[id: jobID] {
+                    state.editor = SkillRotationEditorFeature.State(
+                        job: job,
+                        rotationsByLevel: state.rotationsByJobID[jobID] ?? [:],
+                        tinctures: state.tinctures,
+                        tinctureStatJobs: state.tinctureStatJobs
+                    )
                 } else {
-                    state.selectedJobID = nil
+                    state.editor = nil
                 }
+                return .none
+            case let .editor(.delegate(.rotationsChanged(rotations))):
+                guard let jobID = state.selectedJobID else { return .none }
+                state.rotationsByJobID[jobID] = rotations.isEmpty ? nil : rotations
+                return .none
+            case .editor:
                 return .none
             }
         }
+        .ifLet(\.editor, action: \.editor) {
+            SkillRotationEditorFeature()
+        }
+    }
+}
+
+extension SkillRotationFeature.State {
+    func savedLevels(for jobID: Int) -> [SkillRotationLevel] {
+        guard let rotationsByLevel = rotationsByJobID[jobID] else { return [] }
+        return SkillRotationLevel.displayCases.filter { rotationsByLevel[$0]?.isEmpty == false }
     }
 }
 
