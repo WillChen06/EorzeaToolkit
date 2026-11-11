@@ -49,3 +49,9 @@ struct ItemJobFilterOption: Identifiable, Hashable, Sendable {
         ItemJobFilterOption(abbreviation: "FSH", iconPath: "062000/062118_hr1.tex")
     ]
 }
+
+extension ItemJobFilterOption {
+    var displayName: String {
+        L10n.ItemSearch.Filter.jobName(abbreviation)
+    }
+}

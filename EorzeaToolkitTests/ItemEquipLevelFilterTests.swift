@@ -125,7 +125,7 @@ final class ItemEquipLevelFilterTests: XCTestCase {
 
     /// Every fixture item's name contains the query, so only the filter decides.
     private func search(_ items: [Item], filter: ItemFilter) -> [Item] {
-        ItemSearchViewModel.searchItems(items, query: "道具", filter: filter, classjobJobSetsById: [:]).items
+        ItemSearchQuery.searchItems(items, query: "道具", filter: filter, classjobJobSetsById: [:]).items
     }
 
     private func levels(_ items: [Item]) -> [Int] {
