@@ -180,37 +180,19 @@ final class ItemSearchViewModel {
     }
 
     func updateMinimumItemLevel(_ value: Int) {
-        let clampedValue = min(max(value, ItemFilter.defaultIlvlRange.lowerBound), filter.ilvlRange.upperBound)
-        updateFilter {
-            $0.ilvlRange = clampedValue...$0.ilvlRange.upperBound
-        }
+        updateFilter { $0.setMinimumItemLevel(value) }
     }
 
     func updateMaximumItemLevel(_ value: Int) {
-        let clampedValue = max(min(value, ItemFilter.defaultIlvlRange.upperBound), filter.ilvlRange.lowerBound)
-        updateFilter {
-            $0.ilvlRange = $0.ilvlRange.lowerBound...clampedValue
-        }
+        updateFilter { $0.setMaximumItemLevel(value) }
     }
 
     func updateMinimumEquipLevel(_ value: Int) {
-        let clampedValue = min(
-            max(value, ItemFilter.defaultEquipLevelRange.lowerBound),
-            filter.equipLevelRange.upperBound
-        )
-        updateFilter {
-            $0.equipLevelRange = clampedValue...$0.equipLevelRange.upperBound
-        }
+        updateFilter { $0.setMinimumEquipLevel(value) }
     }
 
     func updateMaximumEquipLevel(_ value: Int) {
-        let clampedValue = max(
-            min(value, ItemFilter.defaultEquipLevelRange.upperBound),
-            filter.equipLevelRange.lowerBound
-        )
-        updateFilter {
-            $0.equipLevelRange = $0.equipLevelRange.lowerBound...clampedValue
-        }
+        updateFilter { $0.setMaximumEquipLevel(value) }
     }
 
     func toggleRarity(_ rarity: Int) {

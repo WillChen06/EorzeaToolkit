@@ -191,3 +191,39 @@ struct ItemFilter: Equatable, Sendable {
         }
     }
 }
+
+extension ItemFilter {
+    /// Moves the lowest item level, kept within the full range and no higher than the highest.
+    mutating func setMinimumItemLevel(_ value: Int) {
+        ilvlRange = Self.range(ilvlRange, minimum: value, within: Self.defaultIlvlRange)
+    }
+
+    /// Moves the highest item level, kept within the full range and no lower than the lowest.
+    mutating func setMaximumItemLevel(_ value: Int) {
+        ilvlRange = Self.range(ilvlRange, maximum: value, within: Self.defaultIlvlRange)
+    }
+
+    mutating func setMinimumEquipLevel(_ value: Int) {
+        equipLevelRange = Self.range(equipLevelRange, minimum: value, within: Self.defaultEquipLevelRange)
+    }
+
+    mutating func setMaximumEquipLevel(_ value: Int) {
+        equipLevelRange = Self.range(equipLevelRange, maximum: value, within: Self.defaultEquipLevelRange)
+    }
+
+    private static func range(
+        _ range: ClosedRange<Int>,
+        minimum value: Int,
+        within bounds: ClosedRange<Int>
+    ) -> ClosedRange<Int> {
+        min(max(value, bounds.lowerBound), range.upperBound)...range.upperBound
+    }
+
+    private static func range(
+        _ range: ClosedRange<Int>,
+        maximum value: Int,
+        within bounds: ClosedRange<Int>
+    ) -> ClosedRange<Int> {
+        range.lowerBound...max(min(value, bounds.upperBound), range.lowerBound)
+    }
+}
