@@ -30,6 +30,7 @@ struct ItemSearchFeature {
         var allResults: [Item] = []
         var visibleResultCount = 0
         var isSearching = false
+        var isFilterPresented = false
         
         var results: [Item] {
             Array(allResults.prefix(visibleResultCount))
@@ -55,6 +56,33 @@ struct ItemSearchFeature {
             isQueryEmpty && filter.isActive
         }
         
+        var uiCategoryGroups: [UICategoryGroup] {
+            UICategoryGroup.groups(from: catalog?.uiCategories ?? [])
+        }
+
+        var availableJobFilterOptions: [ItemJobFilterOption] {
+            ItemJobFilterOption.available(in: catalog?.classjobJobSetsById ?? [:])
+        }
+
+        var equipSlots: [EquipSlot] {
+            catalog?.equipSlots ?? []
+        }
+
+        var baseEquipSlots: [EquipSlot] {
+            catalog?.baseEquipSlots ?? []
+        }
+
+        var restrictedEquipSlots: [EquipSlot] {
+            catalog?.restrictedEquipSlots ?? []
+        }
+
+        var filterSummaryParts: [String] {
+            filter.summaryParts(
+                uiCategories: catalog?.uiCategories ?? [],
+                equipSlots: equipSlots
+            )
+        }
+        
         private var isQueryEmpty: Bool {
             query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         }
@@ -67,6 +95,18 @@ struct ItemSearchFeature {
         case searchQueryChanged(String)
         case searchResponse(ItemSearchResult)
         case loadMoreButtonTapped
+        case filterPresentationChanged(Bool)
+        case minimumItemLevelChanged(Int)
+        case maximumItemLevelChanged(Int)
+        case minimumEquipLevelChanged(Int)
+        case maximumEquipLevelChanged(Int)
+        case rarityToggled(Int)
+        case hqStateChanged(ItemBoolFilterState)
+        case tradableStateChanged(ItemBoolFilterState)
+        case uiCategoryToggled(Int)
+        case jobToggled(String)
+        case equipSlotToggled(Int)
+        case clearFilterButtonTapped
     }
     
     @Dependency(\.continuousClock) var clock
@@ -124,6 +164,39 @@ struct ItemSearchFeature {
                     state.allResults.count
                 )
                 return .none
+            case let .filterPresentationChanged(isPresented):
+                state.isFilterPresented = isPresented
+                return .none
+            case let .minimumItemLevelChanged(level):
+                return updateFilter(&state) { $0.setMinimumItemLevel(level) }
+            case let .maximumItemLevelChanged(level):
+                return updateFilter(&state) { $0.setMaximumItemLevel(level) }
+            case let .minimumEquipLevelChanged(level):
+                return updateFilter(&state) { $0.setMinimumEquipLevel(level) }
+            case let .maximumEquipLevelChanged(level):
+                return updateFilter(&state) { $0.setMaximumEquipLevel(level) }
+            case let .rarityToggled(rarity):
+                return updateFilter(&state) {
+                    $0.selectedRarities.formSymmetricDifference([rarity])
+                }
+            case let .hqStateChanged(hqState):
+                return updateFilter(&state) { $0.hqState = hqState }
+            case let .tradableStateChanged(tradableState):
+                return updateFilter(&state) { $0.tradableState = tradableState }
+            case let .uiCategoryToggled(categoryID):
+                return updateFilter(&state) {
+                    $0.selectedUICategoryIds.formSymmetricDifference([categoryID])
+                }
+            case let .jobToggled(abbreviation):
+                return updateFilter(&state) {
+                    $0.selectedJobAbbrs.formSymmetricDifference([abbreviation])
+                }
+            case let .equipSlotToggled(equipSlotID):
+                return updateFilter(&state) {
+                    $0.selectedEquipSlots.formSymmetricDifference([equipSlotID])
+                }
+            case .clearFilterButtonTapped:
+                return updateFilter(&state, debounce: false) { $0 = ItemFilter() }
             }
         }
     }
@@ -163,6 +236,18 @@ struct ItemSearchFeature {
             await send(.searchResponse(result))
         }
         .cancellable(id: CancelID.search, cancelInFlight: true)
+    }
+    
+    private func updateFilter(
+        _ state: inout State,
+        debounce: Bool = true,
+        _ mutation: (inout ItemFilter) -> Void
+    ) -> Effect<Action> {
+        var filter = state.filter
+        mutation(&filter)
+        guard filter != state.filter else { return .none }
+        state.filter = filter
+        return search(&state, debounce: debounce)
     }
 }
 

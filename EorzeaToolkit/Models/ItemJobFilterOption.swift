@@ -50,3 +50,12 @@ struct ItemJobFilterOption: Identifiable, Hashable, Sendable {
         ItemJobFilterOption(abbreviation: "FSH", iconPath: "062000/062118_hr1.tex")
     ]
 }
+
+extension ItemJobFilterOption {
+    /// The options for the jobs some class job category names, in display order; none while
+    /// no categories have loaded.
+    static func available(in classjobJobSetsById: [Int: Set<String>]) -> [ItemJobFilterOption] {
+        let supportedAbbrs = Set(classjobJobSetsById.values.flatMap(\.self))
+        return displayOptions.filter { supportedAbbrs.contains($0.abbreviation) }
+    }
+}

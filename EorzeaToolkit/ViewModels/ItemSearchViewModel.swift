@@ -100,38 +100,15 @@ final class ItemSearchViewModel {
     }
 
     var uiCategoryGroups: [UICategoryGroup] {
-        let grouped = Dictionary(grouping: uiCategories) { $0.orderMajor }
-
-        return grouped.keys.sorted().map { orderMajor in
-            UICategoryGroup(
-                orderMajor: orderMajor,
-                title: L10n.ItemSearch.Filter.categoryGroupTitle(orderMajor: orderMajor),
-                categories: grouped[orderMajor, default: []].sorted {
-                    if $0.orderMinor != $1.orderMinor {
-                        return $0.orderMinor < $1.orderMinor
-                    }
-
-                    return $0.displayName.localizedStandardCompare($1.displayName) == .orderedAscending
-                }
-            )
-        }
+        UICategoryGroup.groups(from: uiCategories)
     }
 
     var availableJobFilterOptions: [ItemJobFilterOption] {
-        let supportedAbbrs = Set(classjobJobSetsById.values.flatMap(\.self))
-        guard !supportedAbbrs.isEmpty else {
-            return []
-        }
-
-        return ItemJobFilterOption.displayOptions.filter { supportedAbbrs.contains($0.abbreviation) }
+        ItemJobFilterOption.available(in: classjobJobSetsById)
     }
 
     var filterSummaryParts: [String] {
-        filter.summaryParts(
-            uiCategoryNamesById: Dictionary(uniqueKeysWithValues: uiCategories.map { ($0.id, $0.displayName) }),
-            jobNamesByAbbr: Dictionary(uniqueKeysWithValues: ItemJobFilterOption.displayOptions.map { ($0.abbreviation, $0.displayName) }),
-            equipSlotNamesById: Dictionary(uniqueKeysWithValues: equipSlots.map { ($0.id, $0.displayName) })
-        )
+        filter.summaryParts(uiCategories: uiCategories, equipSlots: equipSlots)
     }
 
     func loadItems() {

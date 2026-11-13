@@ -419,6 +419,298 @@ struct ItemSearchFeatureTests {
         await store.send(.loadMoreButtonTapped)
     }
 
+    // MARK: - Filter
+
+    @Test func theFilterSheetOpensAndCloses() async {
+        let store = TestStore(initialState: ItemSearchFeature.State()) {
+            ItemSearchFeature()
+        }
+
+        await store.send(.filterPresentationChanged(true)) {
+            $0.isFilterPresented = true
+        }
+        await store.send(.filterPresentationChanged(false)) {
+            $0.isFilterPresented = false
+        }
+    }
+
+    @Test func narrowingTheItemLevelSearches() async {
+        await assertFilterSearch(.minimumItemLevelChanged(500), listing: [2]) {
+            $0.ilvlRange = 500...795
+        }
+        await assertFilterSearch(.maximumItemLevelChanged(200), listing: [1]) {
+            $0.ilvlRange = 1...200
+        }
+    }
+
+    @Test func narrowingTheEquipLevelSearches() async {
+        await assertFilterSearch(.minimumEquipLevelChanged(60), listing: [2]) {
+            $0.equipLevelRange = 60...100
+        }
+        await assertFilterSearch(.maximumEquipLevelChanged(60), listing: [1]) {
+            $0.equipLevelRange = 1...60
+        }
+    }
+
+    @Test func togglingARaritySearches() async {
+        await assertFilterSearch(.rarityToggled(1), listing: [2]) {
+            $0.selectedRarities.remove(1)
+        }
+    }
+
+    @Test func choosingHQOrTradableSearches() async {
+        await assertFilterSearch(.hqStateChanged(.only), listing: [2]) {
+            $0.hqState = .only
+        }
+        await assertFilterSearch(.tradableStateChanged(.exclude), listing: [1]) {
+            $0.tradableState = .exclude
+        }
+    }
+
+    @Test func togglingACategoryJobOrEquipSlotSearches() async {
+        await assertFilterSearch(.uiCategoryToggled(ItemSearchFixture.shield), listing: [1]) {
+            $0.selectedUICategoryIds = [ItemSearchFixture.shield]
+        }
+        await assertFilterSearch(.jobToggled("BLM"), listing: [2]) {
+            $0.selectedJobAbbrs = ["BLM"]
+        }
+        await assertFilterSearch(.equipSlotToggled(ItemSearchFixture.body), listing: [2]) {
+            $0.selectedEquipSlots = [ItemSearchFixture.body]
+        }
+    }
+
+    /// Toggling the same value again puts the filter back, which searches again too.
+    @Test func togglingTwiceRemovesTheChoice() async {
+        let clock = TestClock()
+        let store = TestStore(
+            initialState: ItemSearchFeature.State(
+                loadState: .loaded,
+                catalog: ItemSearchFixture.filterCatalog(),
+                query: "長袍"
+            )
+        ) {
+            ItemSearchFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+        }
+
+        await store.send(.jobToggled("WHM")) {
+            $0.filter.selectedJobAbbrs = ["WHM"]
+            $0.isSearching = true
+        }
+        await store.send(.jobToggled("WHM")) {
+            $0.filter.selectedJobAbbrs = []
+        }
+        await clock.advance(by: .milliseconds(300))
+        let robe = [2].compactMap { store.state.catalog?.itemsByID[$0] }
+        await store.receive(\.searchResponse) {
+            $0.allResults = robe
+            $0.visibleResultCount = robe.count
+            $0.isSearching = false
+        }
+    }
+
+    /// A value the filter already has, or one the range clamps back to it, changes nothing and
+    /// searches nothing.
+    @Test func anUnchangedFilterDoesNotSearch() async {
+        let store = TestStore(
+            initialState: ItemSearchFeature.State(
+                loadState: .loaded,
+                catalog: ItemSearchFixture.filterCatalog()
+            )
+        ) {
+            ItemSearchFeature()
+        }
+
+        await store.send(.hqStateChanged(.any))
+        await store.send(.minimumItemLevelChanged(0))
+        await store.send(.maximumEquipLevelChanged(120))
+    }
+
+    /// Clearing searches at once, without a debounce.
+    @Test func clearingTheFilterSearchesAtOnce() async {
+        let catalog = ItemSearchFixture.filterCatalog()
+        var filter = ItemFilter()
+        filter.selectedJobAbbrs = ["WHM"]
+        let store = TestStore(
+            initialState: ItemSearchFeature.State(
+                loadState: .loaded,
+                catalog: catalog,
+                query: "長袍",
+                filter: filter
+            )
+        ) {
+            ItemSearchFeature()
+        } withDependencies: {
+            $0.continuousClock = TestClock()
+        }
+
+        await store.send(.clearFilterButtonTapped) {
+            $0.filter = ItemFilter()
+            $0.isSearching = true
+        }
+        // Received without moving the clock.
+        let robe = [2].compactMap { catalog.itemsByID[$0] }
+        await store.receive(\.searchResponse) {
+            $0.allResults = robe
+            $0.visibleResultCount = robe.count
+            $0.isSearching = false
+        }
+    }
+
+    /// With no search text, clearing leaves nothing to list.
+    @Test func clearingTheFilterWithoutASearchTextClearsTheList() async {
+        let catalog = ItemSearchFixture.filterCatalog()
+        var filter = ItemFilter()
+        filter.selectedJobAbbrs = ["WHM"]
+        let items = [1].compactMap { catalog.itemsByID[$0] }
+        let store = TestStore(
+            initialState: ItemSearchFeature.State(
+                loadState: .loaded,
+                catalog: catalog,
+                filter: filter,
+                allResults: items,
+                visibleResultCount: items.count
+            )
+        ) {
+            ItemSearchFeature()
+        }
+
+        await store.send(.clearFilterButtonTapped) {
+            $0.filter = ItemFilter()
+            $0.allResults = []
+            $0.visibleResultCount = 0
+        }
+        #expect(store.state.isWaitingForSearch)
+    }
+
+    @Test func clearingADefaultFilterDoesNothing() async {
+        let store = TestStore(
+            initialState: ItemSearchFeature.State(
+                loadState: .loaded,
+                catalog: ItemSearchFixture.filterCatalog()
+            )
+        ) {
+            ItemSearchFeature()
+        }
+
+        await store.send(.clearFilterButtonTapped)
+    }
+
+    /// Every match, in the order a name search uses: item level descending, then name. The
+    /// names differ in a Latin letter, which sorts the same in every locale.
+    @Test func anActiveFilterListsItsItemsWithoutASearchText() async {
+        let clock = TestClock()
+        let catalog = ItemSearchFixture.catalog()
+        let store = TestStore(
+            initialState: ItemSearchFeature.State(loadState: .loaded, catalog: catalog)
+        ) {
+            ItemSearchFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+        }
+
+        await store.send(.jobToggled("WHM")) {
+            $0.filter.selectedJobAbbrs = ["WHM"]
+            $0.isSearching = true
+        }
+        #expect(store.state.isFilterOnlySearch)
+        await clock.advance(by: .milliseconds(300))
+        let whiteMageItems = [3, 2, 1].compactMap { catalog.itemsByID[$0] }
+        await store.receive(\.searchResponse) {
+            $0.allResults = whiteMageItems
+            $0.visibleResultCount = whiteMageItems.count
+            $0.isSearching = false
+        }
+    }
+
+    @Test func aNameStillNarrowsTheFilter() async {
+        let clock = TestClock()
+        let catalog = ItemSearchFixture.catalog()
+        let store = TestStore(
+            initialState: ItemSearchFeature.State(loadState: .loaded, catalog: catalog, query: "長袍")
+        ) {
+            ItemSearchFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+        }
+
+        await store.send(.jobToggled("WHM")) {
+            $0.filter.selectedJobAbbrs = ["WHM"]
+            $0.isSearching = true
+        }
+        #expect(!store.state.isFilterOnlySearch)
+        await clock.advance(by: .milliseconds(300))
+        let whiteMageRobes = [2, 1].compactMap { catalog.itemsByID[$0] }
+        await store.receive(\.searchResponse) {
+            $0.allResults = whiteMageRobes
+            $0.visibleResultCount = whiteMageRobes.count
+            $0.isSearching = false
+        }
+    }
+
+    /// The sheet's options and the summary come from the loaded data.
+    @Test func theFilterOptionsComeFromTheCatalog() {
+        var filter = ItemFilter()
+        filter.selectedUICategoryIds = [ItemSearchFixture.shield]
+        filter.selectedEquipSlots = [ItemSearchFixture.body]
+        let state = ItemSearchFeature.State(
+            loadState: .loaded,
+            catalog: ItemSearchFixture.filterCatalog(),
+            filter: filter
+        )
+
+        #expect(state.uiCategoryGroups.map(\.orderMajor) == [1, 3])
+        #expect(state.availableJobFilterOptions.map(\.abbreviation) == ["WHM", "BLM"])
+        #expect(state.baseEquipSlots.map(\.id) == [ItemSearchFixture.offHand, ItemSearchFixture.body])
+        #expect(state.filterSummaryParts.contains("盾"))
+        #expect(state.filterSummaryParts.contains("身體"))
+    }
+
+    @Test func noCatalogMeansNoFilterOptions() {
+        let state = ItemSearchFeature.State()
+
+        #expect(state.uiCategoryGroups.isEmpty)
+        #expect(state.availableJobFilterOptions.isEmpty)
+        #expect(state.equipSlots.isEmpty)
+    }
+
+    /// Starts from the filter catalog with an empty search field, sends `action`, and expects
+    /// the filter `change` makes, a debounced search, and the items `ids` names, in that order.
+    private func assertFilterSearch(
+        _ action: ItemSearchFeature.Action,
+        listing ids: [Int],
+        filter change: (inout ItemFilter) -> Void,
+        fileID: StaticString = #fileID,
+        filePath: StaticString = #filePath,
+        line: UInt = #line,
+        column: UInt = #column
+    ) async {
+        let clock = TestClock()
+        let catalog = ItemSearchFixture.filterCatalog()
+        var expectedFilter = ItemFilter()
+        change(&expectedFilter)
+        let expectedItems = ids.compactMap { catalog.itemsByID[$0] }
+        let store = TestStore(
+            initialState: ItemSearchFeature.State(loadState: .loaded, catalog: catalog)
+        ) {
+            ItemSearchFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+        }
+
+        await store.send(action, assert: {
+            $0.filter = expectedFilter
+            $0.isSearching = true
+        }, fileID: fileID, file: filePath, line: line, column: column)
+        await clock.advance(by: .milliseconds(300))
+        await store.receive(\.searchResponse, assert: {
+            $0.allResults = expectedItems
+            $0.visibleResultCount = expectedItems.count
+            $0.isSearching = false
+        }, fileID: fileID, file: filePath, line: line, column: column)
+    }
+
     /// 120 items, more than two pages, all named 「道具…」. A higher id has a higher item level,
     /// and every name starts with 「道具」, so searching for it lists them from id 120 down.
     private let pagedCatalog = ItemSearchFixture.catalog(

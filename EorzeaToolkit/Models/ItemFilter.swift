@@ -227,3 +227,17 @@ extension ItemFilter {
         range.lowerBound...max(min(value, bounds.upperBound), range.lowerBound)
     }
 }
+
+extension ItemFilter {
+    /// The summary under the search field, naming categories, jobs and equip slots as the
+    /// loaded data and the job list name them.
+    func summaryParts(uiCategories: [UICategory], equipSlots: [EquipSlot]) -> [String] {
+        summaryParts(
+            uiCategoryNamesById: Dictionary(uniqueKeysWithValues: uiCategories.map { ($0.id, $0.displayName) }),
+            jobNamesByAbbr: Dictionary(
+                uniqueKeysWithValues: ItemJobFilterOption.displayOptions.map { ($0.abbreviation, $0.displayName) }
+            ),
+            equipSlotNamesById: Dictionary(uniqueKeysWithValues: equipSlots.map { ($0.id, $0.displayName) })
+        )
+    }
+}

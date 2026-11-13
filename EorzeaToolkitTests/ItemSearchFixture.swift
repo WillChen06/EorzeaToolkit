@@ -33,6 +33,7 @@ enum ItemSearchFixture {
         name: String,
         ilvl: Int = 1,
         rarity: Int = 1,
+        uiCategory: Int = 0,
         job: Int = 0,
         equipSlot: Int = 0,
         equipLevel: Int = 0,
@@ -48,6 +49,7 @@ enum ItemSearchFixture {
             rarity: rarity,
             canBeHq: canBeHq,
             isUntradable: isUntradable,
+            uiCategoryId: uiCategory,
             classjobCategoryId: job,
             equipSlot: equipSlot,
             equipLevel: equipLevel
@@ -57,14 +59,47 @@ enum ItemSearchFixture {
     static func catalog(
         items: [Item] = ItemSearchFixture.items,
         version: String? = "v1",
+        uiCategories: [UICategory] = [],
         classjobCategories: [ClassJobCategory] = ItemSearchFixture.classjobCategories,
         equipSlots: [EquipSlot] = []
     ) -> ItemCatalog {
         ItemCatalog(data: ItemDataResponse(
             meta: ItemDataMeta(version: version),
             items: items,
+            uiCategories: uiCategories,
             classjobCategories: classjobCategories,
             equipSlots: equipSlots
         ))
+    }
+
+    // MARK: - Filtering
+
+    /// UI category and equip slot ids.
+    static let shield = 11
+    static let bodyArmor = 34
+    static let offHand = 2
+    static let body = 4
+
+    /// Two items that differ in everything the filter compares, so each filter keeps exactly one.
+    static let filterItems = [
+        item(
+            id: 1, name: "木盾", ilvl: 100, rarity: 1, uiCategory: shield, job: whiteMage,
+            equipSlot: offHand, equipLevel: 50, canBeHq: false, isUntradable: true
+        ),
+        item(
+            id: 2, name: "棉布長袍", ilvl: 600, rarity: 3, uiCategory: bodyArmor, job: blackMage,
+            equipSlot: body, equipLevel: 90, canBeHq: true, isUntradable: false
+        )
+    ]
+
+    static func filterCatalog() -> ItemCatalog {
+        catalog(
+            items: filterItems,
+            uiCategories: [
+                UICategory(id: shield, nameTw: "盾", orderMinor: 1, orderMajor: 1),
+                UICategory(id: bodyArmor, nameTw: "身體防具", orderMinor: 1, orderMajor: 3)
+            ],
+            equipSlots: [EquipSlot(id: offHand, nameTw: "副手"), EquipSlot(id: body, nameTw: "身體")]
+        )
     }
 }
