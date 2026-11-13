@@ -675,6 +675,137 @@ struct ItemSearchFeatureTests {
         #expect(state.equipSlots.isEmpty)
     }
 
+    // MARK: - Selection
+
+    @Test func selectingAnItemOpensIt() async {
+        let catalog = ItemSearchFixture.catalog()
+        let store = TestStore(
+            initialState: ItemSearchFeature.State(loadState: .loaded, catalog: catalog)
+        ) {
+            ItemSearchFeature()
+        }
+
+        await store.send(.itemSelected(3)) {
+            $0.selectedItemID = 3
+        }
+        #expect(store.state.selectedItem == catalog.itemsByID[3])
+    }
+
+    /// An id no item has clears the selection. It is larger than the number of items, so
+    /// looking it up by position instead of by id would trap.
+    @Test func selectingAnUnknownItemClearsTheSelection() async {
+        let store = TestStore(
+            initialState: ItemSearchFeature.State(
+                loadState: .loaded,
+                catalog: ItemSearchFixture.catalog(),
+                selectedItemID: 3
+            )
+        ) {
+            ItemSearchFeature()
+        }
+
+        await store.send(.itemSelected(99_999)) {
+            $0.selectedItemID = nil
+        }
+        #expect(store.state.selectedItem == nil)
+    }
+
+    @Test func selectingNothingClearsTheSelection() async {
+        let store = TestStore(
+            initialState: ItemSearchFeature.State(
+                loadState: .loaded,
+                catalog: ItemSearchFixture.catalog(),
+                selectedItemID: 3
+            )
+        ) {
+            ItemSearchFeature()
+        }
+
+        await store.send(.itemSelected(nil)) {
+            $0.selectedItemID = nil
+        }
+    }
+
+    @Test func nothingCanBeSelectedBeforeTheItemsLoad() async {
+        let store = TestStore(initialState: ItemSearchFeature.State()) {
+            ItemSearchFeature()
+        }
+
+        await store.send(.itemSelected(3))
+        #expect(store.state.selectedItem == nil)
+    }
+
+    @Test func aRemoteUpdateWithoutTheSelectedItemClearsTheSelection() async {
+        let updated = ItemSearchFixture.catalog(
+            items: ItemSearchFixture.items.filter { $0.id != 5 },
+            version: "v2"
+        )
+
+        await assertRemoteUpdate(to: updated, afterSelecting: 5) {
+            $0.catalog = updated
+            $0.selectedItemID = nil
+        }
+    }
+
+    @Test func aRemoteUpdateThatKeepsTheSelectedItemKeepsTheSelection() async {
+        let updated = ItemSearchFixture.catalog(
+            items: ItemSearchFixture.items.filter { $0.id != 5 },
+            version: "v2"
+        )
+
+        await assertRemoteUpdate(to: updated, afterSelecting: 3) {
+            $0.catalog = updated
+        }
+    }
+
+    /// Loads the fixture catalog, selects `itemID` before the remote update answers, and
+    /// expects the update to `updated` to change the state as `change` says. With an empty
+    /// search field and the default filter, neither the load nor the update searches.
+    private func assertRemoteUpdate(
+        to updated: ItemCatalog,
+        afterSelecting itemID: Int,
+        change: @escaping (inout ItemSearchFeature.State) -> Void,
+        fileID: StaticString = #fileID,
+        filePath: StaticString = #filePath,
+        line: UInt = #line,
+        column: UInt = #column
+    ) async {
+        let clock = TestClock()
+        let catalog = ItemSearchFixture.catalog(version: "v1")
+        let store = TestStore(initialState: ItemSearchFeature.State()) {
+            ItemSearchFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.itemData.load = { catalog }
+            // Held until the clock moves, so the item can be selected first.
+            $0.itemData.refresh = { _ in
+                try await clock.sleep(for: .seconds(1))
+                return updated
+            }
+        }
+
+        await store.send(.task) {
+            $0.loadState = .loading
+        }
+        await store.receive(\.catalogResponse.success) {
+            $0.loadState = .loaded
+            $0.catalog = catalog
+        }
+        await store.send(.itemSelected(itemID)) {
+            $0.selectedItemID = itemID
+        }
+
+        await clock.advance(by: .seconds(1))
+        await store.receive(
+            \.refreshResponse,
+            assert: change,
+            fileID: fileID,
+            file: filePath,
+            line: line,
+            column: column
+        )
+    }
+
     /// Starts from the filter catalog with an empty search field, sends `action`, and expects
     /// the filter `change` makes, a debounced search, and the items `ids` names, in that order.
     private func assertFilterSearch(

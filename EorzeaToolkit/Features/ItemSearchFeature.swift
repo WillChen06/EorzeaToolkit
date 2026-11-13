@@ -31,6 +31,7 @@ struct ItemSearchFeature {
         var visibleResultCount = 0
         var isSearching = false
         var isFilterPresented = false
+        var selectedItemID: Int?
         
         var results: [Item] {
             Array(allResults.prefix(visibleResultCount))
@@ -83,6 +84,10 @@ struct ItemSearchFeature {
             )
         }
         
+        var selectedItem: Item? {
+            selectedItemID.flatMap { catalog?.itemsByID[$0] }
+        }
+        
         private var isQueryEmpty: Bool {
             query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         }
@@ -107,6 +112,7 @@ struct ItemSearchFeature {
         case jobToggled(String)
         case equipSlotToggled(Int)
         case clearFilterButtonTapped
+        case itemSelected(Int?)
     }
     
     @Dependency(\.continuousClock) var clock
@@ -148,6 +154,10 @@ struct ItemSearchFeature {
             case let .refreshResponse(catalog):
                 guard let catalog else { return .none }
                 state.catalog = catalog
+                // The selected item may be gone from the update.
+                if let itemID = state.selectedItemID, catalog.itemsByID[itemID] == nil {
+                    state.selectedItemID = nil
+                }
                 return search(&state, debounce: false)
             case let .searchQueryChanged(query):
                 state.query = query
@@ -197,6 +207,13 @@ struct ItemSearchFeature {
                 }
             case .clearFilterButtonTapped:
                 return updateFilter(&state, debounce: false) { $0 = ItemFilter() }
+            case let .itemSelected(itemID):
+                if let itemID, state.catalog?.itemsByID[itemID] != nil {
+                    state.selectedItemID = itemID
+                } else {
+                    state.selectedItemID = nil
+                }
+                return .none
             }
         }
     }
