@@ -104,7 +104,7 @@ final class ItemSearchFilterOnlyTests: XCTestCase {
         var filter = ItemFilter()
         filter.selectedJobAbbrs = ["WHM", "BLM"]
 
-        let result = ItemSearchViewModel.searchItems(
+        let result = ItemSearchQuery.searchItems(
             Self.data.items,
             query: "",
             filter: filter,

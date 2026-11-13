@@ -408,10 +408,10 @@ final class ItemDescriptionSearchTests: XCTestCase {
     func testTheOnlyItemWithANameIsFoundWhateverItsCase() {
         let items = Fixture.data.items
 
-        XCTAssertEqual(ItemSearchViewModel.onlyItemID(named: "白鋼錠", in: items), 1)
-        XCTAssertEqual(ItemSearchViewModel.onlyItemID(named: "ex無瑕白染劑", in: items), 4)
-        XCTAssertNil(ItemSearchViewModel.onlyItemID(named: "奶油", in: items), "two items")
-        XCTAssertNil(ItemSearchViewModel.onlyItemID(named: "白鋼", in: items), "only part of a name")
+        XCTAssertEqual(ItemSearchQuery.onlyItemID(named: "白鋼錠", in: items), 1)
+        XCTAssertEqual(ItemSearchQuery.onlyItemID(named: "ex無瑕白染劑", in: items), 4)
+        XCTAssertNil(ItemSearchQuery.onlyItemID(named: "奶油", in: items), "two items")
+        XCTAssertNil(ItemSearchQuery.onlyItemID(named: "白鋼", in: items), "only part of a name")
     }
 
     // MARK: - Messages (AC-13, AC-14)
