@@ -3,7 +3,8 @@ import Foundation
 /// The jobs the item search can filter by, in the order the filter shows them.
 ///
 /// Kept free of localization and UI types so the item query evaluation tool (macOS) compiles
-/// the same list as the app. The localized `displayName` lives with the item search view model.
+/// the same list as the app. The localized `displayName` lives in
+/// `ItemJobFilterOption+DisplayName.swift`, which the tool leaves out.
 struct ItemJobFilterOption: Identifiable, Hashable, Sendable {
     let abbreviation: String
     let iconPath: String
@@ -48,10 +49,4 @@ struct ItemJobFilterOption: Identifiable, Hashable, Sendable {
         ItemJobFilterOption(abbreviation: "BTN", iconPath: "062000/062117_hr1.tex"),
         ItemJobFilterOption(abbreviation: "FSH", iconPath: "062000/062118_hr1.tex")
     ]
-}
-
-extension ItemJobFilterOption {
-    var displayName: String {
-        L10n.ItemSearch.Filter.jobName(abbreviation)
-    }
 }
