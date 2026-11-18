@@ -1,6 +1,6 @@
 # Duo 版面回歸驗證
 
-Spec：`prompts/iphone-duo-layout-coverage.md`。基準：main `956a98f`（PR #71），分支 `test/duo-layout-coverage`。
+Spec：`docs/archive/spec-flow/prompts/iphone-duo-layout-coverage.md`。基準：main `956a98f`（PR #71），分支 `test/duo-layout-coverage`。
 
 ## 重跑自動測試
 

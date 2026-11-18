@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Describes the item to find in one sentence, and turns it into the item search's filter and
-/// search text (prompts/item-description-search.md, 「描述搜尋畫面」).
+/// search text (docs/archive/spec-flow/prompts/item-description-search.md, 「描述搜尋畫面」).
 struct ItemDescriptionSearchSheet: View {
     let viewModel: ItemSearchViewModel
     @FocusState private var isSentenceFocused: Bool

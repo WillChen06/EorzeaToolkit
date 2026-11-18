@@ -176,10 +176,10 @@ struct FieldScore {
 
 /// What the report judges a run by.
 enum EvalGate {
-    /// The evaluation set (prompts/item-query-eval.md): every field against its own threshold,
+    /// The evaluation set (docs/archive/spec-flow/prompts/item-query-eval.md): every field against its own threshold,
     /// `EvalField.threshold`.
     case perField
-    /// The user's held-out set (prompts/item-description-search.md): usage and whole sentences.
+    /// The user's held-out set (docs/archive/spec-flow/prompts/item-description-search.md): usage and whole sentences.
     /// A held-out set is small, so a single field can have only a couple of sentences; the report
     /// prints each field's rate to find causes, without judging it.
     case holdout

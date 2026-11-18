@@ -24,7 +24,7 @@ final class ItemSearchViewModel {
 
     var query = ""
 
-    // Description search (prompts/item-description-search.md).
+    // Description search (docs/archive/spec-flow/prompts/item-description-search.md).
     private(set) var descriptionSearchAvailability: ItemDescriptionSearchAvailability = .unavailable
     private(set) var isShowingDescriptionSearch = false
     /// The sentence being edited on the description search screen.
@@ -482,7 +482,7 @@ final class ItemSearchViewModel {
     }
 
     /// Why a parsed sentence cannot be applied, or nil when it can
-    /// (prompts/item-description-search.md, 「描述搜尋畫面」).
+    /// (docs/archive/spec-flow/prompts/item-description-search.md, 「描述搜尋畫面」).
     private static func message(for parsedQuery: ItemQuery) -> ItemDescriptionSearchMessage? {
         switch parsedQuery.usage {
         case .unsupported:

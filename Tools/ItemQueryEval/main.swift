@@ -2,7 +2,7 @@ import Foundation
 import FoundationModels
 
 // Evaluates how well the on-device model turns a Traditional Chinese sentence into item search
-// conditions, using the same parsing code as the app. See prompts/item-query-eval.md.
+// conditions, using the same parsing code as the app. See docs/archive/spec-flow/prompts/item-query-eval.md.
 //
 // Exits 0 once every case has been asked, blocked or failed cases included; 1 when the input
 // files are wrong or the model cannot be used; 2 for bad arguments.

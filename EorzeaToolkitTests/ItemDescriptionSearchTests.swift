@@ -2,7 +2,7 @@ import XCTest
 @testable import EorzeaToolkit
 
 /// Description search in the item search: model status, applying a parsed sentence, recipe
-/// lookups, messages and abandoned parses (prompts/item-description-search.md).
+/// lookups, messages and abandoned parses (docs/archive/spec-flow/prompts/item-description-search.md).
 @MainActor
 final class ItemDescriptionSearchTests: XCTestCase {
     private enum Fixture {
