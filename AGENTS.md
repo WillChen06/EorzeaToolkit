@@ -75,7 +75,7 @@ These override anything a skill or general best practice says.
   - `--holdout` runs the user's held-out set, `Tools/ItemQueryEval/holdout.json`, instead. It
     skips the evaluation set's composition check and allows expected keywords the sentence does
     not contain (a player's nickname for an item). The run is judged by usage and whole
-    sentences (`prompts/item-description-search.md`).
+    sentences (`docs/archive/spec-flow/prompts/item-description-search.md`).
   - The user writes the held-out set's sentences and expected results. An agent may only put
     what the user wrote into the file's format, and must not change the matching rules or the
     model's instructions because of it before its first run.
@@ -114,7 +114,8 @@ Rules for running them:
 - Do not push until the user has verified your changes and tells you to push. Then push the
   branch and open a regular pull request into `main`, not a draft: the user has already
   verified it, and a draft would hold back the automated review. Fill in
-  `.github/pull_request_template.md`, including `## Spec` and `## Acceptance Criteria`.
+  `.github/pull_request_template.md` in the shape of the `/pr` skill, including `## Spec`
+  (the issues it closes) and `## Acceptance Criteria`.
 - Never push to `main` and never merge. The user does the final review and merges manually.
 - CI must be green before the automated review runs; it is skipped on a failing build, so fix
   the build first. Review standards live in `.github/claude-review-guidelines.md` and apply to
@@ -122,64 +123,49 @@ Rules for running them:
 - Requests relayed through OpenAB (Discord → Codex) also follow
   `docs/openab-developer-workflow.md`.
 
-## Specs
+## Specs and tickets
 
-Feature work starts from a spec under `prompts/`, written with the user before any code and
-following `prompts/_TEMPLATE.md`.
+Work follows Matt Pocock's engineering skills (the `mattpocock-skills` Claude Code plugin) and
+is tracked in GitHub Issues. `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md` and
+`docs/agents/domain.md` configure them.
 
-Writing a spec:
+- **Spec**: a GitHub issue written with `/to-spec` after the problem has been discussed (or
+  grilled with `/grill-with-docs`). It has Problem Statement, Solution, User Stories,
+  Implementation Decisions, Testing Decisions, Out of Scope and Further Notes, and is labelled
+  `ready-for-agent`.
+- **Tickets**: `/to-tickets` breaks a spec into tracer-bullet sub-issues, each with acceptance
+  criteria and its blocking edges. Bugs and requests enter through `/triage`.
+- **Implementing**: `/implement` builds a ticket (or a small spec) with `/tdd` at the agreed
+  seams; `/implement-spec` works a whole spec's ticket graph on one integration branch. Both
+  close with `/code-review`, whose Standards axis reads this file and
+  `.github/claude-review-guidelines.md` and whose Spec axis reads the originating issue.
+- Do not build what the spec lists under Out of Scope. If a requirement turns out wrong, edit the
+  issue and say what changed and why in the PR body.
+- Domain vocabulary and decisions go in `GLOSSARY.md` and `docs/adr/`, created by
+  `/domain-modeling` when a term or decision is first settled.
+- This file overrides the skills' defaults. In particular `/implement-spec` does not open a
+  draft PR or push (see Git and pull requests), tests run through `./scripts/run_tests.sh`, and
+  Xcode builds and tests run one at a time even when implementer subagents work in parallel.
+- Tools without the plugin (Codex through OpenAB) follow the same steps by hand: read the spec
+  and ticket issues with `gh`, build test-first, and review the diff against the issue.
 
-- Write the `## 驗收` section during the spec session, while the desired behaviour is still the
-  subject. Written after implementation, it bends toward whatever was built and verification
-  collapses into self-assessment.
-- Do not backfill `## 驗收` into specs that shipped without it.
-
-Implementing a spec: its `## 驗收` section is the contract.
-
-- Implement every criterion; do not pick and choose.
-- `[自動]`: prove it with a unit test or `scripts/validate_data.py`. If the criterion names a
-  test, confirm it really asserts the criterion; if it names none, add one.
-- `[diff]`: must be evident from the diff alone.
-- `[人工]`: needs the running app. Give reproducible steps and the expected result, and leave
-  the verdict to the user.
-- Do not reshape a criterion to fit what you built. If a criterion is wrong, change the spec
-  and explain what changed and why in the PR body.
-- Do not build anything the spec defers under 「不在這個 Phase」.
-- Report every criterion's outcome in the PR body, including any you could not meet.
+Specs written before this flow, with their `## 驗收` contracts, are archived in
+`docs/archive/spec-flow/prompts/`; code comments and docs that cite them point there. The
+previous workflow is described in `docs/archive/spec-flow/README.md`. Do not add new specs there.
 
 ## Subagents
 
-Two read-only roles support this work. Each role's instructions live in one shared file that
-every tool's agent definition points to:
+The read-only explorer maps execution paths, data flow, affected files, existing patterns,
+tests and risks. Its instructions live in `docs/agents/project-explorer.md`, which both tools'
+agent definitions (`project_explorer` for Codex, `project-explorer` for Claude Code) point to.
+Use it for cross-file features, refactors, complex bugs, an unclear execution path, or as the
+exploration subagent of `/implement-spec`. Skip it for small, localized changes unless the user
+asks.
 
-| Role | Instructions | Codex agent | Claude Code agent |
-| --- | --- | --- | --- |
-| Explorer | `docs/agents/project-explorer.md` | `project_explorer` | `project-explorer` |
-| Acceptance reviewer | `docs/agents/acceptance-reviewer.md` | `acceptance_reviewer` | `acceptance-reviewer` |
-
-When asked to implement a spec that has a `## 驗收` section, use this workflow without waiting
-to be asked for subagents:
-
-1. Before editing files, run the explorer and the acceptance reviewer (planning-review mode) in
-   parallel. The explorer maps the execution path, data flow, affected files, existing
-   patterns, tests, and risks; the reviewer maps each criterion, preserved exactly, to the
-   implementation evidence, tests, validation scripts, and manual checks it needs.
-2. Wait for both, then fold their results into the implementation plan.
-3. Only the primary agent edits files and runs the build, test, and data-validation commands.
-4. After implementing and verifying, run the acceptance reviewer again in implementation-review
-   mode. Give it the spec path, the diff scope, and every build, test, validation, and
-   manual-check result available.
-5. Resolve every actionable finding, or explicitly report unmet and unverified criteria, before
-   calling the task done.
-
-For other tasks, use the explorer for cross-file features, refactors, complex bugs, or an
-unclear execution path. Skip subagents for small, localized changes unless the user asks.
-
-- Subagents stay read-only: no file edits, and no commands that write workspace artifacts.
-- Their findings are evidence and recommendations. Architecture, product, and scope decisions
-  stay with the primary agent.
-- If your tool cannot run subagents, perform both roles yourself as separate passes, following
-  the instruction files above.
+- The explorer stays read-only: no file edits, and no commands that write workspace artifacts.
+- Implementer subagents started by `/implement-spec` edit only in their own worktrees.
+- Subagent findings are evidence and recommendations. Architecture, product, and scope
+  decisions stay with the primary agent.
 
 ## Skills
 

@@ -1,7 +1,7 @@
 import Foundation
 
 /// Whether the item search can offer description search, as the 「模型狀態」 table of
-/// prompts/item-description-search.md puts it. It names no FoundationModels type, so the item
+/// docs/archive/spec-flow/prompts/item-description-search.md puts it. It names no FoundationModels type, so the item
 /// search keeps it on every iOS version.
 enum ItemDescriptionSearchAvailability: Equatable, Sendable, CaseIterable {
     case available

@@ -109,7 +109,7 @@ enum L10n {
             return String(localized: "itemSearch.row.equipAndItemLevel \(equipLevel) \(item.ilvl)")
         }
 
-        /// prompts/item-description-search.md, 「入口」「描述搜尋畫面」.
+        /// docs/archive/spec-flow/prompts/item-description-search.md, 「入口」「描述搜尋畫面」.
         enum DescriptionSearch {
             /// The screen's title and the button's VoiceOver label.
             static let title: LocalizedStringKey = "itemSearch.descriptionSearch.title"

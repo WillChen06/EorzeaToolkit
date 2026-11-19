@@ -1,7 +1,7 @@
 import Foundation
 
 /// Why a parsed sentence was not applied, as the 「描述搜尋畫面」 table of
-/// prompts/item-description-search.md lists it. The screen stays open and shows it.
+/// docs/archive/spec-flow/prompts/item-description-search.md lists it. The screen stays open and shows it.
 enum ItemDescriptionSearchMessage: Equatable, Sendable {
     /// Usage 「無法處理」, or a recipe lookup without a keyword.
     case notAnItemQuery
@@ -52,7 +52,7 @@ extension ItemQuery {
 
 extension ItemFilter {
     /// The filter a parsed sentence asks for. Whatever the sentence did not mention stays at
-    /// its default (prompts/item-description-search.md, 「套用」).
+    /// its default (docs/archive/spec-flow/prompts/item-description-search.md, 「套用」).
     init(query: ItemQuery) {
         self.init()
         selectedUICategoryIds = query.categoryIds

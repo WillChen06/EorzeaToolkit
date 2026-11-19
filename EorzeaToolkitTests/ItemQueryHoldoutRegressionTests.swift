@@ -29,7 +29,7 @@ final class ItemQueryHoldoutRegressionTests: XCTestCase {
         /// its usage; for a search the model's keyword may have differed and been dropped, so
         /// running the set on the Mac is the check with the real answers.
         let answers: [String: String]
-        /// Sentences the rules do not cover in this phase (prompts/item-description-search.md).
+        /// Sentences the rules do not cover in this phase (docs/archive/spec-flow/prompts/item-description-search.md).
         let knownMisses: [String: String]
     }
 

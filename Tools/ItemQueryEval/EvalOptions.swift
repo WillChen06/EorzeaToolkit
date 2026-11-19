@@ -16,7 +16,7 @@ struct EvalOptions {
     """
 
     let checkOnly: Bool
-    /// The user's held-out set (prompts/item-description-search.md) rather than the evaluation
+    /// The user's held-out set (docs/archive/spec-flow/prompts/item-description-search.md) rather than the evaluation
     /// set: it is written apart from the matching rules, need not follow the evaluation set's
     /// composition, and may expect keywords the sentence does not contain.
     let holdout: Bool

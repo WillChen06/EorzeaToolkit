@@ -82,7 +82,7 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.willchen.eorzeaToolkit.uitests
 
-  # Evaluates the on-device model's item query parsing on the Mac (prompts/item-query-eval.md).
+  # Evaluates the on-device model's item query parsing on the Mac (docs/archive/spec-flow/prompts/item-query-eval.md).
   # Run it with scripts/run_item_query_eval.sh; CI neither builds nor runs it.
   ItemQueryEval:
     type: tool

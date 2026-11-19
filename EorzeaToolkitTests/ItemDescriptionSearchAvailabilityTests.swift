@@ -1,7 +1,7 @@
 import XCTest
 @testable import EorzeaToolkit
 
-/// The 「模型狀態」 table of prompts/item-description-search.md (AC-7). How the item search
+/// The 「模型狀態」 table of docs/archive/spec-flow/prompts/item-description-search.md (AC-7). How the item search
 /// uses these flags is in `ItemDescriptionSearchTests`.
 final class ItemDescriptionSearchAvailabilityTests: XCTestCase {
     /// An exhaustive switch, so a new state does not compile until it has a row here.

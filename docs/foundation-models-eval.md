@@ -1,15 +1,15 @@
 # Foundation Models 道具搜尋解析評估紀錄
 
 `./scripts/run_item_query_eval.sh` 每跑一次正式評估，就在這裡記一筆：環境、各欄位正確率、失敗的句子、是否達到門檻。
-規則與門檻見 `prompts/item-query-eval.md`。iOS／macOS 大版本換模型時，用同一份評估集重跑並新增一筆。
+規則與門檻見 `docs/archive/spec-flow/prompts/item-query-eval.md`。iOS／macOS 大版本換模型時，用同一份評估集重跑並新增一筆。
 
 ---
 
 ## 2026-10-16：第六輪，第二輪後的比對規則（達到門檻）
 
 - **環境**：與前幾輪相同（macOS 27.2 beta，Build 26B5101f；Xcode 27.1）。
-- **程式碼**：`feature/item-description-search` 的 `15834d1`，加上 `prompts/item-description-search.md`「比對規則調整」的「第二輪後」規則；給模型的指示不變；評估集與第四輪相同。
-- **目的**：確認第二輪後的規則沒讓評估集退步（`prompts/item-description-search.md` AC-43）。
+- **程式碼**：`feature/item-description-search` 的 `15834d1`，加上 `docs/archive/spec-flow/prompts/item-description-search.md`「比對規則調整」的「第二輪後」規則；給模型的指示不變；評估集與第四輪相同。
+- **目的**：確認第二輪後的規則沒讓評估集退步（`docs/archive/spec-flow/prompts/item-description-search.md` AC-43）。
 - **門檻**：**達到**，和第五輪完全相同：用法 41/42，整句完全正確 41/42，其他欄位都是 100%。
 - **guardrail**：0 句被擋下，0 句其他錯誤。
 - **耗時**：每句平均約 0.47 秒。
@@ -160,8 +160,8 @@
 ## 2026-10-16：第五輪，比對規則調整後（達到門檻）
 
 - **環境**：與前幾輪相同（macOS 27.2 beta，Build 26B5101f；Xcode 27.1）。
-- **程式碼**：`feature/item-description-search` 的 `8670ebe`，加上 `prompts/item-description-search.md`「比對規則調整」的規則；給模型的指示不變；評估集與第四輪相同。
-- **目的**：確認調整後的規則沒讓評估集退步（`prompts/item-description-search.md` AC-35）。
+- **程式碼**：`feature/item-description-search` 的 `8670ebe`，加上 `docs/archive/spec-flow/prompts/item-description-search.md`「比對規則調整」的規則；給模型的指示不變；評估集與第四輪相同。
+- **目的**：確認調整後的規則沒讓評估集退步（`docs/archive/spec-flow/prompts/item-description-search.md` AC-35）。
 - **門檻**：**達到**。結果和第四輪完全相同：用法 41/42，整句完全正確 41/42，其他欄位都是 100%。
 - **guardrail**：0 句被擋下，0 句其他錯誤。
 - **耗時**：每句平均約 0.44 秒。
@@ -174,7 +174,7 @@
 
 - **環境**：與前幾輪相同（macOS 27.2 beta，Build 26B5101f；Xcode 27.1）。
 - **程式碼**：`feature/item-description-search` 的 `9f4b5aa`。解析程式碼和給模型的指示與第四輪相同。
-- **保留集**：24 句（規則見 `prompts/item-description-search.md`「保留集」）。跑的時候是 `Tools/ItemQueryEval/holdout.json`，規則依這一輪調整後改名為 `holdout-1.json`，只當回歸測試：
+- **保留集**：24 句（規則見 `docs/archive/spec-flow/prompts/item-description-search.md`「保留集」）。跑的時候是 `Tools/ItemQueryEval/holdout.json`，規則依這一輪調整後改名為 `holdout-1.json`，只當回歸測試：
   - 使用者寫的 8 句（`holdout-01`～`08`）；
   - 沒讀過 repo、比對規則和指示的 subagent 照使用者的句子產生 18 句候選，使用者刪掉 2 句、確認其餘 16 句的預期結果（`holdout-g`）。
 - **門檻**：用法 ≥ 90%、整句完全正確 ≥ 80%：**未達到**。用法 24/24（100%），整句完全正確 5/24（20.8%）。

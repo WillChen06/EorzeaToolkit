@@ -2,7 +2,7 @@ import XCTest
 @testable import EorzeaToolkit
 
 /// With an empty search field, an active filter alone lists its items
-/// (prompts/item-description-search.md, 「只用 filter 搜尋」, AC-24).
+/// (docs/archive/spec-flow/prompts/item-description-search.md, 「只用 filter 搜尋」, AC-24).
 @MainActor
 final class ItemSearchFilterOnlyTests: XCTestCase {
     private static let whiteMage = 1
